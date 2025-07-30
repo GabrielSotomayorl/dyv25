@@ -23,312 +23,317 @@ library(pander)
 
 # I. Identificación
 
-**Código:** SOC8224-01 02
-
-**Créditos:** 5
-
-**Período Académico:** 2º semestre 2024
-
-**Requisito:** Estadística II
-
-**Horario:** Lunes 08:30-09:50 // Plenaria
-Lunes 10:00-11:20 // Taller grupo 1
-Lunes 11:30-12:50 // Taller grupo 2
-
-
-**Sala:**  
-Plenaria: Sala 603, Ejército 233 
-Talleres: Laboratorio de computación 2do piso, Facultad de CCSS, Ejército 333 
-
-**Ayudantías:** 
-
-Sección 1: Lunes 14:30- 15:50 Lab. Computación piso 3 
-Sección 2: Lunes 14:30-15:50 Lab. Computación piso 2 
-
-**Asistencia:** 	Obligatoria (70%) 
-
-**Docente:** Profesor: Gabriel Sotomayor
-[gabriel.sotomayor\@mail.udp.cl](gabriel.sotomayor@mail.udp.cl)
-
-**Ayudantes:** Patricio Alarcón
-[patricio.alarcon@mail.udp.cl](patricio.alarcon@mail.udp.cl)
-
-Fernanda Hurtado
-[fernanda.hurtado@mail.udp.cl](fernanda.hurtado@mail.udp.cl)
-
-Francisca Hernández 
-[francisca.hernandez_c@mail.udp.cl](francisca.hernandez_c@mail.udp.cl)
+-   **Código:** SOC09124
+-   **Créditos:** 5
+-   **Período Académico:** 2º semestre 2025
+-   **Requisito:** SOC09114 MATEMÁTICAS PARA SOCIOLOGÍA
+-   **Duración:** Semestral
+-   **Horario de plenaria:** Lunes 08:30-9:50
+-   **Horario de talleres:**
+    -   Grupo 1: Lunes 10:00-11:20
+    -   Grupo 2: Lunes 11:30-12:50
+-   **Horario ayudantía:**
+    -   Grupo 1: Lunes 14:30–15:50
+    -   Grupo 2: Lunes 14:30–15:50
+-   **Asistencia:** 70% (clases y ayudantías)
+-   **Docente:** Gabriel Sotomayor López ([gabriel.sotomayor@mail.udp.cl](mailto:gabriel.sotomayor@mail.udp.cl))
+-   **Ayudante:**
+    -   Felipe Adasme ([felipe.adasme@mail.udp.cl](mailto:felipe.adasme@mail.udp.cl))
+    -   Francisca Hernández ([francisca.hernandez_c@mail.udp.cl](mailto:francisca.hernandez_c@mail.udp.cl))
+    -   Amanda Sanhueza ([Amanda.sanhueza@mail.udp.cl](mailto:Amanda.sanhueza@mail.udp.cl))
 
 # II. Presentación
 
-El curso aborda las principales técnicas para establecer relaciones entre variables. Se enfatizan la comprensión de procedimientos e interpretación de resultados, así como el uso de herramientas computacionales, en particular R y RStudio. El curso requiere de una formación básica previa en el análisis de datos estadísticos, tiene una orientación aplicada al análisis de datos multivariados en ciencias sociales.
+La estadística es una herramienta esencial para el quehacer sociológico moderno, ya que permite analizar diferentes dinámicas que se despliegan en todas las áreas de la vida social. Este curso busca entregar a los/las alumnos/as las herramientas básicas para establecer la relación entre la recolección de datos en investigaciones empíricas de carácter cuantitativo y las técnicas estadísticas apropiadas para el análisis, lectura e interpretación de los resultados. Para tales propósitos, el curso aborda elementos de la estadística descriptiva univariada como lo son la presentación de datos en tablas y gráficos, el cálculo e interpretación de estadígrafos de tendencia central, de dispersión, de forma y de posición; además de nociones básicas de estadística descriptiva bivariada y algunas reglas de asociación.
+
+Los alumnos desarrollarán la capacidad de resumir información, analizarla y concluir sustantivamente respecto de cualquier problemática social que deban tratar. En consecuencia, el curso tiene un carácter eminentemente práctico a través de ejercicios y el uso de lenguajes de programación con orientación estadística que permitan el análisis y presentación adecuada de los datos. Finalmente, se busca que los/las alumnos/as comprendan el uso y la relevancia del análisis estadístico en las Ciencias Sociales y de forma particular en la Sociología.
 
 # III. Resultados de Aprendizaje
 
-## Resultado general
+## III.1. Resultado general
 
-Entregar herramientas para que las personas puedan abordar el análisis de datos tanto de dependencia como de interdependencia v desde la estadística multivariante, elaborando y probando hipótesis y desarrollando modelos explicativos de determinados fenómenos de estudio. Las personas estudiantes aprenderán los métodos de análisis de datos más habituales, y realizarán prácticas en programas estadísticos, principalmente R.\  
+Aplicar los métodos y herramientas de la estadística descriptiva necesarios para el análisis de datos cuantitativos en las ciencias sociales.
 
-El enfoque del curso será aplicado e irá dirigido a la utilización crítica de las técnicas estadísticas para explicar distintos problemas relacionados con las Ciencias Sociales. Se espera que las personas comprendan que la complejidad de los fenómenos estudiados por las ciencias sociales obliga a que su análisis considere múltiples medidas para poderlos explicar en forma adecuada.\
+## III.2. Resultados específicos:
 
-## Resultados específicos
+-   Comprender el uso y relevancia de la estadística en las Ciencias Sociales.
+-   Relacionar metodologías de recolección de datos y las técnicas estadísticas apropiadas para su análisis.
+-   Comprender las principales herramientas de la estadística descriptiva.
+-   Definir correctamente un plan de análisis descriptivo para una tabla de datos.
+-   Identificar el estadístico apropiado según el tipo de variable analizada.
+-   Manipular y analizar tablas de datos a través del lenguaje de programación R.
+-   Interpretar datos cuantitativos producidos por investigaciones propias o de terceros.
+-   Distinguir entre estadística descriptiva e inferencial.
 
-Al final del curso las personas estudiantes deberán poder:\
+Los puntos anteriores se realizarán utilizando el lenguaje de programación estadístico R junto a herramientas de apoyo como Word y Excel. Los/as estudiantes tendrán una base sólida en este lenguaje de programación.
 
-•	Explicar distintos problemas sociales considerando sus múltiples factores, mediante el uso de análisis multivariado de datos.\
-•	Utilizar el análisis de datos desde la estadística inferencial, elaborando y testeando hipótesis y desarrollando modelos explicativos de determinados fenómenos de estudio. 
-•	Utilizar el análisis estadístico desde la interrelación entre múltiples variables y sus categorías.\
-•	Identificar las situaciones en que se utilizan cada una las técnicas estadísticas multivariadas, justificar el uso de éstas y ser capaz de analizar e interpretar los resultados obtenidos.\
-•	Demostrar una lectura crítica del análisis multivariado de datos en ciencias sociales.\
+# IV. Contenidos
 
+## UNIDAD 1: Introducción a la estadística y su relación con las ciencias sociales
 
-# IV. Contenidos.
+-   El proceso de conocimiento científico: lógica inductiva y deductiva.
+-   Etapas generales de la investigación social empírica.
+-   Datos: la fuente de información clave para la estadística.
+-   La estadística como una aproximación a preguntas de investigación sociológicas.
+-   Usos de la estadística en la actualidad: sociología, ciencia política, economía políticas públicas, otros.
+-   La relevancia de los lenguajes de programación para el análisis estadístico actual.
 
-## 1. Uso de modelos estadísticos en Ciencias Sociales
+## UNIDAD 2: Conceptos claves para la investigación social
 
-## 2. Modelo de Regresión Lineal Múltiple
+-   Conceptualización y operacionalización.
+-   Unidad de análisis vs unidad de observación.
+-   Tipos de variables y niveles de medición.
+-   Muestra y población: estadísticos muestrales y parámetros poblacionales.
+-   Población objetivo, marco muestral, muestra.
+-   Validez y confiabilidad en la medición.
+-   Error de medición y error muestral.
 
-•	Regresión lineal simple\
-•	Ecuación de regresión múltiple\
-•	Pruebas de hipótesis para los coeficientes\
-•	Coeficiente de Determinación Ajustado\
-•	Cálculo de la mejor ecuación de regresión múltiple\
-•	Coeficientes “beta” estandarizados\
-•	Variables ficticias o dummy\
-•	Interpretación de los coeficientes\
-•	Supuestos del modelo - Análisis de residuos\
-•	Prácticas en programa estadístico R\
-•	Interpretaciones\
+## UNIDAD 3: Marcos de datos para la investigación social
 
+-   Estructura de una tabla de datos: lógica filas, columnas.
+-   Exploración de una tabla de datos en R.
+-   Tipos de variables en una tabla de datos.
+-   Introducción al `tidyverse`.
+-   Manipulación de tablas de datos I: selecciones, filtros, ordenamiento.
+-   Manipulación de tablas de datos II: uniones y pivot.
+-   Recodificación de variables: uso de estructuras condicionales.
+-   Construcción de variables: índices, escalas y tipologías.
 
-## 3. Modelos de Regresión Logística Binaria
+## UNIDAD 4: Estadística Descriptiva Univariada
 
-•	Introducción\
-•	Modelo de regresión logística bivariado\
-•	Modelo de regresión logística multivariado\
-•	Evaluación del modelo\
-•	Test de Wald - Interpretación de los coeficientes\
-•	Requisitos y limitaciones\
-•	Prácticas en programa estadístico R\
-•	Interpretaciones\
+-   **Estadísticos para variables numéricas:**
+    -   Estadísticos de centro: media, mediana, moda.
+    -   Estadísticos de dispersión: rango, varianza, desviación estándar.
+    -   Posición: percentiles.
+    -   Forma: asimetría y curtosis.
+-   **Estadístico para variables discretas o categóricas:**
+    -   Frecuencias absolutas y relativas.
+    -   Porcentajes.
+    -   Tasas.
+-   Visualización de datos descriptivas: barras, histogramas y boxplots.
+-   Recomendaciones para la visualización de datos cuantitativos.
 
+## UNIDAD 5: Estadística Descriptiva Bivariada
 
-## 4. Análisis de Conglomerados
+-   Tipos de asociaciones entre variables según su naturaleza.
+-   Concepto de independencia.
+-   Construcción de estadísticos por grupo.
+-   Construcción de tablas de contingencia.
+-   Control por tercera variable.
+-   Visualizaciones bivariadas: barras, histogramas y boxplots.
+-   Medidas de asociación: Pearson, spearman, gamma, policóricas.
+-   Más allá de lo descriptivo: la probabilidad como medida de incertidumbre.
 
-•	Introducción\
-•	¿Qué es un conglomerado?\
-•	Método jerárquico y Dendograma\
-•	Método de K-medias\
-•	Prácticas en programa en R Studio\
-•	Interpretaciones\
+## AYUDANTÍAS DE R
 
+Tendremos una serie de 8 ayudantías de R en horario de ayudantía. El objetivo de estas ayudantias es introducirse al lenguaje R para el análisis estadístico y serán guías de estudio para desarrollar las evaluaciones del curso.
 
-## 5. Análisis de Componentes Principales
+-   **Ayudantía Nº1 (18-08/25-08):** Introducción a R como lenguaje de programación estadístico.
+    -   R como lenguaje y RStudio como interprete.
+    -   Trabajo con rutas relativas y proyectos.
+    -   Vectores, matrices, listas.
+    -   Operadores lógicos para la programación.
+    -   Construcción de un marco de datos como una lista de vectores.
+    -   Lógica de objetos y funciones en R.
+-   **Ayudantía Nº2 (01-09/08-09):** Lectura y exploración de marcos de datos en R.
+    -   Descarga y uso de librerías en R.
+    -   Conocer la variedad de formatos en los que puede estar empaquetada una tabla de datos.
+    -   Importar una tabla de datos desde distintos formatos.
+    -   Explorar las dimensiones de una tabla: filas, columnas, nombres de columnas.
+    -   Identificar el tipo de variable con el que se trabaja.
+    -   Lógica de indexación de las tablas de datos.
+    -   Complementar el análisis con el libro de código.
+    -   Explorar variables: valores atípicos y missing values.
+-   **Ayudantía Nº3 (22-09):** Manipulación de marcos de datos en R I.
+    -   Introducción al `tidyverse`.
+    -   Uso de la librería `dplyr`.
+    -   Filtrar una tabla de datos en R (`filter`).
+    -   Seleccionar columnas en una tabla de datos en R (`select`).
+    -   Ordenar tablas de datos en R (`arrange`).
+-   **Ayudantía Nº4 (13-10):** Manipulación de marcos de datos en R II.
+    -   Unir tablas de datos por filas y columnas.
+    -   Problemas de `cbind`.
+    -   Uso de Joins y Keys.
+    -   Uso de `rbind` y `add_row`.
+    -   Pivoteo de tablas de datos: long a wide y viceversa.
+-   **Ayudantía Nº5 (20-10):** Generación de variables en R.
+    -   Uso de indexación y `mutate`.
+    -   Generación de índices, escalas y tipologías.
+    -   Recodificación de variables: `ifelse` y `case_when`.
+-   **Ayudantía Nº6 (27-10):** Visualización de datos en R.
+    -   Uso de `ggplot2` y lógica de capas.
+    -   Construcción de gráficos: barras, histogramas y boxplots.
+    -   Customización de gráficos.
+-   **Ayudantía Nº7 (03-11):** Análisis descriptivo univariado en R.
+    -   Plan de análisis univariado.
+    -   Exploración de una tabla de datos real.
+    -   Estadísticos descriptivos y visualizaciones.
+    -   Interpretación de resultados.
+-   **Ayudantía Nº8 (10-11):** Análisis descriptivo bivariado en R.
+    -   Plan de análisis bivariado.
+    -   Exploración de una tabla de datos real.
+    -   Estadísticos descriptivos y visualizaciones.
+    -   Interpretación de resultados.
+    -   Exportar tablas de datos en excel.
 
-•	Introducción\
-•	Análisis factorial y ACP\
-•	La matriz de correlación\
-•	Elección de los componentes principales\
-•	Representación gráfica de los resultados\
-•	Prácticas en programa estadístico R \
-•	Interpretaciones\
+# V. Metodología
 
+El curso se desarrollará en base a clases teóricas de modalidad expositivas y prácticas tipo taller. En ese sentido, durante las clases en aula se presentaran los contenidos del curso tanto a nivel teórico como práctico a través de ejemplos, además se realizarán guías de ejercicios grupales o individuales orientadas a la aplicación práctica de los contenidos. Algunas de las sesiones de clases serán destinadas al trabajo exclusivo en laboratorio de computación, en donde se abordará el trabajo con el lenguaje de programación R.
 
-# V. Metodología del curso
+Adicionalmente se realizará una sesión semanal de ayudantía con asistencia obligatoria a cargo de los ayudantes del curso, la que se realizará en el laboratorio de computación en un horario fijado con anterioridad. La ayudantía tendrá como objetivo entregar los elementos necesarios para el desarrollo y aplicación adecuada de los contenidos vistos en clases y la práctica de R como lenguaje de programación.
 
-•	El curso se organizará en torno a sesiones plenarias y talleres prácticos. En las sesiones plenarias se abordarán los contenidos de las distintas técnicas estadísticas consideradas, mediante clases expositivas a cargo del docente. En los talleres prácticos se aplicarán dichas técnicas mediante el uso de R.\ 
-•	Las/los ayudantes tendrán el rol de apoyar las sesiones de clases, especialmente durante los talleres prácticos. A su vez, realizarán ayudantías durante el semestre. Estas ayudantías serán definidas según disponibilidad horaria del curso. Durante las ayudantías, las personas estudiantes aprenderán a trabajar con bases de datos, realizando análisis y estimaciones de acuerdo con los tópicos vistos en clase, utilizando RStudio. Además, tendrán la función de revisar los trabajos prácticos, en conjunto y bajo la supervisión del profesor.\ 
-
-•	Todos los materiales del curso estarán disponibles en la página https://aadi2024.netlify.app/. 
-
-•	Las/los estudiantes debe cumplir con un porcentaje mínimo del 70% de asistencia para aprobar el curso. Se recomienda asistir a clases para manejar los distintos contenidos. Todos los contenidos vistos en clase serán evaluados en pruebas y trabajos prácticos (incluyendo aspectos que no aparezcan en las presentaciones en clases).\ 
+El ayudante, además de realizar las sesiones de ayudantía, tendrá la función de revisar los trabajos prácticos, en conjunto y bajo la supervisión del profesor. NO será labor del ayudante, a menos que esté dentro de la programación, hacer ayudantías especiales para los trabajos prácticos.
 
 # VI. Evaluación
 
-Se utilizarán tres formas de evaluación: Pruebas solemnes, reportes de investigación y tareas:\ 
+Se realizarán cuatro evaluaciones, todas de carácter obligatorio:
 
-•	2 pruebas solemnes (15% y 25% c/u, 40% total). \ 
-•	2 reportes de investigación (20% c/u, 40% total).\ 
-•	3 Tareas (6,6 c/u 20% total)\ 
+-   **Trabajo prácticos (TP: 30%)**
+    Durante el semestre los/as estudiantes desarrollarán un total de 2 trabajos prácticos que evaluarán los contenidos del curso y los talleres. Estos trabajos se deberán realizar en grupo. En ellos se elaborarán los contenidos teóricos y prácticos abordados en las clases y ayudantías a partir de una pregunta de investigación propia. La pauta de cada trabajo práctico será entregada en clases o en ayudantía y los alumnos tendrán dos semanas para desarrollarlo. Para cada trabajo deberán entregar un informe en formato Word. El promedio simple de los 2 trabajos prácticos corresponderá al 30% de la nota de presentación a examen.
 
-**Pruebas solemnes:** Pruebas escritas que evaluarán los contenidos vistos en clases, especialmente la interpretación de resultados de análisis estadísticos.\ 
+-   **Controles (CONT: 10%)**
+    Durante las clases se aplicarán 5 controles individuales. Como regla general siempre habrá control al final de cada unidad (revise la programación). Las instrucciones se entregaran en la clase. En los controles se evaluaran los contenidos vistos en las clases anteriores, considerando la bibliografía del curso. El promedio simple de los 5 controles en clases corresponderá al 10% de la nota de presentación a examen. Se podrá borrar la peor nota.
 
-**Reportes de investigación:** Trabajos prácticos orientados a responder una pregunta de investigación específica, que derive de los intereses de las personas estudiantes. Los reportes se harán en grupos de 3 personas, y se realizarán fuera del horario de clases. Los informes tendrán que estar organizados a partir de la siguiente estructura:\ 
-1)	Portada\ 
-2)	Introducción: Problematización, objetivo y pregunta de investigación.\ 
-3)	Argumentos e hipótesis o expectativas\ 
-4)	Datos, variables y métodos\ 
-5)	Resultados \ 
-6)	Conclusiones\ 
+-   **Tareas de R (TAR: 10%)**
+    A lo largo del semestre ese realizarán 4 tareas de R individuales, en las cuales a partir de una pregunta de investigación y datos propuestos por el equipo docente los estudiantes deberán realizar un análisis de datos considerando las herramientas teóricas y prácticas desarrolladas en el curso.
 
-**Tareas:** Tareas breves enfocadas en la aplicación de técnicas de análisis en R a partir de un problema de investigación dado.\ 
+-   **Pruebas solemnes (PS: 50%)**
+    Tendremos dos pruebas solemnes que evaluarán conceptos, calculo, análisis e interpretación de datos. Los estudiantes deberán revisar las clases, talleres y bibliografía asignada. Cada prueba solemne equivale al 25% de la nota de presentación a examen.
+    -   Primera prueba solemne: 06 de octubre 2025.
+    -   Segunda prueba solemne: 01 de diciembre de 2025.
+    -   Prueba recuperativa (ambas secciones): 08 de diciembre de 2025.
 
-### Inasistencias a pruebas solemnes y reportes de investigación
-Si una/un estudiante falta a una prueba solemne, puede presentar ante la Secretaría de Estudios un certificado médico dentro de los cinco días hábiles posteriores a dicha evaluación, para tener derecho a rendir una prueba recuperativa. Las/los estudiantes tendrán derecho a un máximo de una prueba recuperativa por curso. La prueba podrá ser rendida a fin de semestre, y considerará todos los contenidos vistos durante el curso. Las evaluaciones no rendidas tendrán nota 1.0.\ 
+**Nota de presentación (NP: 70%)**
+`NP = TP x 0,30 + CONT x 0,10 + TAR x 0,10 + PS x 0,50`
 
-En caso de tener certificado médico para la fecha de entrega de alguno de los reportes de investigación, se deberá conversar con la profesora una nueva fecha de entrega. De tener certificado médico, es responsabilidad del estudiante contactar a la profesora para definir la manera de proceder. Inasistencias o no entregas de trabajos sin certificado médico tendrán nota 1.\ 
+**Examen (30%)**
+Habrá un examen donde se evaluará todos los contenidos del curso (clases, talleres, guías, ayudantías). Este examen equivale al 30% de la nota final del curso.
+-   Examen para ambas secciones: fecha por confirmar
 
-### Examen
-La nota que resulte del conjunto de evaluaciones parciales será la nota de presentación a examen. Si esta es 3,5 o superior, se podrá rendir el examen. En caso contrario, se considerará que la persona estudiante ha reprobado la asignatura, manteniéndose la nota de presentación como nota final.\ 
+Se podrán eximir del examen aquellos estudiantes que tengan una nota de presentación igual a 5,5 siempre y cuando no tengan ninguna nota bajo 5,0 en las pruebas solemnes. La nota de presentación será la nota final del curso en ese caso. La nota mínima en el examen para aprobar el curso es un 3,5.
 
-La nota de eximición es de 5,5, siempre y cuando no se tengan notas bajo 4,0 en las pruebas solemnes. En ese caso, se considerará que la persona estudiante ha aprobado la asignatura, manteniéndose la nota de presentación como nota final.\ 
+**Sobre los requisitos de aprobación:** se exigirá un 70% de asistencia como mínimo considerando clases y Ayudantías. El alumno/a que no cumpliere el requisito mínimo de asistencia, no tendrá derecho a rendir examen y reprobará el curso automáticamente. Se tomará en cada bloque. Si el estudiante se retira 15 minutos o más antes de finalizar la clase se considerará como ausente.
 
-La nota de presentación equivale al 70% del total, mientras que la nota en el EXAMEN al 30%. El examen consistirá en una evaluación escrita y práctica cuyos contenidos serán definidos en la última sesión de cátedra.\ 
+**Nota Final (NF)**
+`NF = NP x 0,7 + Examen x 0,3`
 
-### Recorrección
-Según reglamento, las/los estudiantes tienen derecho a conocer las notas y la pauta de corrección de todas las evaluaciones en un plazo que no podrá exceder de 10 días hábiles contados desde la fecha desde que éstas fueran rendidas, como también a conocer el resultado de sus evaluaciones solemnes o principales, antes de rendir las siguientes de igual categoría en una misma asignatura. \ 
+Aquella persona que falta a una evaluación deberá rendir una prueba recuperativa que ponderará el % de la evaluación faltante. Quien falte a dos o más evaluaciones deberá rendir la prueba recuperativa y el examen. El porcentaje de las evaluaciones ausentes se sumará a la ponderación del examen.
 
-Las/los estudiantes pueden imputar la corrección de cualquier evaluación escrita, en un plazo no superior a 5 días hábiles desde la entrega de la nota. Ello, a través de una carta dirigida profesor, que debe ir acompañada por la prueba, trabajo o informe evaluado, y, además, por las correcciones y comentarios que eventualmente haya entregado el docente. El académico deberá comunicar al estudiante el resultado de la recorrección, fundamentando por escrito sus argumentos, en un plazo no superior a los 5 días hábiles.\ 
+# VII. Aspectos prácticos
+
+## VII.1. Justificaciones y re-correcciones
+
+Los/as estudiantes que, por razones médicas u otras, no entreguen alguna de estas evaluaciones del curso, deben seguir el procedimiento de justificación de evaluaciones definido por la unidad académica: “Si un estudiante falta a una evaluación, puede presentar ante la Secretaría de Estudios un certificado médico dentro de los cinco días hábiles posteriores a dicha evaluación, para tener derecho a rendir una prueba recuperativa. Las evaluaciones no rendidas tendrán nota 1.0. Los estudiantes tendrán derecho a un máximo de una prueba recuperativa por curso. Es decisión del profesor la fecha y modalidad en que se realizará dicha prueba”.
+
+Según reglamento, los estudiantes tienen derecho a conocer las notas y la pauta de corrección de todas las evaluaciones en un plazo que no podrá exceder de 10 días hábiles contados desde la fecha desde que éstas fueran rendidas, como también a conocer el resultado de sus evaluaciones solemnes o principales, antes de rendir las siguientes de igual categoría en una misma asignatura.
+
+Los estudiantes pueden imputar la corrección de cualquier evaluación escrita, en un plazo no superior a 5 días hábiles desde la entrega de la nota. Ello, a través de una carta dirigida profesor, que debe ir acompañada por la prueba, trabajo o informe evaluado y además, por las correcciones y comentarios que eventualmente haya entregado el/la docente. El académico deberá comunicar al estudiante el resultado de la recorrección, fundamentando por escrito sus argumentos, en un plazo no superior a los 5 días hábiles.
+
+## VII.2. Ayudantías y tutorías
+
+El ayudante tendrá un rol fundamental en el curso. Estará a cargo de realizar las ayudantias de R y resolver dudas respecto a los contenidos del curso. Además colaborará en la organización del curso, participará en las discusiones y estará a cargo de la corrección de las evaluaciones.
+
+# VIII. Cronograma de trabajo
+
+| Semana | Fecha | UNIDAD | Tópico | Evaluaciones | Lecturas Obligatorias / Ayudantía |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | **Clase:** Lunes, <br> 11-08-2025 | Unidad 1: Introducción a la estadística y su relación con las ciencias sociales | - Presentación del curso.<br>- El proceso de conocimiento científico: lógica inductiva y deductiva.<br>- Etapas generales de la investigación social empírica.<br>- Datos: la fuente de información clave para la estadística.<br>- La estadística como una aproximación a preguntas de investigación sociológicas. | | **Clase:**<br>- Babbie, E. (2000). Capítulo 1. Pags. 4 a la 26.<br>- Babbie, E. (2000). Capítulo 2. Pags. 30 a la 48.<br>- Cea D’Ancona M. (1996). Capítulo 2. Pags. 81 a la 120.<br>**Sin ayudantía** |
+| 2 | **Clase:** Lunes, 18-08-2025 <br> **Ayudantía:** Lunes, 18-08-2025 | | - Usos de la estadística en la actualidad: sociología, políticas públicas, otros.<br>- La relevancia de los lenguajes de programación para el análisis estadístico actual. | **Control N°1**<br>(en clases) | **Clase:**<br>- Moore, D. S. (2005). Título Razonamiento estadístico. Pags. 27 a la 37 del PDF.<br>**Ayudantía de R N°1 (parte 1):**<br>- Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Capítulo 1. Introduction. Capítulo 3. Workflow: basics. Capítulo 5. Workflow: code style. Y Capítulo 7. Workflow: scripts and projects. |
+| 3 | **Clase:** Lunes, 25-08-2025 <br> **Laboratorio:** Lunes, 25-08-2025 | Unidad 2: Conceptos claves para la investigación social | - Conceptualización y operacionalización.<br>- Unidad de análisis vs unidad de observación.<br>- Tipos de variables y niveles de medición. | | **Clase:**<br>- Babbie, E. (2000). Capítulo 5. Pags. 96 a la 115.<br>- Babbie, E. (2000). Capítulo 6. Pags. 117 a la 138.<br>- Ritchey F. (2008). Capítulo 2. Pags. 42 a la 48.<br>- Asún, R. (2006). Medir la realidad social: El sentido de la metodología cuantitativa.<br>**Ayudantía de R N°1 (parte 2):**<br>- Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Capítulo 3. Workflow: basics y Capítulo 5. Workflow: code style.<br>- Urdinez, F., & Cruz, A. (2020). Capítulo 1. R Básico. |
+| 4 | **Clase:** Lunes, 01-09-2025 <br> **Laboratorio:** Lunes, 01-09-2025 | | - Muestra y población: estadísticas muestrales y parámetros poblacionales.<br>- Población objetivo, marco muestral, muestra.<br>- Validez y confiabilidad en la medición.<br>- Error de medición y error muestral. | **Control N°2**<br>(en clases)<br>**Tarea 1** | **Clase:**<br>- Babbie, E. (1996). Capítulo 5. Pags. 147 a la 175.<br>- Babbie, E. (2000). Capítulo 4. Pags. 89 a la 91.<br>- Babbie, E. (2000). Capítulo 8. Pags. 176 a la 191.<br>**Ayudantía de R N°2 (parte 1)** |
+| 5 | **Clase:** Lunes, 08-09-2025 <br> **Laboratorio:** Lunes, 08-09-2025 | Unidad 3: Marcos de datos para la investigación social | - Estructura de una tabla de datos: lógica filas, columnas.<br>- Exploración de una tabla de datos en R.<br>- Tipos de variables en una tabla de datos. | **Trabajo Práctico 1**<br>(3 semanas) | **Clase:**<br>- Babbie, E. (2000). Capítulo 14. Pags. 336 a la 342.<br>**Ayudantía de R N°2 (parte 2):**<br>- Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Capítulo 8. Data import. Y Capítulo 11. Exploratory data análisis. |
+| | Lunes, 15-09-2025 | | **SEMANA DE RECESO POR FIESTAS PATRIAS, NO HAY CLASES NI EVALUACIONES** | | |
+| 6 | **Clase:** Lunes, 22-09-2025 <br> **Ayudantía:** Lunes, 22-09-2025 | Unidad 3: Marcos de datos para la investigación social | - Manipulación de tablas de datos I: selecciones, filtros, ordenamiento.<br>- Manipulación de tablas de datos II: uniones y pivot. | | **Ayudantía de R N°3:**<br>- Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Capítulo 4. Data Transformation. Y Capítulo 6. Data tidying.<br>- Urdinez, F., & Cruz, A. (2020). Capítulo 2. Manejo de datos. |
+| 7 | **Clase:** Lunes, 29-09-2025 <br> **Ayudantía:** Lunes, 29-09-2025 | | - Recodificación de variables: uso de estructuras condicionales.<br>- Construcción de variables: índices, escalas y tipologías. | **Control N°3**<br>(en clases) | **Clase:**<br>- Babbie, E. (2000). Capítulo 7. Pags. 144 a la 167.<br>**Ayudantía: Preparación de la solemne I** |
+| 8 | Lunes, 06-10-2025 | | **SOLEMNE 1 – CONTENIDO DE LA UNIDAD 1, 2 Y 3** | | |
+| 9 | **Clase:** Lunes, 13-10-2025 <br> **Laboratorio:** Lunes, 13-10-2025 | Unidad 4: Estadística Descriptiva Univariada | - Estadísticos de centro: media, mediana, moda.<br>- Estadísticos de dispersión: rango, varianza, desviación estándar.<br>- Posición: percentiles.<br>- Forma: asimetría y curtosis. | **Tarea 2** | **Clase:**<br>- Moore, D. S. (2005). Capítulo 1. Pags. 32 a la 54.<br>- Ritchey F. (2008). Capítulo 4. Pags. 107 a la 117.<br>- Ritchey F. (2008). Capítulo 4. Pags. 136 a la 154.<br>**Ayudantía de R N°4** |
+| 10 | **Clase:** Lunes, 20-10-2025 <br> **Laboratorio:** Lunes, 20-10-2025 | | - Frecuencias absolutas y relativas.<br>- Porcentajes.<br>- Tasas. | | **Clase:**<br>- Diez, D. M., Barr, C. D., & Çetinkaya-Rundel, M. (2024). Capítulo 2. Pags. 61 a la 71.<br>- Ritchey F. (2008). Capítulo 4. Pags. 52 a la 61.<br>**Ayudantía de R N°5** |
+| 11 | **Clase:** Lunes, 27-10-2025 <br> **Laboratorio:** Lunes, 27-10-2025 | | - Visualización de datos: barras, histogramas y boxplots.<br>- Recomendaciones para la visualización de datos cuantitativos. | **Control N°4**<br>(en clases)<br>**Tarea 3** | **Clase:**<br>- Moore, D. S. (2005). Capítulo 1. Pags. 3 a la 24.<br>**Ayudantía de R Nº6:**<br>- Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Capítulo 2. Data visualization. |
+| 12 | **Clase:** Lunes, 03-11-2025 <br> **Laboratorio:** Lunes, 03-11-2025 | Unidad 5: Estadística Descriptiva Bivariada | - Tipos de asociaciones entre variables según su naturaleza.<br>- Concepto de independencia.<br>- Construcción de estadísticos por grupo. | **Trabajo Práctico 2**<br>(3 semanas) | **Clase:**<br>- Moore, D. S. (2005). Capítulo 2. Pags. 98 a la 128.<br>**Ayudantía de R Nº7** |
+| 13 | **Clase:** Lunes, 10-11-2025 <br> **Laboratorio:** Lunes, 10-11-2025 | | - Construcción de tablas de contingencia.<br>- Control por tercera variable. | **Tarea 4** | **Clase:**<br>- Moore, D. S. (2005). Capítulo 2. Pags. 173 a la 183.<br>**Ayudantía de R N°8** |
+| 14 | **Clase:** Lunes, 17-11-2025 <br> **Ayudantía:** Lunes, 17-11-2025 | | - Visualizaciones bivariadas: barras, histogramas y boxplots.<br>- Medidas de asociación: Pearson, spearman, gamma.<br>- Más allá de lo descriptivo: la probabilidad como medida de incertidumbre.<br>- Recomendaciones para la visualización de datos cuantitativos. | **Control N°5**<br>(en clases) | **Clase:**<br>- Ritchey F. (2008). Capítulo 3. Pags. 78 a la 94.<br>- Moore, D. S. (2005). Capítulo 2. Pags. 97 a la 127.<br>- Moore, D. S. (2005). Capítulo 4. Pags. 270 a la 288.<br>- Moore, D. S. (2005). Capítulo 5. Pags. 344 a la 355.<br>- Urdinez, F., & Cruz, A. (2020). Capítulo 3. Visualización de datos.<br>**Ayudantía: Preparación de la solemne II** |
+| | Lunes, 24-11-2025 | | - Cierre del curso: uso de la estadística en ciencias sociales<br>- Sesiones de trabajo para el trabajo práctico II | | |
+| 16 | Lunes, 01-12-2025 | | **SOLEMNE II – CONTENIDO DE LA UNIDAD 4 Y 5** | | |
+| 17 | Lunes, 08-12-2025 | | **PRUEBA RECUPERATIVA** | | |
+| | | | **EXAMEN: FECHA POR CONFIRMAR** | | |  
 
 
-# VII. Bibliografía
+# IX. Bibliografía
 
-## VII.1 Bibliografía Obligatoria
+## IX.1. Bibliografía Obligatoria
 
-•	Cea D’Ancona, M. (2002). Análisis multivariable: teoría y práctica de la investigación Social. Madrid: Editorial Síntesis Sociológica.\
-•	Camarero (2017). Regresión Logística: Fundamentos y aplicación a la investigación sociológica\
-•	Darlington, R. B., & Hayes, A. F. (2017). Regression analysis and linear models: concepts, applications, and implementation. Guilford Press\
-•	Wickham, H. (2017). R para Ciencia de Datos https://es.r4ds.hadley.nz/index.html      
-•	Hair, J., Anderson, R., Tatham, R., & Black, W. (1999). Análisis multivariante. Madrid: Editorial Prentice Hall. \
-•	Husson, F., Pagès, J., & Lê, S. (2012). Análisis de datos con R. Escuela Colombiana de Ingenieria Julio Garavito.\
-•	Lizón, Á. (2006). Estadística y causalidad en la sociología empírica del XX. Papers, 80, 223-255. Universitat Autònoma de Barcelona, Departament de Sociologia.\
-•	Moore (2010) Estadística aplicada básica. Barcelona: Antoni Bosch\
-•	Wooldridge, J. M. (2008). Introducción a la econometría: un enfoque moderno. Paraninfo Cengage Learning.\
+-   Asún, R. (2006). Medir la realidad social: El sentido de la metodología cuantitativa. En M. Canales, *Metodologías de investigación Social. Introducción a los oficios* (págs. 31- 62). Santiago: LOM.
+-   Babbie, E. (1996) *Manual para la práctica de la investigación social*. Bilbao, España: Desclée De Brouwer.
+-   Babbie, E. (2000). *Fundamentos de la investigación social*. Cengage Learning Latin Am.
+-   Cea D’Ancona M. (1996) *Metodología Cuantitativa: Estrategias y Técnicas de Investigación Social*. Ed. Síntesis Sociológica, Madrid
+-   Diez, D. M., Barr, C. D., & Çetinkaya-Rundel, M. (2024). *OpenIntro Statistics*. Creative Commons.
+-   Hernández R., Fernández C. & Baptista P. (2010) *Metodología de la Investigación*. Mc Graw Hill
+-   Moore, D. S. (2005). *Estadística aplicada básica*. Antoni Bosch editor.
+-   Ritchey F. (2008) *Estadística para las ciencias sociales*. McGraw-Hill.
+-   Urdinez, F., & Cruz, A. (2020). *R for political data science: a practical guide*. CRC Press. Disponible en: <https://arcruz0.github.io/libroadp/>
+-   Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). *R for data science*. O'Reilly Media, Inc. Disponible en: <https://r4ds.hadley.nz/>
 
-## VII.2 Bibliografía complementaria
+## IX.2. Bibliografía Complementaria
 
-•	Alboukadel, K. (2017). Practical Guide to Principal Component Methods in R. STHDA. com, 152.\
-•	Darlington, R. B., & Hayes, A. F. (2017). Regression analysis and linear models: concepts, applications, and implementation. Guilford Press.\
-•	Everitt, B., & Hothorn, T. (2011). An introduction to applied multivariate analysis with R. Springer Science & Business Media.\
-•	Kassambara, A. (2017). Practical guide to cluster analysis in R: Unsupervised machine learning (Vol. 1). STHDA.\
+-   Çetinkaya-Rundel, M., & Hardin, J. (2021). *Introduction to Modern Statistics*. OpenIntro. Disponible en: <https://openintro-ims.netlify.app/>
+-   Goldthorpe, J. H. (2017). *La sociología como ciencia de la población*. Madrid. Alianza Editorial.
+-   Healey, J. F. (2015). *The essentials of statistics: A tool for social research*. Cengage Learning.
 
+# X. Cláusula Ética y Normativas
 
-# VIII. Cláusula Ética
+## X.1. Cláusula Ética
 
-La Escuela establece severas sanciones para las faltas graves que los estudiantes realicen, tales como plagio o falsificación de documentos, señalados en el Reglamento del Estudiante de Pregrado en el Título XIII de las Conductas Contrarias a los Principios Universitarios.\ 
- 
-El Comité de Ética es la instancia responsable de revisar y resolver las situaciones que sean contrarias a los principios universitarios, en relación al desarrollo de conductas ilícitas que vicien los procesos de evaluación. Son definidas como conductas que vician una evaluación, todos aquellos actos que implican un rompimiento de los estándares éticos que un estudiante debe resguardar en una evaluación, distorsionando la apreciación de los conocimientos y habilidades reales que el estudiante posee (por ejemplo, copia y uso indebido de documento y/o medios electrónicos, modificación o falsificación de documentos, plagio en trabajos escritos).\ 
-Se consideran como fuentes de información que se deben citar, los textos e imágenes en formato electrónico o en papel, en todas sus modalidades: libros, diarios, documentos de trabajo, artículos académicos, etc.\ 
+La Escuela establece severas sanciones para las faltas graves que los estudiantes realicen, tales como plagio o falsificación de documentos, señalados en el Reglamento del Estudiante de Pre-grado en el Título XIII de las Conductas Contrarias a los Principios Universitarios.
 
+El Comité de Ética es la instancia responsable de revisar y resolver las situaciones que sean contrarias a los principios universitarios, en relación al desarrollo de conductas ilícitas que vicien los procesos de evaluación. Son definidas como conductas que vician una evaluación, todos aquellos actos que implican un rompimiento de los estándares éticos que un estudiante debe resguardar en una evaluación, distorsionando la apreciación de los conocimientos y habilidades reales que el estudiante posee (por ejemplo, copia y uso indebido de documento y/o medios electrónicos, modificación o falsificación de documentos, plagio en trabajos escritos).
 
-# IX. Cronograma de trabajo
+Se consideran como fuentes de información que se deben citar, los textos e imágenes en formato electrónico o en papel, en todas sus modalidades: libros, diarios, documentos de trabajo, artículos académicos, etc.
 
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| Fecha         | Contenidos                                  | Lecturas sugeridas                               | Hitos                                            |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 12 de agosto  | Introducción y Uso de modelos en ciencias   | - Lizón, Á. (2006). Estadística y causalidad     |                                                  |
-|               | sociales                                    |   en la sociología empírica del XX. Papers, 80,  |                                                  |
-|               |                                             |   223-255. Universitat Autònoma de Barcelona,    |                                                  |
-|               |                                             |   Departament de Sociologia.                     |                                                  |
-|               |                                             | - Esser, H. (2010). El problema de la            |                                                  |
-|               |                                             |   "sociología de las variables". En J. A.        |                                                  |
-|               |                                             |   Noguera (Ed.), Teoría sociológica analítica    |                                                  |
-|               |                                             |   Madrid: Centro de Investigaciones Sociológicas.|                                                  |
-|               |                                             | - Moore (2010)                                   |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 19 de agosto  | Continuación de uso de modelos en ciencias  | Moore (2010) Estadística aplicada básica.        |                                                  |
-|               | sociales y estadística bivariada            | Barcelona: Antoni Bosch. Cap 2.                  |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 26 de agosto  | Regresión Lineal Simple                     | Moore (2010) Estadística aplicada básica.        | Pauta Tarea 1 (Gestión de datos y estadística    |
-|               |                                             | Barcelona: Antoni Bosch. Cap 2.                  | bivariada)                                       |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 2 de sept.    | Regresión Lineal Simple                     | Moore (2010) Estadística aplicada básica.        | Entrega Tarea 1 (Gestión de datos y estadística  |
-|               |                                             | Barcelona: Antoni Bosch. Cap 2.                  | bivariada)                                       |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 9 de sept.    | Prueba Solemne 1                            |                                                  |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 16 de sept.   | Feriado                                     |                                                  |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 23 de sept.   | Regresión Lineal Multiple                   | - Cea D'Ancona, M. (2002). Análisis              |                                                  |
-|               |                                             |   multivariable: teoría y práctica de la         |                                                  |
-|               |                                             |   investigación Social. Madrid: Editorial        |                                                  |
-|               |                                             |   Síntesis Sociológica. Capítulo 2.              |                                                  |
-|               |                                             | - Wooldridge, J. M. (2008). Introducción a la    |                                                  |
-|               |                                             |   econometría: un enfoque moderno. Paraninfo     |                                                  |
-|               |                                             |   Cengage Learning. Cap 3.                       |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 30 de sept.   | Regresión Lineal Multiple                   | - Cea D'Ancona, M. (2002). Análisis              | Pauta Tarea 2 (Regresión lineal múltiple)        |
-|               |                                             |   multivariable: teoría y práctica de la         |                                                  |
-|               |                                             |   investigación Social. Madrid: Editorial        |                                                  |
-|               |                                             |   Síntesis Sociológica. Capítulo 2.              |                                                  |
-|               |                                             | - Wooldridge, J. M. (2008). Introducción a la    |                                                  |
-|               |                                             |   econometría: un enfoque moderno. Paraninfo     |                                                  |
-|               |                                             |   Cengage Learning. Cap 3.                       |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 7 de octubre  | Inferencia estadística y regresión          | Moore (2010) Estadística aplicada básica.        | Entrega Tarea 2 (Regresión lineal múltiple)      |
-|               |                                             | Barcelona: Antoni Bosch. Cap 7.                  |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 14 de oct.    | Regresión Logística I                       | - Cea D'Ancona, M. (2002). Análisis              | Pauta Informe 1 (regresión lineal múltiple o     |
-|               |                                             |   multivariable: teoría y práctica de la         | logística)                                       |
-|               |                                             |   investigación Social. Madrid: Editorial        |                                                  |
-|               |                                             |   Síntesis Sociológica. Capítulo 2.              |                                                  |
-|               |                                             | - Camarero (2017). Regresión Logística:          |                                                  |
-|               |                                             |   Fundamentos y aplicación a la investigación    |                                                  |
-|               |                                             |   sociológica                                    |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 21 de oct.    | Regresión Logística II                      | - Cea D'Ancona, M. (2002). Análisis              |                                                  |
-|               |                                             |   multivariable: teoría y práctica de la         |                                                  |
-|               |                                             |   investigación Social. Madrid: Editorial        |                                                  |
-|               |                                             |   Síntesis Sociológica. Capítulo 2.              |                                                  |
-|               |                                             | - Camarero (2017). Regresión Logística:          |                                                  |
-|               |                                             |   Fundamentos y aplicación a la investigación    |                                                  |
-|               |                                             |   sociológica                                    |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 28 de oct.    | Supuestos y chequeos de robustez            | - Darlington & Hayes 2016 Cap16 Detecting and    | Entrega Informe 1 (regresión lineal múltiple o   |
-|               |                                             |   Managing Irregularities                        | logística)                                       |
-|               |                                             | - Darlington & Hayes 2016 Cap12 Nonlinear        |                                                  |
-|               |                                             |   relationships                                  |                                                  |
-|               |                                             | - Wooldridge cap 6 Temas adicionales             |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 4 de nov.     | Análisis de Conglomerados (Método           | - Cea D'Ancona, M. (2002). Análisis              |                                                  |
-|               | jerárquico)                                 |   multivariable: teoría y práctica de la         |                                                  |
-|               |                                             |   investigación Social. Madrid: Editorial        |                                                  |
-|               |                                             |   Síntesis Sociológica. Capítulo 3.              |                                                  |
-|               |                                             | - Hair, J., Anderson, R., Tatham, R., & Black,   |                                                  |
-|               |                                             |   W. (1999). Análisis multivariante. Madrid:     |                                                  |
-|               |                                             |   Editorial Prentice Hall. Capítulo 9.           |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 11 de nov.    | Análisis de Conglomerados (Métodos de       | - Cea D'Ancona, M. (2002). Análisis              | Pauta Tarea 3 (conglomerados no jerárquicos)     |
-|               | K-medias)                                   |   multivariable: teoría y práctica de la         |                                                  |
-|               |                                             |   investigación Social. Madrid: Editorial        |                                                  |
-|               |                                             |   Síntesis Sociológica. Capítulo 3.              |                                                  |
-|               |                                             | - Hair, J., Anderson, R., Tatham, R., & Black,   |                                                  |
-|               |                                             |   W. (1999). Análisis multivariante. Madrid:     |                                                  |
-|               |                                             |   Editorial Prentice Hall. Capítulo 9.           |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 18 de nov.    | Análisis de Componentes Principales         | - Cea D'Ancona, M. (2002). Análisis              | Entrega Tarea 3 (conglomerados no jerárquicos)   |
-|               |                                             |   multivariable: teoría y práctica de la         |                                                  |
-|               |                                             |   investigación Social. Madrid: Editorial        | Pauta Informe 2 (Conglomerados o ACP)            |
-|               |                                             |   Síntesis Sociológica. Capítulo 5.              |                                                  |
-|               |                                             | - Husson, F., Pagès, J., & Lê, S. (2012).        |                                                  |
-|               |                                             |   Análisis de datos con R. Escuela Colombiana    |                                                  |
-|               |                                             |   de Ingenieria Julio Garavito. Capítulo 1.      |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 25 de nov.    | Análisis de Componentes Principales         | - Cea D'Ancona, M. (2002). Análisis              |                                                  |
-|               |                                             |   multivariable: teoría y práctica de la         |                                                  |
-|               |                                             |   investigación Social. Madrid: Editorial        |                                                  |
-|               |                                             |   Síntesis Sociológica. Capítulo 5.              |                                                  |
-|               |                                             | - Husson, F., Pagès, J., & Lê, S. (2012).        |                                                  |
-|               |                                             |   Análisis de datos con R. Escuela Colombiana    |                                                  |
-|               |                                             |   de Ingenieria Julio Garavito. Capítulo 1.      |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 2 de dic.     | Prueba Solemne 2                            |                                                  |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 9 de dic.     | Prueba Recuperativa y taller de vinculación |                                                  | Entrega Informe 2 (Conglomerados o ACP)          |
-|               | entre técnicas                              |                                                  |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-| 16 de dic.    | Examen                                      |                                                  |                                                  |
-+---------------+---------------------------------------------+--------------------------------------------------+--------------------------------------------------+
-# X. NORMATIVA DE PREVEVENCIÓN Y SANCIÓN DE ACCIONES DE DISCRIMINACIÓN, VIOLENCIA SEXUAL Y DE GÉNERO DE LA UNIVERSIDAD DIEGO PORTALES.
+## X.2. Normativa sobre Prevención y Sanción de Acciones de Violencia Sexual UDP
 
-Tal como señala esta normativa: 
-“La Universidad Diego Portales (UDP) promueve el pluralismo y la independencia crítica de quienes la integran y tienen como uno de sus principales objetivos el desarrollo integral de las personas que forman parte de ella y de la sociedad. En ese marco, la UDP promueve una convivencia reflexiva basada en el reconocimiento a la dignidad de las personas, la libertad de expresión, la libertad sexual, la identidad y expresión de género, y la autonomía.”
-Por lo tanto: “Quienes integren la Universidad tienen la obligación de conocer esta normativa y los protocolos, sitios web y programas que de ella se deriven. Particularmente responsables de su implementación serán las autoridades de la Universidad, quienes tendrán la primera obligación de hacer frente a situaciones que deñen a sus integrantes. Para lograr estos objetivos, se debe realizar la correcta difusión y socialización de la normativa.”
+### Párrafo I. De la violencia sexual
 
-Los detalles de la normativa pueden ser consultados en el siguiente
-enlace: [Normativa de prevención y sanción de acciones de violencia
-sexual](https://staticcl1.fidelizador.com/udportales/2022/enero/actualizacion-normativa/RESOLUCION_%20RECTORIA_%20N%3F03_%28APRUEBA_MODIF_NORMATIVA_VIOLENCIA%202022%29OK.pdf)
+**Artículo 1.** Serán consideradas conductas de violencia sexual todos aquellos comportamientos, palabras o gestos de connotación sexual dirigidos hacia una persona (o personas) que sea integrante, beneficiario/a o contraparte de la Universidad, que no hayan sido consentidos por ella y que atenten contra su dignidad o integridad psicológica y/o física. Dada la realidad cultural y social previamente señalada, aun cuando en una gran mayoría de situaciones estas conductas de violencia sexual son realizadas por hombres hacia mujeres, esta normativa contempla e incluye toda violencia sexual cometida por una persona o grupo de personas contra otra persona o grupo de personas, independiente de su género.
 
-# [Descargar programa en pdf](../files/Programa curso Analisis Avanzado de Datos I 2024.pdf/)
+**Artículo 2.** Se considerarán acciones de violencia sexual, sin que la enumeración sea taxativa, al acoso sexual, la agresión sexual, la exhibición, exposición y voyerismo sexual, el acecho sexual, verbalizaciones sexuales y, en general, cualquier interacción con significado sexual no consentido.
 
-<a Puedes descargar el programa apretando el siguiente botón class="btn btn-primary" href="../files/Programa curso Analisis Avanzado de Datos I 2024.pdf/" role="button"><i class="far fa-file-pdf"></i></a>
+**Artículo 3.** Se denominará acoso u hostigamiento sexual a las insinuaciones y/o requerimientos de carácter sexual, no deseados, no consentidos, y que afecten la dignidad e integridad de quien los recibe. El acoso sexual ocurre cuando se sugiere explícita o implícitamente que la aceptación o el rechazo de dichas insinuaciones y/o requerimientos de carácter sexual tendrá incidencia en las condiciones laborales, académicas, personales y/o psicológicas de una persona o grupo de personas al interior de la Universidad, o bien cuando la conducta tiene el propósito o el efecto de interferir en la convivencia, salud mental, rendimiento académico o laboral de una persona o grupo de personas, creando un ambiente intimidante u hostil para quien o quienes afecta.
+
+**Artículo 4.** Se considerará agresión sexual al acto o actos que se cometan mediante el uso de la fuerza, la amenaza del uso de la fuerza o cualquier otra forma de coacción, intimidación y/o amenaza física y/o verbal. En el marco de esta normativa, la agresión sexual incluye a la violación y el abuso sexual, sin perjuicio de la responsabilidad penal en que pueda incurrir su autor.
+
+**Artículo 5.** La exhibición, exposición y el voyerismo sexual son conductas que buscan violar la privacidad de una persona en el ámbito de la sexualidad. Incluye conductas como presenciar u observar relaciones o actividades sexuales de otra(s) persona (s); desnudarse parcial o totalmente delante de terceras personas; grabar, fotografiar, y distribuir sin el consentimiento de la(s) persona(s) involucrada(s), por cualquier medio, imágenes de personas semidesnudas o desnudas, teniendo relaciones sexuales y/o desarrollando conductas sexuales.
+
+**Artículo 6.** Son constitutivos de acecho sexual la acción o el conjunto de acciones con connotación sexual, dirigidas hacia una persona sin su consentimiento y que persiguen o tienen como efecto generar temor e inseguridad. Implica conductas como seguir, observar o vigilar a una persona, presentarse en su lugar de residencia, trabajo o estudio, llamar por teléfono, enviar mensajes, grabaciones, fotos, videos u objetos de connotación sexual, sin contar con el consentimiento de la persona que los recibe. Constituirá una agravante del acecho sexual el que la víctima de éste haya manifestado expresamente su rechazo hacia dicha acción o acciones, por cualquier medio.
+
+**Artículo 7.** Las acciones de violencia sexual ocurren sin el consentimiento de las personas afectadas. El consentimiento se entiende como el acuerdo o aceptación de participar en una actividad sexual específica. Este se manifiesta de manera inequívoca mediante palabras o actos concluyentes de una persona que está en condiciones de consentir y se encuentra en pleno uso de sus facultades. Diversos factores impactan en cómo el consentimiento es dado y recibido, incluyendo las dinámicas de desigualdad de poder. Dado que el consentimiento no puede ser obtenido en circunstancias de amenaza, coerción de cualquier tipo o la fuerza, acuerdos obtenidos en estos contextos no constituyen consentimiento. El consentimiento para un acto sexual particular no puede interpretarse como consentimiento para actos sexuales posteriores. Asimismo, dentro de un mismo acto, inicialmente consentido, puede existir retractación. Del mismo modo, los actos sexuales previos o la existencia de una relación de pareja tampoco constituyen por sí misma expresión de consentimiento.
+
+**Artículo 8.** El consumo de alcohol y/o de drogas podría reducir, e incluso eliminar la posibilidad de consentimiento. Considerando lo anterior, el hecho de encontrarse bajo la influencia del alcohol o de drogas, no exime de responsabilidad a quien incurre en conductas de violencia sexual, así como tampoco podrá presumirse la aceptación de la conducta por parte de la persona afectada por ésta.
+
+### Párrafo II. De la violencia hacia las diversidades sexuales y de género
+
+**Artículo 9.** Se entiende por violencia hacia la diversidad sexual y de género cualquier acción o conducta que atente contra la vida, integridad física o psíquica, o la libertad sexual de una persona y que se ejerce tomando en consideración el sexo, orientación sexual, identidad de género y/o la expresión de género de la persona. El concepto de violencia hacia la diversidad sexual y de género será entendido de manera amplia, abarcando de manera no taxativa conductas como las siguientes:
+1.  Violencia física de tipo sexual, como tocamientos, golpes, heridas y/o empujones.
+2.  Violencia psicológica, como humillaciones y/o amenazas.
+3.  Violencia social, como inducir al aislamiento y alejamiento de redes de apoyo.
+4.  Actos discriminatorios por identidad y/o expresión de género o por la orientación sexual de una persona.
+5.  Difusión de información relativa a su sexualidad y/o género.
+6.  No respetar el nombre social de una persona, cuando ha sido solicitado su uso.
+
+**Artículo 10.** Cualquier persona podrá presentar una denuncia cuando haya presenciado directamente actos o conductas discriminatorias en atención al género o contra la diversidad sexual. En este caso, la persona denunciante, aunque no sea víctima directa, deberá llevar adelante la denuncia de conformidad a lo establecido en los artículos 26 y siguientes de esta normativa.
+
+**Artículo 11.** Si la violencia hacia la diversidad sexual y de género se da en conjunto con algún tipo de violencia sexual, se considerará como una agravante. Sin embargo, la violencia hacia la diversidad sexual y de género es sancionable por sí sola, con independencia de si se realizó en conjunto con un acto de violencia sexual.
+
+**Artículo 12.** No es necesario que exista violencia sistemática, o actos reiterados de violencia para recurrir a esta normativa. Una sola acción puede constituir un acto de violencia.
+
+**Más información:** <https://genero.udp.cl/por-una-cultura-libre-de-discriminacion-y-violencia-2-2/normativa-de-prevencion-y-sancion-de-acciones-de-discriminacion-violencia-sexual-y-o-de-genero/>
+
+## X.3. Uso de Inteligencia Artificial (IA)
+
+El uso de cualquier tipo de herramientas de inteligencia artificial (IA) en este curso debe contar con la autorización explícita del profesor, ya que su utilización tiene que estar en sintonía con los objetivos de aprendizaje y el tipo de evaluaciones que se han definido en el presente programa de curso. Esto puede significar que ninguna o que algunas de las actividades permiten el uso de IA.
+
+Su uso sin autorización puede afectar el aprendizaje de habilidades claves de la asignatura y, además, constituir una falta ética, de acuerdo con lo establecido en el Reglamento de Facultad.
+
+Es importante realizar la consulta al profesor responsable si existen dudas sobre el uso de una herramienta de IA en una tarea o una evaluación.
+
+<p>Puedes descargar el programa apretando el siguiente botón:
+<a Puedes descargar el programa apretando el siguiente botón class="btn btn-primary" href="../files/Descripción y Visualización de Datos UDP 2º semestre 2025.pdf/" role="button"><i class="far fa-file-pdf"></i></a></p>
