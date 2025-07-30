@@ -38,7 +38,7 @@ font_size: "M"
 site_type: "Course"
 
 # Description for social sharing and search engines. If undefined, superuser role is used in place.
-description: "Análisis Avanzado de Datos I, por Gabriel Sotomayor López"
+description: "Descripción y visualización de datos, por Gabriel Sotomayor López"
 
 
 ############################
@@ -71,7 +71,7 @@ privacy_pack: false
 # Enable visitors to edit pages?
 #   `repo` defines the repository URL. `editable` defines which page types can be edited.
 edit_page:
-  repo_url: 'https://github.com/GabrielSotomayorl/aadii2024' 
+  repo_url: 'https://github.com/GabrielSotomayorl/dyv25' 
   content_dir: ''
   repo_branch: master
   editable:
@@ -109,12 +109,12 @@ instructor:
 
 
 ayudante1: 
-  name: Patricio Alarcón
-  email: patricio.alarcon@mail.udp.cl
+  name: Felipe Adasme
+  email: felipe.adasme@mail.udp.cl 
 
 ayudante2: 
-  name: Fernanda Hurtado
-  email: fernanda.hurtado@mail.udp.cl 
+  name: Francisca Hernández
+  email: francisca.hernandez_c@mail.udp.cl
   
 ayudante3: 
   name: Francisca Hernández
@@ -122,16 +122,16 @@ ayudante3:
 
 course:
   number: "SOC8224"
-  semester: "I° Semestre - 2024"
+  semester: "II° Semestre - 2025"
   days: |
     Plenaria: Lunes 8:30-09:50 /
     Taller sección 1: Lunes 10:00-11:20 /
     Taller sección 2: Lunes 11:30-12:50 /
     
-  location: "Sala 603/ Laboratorio de Computación 2° piso FCSH"
+  location: "Sala Pendiente"
   dates: "Ayudantia: Lunes 14:30-15:50"
   github: "GabrielSotomayorl"
-  copyrightYear: "2024. Web developed by Andrew Heiss and custom by"
+  copyrightYear: "2025. Web developed by Andrew Heiss and custom by"
 
 university: 
   name: Universidad Diego Portales
