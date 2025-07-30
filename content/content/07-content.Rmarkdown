@@ -1,0 +1,40 @@
+---
+title: "Análisis de regresión lineal múltiple III"
+linktitle: "7: Análisis de regresión lineal múltiple III"
+date: "2024-10-07"
+start_date: "2024-10-07"
+end_date: "2024-10-07"
+menu:
+  content:
+    parent: Contenido
+    weight: 7
+type: docs
+toc: true
+bibliography: "../../static/bib/references.bib"
+csl: "../../static/bib/chicago-fullnote-bibliography-no-bib.csl"
+slides: "07-slides"
+---
+
+```{r slides-videos, echo=FALSE, include=FALSE}
+source(here::here("R", "slide-tabs.R"))
+
+slide_details <- tibble::tribble(
+  ~title, ~slide, ~active,
+  "Análisis de regresión lineal múltiple III", "0", TRUE)
+```
+
+# Slides
+
+`r blogdown::shortcode("slide-buttons")`
+
+```{r show-slide-tabs, echo=FALSE, results="asis"}
+slide_tabs(slide_details, "/slides/07-slides.html")
+```
+
+{{% div fyi %}}
+**¿Cómo ocupar**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras estas viendo las slides, podrás ver los comandos específicos para navegar en ellas.
+{{% /div %}}
+
+
+
+

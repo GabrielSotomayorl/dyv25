@@ -1,0 +1,358 @@
+---
+title: "Clase 6 <br> Regresión Lineal Múltiple II"
+subtitle: "Análisis Avanzado de Datos"
+author: "Gabriel Sotomayor"
+format: 
+  revealjs:
+    theme: [dark, custom.scss]
+    slide-number: true
+    auto-fit: true
+    logo: images/logo.png
+editor: visual
+---
+
+## [Evaluaciones]{style="color:#FFFFFF;"} {.dark-background}
+
+**Tarea 2: 9 de octubre**\
+- Regresión lineal múltiple
+
+**Informe 1: 30 de Octubre**\
+- Regresión lineal múltiple o regresión logística
+
+# Recordatorio clase anterior
+
+## El problema del control estadístico. {.smaller background-color="white"}
+
+El control estadístico consiste en ajustar los análisis para "controlar" el efecto de otras variables (covariadas) que podrían estar influyendo en la relación entre las variables de interés.
+
+Ejemplo: En un estudio sobre diferencias salariales entre hombres y mujeres, las covariadas pueden incluir años de empleo o nivel educativo.
+
+Por otro lado podemos controlar estadísticamente: Control Ajuste matemático que no requiere manipulación directa de datos o exclusión de casos. Es lo que comunmente tendremos que hacer en el contexto de estudios observacionales.
+
+## Introducción al Modelo de Regresión Múltiple {.smaller background-color="white"}
+
+Un modelo de regresión múltiple examina la relación entre una **variable dependiente** y **varias variables independientes o predictores**.\
+La regresión múltiple permite **controlar otras variables** mientras se evalúa el efecto de una variable predictora específica.\
+Ejemplo: Si estudiamos la relación entre el ejercicio y la pérdida de peso, también podemos controlar la cantidad de alimentos consumidos para aislar su efecto.
+
+Ecuación básica del modelo:
+
+$$ Y = b_0 + b_1 X_1 + b_2 X_2 + \dots + b_k X_k + \epsilon $$ Donde $Y$ es la variable dependiente, $b_0$ es la constante o intercepto, $X_1, X_2, \dots X_k$ son las variables independientes, $b_1, b_2, \dots b_k$ son los coeficientes de regresión, y $\epsilon$ es el error.
+
+## Asociación Parcial {.smaller background-color="white"}
+
+La asociación parcial mide la relación entre dos variables manteniendo constantes otras variables.
+
+Ejemplo: En un estudio sobre pérdida de peso, podemos medir la relación entre la ingesta de alimentos y la pérdida de peso, controlando la cantidad de ejercicio realizado.
+
+## Objetivo de la sesión {.center background-color="white"}
+
+Profundizar en el concepto de control estadístico y el uso de regresión lineal múltiple con distintos tipos de variables independientes.
+
+## Ejemplo con CASEN {.smaller background-color="white"}
+
+Trabajaremos con CASEN utilizando como variable dependiente los ingresos del trabajo, y como variable predictora la edad y los años de escolaridad. Más adelante se utilizará el sexo y el nivel educacional por tramos para ejemplificar la introudcción de variables categóricas en modelos de regresión lineal múltiple. 
+
+```{r}
+library(haven)
+library(tidyverse)
+library(texreg)
+
+casen2 <- read_sav("data/casen.sav")
+
+casen2 %>% 
+  filter(!is.na(ytrabajocor)) %>% 
+  select(ytrabajocor, esc, edad, sexo, educ_simple_factor) %>% 
+  head()
+
+```
+
+
+## Ejemplo con CASEN {.smaller background-color="white"}
+
+
+```{r, results='asis'}
+modelo1 <- lm(ytrabajocor ~ esc , data = casen2)
+modelo2 <- lm(ytrabajocor ~ edad, data = casen2)
+modelo3 <- lm(ytrabajocor ~ esc + edad, data = casen2)
+
+htmlreg(list(modelo1,modelo2,modelo3))
+
+```
+
+## Ejemplo con CASEN {.smaller background-color="white"}
+
+
+```{r, results='asis'}
+library(corrplot)
+# Seleccionamos las variables del modelo
+variables_modelo <- casen2 %>% 
+  select(ytrabajocor, esc, edad)
+
+# Calculamos la matriz de correlación
+matriz_correlacion <- cor(variables_modelo, use = "complete.obs")
+
+# Generamos el corrplot
+corrplot(matriz_correlacion, method = "color", type = "upper", 
+         tl.col = "black", tl.srt = 45, 
+         addCoef.col = "black", number.cex = 0.7, 
+         cl.cex = 0.8, tl.cex = 0.8, mar = c(0,0,1,0),
+         title = "Matriz de Correlación")
+```
+## Comparación entre regresiones simples y múltiples {.smaller background-color="white"}
+
+- **Modelo 1 (Años de Escolaridad)**:
+  - El coeficiente beta para **Años de Escolaridad** en el modelo simple es **77,114**. Indica que por cada año adicional de escolaridad, los **Ingresos del Trabajo** esperados aumentan en 77,114 unidades.
+
+
+- **Modelo 2 (Edad)**:
+  - El coeficiente beta para **Edad** en el modelo simple es **-1,403**. Indica que por cada año adicional de edad, los **Ingresos del Trabajo** esperados disminuyen en 1,403 unidades.
+
+- **Modelo 3 (Años de Escolaridad + Edad)**:
+  - Al incluir ambas variables, el coeficiente para **Años de Escolaridad** aumenta a **88,022**, mientras que el coeficiente para **Edad** cambia drásticamente a **7,681**.
+
+
+---
+
+## Efecto de la correlación entre Años de Escolaridad y Edad {.smaller background-color="white"}
+
+- La correlación entre **Años de Escolaridad** y **Edad** es **-0.38**, lo que indica que a mayor edad, en promedio, los años de escolaridad son menores.
+- En el **Modelo 1**, el coeficiente de **Años de Escolaridad** es **77,114**, pero en el **Modelo 3** aumenta a **88,022** al incluir **Edad**, debido al ajuste por la correlación entre ambas variables.
+- En el **Modelo 2**, **Edad** tiene un coeficiente negativo (**-1,403**), pero en el **Modelo 3**, tras ajustar por los **Años de Escolaridad**, el coeficiente de **Edad** se vuelve positivo (**7,681**), lo que muestra que parte del efecto negativo inicial de la edad era por su relación con la escolaridad.
+
+
+---
+
+## Control estadístico y parcialización {.smaller background-color="white"}
+
+- **Control estadístico**:
+  - El proceso de **parcialización** consiste en aislar el efecto de una variable independiente sobre los **Ingresos del Trabajo**, controlando por las otras variables incluidas en el modelo.
+  - En el modelo múltiple, el coeficiente de cada variable refleja su **efecto neto** después de ajustar por las demás variables en el modelo.
+
+- **Comparación de los modelos**:
+  - Los modelos simples no muestran apropiadamente el efecto de las variables al no tener en cuenta las relaciones entre ellas.
+  - El modelo múltiple, al incluir ambas variables, da una imagen más completa y precisa del impacto de cada predictor, lo que se refleja en los coeficientes beta y el incremento en el valor de $R^2$ ajustado.
+
+---
+
+## Predictores categóricos en RLM {.smaller background-color="white"}
+
+-   **Predictores dicotómicos**:
+    -   Las variables **dicotómicas** se integran directamente en el modelo. Deben ser recodificadas a valores 0 y 1.
+    -   Cada valor representa una categoría, por ejemplo, 0 para "No" y 1 para "Sí".
+    -   **Interpretación**: El coeficiente beta asociado a esta variable representa el **cambio promedio** en la variable dependiente al cambiar de la categoría 0 a la categoría 1, **controlando por las demás variables** del modelo.
+-   **Transformación de predictores politómicos**:
+    -   Las variables **politómicas** (más de dos categorías) deben transformarse en un conjunto de **variables dicotómicas** o **dummies**.
+    -   Se crea una variable dummy para cada categoría, excepto una que se toma como **categoría de referencia**.
+
+## Ejemplo de sexo e ingresos del trabajo {.smaller background-color="white"}
+
+```{r, results='asis'}
+modelo1 <- lm(ytrabajocor ~ esc , data = casen2)
+modelo2 <- lm(ytrabajocor ~ factor(sexo), data = casen2)
+modelo3 <- lm(ytrabajocor ~ esc + factor(sexo), data = casen2)
+
+htmlreg(list(modelo1,modelo2,modelo3))
+
+```
+
+## Ejemplo de sexo e ingresos del trabajo (datos simulados) {.smaller background-color="white"}
+
+```{r}
+# Cargar librerías necesarias
+library(ggplot2)
+
+# Crear datos ficticios
+set.seed(42)
+n <- 100
+escolaridad <- sample(8:20, n, replace = TRUE)  # Años de escolaridad entre 8 y 20
+sexo <- sample(c("Mujer", "Hombre"), n, replace = TRUE)  # Sexo: "Mujer" o "Hombre"
+brecha_sexo <- 5000  # Diferencia de ingresos entre hombres y mujeres
+coef_esc <- 1500  # Aumento de ingresos por cada año adicional de escolaridad
+
+# Generar ingresos como función de escolaridad y sexo
+ingresos <- 20000 + escolaridad * coef_esc + ifelse(sexo == "Hombre", brecha_sexo, 0) + rnorm(n, 0, 5000)
+
+# Crear data frame
+df <- data.frame(Escolaridad = escolaridad, Sexo = sexo, Ingresos = ingresos)
+
+# Crear gráfico
+ggplot(df, aes(x = Escolaridad, y = Ingresos, color = Sexo)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +  # Líneas de regresión por grupo de sexo
+  labs(
+    title = "Relación entre Escolaridad e Ingresos por Sexo (Datos Ficticios)",
+    x = "Años de Escolaridad",
+    y = "Ingresos"
+  ) +
+  theme_minimal()
+
+```
+
+
+
+------------------------------------------------------------------------
+
+## Lógica y interpretación de predictores categóricos {.smaller background-color="white"}
+
+-   **Lógica de la transformación**:
+    -   El proceso de codificación convierte una variable con $k$ categorías en $k - 1$ variables dummies.
+    -   Cada una de estas dummies toma el valor 1 si la observación pertenece a esa categoría y 0 en caso contrario.
+    -   La **categoría de referencia** es aquella que no tiene variable dummy y sirve como punto de comparación.
+-   **Interpretación de los coeficientes**:
+    -   El coeficiente de cada dummy representa la **diferencia promedio** en la variable dependiente con respecto a la **categoría de referencia**.
+    -   Si el coeficiente es positivo, la media de la variable dependiente es **mayor** en esa categoría en comparación con la referencia; si es negativo, la media es **menor**.
+    -   Todos los efectos están ajustados por las demás variables en el modelo.
+
+## Ejemplo de niveles de escolaridad {.smaller background-color="white"}
+
+| educ_simple_factor    | dummy_media_completa | dummy_superior_tecnica | dummy_superior_profesional |
+|-----------------------|----------------------|------------------------|----------------------------|
+| Menos que Media        | 0                    | 0                      | 0                          |
+| Media Completa         | 1                    | 0                      | 0                          |
+| Superior Técnica       | 0                    | 1                      | 0                          |
+| Superior Profesional   | 0                    | 0                      | 1                          |
+
+
+## Ejemplo de niveles de escolaridad {.smaller background-color="white"}
+
+```{r, results='asis'}
+modelo1 <- lm(ytrabajocor ~ edad, data = casen2)
+modelo2 <- lm(ytrabajocor ~ factor(educ_simple_factor), data = casen2)
+modelo3 <- lm(ytrabajocor ~ edad + factor(educ_simple_factor), data = casen2)
+
+htmlreg(list(modelo1,modelo2,modelo3), custom.coef.names = c("Intercepto", "Edad", "Media completa (ref. menos que media)",
+                                                             "Superior Técnica", "Superior Profesional"),
+        single.row = T)
+
+```
+
+
+## Interpretación de los Coeficientes Beta en Regresión Lineal Múltiple {.smaller background-color="white"}
+
+-   **Tamaño y Dirección del Efecto**:
+    -   Cada coeficiente beta ($\beta$) indica el **cambio en la variable dependiente** por **cada unidad de cambio en la variable independiente** correspondiente.
+    -   **Dirección**:
+        -   $\beta > 0$: Indica un **efecto positivo** (la variable dependiente aumenta).
+        -   $\beta < 0$: Indica un **efecto negativo** (la variable dependiente disminuye).
+-   **Controlando por las demás variables del modelo**:
+    -   El valor de $\beta$ refleja el **efecto neto** de la variable independiente, es decir, **ajustado por todas las otras variables** incluidas en el modelo.
+    -   Permite evaluar el efecto **aislado** de cada variable independiente mientras se **controlan** los posibles efectos de las demás.
+
+-----------------
+
+
+
+
+
+
+## Interpretación de Coeficientes Beta para Variables Categóricas {.smaller background-color="white"}
+
+-   **Diferencia con la Categoría de Referencia**:
+    -   El coeficiente beta para una variable categórica representa la **diferencia promedio** en la variable dependiente entre el grupo correspondiente y la **categoría de referencia**.
+    -   Si $\beta$ es positivo, indica que el grupo en cuestión tiene una **mayor** media en comparación con la categoría de referencia. Si $\beta$ es negativo, la media es **menor**.
+-   **Controlando por las demás variables del modelo**:
+    -   Al igual que en las variables continuas, los efectos están **ajustados** por las demás variables independientes, lo que permite interpretar el efecto de la categoría como si las otras variables permanecieran **constantes**.
+
+## $R^2$ en Regresión Lineal Múltiple {.smaller background-color="white"}
+
+-   **Definición de** $R^2$:
+    -   El $R^2$ mide la proporción de la **variabilidad explicada** por el modelo en relación a la variabilidad total.
+    -   Se interpreta como el porcentaje de la variación en la variable dependiente que es explicado por las variables independientes.
+
+$$ R^2 = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2} $$ - Donde: - $\hat{y}_i$ son los valores predichos. - $y_i$ son los valores observados. - $\bar{y}$ es el promedio de la variable dependiente.
+
+-   **Limitaciones**:
+    -   El $R^2$ puede aumentar al agregar más predictores, incluso si no aportan significativamente al modelo.
+
+------------------------------------------------------------------------
+
+## $R^2$ Ajustado y su Utilidad {.smaller background-color="white"}
+
+   -   El $R^2$ ajustado corrige la sobreestimación del $R^2$ al penalizar por el número de predictores en el modelo.
+   -   Tiene en cuenta tanto el **número de predictores** como el **tamaño de la muestra**.
+    
+-   **Cálculo**:
+    -   $$ R^2_{ajustado} = 1 - \left( \frac{(1 - R^2)(n - 1)}{n - k - 1} \right) $$
+    -   Donde:
+        -   $n$ es el número de observaciones.
+        -   $k$ es el número de predictores en el modelo.
+
+    -   A diferencia del $R^2$, el $R^2$ ajustado **disminuye** si se agregan predictores que no mejoran el modelo, ayudando a evitar el sobreajuste.
+    -   Es más útil cuando se compara la calidad de diferentes modelos con un número distinto de predictores.
+
+## Evaluación docente intermedia {.smaller background-color="white"}
+
+Se está realizando el proceso de evaluación docente intermedia, por lo que les solicitamos que puedan contestar el siguiente formulario:
+
+<https://forms.gle/xDGewTRR5yHZkZZt9>
+
+![](img/06/qr.jpg)
+## Profundización sobre el proceso de parcialización {.smaller background-color="white"}
+
+En un **modelo de regresión múltiple**, queremos entender cómo varios predictores afectan una variable dependiente, **manteniendo constante** el efecto de los demás.
+
+- Esto significa que el coeficiente de un predictor **no refleja el efecto directo de la variable original**, sino lo que queda de esa variable una vez que hemos controlado el efecto de los otros predictores.
+- Este proceso de **"limpiar" los efectos de otras variables** se llama **parcialización**.
+
+## ¿Qué es la Parcialización? {.smaller background-color="white"}
+
+Cuando dos variables predictoras están relacionadas entre sí (por ejemplo, **escolaridad** y **edad**), sus efectos pueden estar mezclados.
+
+- **Parcialización** es el proceso de "separar" el efecto de una variable del efecto de las otras.
+- El resultado es un **residuo parcial**, que refleja solo la parte de la variable que no está explicada por los otros predictores.
+
+## Ejemplo con CASEN {background-color="white"}
+
+```{r, echo=TRUE, eval=FALSE}
+casen2p<-casen2 %>% 
+  select(ytrabajocor, edad, esc) %>% 
+  filter(!is.na(ytrabajocor) & !is.na(esc) & !is.na(edad))
+
+mod_esc <- lm(esc ~ edad, data = casen2p)
+mod_edad <- lm(edad ~ esc, data = casen2p)
+
+casen2pp<-data.frame(casen2p,  mod_esc$residuals, mod_edad$residuals)
+print(casen2pp)
+```
+## Ejemplo con CASEN {.smaller background-color="white"}
+
+```{r, echo=F, eval=T}
+casen2p<-casen2 %>% 
+  select(ytrabajocor, edad, esc) %>% 
+  filter(!is.na(ytrabajocor) & !is.na(esc) & !is.na(edad))
+
+mod_esc <- lm(esc ~ edad, data = casen2p)
+mod_edad <- lm(edad ~ esc, data = casen2p)
+
+casen2pp<-data.frame(casen2p,  mod_esc$residuals, mod_edad$residuals)
+print(casen2pp)
+```
+
+## Ejemplo con CASEN {background-color="white"}
+```{r, echo=TRUE, eval=FALSE}
+
+htmlreg(list(lm(ytrabajocor ~ mod_esc.residuals  , data = casen2pp),
+             lm(ytrabajocor ~ mod_edad.residuals  , data = casen2pp),
+             lm(ytrabajocor ~  esc + edad , data = casen2p)))
+```
+ 
+
+
+## Ejemplo con CASEN {.smaller background-color="white"}
+```{r, results='asis'}
+
+htmlreg(list(lm(ytrabajocor ~ mod_esc.residuals  , data = casen2pp),
+               lm(ytrabajocor ~ mod_edad.residuals  , data = casen2pp),
+lm(ytrabajocor ~  esc + edad , data = casen2p)))
+```
+ 
+
+
+## Ejemplo con CASEN {.smaller background-color="white"}
+
+Con el fin de comprender la lógica del proceso de parcialziación, hacemos una regresión simple de cada predictor (e.g., escolaridad) sobre los otros predictores (e.g., edad), obteniendo los residuos de estas regresiones.
+
+Los **residuos** obtenidos son la parte de la variable que no está correlacionada con los otros predictores. Estos se utilizan en lugar de las variables originales en la regresión múltiple.
+
+Al realizar una regresión de la variable dependiente (e.g., ingresos) sobre los residuos de los predictores ajustados, obtenemos los mismos coeficientes y resultados que en una regresión múltiple tradicional.

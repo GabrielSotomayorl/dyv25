@@ -1,0 +1,167 @@
+lessons:
+  - title: 'Análisis avanzado de datos I'
+    header: True
+
+  - title: '<span class="content-title">Unidad 1. Uso de modelos estadísticos en Ciencias Sociales</span>'
+    date: "12 - 26 de agosto"
+    date_start: "12 agosto"
+    date_end: "26 agosto"
+    bg: 1
+    
+  - title: '• Introducción y Uso de modelos en ciencias sociales'
+    session: "Sesión 1"
+    date: "12 agosto"
+    content: "01-content"
+    example: "01-practico"
+    bg: 1
+
+  - title: '• Continuación de uso de modelos en ciencias sociales y estadística bivariada'
+    session: "Sesión 2"
+    date: "19 agosto"
+    content: "02-content"
+    example: "02-practico"
+    bg: 1
+    bottomborder: True
+
+
+
+  - title: '<span class="content-title">Unidad 2. Modelo de Regresión Lineal Múltiple</span>'
+    date: "2 de septiembre - 7 de octubre"
+    date_start: "2 septiembre"
+    date_end: "7 octubre"
+    bg: 2
+
+  - title: '• Regresión Lineal Simple I'
+    session: "Sesión 3"
+    date: "26 agosto"
+    content: "03-content"
+    example: "03-practico"
+    bg: 2
+
+
+  - title: '• Regresión Lineal Simple II'
+    session: "Sesión 4"
+    date: "2 septiembre"
+    content: "04-content"
+    example: "04-practico"
+    bg: 2
+    
+  - title: '• Prueba Solemne 1'
+    session: "Sesión 5"
+    date: "9 septiembre"
+    bg: 2
+    
+  - title: '**• Feriado**'
+    session: "Sesión -"
+    date: "16 septiembre"
+    bg: 2
+
+  - title: '• Regresión Lineal Múltiple I'
+    session: "Sesión 6"
+    date: "23 septiembre"
+    content: "05-content"
+    example: "05-practico"
+    bg: 2
+
+  - title: '• Regresión Lineal Múltiple II'
+    session: "Sesión 7"
+    date: "30 septiembre"
+    # content: "06-content"
+    # example: "06-practico"
+    bg: 2
+
+  - title: '• Inferencia estadística y regresión'
+    session: "Sesión 8"
+    date: "7 octubre"
+    content: "07-content"
+    example: "07-practico"
+    bg: 2
+    bottomborder: True
+
+  - title: '<span class="content-title">Unidad 3. Modelos de Regresión Logística Binaria</span>'
+    date: "14 - 28 de octubre"
+    date_start: "14 octubre"
+    date_end: "28 octubre"
+    bg: 1
+    
+  - title: '• Regresión Logística I'
+    session: "Sesión 9"
+    date: "14 octubre"
+    content: "08-content"
+    example: "08-practico"
+    bg: 1
+
+  - title: '• Regresión Logística II'
+    session: "Sesión 10"
+    date: "21 octubre"
+    content: "08-content"
+    example: "08-practico"
+    bg: 1
+
+  - title: '• Supuestos y chequeos de robustez'
+    session: "Sesión 11"
+    date: "28 octubre"
+    content: "10-content"
+    example: "10-practico"
+    bg: 1
+    bottomborder: True
+
+  - title: '<span class="content-title">Unidad 4. Análisis de Conglomerados</span>'
+    date: "4 - 11 de noviembre"
+    date_start: "4 noviembre"
+    date_end: "11 noviembre"
+    bg: 2
+
+  - title: '• Análisis de Conglomerados (Método jerárquico)'
+    session: "Sesión 12"
+    date: "4 noviembre"
+    content: "11-content"
+    example: "11-practico"
+    bg: 2
+
+  - title: '• Análisis de Conglomerados (Métodos de K-medias)'
+    session: "Sesión 13"
+    date: "11 noviembre"
+    content: "12-content"
+    example: "12-practico"
+    bg: 2
+    bottomborder: True
+
+  - title: '<span class="content-title">Unidad 5. Análisis de Componentes Principales</span>'
+    date: "18 - 25 de noviembre"
+    date_start: "18 noviembre"
+    date_end: "25 noviembre"
+    bg: 1
+
+  - title: '• Análisis de Componentes Principales I'
+    session: "Sesión 14"
+    date: "18 noviembre"
+    content: "13-content"
+    example: "13-practico"
+    bg: 1
+
+  - title: '• Análisis de Componentes Principales II'
+    session: "Sesión 15"
+    date: "25 noviembre"
+    content: "14-content"
+    example: "14-practico"
+    bg: 1
+    bottomborder: True
+
+  - title: '• Prueba Solemne 2'
+    session: "Sesión 16"
+    date: "2 diciembre"
+    bg: 2
+    bottomborder: True
+
+  - title: '• Prueba Recuperativa y taller de vinculación entre técnicas'
+    session: "Sesión 17"
+    date: "9 diciembre"
+    bg: 1
+    bottomborder: True
+
+  - title: '• Examen'
+    session: "Sesión 18"
+    date: "16 diciembre"
+    bg: 2
+    bottomborder: True

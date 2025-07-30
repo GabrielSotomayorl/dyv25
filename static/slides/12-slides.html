@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="12-slides_files/libs/clipboard/clipboard.min.js"></script>
+<script src="12-slides_files/libs/quarto-html/tabby.min.js"></script>
+<script src="12-slides_files/libs/quarto-html/popper.min.js"></script>
+<script src="12-slides_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="12-slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="12-slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="12-slides_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="12-slides_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.3.450">
+
+  <meta name="author" content="Gabriel Sotomayor">
+  <title>Clase 12   Análisis de conglomerados II</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="12-slides_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="12-slides_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="12-slides_files/libs/revealjs/dist/theme/quarto.css">
+  <link href="12-slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="12-slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="12-slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="12-slides_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-titled.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-titled) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-titled .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-titled .callout-title  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-titled.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-titled.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-title {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-title {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-title {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-titled .callout-body > .callout-content > :last-child {
+    margin-bottom: 0.5rem;
+  }
+
+  .callout.callout-titled .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-titled) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-title {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-title {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-title {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-title {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-title {
+    background-color: #ffe5d0
+  }
+
+  </style>
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  
+  <script src="12-slides_files/libs/kePrint-0.0.1/kePrint.js"></script>
+  <link href="12-slides_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Clase 12 <br> Análisis de conglomerados II</h1>
+  <p class="subtitle">Análisis Avanzado de Datos</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Gabriel Sotomayor 
+</div>
+</div>
+</div>
+
+</section>
+<section>
+<section id="recordatorio-de-la-clase-anterior" class="title-slide slide level1 center">
+<h1>Recordatorio de la clase anterior</h1>
+
+</section>
+<section id="tipos-de-técncias-multivariadas" class="slide level2 smaller" data-background-color="white">
+<h2>Tipos de técncias multivariadas</h2>
+<p>En el análisis multivariable, las técnicas se pueden clasificar en <strong>técnicas de dependencia</strong> y <strong>técnicas de interdependencia</strong>. La selección de la técnica adecuada depende de la naturaleza de la pregunta de investigación y la relación entre las variables.</p>
+<p>Las <strong>técnicas de dependencia</strong> se utilizan cuando existe una clara distinción entre variables dependientes (o respuesta) y variables independientes (o predictoras). Es decir, hay una relación de dependencia que se quiere modelar y analizar. El objetivo principal de estas técnicas es estimar el efecto de las variables independientes sobre las dependientes.</p>
+<p>Las <strong>técnicas de interdependencia</strong> se aplican cuando no existe una distinción clara entre variables dependientes e independientes, o no es necesario establecer una relación de dependencia. En lugar de eso, todas las variables se tratan de igual forma, y el objetivo es descubrir patrones o estructuras ocultas en los datos.</p>
+</section>
+<section id="introducción-al-análisis-de-conglomerados" class="slide level2 smaller" data-background-color="white">
+<h2>Introducción al Análisis de Conglomerados</h2>
+<p>El análisis de conglomerados (o “cluster analysis”) es una técnica que se ubica dentro de las técnicas multivariables de clasificación. Su objetivo es agrupar datos en grupos llamados conglomerados, donde los integrantes de un conglomerado son lo más similares posibles entre sí y diferentes de los otros grupos.</p>
+<p>El análisis de conglomerados se utiliza ampliamente en diferentes disciplinas debido a su capacidad para identificar estructuras ocultas dentro de los datos. Esta técnica se enfoca principalmente en la exploración de datos, sin tener hipótesis a priori sobre la estructura de los mismos.</p>
+</section>
+<section id="objetivos-del-análisis-de-conglomerados" class="slide level2 smaller" data-background-color="white">
+<h2>Objetivos del Análisis de Conglomerados</h2>
+<ol type="1">
+<li><strong>Desarrollar tipologías o clasificaciones de datos.</strong>
+<ul>
+<li>Permite identificar patrones dentro de los datos y agruparlos según características compartidas.</li>
+</ul></li>
+<li><strong>Buscar esquemas conceptuales útiles para agrupar entidades.</strong>
+<ul>
+<li>Estos esquemas pueden utilizarse para comprender mejor el comportamiento de los datos y realizar predicciones.</li>
+</ul></li>
+<li><strong>Generalizar hipótesis a través de la exploración de datos.</strong>
+<ul>
+<li>Explorar datos sin hipótesis previas y generar nuevas hipótesis basadas en los conglomerados formados.</li>
+</ul></li>
+<li><strong>Validar tipos definidos a través de otros procedimientos.</strong>
+<ul>
+<li>Se pueden utilizar técnicas complementarias para validar la calidad de los conglomerados, como el análisis discriminante o pruebas estadísticas.</li>
+</ul></li>
+</ol>
+</section></section>
+<section>
+<section id="etapas-del-análisis-de-conglomerados" class="title-slide slide level1 center">
+<h1>Etapas del Análisis de conglomerados</h1>
+
+</section>
+<section id="pasos-principales-en-el-análisis-de-conglomerados" class="slide level2 smaller" data-background-color="white">
+<h2>Pasos Principales en el Análisis de Conglomerados</h2>
+<p>En la ejecución de un análisis de conglomerados se siguen una serie de fases que pueden resumirse en los siguientes pasos:</p>
+<ol type="1">
+<li><strong>Selección de Variables</strong>:
+<ul>
+<li>Selección de las variables que favorezcan la agrupación de los datos. Esta es una decisión clave y previa a cualquier análisis de conglomerados, ya que las variables elegidas determinan las características de clasificación que identifican a cada conglomerado.</li>
+</ul></li>
+<li><strong>Selección del Procedimiento de Conglomeración</strong>:
+<ul>
+<li>Decidir qué tipo de procedimiento de conglomeración se seguirá, ya sea jerárquico y/o no jerárquico, junto con el algoritmo específico de clasificación para la creación de los conglomerados.</li>
+</ul></li>
+</ol>
+</section>
+<section id="pasos-principales-en-el-análisis-de-conglomerados-1" class="slide level2 smaller" data-background-color="white">
+<h2>Pasos Principales en el Análisis de Conglomerados</h2>
+<ol start="3" type="1">
+<li><strong>Elección de Medidas de Distancia y Proximidad</strong>:
+<ul>
+<li>Elegir las medidas de distancia y proximidad para proceder a la formación de los conglomerados. Esta elección depende en gran medida de la naturaleza de las variables incluidas en el análisis. Para variables métricas, hay más opciones disponibles, mientras que para variables no métricas (nominales u ordinales), se utilizan medidas de co-ocurrencia.</li>
+</ul></li>
+<li><strong>Decisión sobre el Número de Conglomerados</strong>:
+<ul>
+<li>Determinar el número de conglomerados que se constituirán, basado en criterios estadísticos, visualizaciones (como dendogramas) o criterios teóricos.</li>
+</ul></li>
+</ol>
+</section>
+<section id="pasos-principales-en-el-análisis-de-conglomerados-2" class="slide level2 smaller" data-background-color="white">
+<h2>Pasos Principales en el Análisis de Conglomerados</h2>
+<ol start="5" type="1">
+<li><strong>Presentación e Interpretación de Resultados</strong>:
+<ul>
+<li>Presentar e interpretar los resultados obtenidos, tanto en su forma numérica (tablas de aglomeración) como gráfica (dendogramas y gráficos de témpanos).</li>
+</ul></li>
+<li><strong>Validación de Resultados</strong>:
+<ul>
+<li>Validar los resultados del análisis. Si los resultados no alcanzan la calificación de válidos, se deben introducir modificaciones para mejorar la solución, lo cual implica repetir el proceso desde el principio, revisando las decisiones previas.</li>
+</ul></li>
+</ol>
+<p>Estas fases se pueden agrupar en cuatro bloques principales: selección de variables, procedimiento de conglomeración, interpretación de resultados, y validación de los hallazgos, que se repiten iterativamente hasta alcanzar una solución adecuada.</p>
+</section>
+<section class="slide level2">
+
+
+<img data-src="img/11/esquema.png" class="r-stretch quarto-figure-center"></section>
+<section id="elección-de-variables" class="slide level2 smaller" data-background-color="white">
+<h2>Elección de Variables</h2>
+<p>La elección de las variables es crucial ya que determina la calidad de la agrupación. Las decisiones deben basarse en la naturaleza de los datos y el objetivo de la investigación:</p>
+<ul>
+<li><strong>Relevancia</strong>: Se deben elegir variables que sean relevantes para los objetivos del estudio.</li>
+<li><strong>Colinealidad</strong>: Evitar incluir variables muy correlacionadas, ya que pueden influir demasiado en la formación de los conglomerados.</li>
+<li><strong>Escalado</strong>: Variables con rangos muy diferentes deberían ser estandarizadas para evitar sesgos, ya que el análisis de conglomerados es muy sensible a las escalas de las variables.
+<ul>
+<li><strong>Estandarización</strong>: Convertir las variables a puntuaciones Z para que tengan media cero y desviación estándar uno.</li>
+</ul></li>
+</ul>
+</section></section>
+<section>
+<section id="métodos-jerárquicos-vs-no-jerárquicos" class="title-slide slide level1 center">
+<h1>Métodos Jerárquicos vs No Jerárquicos</h1>
+
+</section>
+<section id="métodos-jerárquicos" class="slide level2 smaller" data-background-color="white">
+<h2>Métodos Jerárquicos</h2>
+<p>Los <strong>métodos jerárquicos</strong> son aquellos en los que los conglomerados se forman de manera jerárquica. Esto significa que el proceso de agrupamiento se realiza en una serie de pasos sucesivos, donde cada observación se va uniendo progresivamente a conglomerados más grandes, o conglomerados se van dividiendo en grupos más pequeños. Los métodos jerárquicos pueden ser <strong>aglomerativos</strong> o <strong>divisivos</strong>.</p>
+</section>
+<section id="métodos-jerárquicos-1" class="slide level2 smaller" data-background-color="white">
+<h2>Métodos Jerárquicos</h2>
+<ul>
+<li><strong>Aglomerativos</strong>: Forman conglomerados empezando desde objetos individuales y uniéndolos en conglomerados mayores hasta que todos los objetos se encuentran en un solo conglomerado. Se utiliza un criterio de distancia para decidir qué objetos agrupar.
+<ul>
+<li>Algoritmos comunes: Método de Ward, Método del centroide, Distancias mínimas/máximas.</li>
+<li><strong>Ventaja</strong>: Permite observar la estructura completa de los conglomerados.</li>
+<li><strong>Desventaja</strong>: Puede ser computacionalmente costoso en grandes volúmenes de datos.</li>
+</ul></li>
+<li><strong>Divisivos</strong>: Comienzan con un solo conglomerado que incluye todos los objetos, y sucesivamente dividen los conglomerados hasta que cada objeto pertenece a su propio conglomerado.</li>
+</ul>
+</section>
+<section id="métodos-no-jerárquicos" class="slide level2 smaller" data-background-color="white">
+<h2>Métodos No Jerárquicos</h2>
+<p>Los <strong>métodos no jerárquicos</strong> no siguen un proceso jerárquico de agrupamiento, sino que intentan dividir el conjunto de datos en un número predefinido de conglomerados. Estos métodos asignan iterativamente los datos a conglomerados con base en una medida de similitud, buscando optimizar la homogeneidad dentro de los conglomerados y la heterogeneidad entre ellos.</p>
+<ul>
+<li><strong>K-Means</strong>: Agrupa datos en un número predefinido de grupos. El algoritmo selecciona aleatoriamente los centroides iniciales y, luego, cada dato se asigna al centroide más cercano. Los centroides se recalculan iterativamente hasta que no se producen más cambios significativos.
+<ul>
+<li>Se eligen los centroides aleatoriamente y los datos se reasignan iterativamente hasta minimizar la variación intragrupal.</li>
+<li><strong>Ventaja</strong>: Es eficiente en grandes conjuntos de datos.</li>
+<li><strong>Desventaja</strong>: Es sensible a los valores iniciales y puede converger a soluciones subóptimas si no se eligen buenos centroides.</li>
+</ul></li>
+</ul>
+</section>
+<section id="distancia-en-el-análisis-de-conglomerados" class="slide level2 smaller" data-background-color="white">
+<h2>Distancia en el Análisis de Conglomerados</h2>
+<ul>
+<li><p>Las decisiones sobre cuáles objetos combinar para formar un conglomerado se basan en estas matrices.</p></li>
+<li><p>Dependiendo del tipo de variables, se utilizan diferentes medidas para calcular las distancias o similaridades (por ejemplo, medidas euclidianas para variables continuas o coeficientes de Jaccard para datos binarios).</p></li>
+<li><p><strong>Tipos de Medidas</strong>:</p>
+<ul>
+<li><strong>Medidas de Distancia</strong>: Se enfocan en cuán diferentes son los objetos en términos de magnitudes. Ejemplo: Distancia euclidiana.</li>
+<li><strong>Medidas de Similaridad</strong>: Enfocadas en patrones comunes entre objetos. Ejemplo: Correlación de Pearson.</li>
+</ul></li>
+</ul>
+</section>
+<section id="distancia-euclidiana" class="slide level2 smaller" data-background-color="white">
+<h2>Distancia Euclidiana</h2>
+<ul>
+<li><p>La <strong>distancia euclidiana</strong> es la distancia “en línea recta” entre dos puntos en un espacio multidimensional, calculada según el Teorema de Pitágoras. Se utiliza mayormente para variables continuas.</p></li>
+<li><p><strong>Fórmula Matemática</strong>: La distancia euclidiana entre dos objetos (i, j) se calcula como: <span class="math display">\[ d_{ij} = \sqrt{\sum_{k=1}^{p} (x_{ik} - x_{jk})^2} \]</span></p>
+<ul>
+<li>Donde <span class="math inline">\(x_{ik}\)</span> y <span class="math inline">\(x_{jk}\)</span> son los valores de la variable <span class="math inline">\(k\)</span> para los objetos <span class="math inline">\(i\)</span> y <span class="math inline">\(j\)</span> respectivamente.</li>
+</ul></li>
+<li><p><strong>Propiedades</strong>:</p>
+<ul>
+<li><strong>Siempre positiva</strong>: La distancia siempre será mayor o igual a cero.</li>
+<li><strong>Valores Bajos</strong>: Indican que los objetos son más similares entre sí.</li>
+<li><strong>No tiene límite superior</strong>: La distancia puede ser tan grande como lo permitan los datos.</li>
+</ul></li>
+</ul>
+</section>
+<section id="distancia-euclidiana-1" class="slide level2 smaller" data-background-color="white">
+<h2>Distancia Euclidiana</h2>
+<ul>
+<li><strong>Distancia Euclidiana al Cuadrado</strong>: Frecuentemente usada en algoritmos de conglomerados como el método del centroide y el método de Ward. Se define como la suma de los cuadrados de las diferencias entre los valores de las variables de los objetos.
+<ul>
+<li><strong>Problema de Escalabilidad</strong>: Si las variables están en diferentes unidades de medida, las variables con valores mayores pueden influir más en el cálculo de la distancia. La solución común es la estandarización de las variables.</li>
+</ul></li>
+</ul>
+</section>
+<section id="estandarización" class="slide level2 smaller" data-background-color="white">
+<h2>Estandarización</h2>
+<ul>
+<li><p><strong>¿Cuándo Estandarizar?</strong>: La estandarización de las variables es recomendable cuando las variables tienen diferentes unidades de medida o rangos significativamente distintos. Por ejemplo, si una variable está medida en ingresos anuales (en miles) y otra en edad (en años), la variable con valores más altos dominará el cálculo de la distancia.</p></li>
+<li><p><strong>Efecto de la Estandarización</strong>:</p>
+<ul>
+<li><strong>Reducción de Influencia Desigual</strong>: La estandarización reduce la influencia de variables con grandes valores numéricos, asegurando que todas las variables contribuyan de manera equitativa al cálculo de la distancia.</li>
+<li><strong>Posibles Desventajas</strong>: La estandarización puede minimizar diferencias que podrían ser relevantes en el contexto del análisis. Esto es especialmente cierto cuando la variabilidad en una variable tiene un significado sustancial importante.</li>
+</ul></li>
+</ul>
+</section>
+<section id="obtrención-de-conglomerados" class="slide level2 smaller" data-background-color="white">
+<h2>Obtrención de conglomerados</h2>
+<p>A la elección de la medida de similaridad o de distancia le sigue la obtención de la solución de conglomerados, en conformidad con las diversas decisiones adoptadas. Es decir, el método de conglomeración, el algoritmo de clasificación y la medida de similaridad o distancia. Antes de proceder a la interpretación de los resultados, se debe dirimir una cuestión crucial: la referente al número de conglomerados a retener entre las distintas alternativas posibles de clasificación de los objetos de interés.</p>
+<p>En la conglomeración no jerárquica, la decisión sobre el número de conglomerados a retener es previa a la ejecución de cualquier análisis. En la conglomeración jerárquica, sin embargo, esta decisión se toma al final del análisis, una vez que todos los conglomerados han sido formados. De ahí que se incluya esta discusión en este apartado posterior a la exposición de decisiones clave previas al análisis de conglomerados.</p>
+</section>
+<section id="elección-del-número-de-conglomerados" class="slide level2 smaller" data-background-color="white">
+<h2>Elección del Número de Conglomerados</h2>
+<p>La finalidad de todo análisis de conglomerados es la clasificación de una serie de objetos en conglomerados (o grupos) homogéneos. Pero, ¿cuántos conglomerados se requieren para describir de forma precisa la similitud y la diversidad en una población?</p>
+<p>No existe una respuesta única para esta cuestión, pero existen varios procedimientos alternativos que se pueden aplicar para determinar el número idóneo de conglomerados:</p>
+<ul>
+<li><strong>Criterios Teóricos</strong>: Seguir algún criterio teórico que fundamente la elección de un número de conglomerados específico. Es recomendable probar diferentes soluciones de clasificación y luego elegir aquella que tenga mayor significado teórico y estadístico.</li>
+<li><strong>Coeficientes de Conglomeración</strong>: En la conglomeración jerárquica, se pueden observar los coeficientes de conglomeración, también llamados “coeficientes de fusión” o “coeficientes de aglomeración”. Estos coeficientes indican el valor numérico (medida de distancia o similitud) que propicia la unión de objetos para formar conglomerados. La solución idónea corresponde al número de conglomerados previo al “salto” apreciable en el valor del coeficiente de conglomeración.</li>
+<li><strong>Dendograma</strong>: Además, la información proporcionada por el dendograma es uno de los gráficos más característicos en la conglomeración y puede ser útil para la determinación del número de conglomerados</li>
+</ul>
+<p>Cuando se observan varias variaciones o “saltos” en los coeficientes, puede resultar difícil decidir cuál es relevante. Esta subjetividad es una crítica frecuente a los métodos de conglomeración jerárquica.</p>
+</section></section>
+<section>
+<section id="presentación-de-resultados-de-conglomerados" class="title-slide slide level1 center">
+<h1>Presentación de resultados de conglomerados</h1>
+
+</section>
+<section id="análisis-de-conglomerados-jerárquico" class="slide level2 smaller" data-background-color="white">
+<h2>Análisis de conglomerados Jerárquico</h2>
+<h3 id="historial-de-conglomeración">Historial de Conglomeración</h3>
+<ul>
+<li>El historial de conglomeración es una tabla que resume el proceso de constitución de los conglomerados.</li>
+<li>Incluye las siguientes columnas:
+<ul>
+<li><strong>Etapa</strong>: número de la etapa del análisis.</li>
+<li><strong>Objetos combinados</strong>: los dos objetos o conglomerados que se combinan en cada etapa.</li>
+<li><strong>Coeficiente</strong>: valor de la medida de distancia o similitud utilizada.</li>
+</ul></li>
+<li><strong>Interpretación del Historial</strong>:
+<ul>
+<li>Ayuda a determinar el número óptimo de conglomerados observando los saltos grandes en los coeficientes.</li>
+<li>Útil para identificar conglomerados atípicos que se unen en etapas tardías.</li>
+</ul></li>
+</ul>
+</section>
+<section id="análisis-de-conglomerados-jerárquico-1" class="slide level2 smaller" data-background-color="white">
+<h2>Análisis de conglomerados Jerárquico</h2>
+<h3 id="historial-de-conglomeración-1">Historial de Conglomeración</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   Paso Cluster1 Cluster2    Altura
+1     1       -3      -14 0.4412289
+2     2       -8       -9 0.4419112
+3     3      -10      -17 0.4962598
+4     4      -16        3 0.7013850
+5     5      -11      -12 0.7960683
+6     6       -2      -22 0.7978042
+7     7       -1       -5 0.8750157
+8     8      -20        2 0.9021514
+9     9      -18        4 0.9512569
+10   10        1        8 1.0842550
+11   11      -19        7 1.3545367
+12   12      -15        9 1.5607937
+13   13       -6        6 1.5690875
+14   14       10       12 1.8440775
+15   15      -13        5 2.1954467
+16   16       -7       11 2.6043262
+17   17       14       15 2.9425617
+18   18       13       16 2.9468935
+19   19      -21       18 4.3467653
+20   20       -4       17 4.9913026</code></pre>
+</div>
+</div>
+</section>
+<section id="análisis-de-conglomerados-jerárquico-2" class="slide level2 smaller" data-background-color="white">
+<h2>Análisis de conglomerados Jerárquico</h2>
+<h3 id="conglomerado-de-pertenencia">Conglomerado de Pertenencia</h3>
+<ul>
+<li>Tabla que muestra la asignación de objetos a conglomerados.</li>
+<li>Puede obtenerse para una única solución o un rango de soluciones definido previamente.</li>
+<li><strong>Utilidad</strong>: Permite conocer a qué conglomerado pertenece cada objeto, facilitando la interpretación del análisis.</li>
+</ul>
+</section>
+<section id="análisis-de-conglomerados-jerárquico-3" class="slide level2 smaller" data-background-color="white">
+<h2>Análisis de conglomerados Jerárquico</h2>
+<h3 id="conglomerado-de-pertenencia-1">Conglomerado de Pertenencia</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                          country conglomerado
+2                       Argentina            1
+5                        Barbados            1
+6                          Belize            2
+7                         Bolivia            3
+8                          Brazil            1
+11                          Chile            1
+13                     Costa Rica            1
+16                       Dominica            2
+17             Dominican Republic            2
+18                        Ecuador            2
+19                    El Salvador            2
+21                      Guatemala            2
+24                       Honduras            2
+25                        Jamaica            2
+26                         Mexico            2
+29                       Paraguay            2
+30                           Peru            2
+34                      St. Lucia            2
+36 St. Vincent and the Grenadines            1
+37                       Suriname            2</code></pre>
+</div>
+</div>
+</section>
+<section id="dendograma" class="slide level2 smaller" data-background-color="white">
+<h2>Dendograma</h2>
+<ul>
+<li>Muestra el proceso de aglomeración en un formato jerárquico.</li>
+<li>Ayuda a identificar el número de conglomerados adecuados.</li>
+<li><strong>Interpretación</strong>:
+<ul>
+<li>Las ramas más largas indican conglomerados que se formaron más tarde en el proceso, lo que puede ser un indicador de conglomerados menos homogéneos.</li>
+</ul></li>
+</ul>
+</section>
+<section id="dendograma-1" class="slide level2 smaller" data-background-color="white">
+<h2>Dendograma</h2>
+
+<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section></section>
+<section>
+<section id="análisis-de-conglomerados-no-jerárquico" class="title-slide slide level1 center">
+<h1>Análisis de Conglomerados No Jerárquico</h1>
+
+</section>
+<section id="tablas-de-resultados-no-jerárquico" class="slide level2 smaller" data-background-color="white">
+<h2>Tablas de Resultados No Jerárquico</h2>
+<h3 id="centros-de-los-conglomerados">Centros de los Conglomerados</h3>
+<ul>
+<li>Los <strong>centroides</strong> de cada conglomerado se calculan iterativamente.</li>
+<li>Se presenta información de los centros <strong>iniciales</strong> y <strong>finales</strong>.</li>
+<li>La medida de distancia utilizada para reasignar los objetos es la <strong>distancia euclídea</strong>.</li>
+<li><strong>Iteraciones</strong>:
+<ul>
+<li>Los centroides iniciales y finales normalmente no coinciden, reflejando la evolución de la composición de los conglomerados durante el proceso.</li>
+<li>Cada iteración busca minimizar la distancia total dentro de los conglomerados.</li>
+</ul></li>
+</ul>
+</section>
+<section id="tablas-de-resultados-no-jerárquico-1" class="slide level2 smaller" data-background-color="white">
+<h2>Tablas de Resultados No Jerárquico</h2>
+<h3 id="centros-de-los-conglomerados-1">Centros de los Conglomerados</h3>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed" data-quarto-postprocess="true" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Caracterización de los Conglomerados Ideológicos</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Conglomerado</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adopción Homoparental</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Aborto</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rol del Estado en Educación</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Capitalización Individual Pensiones</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Restricciones Migratorias</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Educación Sexual (Padres)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Restricción a Empresas Contaminantes</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Gasto Social Focalizado</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Cantidad de Individuos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3.365796</td>
+<td style="text-align: right;">2.000000</td>
+<td style="text-align: right;">4.004751</td>
+<td style="text-align: right;">2.546318</td>
+<td style="text-align: right;">4.237530</td>
+<td style="text-align: right;">2.382423</td>
+<td style="text-align: right;">3.543943</td>
+<td style="text-align: right;">2.703088</td>
+<td style="text-align: right;">421</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3.893424</td>
+<td style="text-align: right;">2.909297</td>
+<td style="text-align: right;">4.074830</td>
+<td style="text-align: right;">3.682540</td>
+<td style="text-align: right;">4.281179</td>
+<td style="text-align: right;">3.977324</td>
+<td style="text-align: right;">3.782313</td>
+<td style="text-align: right;">3.698413</td>
+<td style="text-align: right;">441</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3.920981</td>
+<td style="text-align: right;">4.152589</td>
+<td style="text-align: right;">4.305177</td>
+<td style="text-align: right;">2.629428</td>
+<td style="text-align: right;">3.901907</td>
+<td style="text-align: right;">2.258856</td>
+<td style="text-align: right;">3.822888</td>
+<td style="text-align: right;">2.795640</td>
+<td style="text-align: right;">367</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.714286</td>
+<td style="text-align: right;">1.864169</td>
+<td style="text-align: right;">3.946136</td>
+<td style="text-align: right;">3.252927</td>
+<td style="text-align: right;">4.283372</td>
+<td style="text-align: right;">3.950820</td>
+<td style="text-align: right;">3.592506</td>
+<td style="text-align: right;">3.407494</td>
+<td style="text-align: right;">427</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</section>
+<section id="tablas-de-resultados-no-jerárquico-2" class="slide level2 smaller" data-background-color="white">
+<h2>Tablas de Resultados No Jerárquico</h2>
+<h3 id="tabla-anova">Tabla ANOVA</h3>
+<ul>
+<li>Evalúa la contribución de cada variable a la diferenciación entre los conglomerados.</li>
+<li>La tabla ANOVA incluye:
+<ul>
+<li><strong>Medias Cuadráticas entre conglomerados</strong> y <strong>dentro de conglomerado</strong>.</li>
+<li><strong>Estadístico F</strong>: indica qué variables diferencian mejor entre los conglomerados.</li>
+</ul></li>
+<li><strong>Interpretación</strong>:
+<ul>
+<li>Un <strong>valor F</strong> alto sugiere que la variable tiene un papel importante en la diferenciación de los conglomerados.</li>
+<li><strong>Significancia estadística</strong>: Se utiliza para identificar qué variables deben ser consideradas al interpretar las características distintivas de los conglomerados.</li>
+</ul></li>
+</ul>
+</section>
+<section id="tablas-de-resultados-no-jerárquico-3" class="slide level2 smaller" data-background-color="white">
+<h2>Tablas de Resultados No Jerárquico</h2>
+<h3 id="tabla-anova-1">Tabla ANOVA</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># ANOVA para la variable Aborto</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>anova_aborto <span class="ot">&lt;-</span> <span class="fu">aov</span>(c37_02 <span class="sc">~</span> conglomerado, <span class="at">data =</span> elsoc)</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="fu">summary</span>(anova_aborto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Df Sum Sq Mean Sq F value Pr(&gt;F)  
+conglomerado    1    7.6   7.605    5.43 0.0199 *
+Residuals    1654 2316.2   1.400                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># ANOVA para la variable Rol del Estado en Educación</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>anova_educacion <span class="ot">&lt;-</span> <span class="fu">aov</span>(c37_03 <span class="sc">~</span> conglomerado, <span class="at">data =</span> elsoc)</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="fu">summary</span>(anova_educacion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Df Sum Sq Mean Sq F value Pr(&gt;F)
+conglomerado    1      0  0.0080   0.012  0.913
+Residuals    1654   1109  0.6703               </code></pre>
+</div>
+</div>
+</section>
+<section id="gráficos-no-jerárquicos" class="slide level2 smaller" data-background-color="white">
+<h2>Gráficos No Jerárquicos</h2>
+<h3 id="ubicación-de-conglomerados-y-centros">Ubicación de Conglomerados y Centros</h3>
+<ul>
+<li>Representación de la ubicación de cada conglomerado y sus centros.</li>
+<li>Muestra claramente la distribución espacial de los conglomerados.</li>
+<li><strong>Utilidad</strong>:
+<ul>
+<li>Facilita la identificación de conglomerados bien separados, indicando una buena partición de los datos.</li>
+<li>Permite identificar conglomerados solapados que podrían requerir un ajuste del número de conglomerados.</li>
+</ul></li>
+</ul>
+</section>
+<section id="gráficos-no-jerárquicos-1" class="slide level2 smaller" data-background-color="white">
+<h2>Gráficos No Jerárquicos</h2>
+<h3 id="ubicación-de-conglomerados-y-centros-1">Ubicación de Conglomerados y Centros</h3>
+<div class="cell">
+<div class="cell-output-display">
+<p><img data-src="12-slides_files/figure-revealjs/unnamed-chunk-7-1.png" width="960"></p>
+</div>
+</div>
+<p><img src="images/logo.png" class="slide-logo"></p>
+<div class="footer footer-default">
+
+</div>
+</section></section>
+    </div>
+  </div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="12-slides_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="12-slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="12-slides_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="12-slides_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="12-slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="12-slides_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="12-slides_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="12-slides_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="12-slides_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="12-slides_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'smaller': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button', {
+        text: function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+      });
+      clipboard.on('success', function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      });
+      function tippyHover(el, contentFn) {
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start'
+        };
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          return note.innerHTML;
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

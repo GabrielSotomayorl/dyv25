@@ -1,0 +1,166 @@
+---
+title: "Análisis de regresión lineal múltiple III"
+linktitle: "7: Análisis de regresión lineal múltiple III"
+date: "2024-10-07"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 7
+type: docs
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r set up, echo = F}
+knitr::opts_knit$set(sql.max.print = 10)
+```
+
+## 0. Objetivo del práctico
+
+En este práctico aprenderemos a aplicar la **regresión lineal múltiple** en R, utilizando variables continuas para entender cómo influencian una variable dependiente. Además, aprenderemos a calcular manualmente los **estadísticos de significancia** y el **R²** y **R² ajustado**, para profundizar en la comprensión del modelo y la interpretación de los coeficientes.
+
+## 1. Cargar los datos de la encuesta CASEN
+
+Primero, cargamos los datos de la CASEN y seleccionamos las variables que nos interesan: los ingresos del trabajo, los años de escolaridad y la edad.
+
+```{r}
+if (!require(pacman)) {
+  install.packages("pacman")
+}
+
+pacman::p_load(haven, dplyr, texreg, corrplot)
+
+temp <- tempfile() #Creamos un archivo temporal
+download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2022/Base%20de%20datos%20Casen%202022%20SPSS.sav.zip",temp) #descargamos los datos
+casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav")) #cargamos los datos
+unlink(temp); remove(temp) #eliminamos el archivo temporal
+
+casen2 <- casen %>% 
+  select(esc, ytrabajocor, edad) 
+```
+
+## 2. Cálculo manual de $R^2$ y $R^2$ ajustado
+
+Primero realizamos una regresión lineal múltiple para estimar el efecto de la escolaridad y la edad sobre los ingresos del trabajo.
+
+```{r}
+# Realizamos la regresión
+modelo3 <- lm(ytrabajocor ~ esc + edad, data = casen2)
+summary(modelo3)
+```
+
+A continuación, calculamos manualmente el $R^2$ y el $R^2$ ajustado. Recordemos que el $R^2$ mide la proporción de la variabilidad explicada por el modelo, mientras que el $R^2$ ajustado penaliza por el número de predictores para evitar el sobreajuste.
+
+```{r}
+# Calculo manual de R^2 y R^2 ajustado
+SSR <- sum((fitted(modelo3) - mean(casen2$ytrabajocor, na.rm = TRUE))^2)  # Suma de cuadrados explicada
+SST <- sum((casen2$ytrabajocor - mean(casen2$ytrabajocor, na.rm = TRUE))^2, na.rm = TRUE) # Suma total de cuadrados
+R2 <- SSR / SST
+
+n <- nrow(casen2 %>% filter(!is.na(ytrabajocor)))  # Número de observaciones
+k <- length(coef(modelo3)) - 1  # Número de predictores
+R2_ajustado <- 1 - ((1 - R2) * (n - 1) / (n - k - 1))
+
+cat("R^2: ", R2, "\n")
+cat("R^2 Ajustado: ", R2_ajustado, "\n")
+```
+
+### Interpretación de $R^2$ no ajustado
+El valor de $R^2$ obtenido fue 0.150, lo que indica que el 15% de la variabilidad en los ingresos del trabajo es explicada por las variables independientes del modelo: escolaridad y edad. Este valor nos da una idea de la capacidad del modelo para explicar la variabilidad de los ingresos, aunque no tiene en cuenta el número de predictores, lo que puede llevar a una sobreestimación si se añaden muchas variables sin una contribución sustancial.
+
+
+## 3. Cálculo manual de los estadísticos de significancia
+
+Para evaluar la significancia de los coeficientes de la regresión, calculamos manualmente el valor t y el valor p asociado para cada coeficiente.
+
+```{r}
+# Extraemos los coeficientes y errores estándar
+betas <- coef(modelo3)
+SE <- summary(modelo3)$coefficients[, "Std. Error"]
+
+# Calculamos los valores t y p
+valores_t <- betas / SE
+valores_p <- 2 * pt(-abs(valores_t), df = n - k - 1)
+
+# Imprimimos los resultados
+coeficientes <- data.frame(Coefficient = betas, Std_Error = SE, t_value = valores_t, p_value = valores_p)
+print(coeficientes)
+```
+
+## 4. Presentación de la tabla del modelo
+
+Utilizamos `texreg` para presentar la tabla del modelo de manera más amigable.
+
+```{r, results='asis'}
+htmlreg(list(modelo3))
+```
+
+## 5. Interpretación de los coeficientes
+
+**Interpretación del Modelo de Regresión**
+
+Este modelo examina cómo la escolaridad y la edad afectan los ingresos del trabajo. A continuación se presentan las interpretaciones de los coeficientes principales:
+
+### Coeficientes del Modelo
+
+**Intercepto ($b_0$)**:  
+El intercepto de -742,740.49 indica el valor esperado de los ingresos cuando tanto la escolaridad como la edad son cero, lo cual no tiene una interpretación práctica debido a la falta de sentido de esta situación en el contexto real. Este valor es estadísticamente significativo ($p < 0.001$).
+
+**Escolaridad ($b_1$)**:  
+El coeficiente para escolaridad es 88,022.20, indicando que, por cada año adicional de escolaridad, los ingresos del trabajo aumentan en promedio 88,022.20 unidades monetarias, manteniendo constante la edad. Este coeficiente es altamente significativo ($p < 0.001$).
+
+**Edad ($b_2$)**:  
+El coeficiente para la edad es 7,681.28, lo que implica que cada año adicional de edad se asocia con un aumento promedio de 7,681.28 unidades en los ingresos, manteniendo constante la escolaridad. Este coeficiente también es significativo ($p < 0.001$), pero su tamaño del efecto es menor que el de la escolaridad.
+
+**$R^2$ y $R^2$ Ajustado**:  
+El valor de $R^2$ de 0.15 indica que el 15% de la variabilidad en los ingresos del trabajo es explicada por la edad y la escolaridad.
+
+### Consideraciones sobre Significancia y Tamaño del Efecto
+
+- **Significancia Estadística**: Ambos coeficientes son significativos ($p < 0.001$), lo cual sugiere que sus efectos sobre los ingresos no son atribuibles al azar.
+- **Tamaño del Efecto**: Aunque ambos coeficientes son significativos, el tamaño del efecto de la escolaridad es considerablemente mayor que el de la edad, lo que implica que la educación tiene un mayor impacto en los ingresos.
+
+
+## 6. Ejercicio de simulación: Variabilidad de los coeficientes
+
+Para ilustrar la **variabilidad de los coeficientes** debido al muestreo aleatorio, realizaremos un ejercicio de simulación donde generaremos una población con un valor conocido de $β = 2$, y luego extraeremos múltiples muestras para observar cómo varían los coeficientes estimados.
+
+```{r}
+set.seed(123)  # Fijamos la semilla para reproducibilidad
+
+# Generamos una población de 100,000 observaciones
+n_poblacion <- 100000
+x_poblacion <- rnorm(n_poblacion, mean = 50, sd = 10)
+error_poblacion <- rnorm(n_poblacion, mean = 0, sd = 5)
+
+y_poblacion <- 5 + 2 * x_poblacion + error_poblacion
+
+# Tomamos una muestra de la población y realizamos la regresión
+n_muestra <- 100
+muestra <- sample(1:n_poblacion, n_muestra)
+x_muestra <- x_poblacion[muestra]
+y_muestra <- y_poblacion[muestra]
+
+modelo_muestra <- lm(y_muestra ~ x_muestra)
+summary(modelo_muestra)
+
+# Repetimos el proceso para 1000 muestras y almacenamos los coeficientes
+n_replicas <- 1000
+betas_muestras <- numeric(n_replicas)
+
+for (i in 1:n_replicas) {
+  muestra <- sample(1:n_poblacion, n_muestra)
+  x_muestra <- x_poblacion[muestra]
+  y_muestra <- y_poblacion[muestra]
+  modelo <- lm(y_muestra ~ x_muestra)
+  betas_muestras[i] <- coef(modelo)[2]
+}
+
+# Graficamos el histograma de los coeficientes beta obtenidos
+hist(betas_muestras, breaks = 30, col = "skyblue", main = "Distribución de los coeficientes beta",
+     xlab = "Valores de beta", ylab = "Frecuencia")
+abline(v = 2, col = "red", lwd = 2, lty = 2)  # Línea indicando el valor verdadero de beta
+```
+
+En este ejercicio, hemos generado una población donde el valor verdadero de $β$ es 2. Luego, tomamos muestras aleatorias y estimamos el coeficiente beta para cada muestra. El histograma muestra cómo varían los valores estimados de beta, ilustrando la **variabilidad muestral**. La línea roja indica el valor verdadero de $β$, y podemos observar cómo los valores de las muestras se distribuyen alrededor de este valor, reflejando la variabilidad inherente al proceso de muestreo.

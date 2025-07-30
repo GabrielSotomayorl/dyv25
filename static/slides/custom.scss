@@ -1,0 +1,33 @@
+/*-- scss:defaults --*/
+
+$body-bg: #a050a0; /* Morado */
+$body-color: #fff;
+$link-color: #42affa;
+
+/*-- scss:rules --*/
+
+/* Fondo blanco para chunks de código */
+.reveal .slides pre code {
+  background-color: #ffffff; /* Fondo blanco */
+  color: #000000; /* Texto negro para asegurar legibilidad */
+  padding: 10px; /* Opcional: añade un poco de padding para mayor legibilidad */
+  border-radius: 5px; /* Opcional: esquinas redondeadas */
+}
+
+.reveal .slides section {
+  text-align: justify;
+}
+
+.reveal .slides h1, 
+.reveal .slides h2, 
+.reveal .slides h3, 
+.reveal .slides h4, 
+.reveal .slides h5, 
+.reveal .slides h6 {
+  text-align: left; /* Para que los encabezados no se justifiquen */
+}
+
+/* Aplica el color morado a los títulos h2 en diapositivas claras */
+.reveal .slides section:not(.dark-background) h2 {
+  color: #a050a0;
+}

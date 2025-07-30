@@ -1,0 +1,42 @@
+---
+title: "Introducción al curso Análisis avanzado de datos"
+linktitle: "1: Introducción al curso Análisis avanzado de datos"
+date: "2024-08-12"
+start_date: "2024-08-12"
+end_date: "2024-08-12"
+menu:
+  content:
+    parent: Contenido
+    weight: 1
+type: docs
+toc: true
+bibliography: "../../static/bib/references.bib"
+csl: "../../static/bib/chicago-fullnote-bibliography-no-bib.csl"
+slides: "01-slides"
+---
+
+```{r slides-videos, echo=FALSE, include=FALSE}
+source(here::here("R", "slide-tabs.R"))
+
+slide_details <- tibble::tribble(
+  ~title, ~slide, ~active,
+  "Introducción al curso Análisis avanzado de datos", "0", TRUE
+)
+```
+
+# Slides
+
+`r blogdown::shortcode("slide-buttons")`
+
+```{r show-slide-tabs, echo=FALSE, results="asis"}
+slide_tabs(slide_details, "/slides/01-slides.html")
+```
+
+{{% div fyi %}} **¿Cómo ocupar**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras estas viendo las slides, podrás ver los comandos específicos para navegar en ellas. {{% /div %}}
+
+# Materiales de la clase
+-   [<i class="fas fa-laptop-code"></i> Práctico](https://aadi2024.netlify.app/example/01-practico/)
+
+# Bibliografía
+- [Esser 2010 Sociología de las Variables](../bib/Esser 2010 Sociología de las Variables.pdf/)  
+- [Lizon 2006 Estadistica y causalidad en sociologia](../bib/Lizon 2006 Estadistica y causalidad en sociologia.pdf/)

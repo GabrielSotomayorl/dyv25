@@ -1,0 +1,42 @@
+---
+title: "2. Estadística bivariada"
+linktitle: "2. Estadística bivariada"
+date: "2024-08-19"
+start_date: "2024-08-19"
+end_date: "2024-08-19"
+menu:
+  content:
+    parent: Contenido
+    weight: 2
+type: docs
+toc: true
+bibliography: "../../static/bib/references.bib"
+csl: "../../static/bib/chicago-fullnote-bibliography-no-bib.csl"
+slides: "02-slides"
+---
+
+```{r slides-videos, echo=FALSE, include=FALSE}
+source(here::here("R", "slide-tabs.R"))
+
+slide_details <- tibble::tribble(
+  ~title, ~slide, ~active,
+  "Estadística Bivariada", "0", TRUE
+)
+```
+
+# Slides
+
+`r blogdown::shortcode("slide-buttons")`
+
+```{r show-slide-tabs, echo=FALSE, results="asis"}
+slide_tabs(slide_details, "/slides/02-slides.html")
+```
+
+{{% div fyi %}}
+**¿Cómo ocupar**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras estas viendo las slides, podrás ver los comandos específicos para navegar en ellas.
+{{% /div %}}
+
+
+# Bibliografía
+- [Moore Cap 2](../bib/David S. Moore - Estadística aplicada básica, cap 2.pdf/) 
+
