@@ -7,6 +7,8 @@ lessons:
     date_start: "11 agosto"
     date_end: "18 agosto"
     bg: 1
+    content: "01-content"
+    #example: "01-practico"
 
   - title: '• Presentación del curso<br>• El proceso de conocimiento científico: lógica inductiva y deductiva<br>• Etapas generales de la investigación social empírica<br>• Datos: la fuente de información clave para la estadística<br>• La estadística como una aproximación a preguntas de investigación sociológicas.'
     session: "Sesión 1"
