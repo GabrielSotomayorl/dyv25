@@ -1,383 +1,279 @@
 ---
-title: "Clase 2: Repaso de estadística bivariada"
-subtitle: "Análisis Avanzado de Datos"
+title: "Clase 2: El Rol de la Estadística y la Programación en la Sociología Actual"
+subtitle: "Descripción y Visualización de Datos"
 author: "Gabriel Sotomayor"
-format: 
+date: "08-18-2025"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
 ---
 
-## Recordatorio de la clase anterior {.smaller background-color="white"}
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-#### ¿Por qué usamos modelos estadísticos en Ciencias Sociales?
+-   **Repasar** los conceptos de lógica inductiva y deductiva.
+-   **Comprender** por qué los datos sistemáticos son superiores a las anécdotas para el análisis social.
+-   **Reconocer** la variación como un elemento central de la realidad social y la estadística como su lenguaje.
+-   **Argumentar** la relevancia de los lenguajes de programación (como R) para el análisis sociológico moderno.
+-   **Analizar** un ejemplo de investigación sociológica real, identificando sus componentes.
 
--   **Capturar y reducir la complejidad:** Los modelos permiten vincular datos con teorías, ayudando a interpretar la realidad social.\
--   **Formalizar y probar teorías:** Dando precisión y permitiendo identificar relaciones causales y predecir fenómenos.\
--   **Énfasis en la explicación sociológica:** Las técnicas son una herramienta para la investigación social. No basta con explicar la varianza de una variable dependiente, sino la capacidad e explicar las relaciones teóricamente.
+---
+title_slide_background: "#008080"
+---
 
-## Evaluaciones {.dark-background}
+# 1. Datos contra Anécdotas: El Razonamiento Estadístico
 
-**Tarea 1: 2 de septiembre**\
-- Gestión de datos\
-- Estadística bivariada\
-**Prueba 1: 9 de Septiembre**\
-- Uso de modelos en ciencias sociales\
-- Estadística bivariada\
-- Regresión lineal simple
+## Repaso Rápido: La Rueda de la Ciencia {.smaller background-color="white"}
 
-## Objetivo de la sesión {.center background-color="white"}
+Recordemos el ciclo de la investigación social: un diálogo constante entre el mundo de las ideas (**Teoría**) y el mundo de lo observable (**Datos**).
 
-Revisar el estudio de relaciones entre variables con estadística bivariada.
+![](img/rueda_ciencia.png){fig-align="center" width="700"}
+*(Nota: Necesitarás una imagen de la Rueda de la Ciencia/Wallace aquí, similar a la del texto de Babbie)*
 
-## Relaciones entre variables {background-color="white"}
+-   **Deducción:** Parte de la teoría para generar hipótesis que se ponen a prueba con datos.
+-   **Inducción:** Parte de los datos para encontrar patrones y construir teoría.
 
-En sociología frecuentemente queremos contestar preguntas acerca de la relación entre variables, tales como la relación entre la escolaridad de los padres y la de los hijos, el ingreso y la probabilidad de participar en una protesta o entre el sexo y las horas dedicadas al trabajo doméstico.
+La estadística nos proporciona las herramientas para navegar este ciclo de forma rigurosa.
 
-Para esto necesitamos tener mediciones de ambas variables en la misma unidad (personas, comunas, hogares, etc) para poder observar su variación conjunta.
+## Los Datos Tienen Contexto {.smaller background-color="white"}
 
-## Ejemplo: Brecha Salarial de género {background-color="white"}
+> "La estadística trata sobre datos. Éstos son números, pero no sólo son eso. Los datos son números en un contexto."
+> — David S. Moore (2005)
 
-A lo largo de la clase trabajaremos con el ejemplo de la brecha salarial de género de cada comuna, la cual se calcula con la siguiente fórmula:
+El número **`3.75`** por sí solo no significa nada.
+-   Si es el peso de un bebé en **kilos**, es una excelente noticia.
+-   Si es el peso de un bebé en **gramos**, es una tragedia.
 
-$$
-\frac{\text{Salario Promedio Hombres} - \text{Salario Promedio Mujeres}}{\text{Salario Promedio Hombres}} \times 100
-$$ Por ejemplo si en una comuna el salario promedio de los hombres es de \$400.000 y el de las mujeres es 300.000
+En sociología, el contexto es todo. La estadística nos ayuda a interpretar números dentro de un marco social significativo. Un 10% de desempleo no es solo un número; representa vidas, políticas y estructuras sociales.
 
-$$
-\text{Brecha Salarial de Género} = \frac{100.000}{400.000} \times 100 = 0.25 \times 100 = 25\%
-$$
+## Datos Sistemáticos vs. Anécdotas {.smaller background-color="white"}
 
-## Estadísticos descriptivos {background-color="white"}
+-   **Anécdota:** Una historia sorprendente y memorable. Humaniza un tema, pero puede ser engañosa porque a menudo representa un caso extremo o atípico.
+    -   *Ejemplo sociológico: "Mi abuelo fumó toda su vida y murió a los 98 años, así que fumar no es tan malo".*
+-   **Datos Sistemáticos:** Recopilación planificada y exhaustiva de información que busca representar una realidad más amplia.
+    -   *Ejemplo sociológico: Datos de salud pública que muestran que, en promedio, los fumadores tienen una esperanza de vida significativamente menor.*
 
-**Medidas de tendencia central:** Valores situados al centro de las distribuciones que representan espacios donde los datos tienden a agruparse (Media, Mediana, Moda).
+La ciencia social se basa en datos sistemáticos porque las anécdotas, aunque poderosas, son una forma de **observación selectiva**.
 
-**Medidas de Dispersión:** Describen la variabilidad de los datos de una distribución (Rango, Varianza, Desviación estándar).
+## El Caso de Ann Landers: ¿Por qué los datos importan? {.smaller background-color="white"}
 
-## Brecha salarial de género comunal {background-color="white"}
+En 1976, la columnista Ann Landers preguntó a sus lectoras: *"Si pudieran volver a hacerlo, ¿tendrían hijos?"*.
 
-```{r echo=F}
-library(dplyr)
-datos <- readRDS("data/datos.rds") %>% 
-  filter(brecha<40 & brecha > -20 & !is.na(brecha))
-library(ggplot2)
-mean_brecha <- mean(datos$brecha, na.rm = TRUE)
+-   **El Resultado (Anécdotas a gran escala):** Recibió casi 10.000 respuestas. El 70% dijo **NO**. El titular fue explosivo: "El 70% de los padres se arrepienten de tener hijos".
+-   **El Problema:** ¿Quiénes se molestaron en escribir una carta? Aquellos con una opinión fuerte y probablemente negativa. Esto es un **sesgo de autoselección**. No es una muestra representativa.
+-   **El Contraste (Datos Sistemáticos):** Una encuesta nacional posterior, con una muestra representativa, encontró que el **91%** de los padres **SÍ** volverían a tener hijos.
 
-ggplot(datos, aes(x = brecha)) +
-  geom_histogram(
-    binwidth = 5,                    # Ajusta el ancho de las barras
-    fill = "#42affa",                # Color de relleno de las barras
-    color = "white",                 # Color de borde de las barras
-    alpha = 0.8                      # Transparencia de las barras
-  ) +
-  geom_vline(
-    aes(xintercept = mean_brecha),
-    color = "red",                   # Color de la línea
-    linetype = "dashed",             # Tipo de línea (discontinua)
-    size = 1                         # Grosor de la línea
-  ) +
-  labs(
-    x = "Brecha Salarial de Género (%)",
-    y = "Frecuencia",
-    title = "Distribución de la Brecha Salarial de Género por Comuna"
-  ) +
-  theme_minimal(base_size = 14) +    # Tamaño de fuente base
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold"), # Centra y pone en negrita el título
-    axis.title = element_text(face = "bold"),              # Negrita para los títulos de los ejes
-    axis.text = element_text(color = "#333333"),           # Color del texto de los ejes
-    panel.grid.major = element_line(color = "#d3d3d3"),    # Color de las líneas de la cuadrícula mayor
-    panel.grid.minor = element_blank()                     # Elimina las líneas de la cuadrícula menor
-  )
+**Lección:** El método de recolección de datos determina la validez de nuestras conclusiones.
+
+::: footer
+Fuente: Caso citado en Moore, D. S. (2005).
+:::
+
+## La Variación está Siempre Presente {.smaller background-color="white"}
+
+-   La realidad social no es homogénea ni determinista. Las personas, los grupos y los contextos **varían**.
+-   Los ingresos varían, las opiniones varían, los resultados de una política varían.
+-   La estadística es el **lenguaje de la variación**. Nos permite:
+    1.  **Describir** la variación (¿cuán dispersas están las opiniones?).
+    2.  **Identificar** fuentes de variación (¿por qué varían los ingresos? ¿Por género, educación?).
+    3.  **Manejar la incertidumbre** que la variación genera.
+
+Como la variación es omnipresente, en las ciencias sociales no existen "verdades absolutas", sino conclusiones con un cierto grado de probabilidad o confianza.
+
+---
+title_slide_background: "#008080"
+---
+
+# 2. ¿Por qué Aprender a Programar? La Estadística en el Siglo XXI
+
+## La Evolución del Análisis de Datos en Sociología {.smaller background-color="white"}
+
+:::::: columns
+:::: {.column width="50%"}
+**El Pasado**
+
+-   Cálculos manuales.
+-   Tabuladoras mecánicas.
+-   Software de "point-and-click" (ej. SPSS), donde el análisis se oculta detrás de menús.
+
+**Limitaciones:**  
+-   Poca transparencia.  
+-   Difícil de replicar.  
+-   Limitado a las opciones del menú.  
+::::
+:::: {.column width="50%"}
+**El Presente y Futuro**
+
+-   Grandes volúmenes de datos (Big Data).  
+-   Nuevas fuentes: redes sociales, textos, datos geoespaciales.  
+-   Necesidad de herramientas **transparentes, flexibles y potentes**.  
+
+**La Solución:**  
+-   Lenguajes de programación orientados a datos.
+::::
+::::::
+
+## Ventajas de Usar un Lenguaje de Programación (como R) {.smaller background-color="white"}
+
+1.  **Transparencia y Reproducibilidad:**
+    -   Un *script* de código es una receta exacta de cada paso de tu análisis. Cualquier persona (incluido tu "yo" del futuro) puede ejecutarlo y obtener exactamente los mismos resultados. **Este es el pilar de la ciencia abierta.**
+2.  **Flexibilidad y Potencia:**
+    -   No estás limitado por un menú. Tienes acceso a miles de paquetes con las técnicas estadísticas más avanzadas, a menudo desarrolladas por los mismos académicos que las crearon.
+
+
+## Ventajas de Usar un Lenguaje de Programación (como R) {.smaller background-color="white"}
+    
+
+3.  **Visualización de Datos Superior:**
+    -   Permite crear gráficos de alta calidad, personalizados y listos para publicar (ej. con el paquete `ggplot2`), superando con creces las opciones estándar de otros programas.
+4.  **Automatización y Eficiencia:**
+    -   Facilita el manejo de tareas complejas y repetitivas, ahorrando tiempo y reduciendo errores.
+
+**En resumen: Te da el control total sobre tu análisis.**
+
+## Presentación de R y RStudio {.smaller background-color="white"}
+
+:::::: columns
+:::: {.column width="50%"}
+-   **R:** Es el **lenguaje de programación** y el motor estadístico. Es potente, pero su uso directo en la "consola" es poco amigable.
+
+-   **RStudio:** Es un **Entorno de Desarrollo Integrado (IDE)**. Es una interfaz gráfica que hace que trabajar con R sea mucho más fácil e intuitivo. **Usaremos R *a través* de RStudio.**
+::::
+:::: {.column width="50%"}
+![](img/rstudio_interface.png){fig-align="center"}
+*(Nota: Necesitarás una captura de pantalla de la interfaz de RStudio con las 4 ventanas señaladas: Script, Consola, Entorno, Plots/Ayuda).*
+::::
+::::::
+
+**La primera ayudantía de esta semana se centrará en la instalación y los primeros pasos en este entorno.**
+
+---
+title_slide_background: "#008080"
+---
+
+# 3. La Estadística en Acción: Un Caso de Estudio
+
+## Placeholder: Caso de Estudio {.smaller background-color="white"}
+
+**[TÍTULO DE LA INVESTIGACIÓN ELEGIDA]**
+
+En esta sección, analizaremos un ejemplo real de investigación sociológica para ver cómo se aplican en la práctica los conceptos que hemos discutido.
+
+*Esta estructura es una plantilla. El contenido específico de las siguientes diapositivas se completará con la información del artículo o capítulo que selecciones.*
+
+---
+
+## El Problema de Investigación {.smaller background-color="white"}
+
+1.  **Pregunta de Investigación Central:**
+    -   ¿Cuál era el principal interrogante que los autores buscaban responder?
+2.  **Relevancia Sociológica y Social:**
+    -   ¿Por qué este tema es importante para la sociología?
+    -   ¿Qué implicaciones tiene para el debate público o las políticas sociales?
+3.  **Contexto:**
+    -   ¿En qué contexto (país, período de tiempo, grupo social) se enmarca el estudio?
+
+## Marco Teórico e Hipótesis {.smaller background-color="white"}
+
+-   **Teoría de Partida (Lógica Deductiva):**
+    -   ¿Qué conceptos o teorías sociológicas utilizaron los autores como punto de partida?
+-   **Hipótesis Principales:**
+    -   ¿Cuáles eran las relaciones específicas que esperaban encontrar entre sus variables?
+    -   *Ejemplo de hipótesis: "A mayor nivel educativo, menor será el nivel de prejuicio hacia grupos migrantes".*
+
+## Diseño Metodológico: Datos y Variables {.smaller background-color="white"}
+
+-   **Fuente de Datos:**
+    -   ¿De dónde provienen los datos? (Ej. Encuesta CASEN 2017, Encuesta CEP, etc.)
+-   **Unidad de Análisis:**
+    -   ¿A quiénes se estudió? (Individuos, hogares, etc.)
+-   **Variables Clave:**
+
+| Rol en el Modelo      | Variable Conceptual       | ¿Cómo se midió (Operacionalización)?               |
+| :-------------------- | :------------------------ | :------------------------------------------------- |
+| **Variable Dependiente** | [Nombre de la VD]         | [Ej: Pregunta de encuesta, índice, etc.]           |
+| **Variable Independiente 1** | [Nombre de la VI 1]       | [Ej: Años de escolaridad, tramo de ingresos, etc.] |
+| **Variable Independiente 2** | [Nombre de la VI 2]       | [Ej: Escala de confianza interpersonal, etc.]      |
+
+## Algunos Resultados Descriptivos {.smaller background-color="white"}
+
+Aquí mostraremos cómo se veían los datos antes de analizar las relaciones.
+
+*(Ejemplo de lo que podría ir aquí, usando un gráfico de barras)*
+
+![](img/ejemplo_descriptivo.png){fig-align="center"}
+*(Nota: Aquí insertarías un gráfico o tabla simple del estudio elegido, por ejemplo, la distribución de la variable dependiente).*
+
+**Interpretación:** Esta figura nos muestra... [Explicación simple de lo que se ve en el gráfico/tabla].
+
+## Analizando Relaciones (Adelanto) {.smaller background-color="white"}
+
+El núcleo de la investigación es explorar cómo se relacionan las variables.
+
+*(Ejemplo de lo que podría ir aquí, usando una tabla de contingencia o un gráfico de dispersión)*
+
+![](img/ejemplo_bivariado.png){fig-align="center"}
+*(Nota: Aquí insertarías un gráfico o tabla del estudio que muestre una relación entre dos variables).*
+
+**Interpretación preliminar:** Este gráfico sugiere que existe una relación entre [Variable X] y [Variable Y]. A medida que [X] aumenta, parece que [Y] tiende a... [describir el patrón].
+
+**En las próximas unidades aprenderemos a cuantificar y evaluar la significancia de estas relaciones.**
+
+## Conclusiones del Estudio {.smaller background-color="white"}
+
+-   **¿Se confirmaron las hipótesis?**
+    -   Resumen de los hallazgos principales y si apoyaron o refutaron las expectativas teóricas.
+-   **Respuesta a la Pregunta de Investigación:**
+    -   ¿Qué nos dice el estudio sobre el problema sociológico inicial?
+-   **Implicaciones y Limitaciones:**
+    -   ¿Qué sugieren los autores para futuras investigaciones o para la política pública?
+    -   ¿Qué limitaciones reconocen en su propio estudio?
+
+## Conectando el Caso con R {.smaller background-color="white"}
+
+¿Cómo habríamos abordado este estudio usando R? El flujo de trabajo habría sido:
+
+```r
+# El flujo de trabajo en R (conceptual)
+
+# 1. Cargar la base de datos y los paquetes necesarios
+library(tidyverse)
+datos <- read_csv("nombre_de_la_encuesta.csv")
+
+# 2. Preparar los datos: seleccionar, limpiar y recodificar variables
+datos_limpios <- datos %>%
+  select(variable_y, variable_x1, variable_x2) %>%
+  # ... (otros pasos de limpieza)
+
+# 3. Análisis Descriptivo: Explorar las variables
+summary(datos_limpios)
+ggplot(datos_limpios, aes(x = variable_y)) + geom_bar()
+
+# 4. Análisis de Relaciones (Bivariado y Multivariado)
+# ... (Esto es lo que aprenderemos a hacer en el curso)
 ```
+El código documenta cada decisión, asegurando la **transparencia y reproducibilidad** del análisis.
 
-## Media y Varianza {background-color="white"}
+## Discusión Final (15 min) {.smaller background-color="white"}
 
-**Media:** Suma de las puntuaciones dividida por el número de observaciones. Sensible a los casos extremos. $$
-\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i
-$$ **Varianza:** Es una medida de dispersión que representa el promedio de las distancias al cuadrado de cada dato respecto al promedio. Al elevar al cuadrado las distancias, se evita que los signos negativos y positivos se cancelen entre sí.
+**Preguntas sobre el caso de estudio:**
 
-$$
-s^2 = \frac{1}{n-1} \sum_{i=1}^{n} (x_i - \bar{x})^2
-$$
+1.  ¿Les parecen convincentes las conclusiones de los autores? ¿Por qué?
+2.  **Pensamiento Crítico:** ¿Qué otras variables, que no fueron incluidas en el estudio, creen que podrían ser importantes para explicar el fenómeno? (Posibles explicaciones alternativas).
+3.  Si ustedes tuvieran que continuar esta línea de investigación, ¿qué nueva pregunta de investigación les gustaría explorar?
 
-## Represetnación de la varianza {background-color="white"}
+## Cierre de la Unidad Introductoria {.smaller background-color="white"}
 
-```{r echo=F}
-# Calcular la media de la brecha salarial
-mean_brecha <- mean(datos$brecha, na.rm = TRUE)
+**Resumen de estas dos primeras clases:**
 
-ggplot(datos[order(datos$brecha), ], aes(x = seq_along(brecha), y = brecha)) +
-  geom_point(color = "#42affa", size = 3) +  # Puntos de datos
-  geom_hline(yintercept = mean_brecha, color = "red", linetype = "dashed", size = 1) +  # Línea de la media
-  geom_segment(aes(xend = seq_along(brecha), yend = mean_brecha), color = "#ffa500", size = 0.5) +  # Líneas desde cada punto hasta la media
-  labs(
-    x = "Índice",
-    y = "Brecha Salarial de Género (%)",
-    title = "Distancia de cada punto a la Media de la Brecha Salarial"
-  ) +
-  theme_minimal(base_size = 14) +  # Tamaño de fuente base
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold"),  # Centra y pone en negrita el título
-    axis.title = element_text(face = "bold"),  # Negrita para los títulos de los ejes
-    axis.text = element_text(color = "#333333"),  # Color del texto en los ejes
-    panel.grid.major = element_line(color = "#d3d3d3"),  # Color de las líneas de la cuadrícula mayor
-    panel.grid.minor = element_blank()  # Elimina las líneas de la cuadrícula menor
-  )
+-   Hemos transitado desde la **indagación cotidiana** a los fundamentos de la **investigación científica social**.
+-   Entendimos que la estadística es el lenguaje para analizar la **variación** en el mundo social de forma sistemática.
+-   Vimos por qué herramientas como **R** son esenciales para una práctica sociológica **moderna, transparente y reproducible**.
 
+**¡Próximo paso práctico!**
 
-```
+-   No olviden asistir a la **primera ayudantía de R** esta semana para instalar el software y dar los primeros pasos.
 
-## Cálculo de la varianza {background-color="white"}
-
-```{r echo=F}
-# Calcular la media de la brecha
-mean_brecha <- mean(datos$brecha, na.rm = TRUE)
-
-# Crear la tabla con las columnas ajustadas
-tabla_calculos <- data.frame(
-  comuna = datos$comuna,
-  Observaciones = round(datos$brecha,2),  # Columna de observaciones
-  Desviaciones = paste0(
-    round(datos$brecha, 2), 
-    " - ", 
-    round(mean_brecha, 2), 
-    " = ", 
-    round(datos$brecha - mean_brecha, 2)
-  ),
-  `Desviaciones al cuadrado` = paste0(
-    "(", 
-    round(datos$brecha - mean_brecha, 2), 
-    ")^2 = ", 
-    round((datos$brecha - mean_brecha)^2, 2)
-  )
-)
-
-# Calcular la suma de las desviaciones al cuadrado para añadir una fila de totales
-total_desviaciones_al_cuadrado <- sum((datos$brecha - mean_brecha)^2, na.rm = TRUE)
-
-# Añadir una fila de totales
-tabla_calculos <- rbind(
-  tabla_calculos,
-  c("Total", "", "0", paste0("= ", round(total_desviaciones_al_cuadrado, 2)))
-)
-
-
-head(tabla_calculos,10)
-
-
-```
-
-$$
-Varianza = \frac{28961.14}{(323 - 1)} = 89.94
-$$
-
-## Desciación estándar {background-color="white"}
-
-Desviación estándar: Es la raíz cuadrada de la varianza. Es comúnmente utilizada en otros cálculos y es más fácil de interpretar ya que esta aproximadamente en la undiad de medida original. Es la que mejor da cuenta de la dispersión (es decir de las distancias de los casos al promedio).
-
-$$
-\text{Desviación estándar} = \sqrt{\frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}}
-$$ $$
-\text{Desviación estándar} = \sqrt{\frac{28961.14}{(323 - 1)}} = 9.48
-$$
-
-## ¿Que variables influyen en la amplitud de la brecha salarial de género comunal? {background-color="white"}
-
-Pudimos observar que la brecha salarial de género tiene bastante variación entre distintas comunas del país.
-
-Ahora vamos a revisar la relación entre la magnitud de la brecha y el nivel de ruralidad y de educación.
-
-[**¿Cómo creen que se relacionan estas variables con la magnitud de la brecha salarial de género? ¿Porque?**]{style="color:#a050a0;"}
-
-## Rol de las variables {background-color="white"}
-
-**Variable dependiente o respuesta:** Es la variable de interés en el estudio, aquella cuya variación se desea comprender. Comúnmente, se representa en el eje de las ordenadas (eje Y).
-
-**Variable independiente o explicativa:** Es la variable que influye o explica los cambios en la variable respuesta. Habitualmente, se representa en el eje de las abscisas (eje X).
-
-Ojo: si bien lo términos pueden sugerir causalidad esto no necesariamente es así (en la mayoría de los casos no lo es).
-
-## Gráfico de dispersión {background-color="white"}
-
-```{r echo=F}
-ggplot(datos, aes(x = promedio_anios_escolaridad25_2017, y = brecha)) +
-  geom_point(color = "#0073C2", size = 3, alpha = 0.7) +  # Puntos más grandes y ligeramente transparentes
- # geom_smooth(method = "lm", color = "red", linetype = "dashed", se = FALSE) +  # Línea de tendencia con estilo
-  labs(
-    x = "Promedio de Años de Escolaridad (2017)",
-    y = "Brecha Salarial de Género (%)",
-    title = "Relación entre Brecha Salarial de Género y Promedio de Años de Escolaridad"
-  ) +
-  theme_minimal(base_size = 16) +  # Tamaño base de letra aumentado
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),  # Título centrado, en negrita y más grande
-    axis.title = element_text(face = "bold", size = 14),               # Títulos de los ejes en negrita y más grandes
-    axis.text = element_text(color = "#333333", size = 12),            # Texto de los ejes más grande
-    panel.grid.major = element_line(color = "#e0e0e0"),                # Líneas de la cuadrícula mayor en gris claro
-    panel.grid.minor = element_blank()                                 # Elimina las líneas de la cuadrícula menor
-  )
-
-
-```
-
-## Gráfico de dispersión {.smaller background-color="white"}
-
-Un [**gráfico de dispersión**]{style="color:#a050a0;"} muestra la relación entre dos variables cuantitativas medidas en los mismos individuos. Los valores de una variable aparecen en el eje de las abscisas y los de la otra en el eje de las ordenadas. Cada individuo aparece como un punto del diagrama. Su posición depende de los valores que toman las dos variables en cada individuo.
-
-En cualquier gráfico de datos, identifica el aspecto general y las desviaciones del mismo.\
-Puedes describir el aspecto general de un diagrama de dispersión mediante la **forma**, la **dirección** y la **fuerza** de la relación.
-
-Un tipo importante de desviación son las observaciones atípicas, valores individuales que quedan fuera del aspecto general de la relación.
-
-## Asociación positiva y negativa {.smaller background-color="white"}
-
-Dos variables están asociadas **positivamente** cuando valores superiores a la media de una de ellas tienden a ir acompañados de valores también situados por encima de la media de la otra variable, y cuando valores inferiores a la media también tienden a ocurrir conjuntamente.\
-Dos variables están asociadas **negativamente** cuando valores superiores a la media de una de ellas tienden a ir acompañados de valores inferiores a la media de la otra variable, y viceversa.
-
-## Gráfico de dispersión {background-color="white"}
-
-```{r echo=F}
-ggplot(datos, aes(x = promedio_anios_escolaridad25_2017, y = brecha)) +
-  geom_point(color = "#0073C2", size = 3, alpha = 0.7) +  # Puntos más grandes y ligeramente transparentes
-#  geom_smooth(method = "lm", color = "black", linetype = "solid", se = FALSE) +  # Línea de tendencia en negro
-  geom_vline(xintercept = mean(datos$promedio_anios_escolaridad25_2017, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'promedio_anios_escolaridad25_2017'
-  geom_hline(yintercept = mean(datos$brecha, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'brecha'
-  labs(
-    x = "Promedio de Años de Escolaridad (2017)",
-    y = "Brecha Salarial de Género (%)",
-    title = "Relación entre Promedio de Años de Escolaridad y Brecha Salarial de Género"
-  ) +
-  theme_minimal(base_size = 16) +  # Tamaño base de letra aumentado
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),  # Título centrado, en negrita y más grande
-    axis.title = element_text(face = "bold", size = 14),               # Títulos de los ejes en negrita y más grandes
-    axis.text = element_text(color = "#333333", size = 12),            # Texto de los ejes más grande
-    panel.grid.major = element_line(color = "#e0e0e0"),                # Líneas de la cuadrícula mayor en gris claro
-    panel.grid.minor = element_blank()                                 # Elimina las líneas de la cuadrícula menor
-  )
-
-```
-
-## Correlación {background-color="white"}
-
-La correlación mide la fuerza y la dirección de la relación lineal entre dos variables cuantitativas. La correlación se simboliza con la letra r.
-
-Si tenemos datos de dos variables x e y para n individuos. Los valores para el primer individuo son x₁ e y₁, para el segundo son x₂ e y₂, etc. Las medias y las desviaciones típicas de las dos variables son x̄ y sₓ para los valores de x, e ȳ y sᵧ para los valores de y. La correlación r entre x e y es:
-
-$$
-r = \frac{1}{n-1} \sum \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
-$$
-
-## Gráfico de correlación {background-color="white"}
-
-```{r echo=F}
-ggplot(datos, aes(x = promedio_anios_escolaridad25_2017, y = brecha)) +
-  geom_point(color = "#0073C2", size = 3, alpha = 0.7) +  # Puntos más grandes y ligeramente transparentes
-  geom_smooth(method = "lm", color = "black", linetype = "solid", se = FALSE) +  # Línea de tendencia en negro
-  geom_vline(xintercept = mean(datos$promedio_anios_escolaridad25_2017, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'promedio_anios_escolaridad25_2017'
-  geom_hline(yintercept = mean(datos$brecha, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'brecha'
-  labs(
-    x = "Promedio de Años de Escolaridad (2017)",
-    y = "Brecha Salarial de Género (%)",
-    title = "Relación entre Promedio de Años de Escolaridad y Brecha Salarial de Género"
-  ) +
-  theme_minimal(base_size = 16) +  # Tamaño base de letra aumentado
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),  # Título centrado, en negrita y más grande
-    axis.title = element_text(face = "bold", size = 14),               # Títulos de los ejes en negrita y más grandes
-    axis.text = element_text(color = "#333333", size = 12),            # Texto de los ejes más grande
-    panel.grid.major = element_line(color = "#e0e0e0"),                # Líneas de la cuadrícula mayor en gris claro
-    panel.grid.minor = element_blank()                                 # Elimina las líneas de la cuadrícula menor
-  )
-```
-
-## Ejemplo de cálculo {background-color="white"}
-
-```{r echo=F}
-# Calcular la media y la desviación estándar de ambas variables
-mean_x <- mean(datos$brecha, na.rm = TRUE)
-mean_y <- mean(datos$promedio_anios_escolaridad25_2017, na.rm = TRUE)
-
-sd_x <- sd(datos$brecha, na.rm = TRUE)
-sd_y <- sd(datos$promedio_anios_escolaridad25_2017, na.rm = TRUE)
-
-# Crear la tabla con los cálculos paso a paso
-tabla_correlacion <- data.frame(
-  brecha = round(datos$brecha, 2),  # Columna de valores de x redondeados
-  esc = round(datos$promedio_anios_escolaridad25_2017, 2),  # Columna de valores de y redondeados
-  brecha_est = paste0("(", round(datos$brecha, 2), " - ", round(mean_x, 2), ") / ", round(sd_x, 2), " = ", round((datos$brecha - mean_x) / sd_x, 2)),  # Valores x estandarizados
-  esc_esta = paste0("(", round(datos$promedio_anios_escolaridad25_2017, 2), " - ", round(mean_y, 2), ") / ", round(sd_y, 2), " = ", round((datos$promedio_anios_escolaridad25_2017 - mean_y) / sd_y, 2)),  # Valores y estandarizados
-  Prod_est = paste0("(", round((datos$brecha - mean_x) / sd_x, 2), ") * (", round((datos$promedio_anios_escolaridad25_2017 - mean_y) / sd_y, 2), ") = ", round(((datos$brecha - mean_x) / sd_x) * ((datos$promedio_anios_escolaridad25_2017 - mean_y) / sd_y), 2))  # Producto de las variables estandarizadas
-)
-
-
-head(tabla_correlacion)
-```
-
-$$
-Correlación = \frac{142.84}{(323 - 1)} = 0.44
-$$
-
-## Características de la correlación (I) {.smaller background-color="white"}
-
-**Simetría en las Variables:** La correlación no distingue entre variables explicativas y respuesta; es indiferente cuál se llame x o y.\
-**Requisito Cuantitativo:** Las dos variables deben ser cuantitativas para que los cálculos de la correlación tengan sentido. No se puede calcular la correlación entre una variable cuantitativa y una categórica.\
-**Independencia de Unidades:** Como la correlación utiliza valores estandarizados, no cambia si se modifican las unidades de medida de las variables. La correlación es un valor sin unidades.\
-**Significado del Signo:**\
-- Correlación positiva: Indica una asociación positiva entre las variables.\
-- Correlación negativa: Indica una asociación negativa.
-
-## Características de la correlación (II) {.smaller background-color="white"}
-
-**Rango de la Correlación:** La correlación siempre toma valores entre −1 y 1.\
-- Cercanía a 0: Indica una relación lineal débil.\
-- Cercanía a ±1: Indica una relación lineal fuerte. Un valor de ±1 indica una relación lineal perfecta.\
-**Limitación a Relaciones Lineales:** La correlación sólo mide la fuerza de relaciones lineales, no describe adecuadamente las relaciones curvilíneas, aunque estas sean fuertes.\
-**Sensibilidad a Observaciones Atípicas:** La correlación puede verse fuertemente afectada por valores atípicos, lo que puede distorsionar la percepción de la relación entre las variables. Es importante utilizar la correlación con precaución cuando se detectan atípicos.
-
-## Graficos de dispersión y correlación {background-color="white"}
-
-```{r echo=F}
-library(gridExtra)
-# Función para crear un conjunto de datos con una correlación específica
-crear_datos <- function(n, cor) {
-  x <- rnorm(n)
-  y <- cor * x + sqrt(1 - cor^2) * rnorm(n)
-  data.frame(x = x, y = y)
-}
-
-# Crear seis conjuntos de datos con diferentes correlaciones
-set.seed(42)
-datos_0 <- crear_datos(100, 0)
-datos_neg03 <- crear_datos(100, -0.3)
-datos_pos05 <- crear_datos(100, 0.5)
-datos_neg07 <- crear_datos(100, -0.7)
-datos_pos09 <- crear_datos(100, 0.9)
-datos_neg099 <- crear_datos(100, -0.99)
-
-# Función para crear gráficos con líneas de la media
-crear_grafico <- function(data, title) {
-  ggplot(data, aes(x = x, y = y)) + 
-    geom_point() + 
-    geom_vline(xintercept = mean(data$x), color = "red", linetype = "dotted") +  # Línea vertical para la media de x
-    geom_hline(yintercept = mean(data$y), color = "red", linetype = "dotted") +  # Línea horizontal para la media de y
-    labs(title = title) + 
-    theme_minimal()
-}
-
-# Crear los gráficos individuales con líneas de la media
-g0 <- crear_grafico(datos_0, "Correlación r = 0")
-g_neg03 <- crear_grafico(datos_neg03, "Correlación r = -0.3")
-g_pos05 <- crear_grafico(datos_pos05, "Correlación r = 0.5")
-g_neg07 <- crear_grafico(datos_neg07, "Correlación r = -0.7")
-g_pos09 <- crear_grafico(datos_pos09, "Correlación r = 0.9")
-g_neg099 <- crear_grafico(datos_neg099, "Correlación r = -0.99")
-
-# Organizar los gráficos en una cuadrícula 2x3
-grid.arrange(g0,g_pos05, g_pos09,g_neg03, g_neg07, g_neg099, ncol = 3)
-
-```
+**Adelanto de la Unidad 2:** "Conceptos claves para la investigación social: Conceptualización y Medición".
