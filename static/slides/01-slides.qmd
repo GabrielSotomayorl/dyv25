@@ -1,222 +1,366 @@
 ---
-title: "Clase 1: Introducción y uso de modelos en CS"
-subtitle: "Análisis Avanzado de Datos"
+title: "Clase 1: Introducción al Curso"
+subtitle: "Descripción y Visualización de Datos"
 author: "Gabriel Sotomayor"
-format: 
+date: "08-11-2025"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
 ---
 
-## Presentación {background-color="white"}
+## Presentación {.smaller background-color="white"}
 
-El curso aborda las principales técnicas para establecer relaciones entre variables. Se enfatizan la comprensión de procedimientos e interpretación de resultados, así como el uso de herramientas computacionales, en particular [**R y RStudio**]{style="color:#a050a0;"}. El curso requiere de una formación básica previa en el análisis de datos estadísticos, tiene una orientación aplicada al análisis de datos multivariados en ciencias sociales.
+La estadística es una herramienta esencial para el quehacer sociológico moderno. Este curso busca entregar las herramientas básicas para relacionar la recolección de datos cuantitativos con las técnicas estadísticas apropiadas para su análisis, lectura e interpretación.
 
-## Resultados de Aprendizaje {.smaller background-color="white"}
+Se abordarán elementos de la estadística descriptiva univariada y bivariada, como la presentación de datos en tablas y gráficos, el cálculo de estadígrafos (tendencia central, dispersión, etc.) y nociones de asociación.
 
-**Resultado general:** Entregar herramientas para que las personas puedan abordar el análisis de datos tanto de dependencia como de interdependencia v desde la estadística multivariante, elaborando y probando hipótesis y desarrollando modelos explicativos de determinados fenómenos de estudio. Las personas estudiantes aprenderán los métodos de análisis de datos más habituales, y realizarán prácticas en programas estadísticos, principalmente R.
+El curso tiene un carácter eminentemente práctico, utilizando lenguajes de programación como **R** para el análisis y presentación de datos, buscando que los y las estudiantes comprendan la relevancia del análisis estadístico en las Ciencias Sociales.
 
-El enfoque del curso será aplicado e irá dirigido a la utilización crítica de las técnicas estadísticas para explicar distintos problemas relacionados con las Ciencias Sociales. Se espera que las personas comprendan que la complejidad de los fenómenos estudiados por las ciencias sociales obliga a que su análisis considere múltiples medidas para poderlos explicar en forma adecuada.
+## Resultados de Aprendizaje {background-color="white"}
 
-## Resultados específicos {.smaller background-color="white"}
+**Resultado general:** Aplicar los métodos y herramientas de la estadística descriptiva necesarios para el análisis de datos cuantitativos en las ciencias sociales.
 
--   Explicar distintos problemas sociales considerando sus múltiples factores, mediante el uso de análisis multivariado de datos.
--   Utilizar el análisis de datos desde la estadística inferencial, elaborando y testeando hipótesis y desarrollando modelos explicativos de determinados fenómenos de estudio.
--   Utilizar el análisis estadístico desde la interrelación entre múltiples variables y sus categorías.
--   Identificar las situaciones en que se utilizan cada una las técnicas estadísticas multivariadas, justificar el uso de éstas y ser capaz de analizar e interpretar los resultados obtenidos.
--   Demostrar una lectura crítica del análisis multivariado de datos en ciencias sociales.
+## Resultados Específicos {.smaller background-color="white"}
 
-## Contenidos {.smaller .dark-background}
+1.  Comprender el uso y la relevancia de la estadística en las Ciencias Sociales.
+2.  Relacionar metodologías de recolección de datos con las técnicas estadísticas apropiadas.
+3.  Comprender las principales herramientas de la estadística descriptiva.
+4.  Definir correctamente un plan de análisis descriptivo para una tabla de datos.
+5.  Identificar el estadístico apropiado según el tipo de variable analizada.
+6.  Manipular, analizar e interpretar datos cuantitativos a través del lenguaje de programación R.
+7.  Distinguir entre estadística descriptiva e inferencial.
 
-+---------------------------------------------------------+----------------------------------------------------+
-| **1) Uso de modelos estadísticos en Ciencias Sociales** |                                                    |
-+---------------------------------------------------------+----------------------------------------------------+
-| **2) Modelo de Regresión Lineal Múltiple**              | Regresión lineal simple                            |
-|                                                         |                                                    |
-|                                                         | Ecuación de regresión múltiple                     |
-|                                                         |                                                    |
-|                                                         | Pruebas de hipótesis para los coeficientes         |
-|                                                         |                                                    |
-|                                                         | Coeficiente de Determinación Ajustado              |
-|                                                         |                                                    |
-|                                                         | Cálculo de la mejor ecuación de regresión múltiple |
-|                                                         |                                                    |
-|                                                         | Coeficientes "beta" estandarizados                 |
-|                                                         |                                                    |
-|                                                         | Variables ficticias o dummy                        |
-|                                                         |                                                    |
-|                                                         | Interpretación de los coeficientes                 |
-|                                                         |                                                    |
-|                                                         | Supuestos del modelo - Análisis de residuos        |
-|                                                         |                                                    |
-|                                                         | Prácticas en programa estadístico R                |
-|                                                         |                                                    |
-|                                                         | Interpretaciones                                   |
-+---------------------------------------------------------+----------------------------------------------------+
+## Contenidos: Unidad 1 {.smaller .dark-background}
 
-## Contenidos {.smaller .dark-background}
+### 1. Introducción a la estadística y su relación con las ciencias sociales
 
-+-----------------------------------------------+-----------------------------------------------------+
-| **3) Modelos de Regresión Logística Binaria** | · Introducción                                      |
-|                                               |                                                     |
-|                                               | · Modelo de regresión logística bivariado           |
-|                                               |                                                     |
-|                                               | · Modelo de regresión logística multivariado        |
-|                                               |                                                     |
-|                                               | · Evaluación del modelo                             |
-|                                               |                                                     |
-|                                               | · Test de Wald - Interpretación de los coeficientes |
-|                                               |                                                     |
-|                                               | · Requisitos y limitaciones                         |
-|                                               |                                                     |
-|                                               | · Prácticas en programa estadístico R               |
-|                                               |                                                     |
-|                                               | · Interpretaciones                                  |
-+-----------------------------------------------+-----------------------------------------------------+
+-   El proceso de conocimiento científico: lógica inductiva y deductiva.
+-   Etapas generales de la investigación social empírica.
+-   Datos: la fuente de información clave para la estadística.
+-   La estadística como una aproximación a preguntas de investigación sociológicas.
+-   Usos de la estadística en la actualidad: sociología, ciencia política, economía, políticas públicas.
+-   La relevancia de los lenguajes de programación para el análisis estadístico actual.
 
-## Contenidos {.smaller .dark-background}
+## Contenidos: Unidad 2 {.smaller .dark-background}
 
-+--------------------------------------------+--------------------------------------------+
-| **4) Análisis de Conglomerados**           | · ¿Qué es un conglomerado?                 |
-|                                            |                                            |
-|                                            | · Método jerárquico y Dendograma           |
-|                                            |                                            |
-|                                            | · Método de K-medias                       |
-|                                            |                                            |
-|                                            | · Prácticas en programa en R Studio        |
-|                                            |                                            |
-|                                            | · Interpretaciones                         |
-+--------------------------------------------+--------------------------------------------+
-| **5) Análisis de Componentes Principales** | · Análisis factorial y ACP                 |
-|                                            |                                            |
-|                                            | · La matriz de correlación                 |
-|                                            |                                            |
-|                                            | · Elección de los componentes principales  |
-|                                            |                                            |
-|                                            | · Representación gráfica de los resultados |
-|                                            |                                            |
-|                                            | · Prácticas en programa estadístico R      |
-|                                            |                                            |
-|                                            | · Interpretaciones                         |
-+--------------------------------------------+--------------------------------------------+
+### 2. Conceptos claves para la investigación social
 
-## Bibliografía {.smaller background-color="white"}
+-   Conceptualización y operacionalización.
+-   Unidad de análisis vs. unidad de observación.
+-   Tipos de variables y niveles de medición.
+-   Muestra y población: estadísticos muestrales y parámetros poblacionales.
+-   Población objetivo, marco muestral, muestra.
+-   Validez y confiabilidad en la medición.
+-   Error de medición y error muestral.
 
--   Cea D'Ancona, M. (2002). Análisis multivariable: teoría y práctica de la investigación Social. Madrid: Editorial Síntesis Sociológica.
--   Camarero (2017). Regresión Logística: Fundamentos y aplicación a la investigación sociológica
--   Darlington, R. B., & Hayes, A. F. (2017). Regression analysis and linear models: concepts, applications, and implementation. Guilford Press
--   Hair, J., Anderson, R., Tatham, R., & Black, W. (1999). Análisis multivariante. Madrid: Editorial Prentice Hall.
--   Husson, F., Pagès, J., & Lê, S. (2012). Análisis de datos con R. Escuela Colombiana de Ingenieria Julio Garavito.
--   Lizón, Á. (2006). Estadística y causalidad en la sociología empírica del XX.
--   Moore (2010) Estadística aplicada básica. Barcelona: Antoni Bosch
--   Wooldridge, J. M. (2008). Introducción a la econometría: un enfoque moderno. Paraninfo Cengage Learning.
--   Wickham, H. (2017). R para Ciencia de Datos https://es.r4ds.hadley.nz/index.html
+## Contenidos: Unidad 3 {.smaller .dark-background}
+
+### 3. Marcos de datos para la investigación social
+
+-   Estructura de una tabla de datos: lógica filas, columnas.
+-   Exploración de una tabla de datos en R.
+-   Tipos de variables en una tabla de datos.
+-   Introducción al `tidyverse`.
+-   Manipulación de tablas de datos I: selecciones, filtros, ordenamiento.
+-   Manipulación de tablas de datos II: uniones y pivot.
+-   Recodificación de variables: uso de estructuras condicionales.
+-   Construcción de variables: índices, escalas y tipologías.
+
+## Contenidos: Unidad 4 {.smaller .dark-background}
+
+### 4. Estadística Descriptiva Univariada
+
+-   **Estadísticos para variables numéricas:**
+    -   Centro: media, mediana, moda.
+    -   Dispersión: rango, varianza, desviación estándar.
+    -   Posición: percentiles.
+    -   Forma: asimetría y curtosis.
+-   **Estadístico para variables discretas o categóricas:**
+    -   Frecuencias absolutas y relativas, Porcentajes, Tasas.
+-   **Visualización de datos:** barras, histogramas y boxplots.
+
+## Contenidos: Unidad 5 {.smaller .dark-background}
+
+### 5. Estadística Descriptiva Bivariada
+
+-   Tipos de asociaciones entre variables según su naturaleza.
+-   Concepto de independencia.
+-   Construcción de estadísticos por grupo.
+-   Construcción de tablas de contingencia y control por tercera variable.
+-   Visualizaciones bivariadas: barras, histogramas y boxplots.
+-   Medidas de asociación: Pearson, spearman, gamma, policóricas.
+-   Más allá de lo descriptivo: la probabilidad como medida de incertidumbre.
 
 ## Evaluaciones {.smaller .dark-background}
 
--   2 pruebas solemnes (15% y 25% c/u, 40% total).\
--   2 reportes de investigación (20% c/u, 40% total).\
--   3 Tareas (6,6% c/u 20% total).
+| Evaluación | Descripción | Ponderación (NP) |
+|:---|:---|:---|
+| **Trabajos Prácticos (TP)** | 2 trabajos en grupo | 30% |
+| **Controles (CONT)** | 5 controles individuales (se borra el peor) | 10% |
+| **Tareas de R (TAR)** | 4 tareas individuales en R | 10% |
+| **Pruebas Solemnes (PS)** | 2 pruebas (06/10 y 01/12) | 50% |
 
-#### Primeras fechas
-
-Tarea 1: 2 de septiembre\
-Prueba 1: 9 de Septiembre
+-   La **Nota de Presentación (NP)** corresponde al **70%** de la nota final del curso.
+-   El **Examen Final** (fecha por confirmar) corresponde al **30%** restante.
+-   Se requiere **70% de asistencia** para aprobar.
 
 ## Ayudantías {background-color="white"}
 
-El curso tiene tres ayudantes:
+El curso cuenta con un equipo de tres ayudantes:
 
--   Patrio Alarcón [patricio.alarcon\@mail.udp.cl](patricio.alarcon@mail.udp.cl)
+-   **Felipe Adasme** [felipe.adasme\@mail.udp.cl](mailto:felipe.adasme@mail.udp.cl)
+-   **Francisca Hernández** [francisca.hernandez_c\@mail.udp.cl](mailto:francisca.hernandez_c@mail.udp.cl)
+-   **Amanda Sanhueza** [amanda.sanhueza\@mail.udp.cl](mailto:amanda.sanhueza@mail.udp.cl)
 
--   Fernanda Hurtado [fernanda.hurtado\@mail.udp.cl](fernanda.hurtado@mail.udp.cl)
+**Horario de Ayudantías:**\
+- Grupo 1: Lunes 14:30 - 15:50\
+- Grupo 2: Lunes 14:30 - 15:50
 
--   Francisca Hernández [francisca.hernandez_c\@mail.udp.cl](francisca.hernandez_c@mail.udp.cl)
+Se realizarán 10 sesiones prácticas en R a lo largo del semestre para apoyar las evaluaciones.
 
-Están disponibles para responder las dudas que puedan tener a lo largo del curso, tanto estadísticas como de uso de software. Habrá sesiones de ayudantía cada 2 semanas aproximadamente, centradas en la aplicación de las técnicas que revisaremos en R. También les acompañarán en la realización de tareas y trabajos de investigación.
+## Bibliografía Obligatoria (1/2) {.smaller background-color="white"}
+
+-   **Asún, R. (2006).** *Medir la realidad social: El sentido de la metodología cuantitativa*. En M. Canales, Metodologías de investigación Social.
+-   **Babbie, E. (1996).** *Manual para la práctica de la investigación social*. Desclée De Brouwer.
+-   **Babbie, E. (2000).** *Fundamentos de la investigación social*. Cengage Learning Latin Am.
+-   **Cea D'Ancona M. (1996).** *Metodología Cuantitativa: Estrategias y Técnicas de Investigación Social*. Ed. Síntesis Sociológica.
+-   **Diez, D. M., Barr, C. D., & Çetinkaya-Rundel, M. (2024).** *OpenIntro Statistics*. Creative Commons.
+-   **Hernández R., Fernández C. & Baptista P. (2010).** *Metodología de la Investigación*. Mc Graw Hill.
+
+## Bibliografía Obligatoria (2/2) {.smaller background-color="white"}
+
+-   **Moore, D. S. (2005).** *Estadística aplicada básica*. Antoni Bosch editor.
+-   **Ritchey F. (2008).** *Estadística para las ciencias sociales*. McGraw-Hill.
+-   **Urdinez, F., & Cruz, A. (2020).** *R for political data science: a practical guide*. CRC Press. Disponible en: <https://arcruz0.github.io/libroadp/>
+-   **Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023).** *R for data science*. O'Reilly Media, Inc. Disponible en: <https://r4ds.hadley.nz/>
 
 ## Página del Curso {background-color="white"}
 
-[https://aadi2024.netlify.app/](https://aadi2024.netlify.app/){preview-link="true"}
+Todos los materiales, lecturas y anuncios del curso estarán disponibles en el sitio web oficial:
 
-![](img/01/pagina.png)
+[https://dyv25.netlify.app/](https://dyv25.netlify.app/){preview-link="true"}
 
-## Delegado/a de curso {.dark-background}
+## Delegado de Curso {.dark-background}
 
-Las comunicaciones del curso con el equipo docente para temas colectivos deberán gestionarse de manera centralizada mediante un/a delegado/a, especialmente considerando que hay estudiante de distintas generaciones. Esto es particularmente relevante para solicitudes respecto a evaluaciones.
+Las comunicaciones del curso con el equipo docente para temas colectivos deberán gestionarse de manera centralizada mediante un delegado o delegada.
 
-# Uso de modelos en Ciencias Sociales
+Esto es particularmente relevante para solicitudes respecto a evaluaciones o cambios de fechas.
 
-## Objetivo de la sesión {.center background-color="white"}
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-Reflexionar sobre el sentido del uso de estadística (multivariada) y modelos en Ciencias Sociales
+-   **Distinguir** entre el conocimiento cotidiano y el conocimiento científico.
+-   **Identificar** los pilares de la ciencia social: lógica y observación.
+-   **Reconocer** los errores comunes en la indagación humana y cómo la ciencia los previene.
+-   **Definir** los conceptos de teoría, variables y atributos como el lenguaje fundamental de las ciencias sociales.
+-   **Diferenciar** entre las lógicas de investigación inductiva y deductiva.
+-   **Esbozar** las etapas generales de un proyecto de investigación.
 
-# ¿Porqué usamos estadística en Ciencias Sociales?
+---
+title_slide_background: "#008080"
+---
 
-## ¿Porque usar modelo (multivariados) en ciencias sociales? {.smaller background-color="white"}
+# 2. ¿Cómo Conocemos el Mundo Social?
 
-Los modelos son formalismos lógicos o matemáticos que buscan describir la realidad.\
-Nos permiten simultáneamente capturar la complejidad de la realidad social (y los datos con que contamos) y reducirla, de manera de hacerla inteligible: **producir conocimiento (vincular nuestros datos a un contexto teórico mayor)**.
+## Indagación Humana Ordinaria {.smaller background-color="white"}
 
-Permiten:
+Nuestra necesidad fundamental es predecir y comprender el mundo. Para ello, nos basamos en dos fuentes de conocimiento:
 
-<div>
+1.  **Experiencia Directa:** Lo que conocemos por nosotros mismos (ej. el fuego quema).
+2.  **Conocimiento Asentido (Acuerdo):** Lo que sabemos porque nos lo han dicho y lo aceptamos como real. Es la base de la cultura y la vida social.
 
--   Formalizar, dando precisión y permitiendo poner teorías a prueba.
+Este conocimiento "asentido" proviene principalmente de:
 
--   Develar relaciones entre variables y mecanismo causales
+-   **La Tradición:** "Lo que todo el mundo sabe". Nos ahorra el esfuerzo de descubrirlo todo desde cero, pero puede sofocar la curiosidad y el cuestionamiento.
+-   **La Autoridad:** Conocimiento que aceptamos de figuras expertas (científicos, médicos, profesores). Es útil, pero los expertos pueden equivocarse o hablar fuera de su campo.
 
--   Predecir
-
--   Simular
-
-</div>
-
-## Sociología de las variables {.smaller background-color="white"}
-
-Cuando utilizamos estadística, en particular multivariada caemos en la tentación de centrarnos en la técnica estadística por sobre la explicación sociológica.
-
-Esser (2010) formaliza este problema llamandolo la [**sociología de las variables**]{style="color:#a050a0;"}, en la cual se identifica una **variable dependiente (explanandum)** y se propone un conjunto de **variables independientes (explanans)** que podrían influir en ella. La explicación se considera lograda cuando se puede atribuir la **varianza** de la variable dependiente a los efectos de las variables independientes
-
-## Problemas de la Sociología de las Variables {.smaller background-color="white"}
-
-**Incompletitud:** Las relaciones entre variables establecidas en un contexto pueden no ser aplicables en otros, revelando la falta de leyes sociológicas generales y estables. La SV, al intentar explicar fenómenos sociales, frecuentemente se queda en explicaciones ad hoc, lo que limita su alcance y efectividad.
-
-**Significado Variable:** Las variables estructurales pueden tener significados diferentes según el contexto cultural o social. Este problema de equivalencia funcional implica que las mismas variables no siempre tienen el mismo impacto en diferentes escenarios, lo que dificulta la creación de explicaciones universales.
-
-## Problemas de la Sociología de las Variables {.smaller background-color="white"}
-
-**Interdependencia:** Las estructuras sociales son procesos dinámicos donde las interacciones entre individuos y procesos son complejas. La SV no aborda adecuadamente cómo estas interdependencias afectan los resultados sociales, limitando la capacidad de la SV para explicar fenómenos complejos.
-
-**Falta de Sentido:** La SV ignora el sentido subjetivo de las acciones individuales, centrándose solo en relaciones entre variables. Esto deja de lado la dimensión interpretativa crucial para una explicación sociológica completa, que considera las decisiones conscientes de los individuos.
-
-**Reduccionismo:** Al reducir fenómenos sociales a simples relaciones entre variables, la SV pierde de vista la complejidad de las decisiones individuales y colectivas, y cómo estas influyen en los resultados sociales.
-
-## Explicación teórica y modelos estadísticos {.center background-color="white"}
-
-"La consecuencia más importante de los problemas apuntados es una inversión de la perspectiva: los «modelos causales» sobre relaciones entre variables y la varianza «explicada» no son la explicación teórica que buscamos, sino, más bien, solo el explanandum de la «auténtica» explicación teórica conductual." (Esser, 2010, p. 204).
-
-Esto implica que se necesita contar con una [**teoría de la acción social**]{style="color:#a050a0;"}.
-
-## Ejemplo del divorcio {.smaller .center background-color="white"}
-
-::: columns
-::: {.column width="40%"}
-En este caso vemos que hay una relación con forma de "hoz" del riesgo de divorciarse. Lo importante no es describir dicha relación, sino que poder plantear un mecanismo teórico relacionado con el comportamiento de los individuos que la explicque.
+::: footer
+Fuente: Adaptado de Babbie, E. (2000). *Fundamentos de la investigación social*, Cap 1.
 :::
 
-::: {.column width="60%"}
-![](https://media.springernature.com/lw685/springer-static/image/art%3A10.1007%2Fs13524-013-0278-1/MediaObjects/13524_2013_278_Fig2_HTML.gif){fig-align="center" width="600"}
+## Errores Comunes en la Indagación Cotidiana {.smaller background-color="white"}
+
+Al basarnos solo en nuestra experiencia y en acuerdos no examinados, cometemos errores sistemáticos:
+
+-   **Observación Imprecisa:** Vemos las cosas de manera casual y a menudo recordamos mal.
+    -   *Ejemplo: Recordar una manifestación como "más grande" o "más violenta" de lo que fue, influenciado por nuestras emociones.*
+-   **Sobregeneralización:** Asumimos que unos pocos eventos similares son evidencia de un patrón general.
+    -   *Ejemplo: Conocer a dos estudiantes de sociología desordenados y concluir que "todos los sociólogos son desordenados".*
+-   **Observación Selectiva:** Una vez que creemos en un patrón, tendemos a fijarnos solo en los casos que lo confirman e ignoramos los que lo contradicen.
+    -   *Ejemplo: Si creemos que los jóvenes son irresponsables, prestaremos más atención a las noticias sobre fiestas que a las sobre voluntariado juvenil.*
+-   **Razonamiento Ilógico:** Usamos falacias para explicar las contradicciones.
+    -   *Ejemplo: La "falacia del jugador" (si he perdido 5 veces seguidas, "me toca" ganar) o "la excepción confirma la regla".*
+
+## La Ciencia como Antídoto {.smaller background-color="white"}
+
+La investigación científica es una actividad consciente y deliberada diseñada para minimizar estos errores.
+
+::::: columns
+::: {.column width="50%"}
+**Error Cotidiano**
+
+-   Observación Imprecisa
+-   Sobregeneralización
+-   Observación Selectiva
+-   Razonamiento Ilógico
 :::
+
+::: {.column width="50%"}
+**Solución Científica**
+
+-   Medición consciente y sistemática.
+-   Uso de muestras grandes y representativas.
+-   Búsqueda deliberada de casos desviados.
+-   Uso de sistemas lógicos explícitos.
+:::
+:::::
+
+La ciencia social no es más que una forma rigurosa y sistemática de observar y dar sentido al mundo social.
+
+## Actividad de Discusión (10 min) {.smaller background-color="white"}
+
+**Pregunta para reflexionar y discutir:**
+
+Piensen en un estereotipo o prejuicio social común (ej. sobre una generación, un grupo migrante, una profesión, etc.).
+
+**En grupos pequeños, discutan:**
+
+1.  ¿Qué **errores de la indagación cotidiana** creen que son los principales responsables de mantener vivo ese estereotipo?
+2.  ¿Cómo podría un sociólogo diseñar un pequeño estudio para **contrarrestar** uno de esos errores?
+
+---
+title_slide_background: "#008080"
+---
+
+# 3. Los Pilares de la Ciencia Social
+
+## Lógica y Observación {.smaller background-color="white"}
+
+El conocimiento científico se sostiene sobre dos pilares fundamentales:
+
+1.  **Lógica (o Racionalidad):** Las conclusiones deben tener sentido, ser coherentes y basarse en un razonamiento sólido.
+2.  **Observación (o Empirismo):** Las conclusiones deben corresponderse con lo que podemos observar en el mundo real.
+
+Estos pilares se conectan con los tres componentes centrales de la investigación:
+
+::: {layout-ncol="3"}
+![](https://i.imgur.com/2s4P3mB.png){fig-alt="Teoría" width="150"}
+
+**Teoría** (Aspecto Lógico)
+
+![](https://i.imgur.com/uC5rL4E.png){fig-alt="Datos" width="150"}
+
+**Recolección de Datos** (Aspecto Observacional)
+
+![](https://i.imgur.com/vH9Z3lR.png){fig-alt="Análisis" width="150"}
+
+**Análisis de Datos** (Puente entre Lógica y Observación)
 :::
 
-## ¿Cómo se relacionan la SV con la tradición teórica sociológica? {.smaller .center background-color="white"}
+## El Lenguaje de la Sociología: Variables y Atributos {.smaller background-color="white"}
 
-Los fundamentos de la sociología de las variables se pueden encontrar, por ejemplo, en las ideas de Emile Durkheim (u otras tradiciones teóricas holistas), quien propuso tratar los "hechos sociales" como entidades independientes de las acciones individuales, buscando estabilidad en las estructuras y ambientes sociales (lo cual puede argumentarse que va perdiendo eficacia históricamente).
+Las teorías sociales no tratan sobre personas individuales, sino sobre **agregados** y las **relaciones entre variables**.
 
-Giddens, en su rechazo al modelo de Durkheim, enfatizó la importancia de la agencia humana y la producción activa de la sociedad por sus miembros. Esto subraya un cambio hacia el análisis de las condiciones subjetivas y las decisiones individuales, lo que cuestiona las explicaciones puramente estructurales de la SV.
+-   **Atributos:** Son las características o valores que describen a una unidad de análisis.
+    -   *Ejemplos: "mujer", "obrero", "votó por el partido X", "18 años".*
+-   **Variables:** Son agrupaciones lógicas de atributos. La variable es el concepto general; el atributo es la categoría específica.
+    -   *Ejemplos: La variable "Género" agrupa los atributos "hombre", "mujer", etc. La variable "Clase social" agrupa los atributos "clase obrera", "clase media", etc.*
 
-Es una forma en que aparece el problema de la relación entre [**agencia y estructura**]{style="color:#a050a0;"}.
+Un objetivo central de la investigación es explicar por qué las personas tienen ciertos atributos, analizando las relaciones entre variables.
+
+## Lógica Deductiva vs. Lógica Inductiva {.smaller background-color="white"}
+
+Son dos caminos complementarios para conectar Teoría y Observación.
+
+::::: columns
+::: {.column width="50%"}
+**Lógica Deductiva (De lo general a lo específico)**
+
+1.  Se parte de una **teoría** o principio general.
+2.  Se formula una **hipótesis** específica que se pueda probar.
+3.  Se recolectan **observaciones** (datos) para confirmar o refutar la hipótesis.
+
+*Ejemplo: Partiendo de la **teoría** del conflicto, se **hipotetiza** que las personas con menos recursos económicos tendrán una percepción más negativa de la policía. Luego, se realiza una **encuesta** para medirlo.*
+:::
+
+::: {.column width="50%"}
+**Lógica Inductiva (De lo específico a lo general)**
+
+1.  Se parte de **observaciones** específicas del mundo.
+2.  Se buscan **patrones** o regularidades en esas observaciones.
+3.  Se formula una **teoría** general para explicar los patrones observados.
+
+*Ejemplo: Un investigador **observa** a través de entrevistas que muchos trabajadores de plataformas digitales se sienten aislados. Identifica un **patrón** de precariedad y falta de comunidad. Desarrolla una **teoría** sobre la "anomia digital".*
+:::
+:::::
+
+---
+title_slide_background: "#008080"
+---
+
+# 4. El Mapa: La Organización de la Investigación
+
+## Proyecto vs. Diseño de Investigación {.smaller background-color="white"}
+
+A menudo se confunden, pero son conceptos distintos.
+
+-   **El Proyecto de Investigación:** Es el plan global y completo de la indagación. Incluye no solo la metodología, sino también los **objetivos**, el **marco teórico**, los **recursos** (económicos, humanos) y el **cronograma**. Es el "qué", "por qué", "con qué" y "cuándo".
+
+-   **El Diseño de Investigación:** Es una parte del proyecto. Se refiere específicamente a la **estrategia metodológica** para alcanzar los objetivos. Es el "cómo" vamos a recoger y analizar la información.
+
+::: footer
+Fuente: Adaptado de Cea D'Ancona M. (1996). *Metodología Cuantitativa*.
+:::
+
+## Componentes de un Proyecto de Investigación {.smaller background-color="white"}
+
+Un proyecto de investigación se puede estructurar en fases lógicas:
+
+1.  **Formulación del Problema:**
+    -   Definición de objetivos (¿Qué quiero saber?).
+    -   Elaboración del marco teórico (Revisión bibliográfica).
+2.  **Operacionalización del Problema:**
+    -   Formulación de hipótesis.
+    -   Definición conceptual y operacional de las variables.
+    -   Delimitación de las unidades de análisis.
+
+## Componentes de un Proyecto de Investigación {.smaller background-color="white"}
+
+3.  **Diseño de la Investigación:**
+    -   Selección de la estrategia (encuesta, experimento, etc.).
+    -   Diseño de la muestra.
+    -   Elección de técnicas de recogida y análisis de datos.
+4.  **Factibilidad de la Investigación:**
+    -   Análisis de fuentes bibliográficas.
+    -   Evaluación de recursos disponibles.
+    -   Planificación del tiempo.
+
+**Nuestro curso se centrará en herramientas para las fases 2 y 3.**
+
+## Actividad de Cierre (15 min) {.smaller background-color="white"}
+
+**Caso Práctico:**
+
+Una socióloga quiere investigar la relación entre el **uso de redes sociales** y el **bienestar psicológico** en estudiantes universitarios.
+
+**En grupos, respondan:**
+
+1.  Si quisiera usar una **lógica deductiva**, ¿qué teoría podría usar como punto de partida para formular una hipótesis?
+2.  Si quisiera usar una **lógica inductiva**, ¿qué tipo de observaciones podría realizar primero para buscar patrones?
+3.  ¿Cuáles serían las dos **variables** principales de este estudio? Mencionen al menos dos posibles **atributos** para cada una.
+
+## Resumen y Próximos Pasos {.smaller background-color="white"}
+
+**Hoy hemos visto:**
+
+-   Que la investigación científica es una forma sistemática de superar los errores del conocimiento cotidiano.
+-   Que se fundamenta en la **lógica** (teoría) y la **observación** (datos).
+-   Que podemos conectar teoría y datos a través de la **deducción** y la **inducción**.
+-   Que un proyecto de investigación es un plan estructurado con etapas claras.
+
+**Para la próxima clase:**
+
+-   **Lectura obligatoria:** Moore, D. S. (2005). "Razonamiento estadístico".
+-   **Tema:** Analizaremos por qué la estadística es crucial en la sociología moderna y el rol de los lenguajes de programación como R.
