@@ -5,18 +5,18 @@ name: "Inferno"
 light: true
 
 # Primary
-primary: "#a050a0"
+primary: "#D76D77"   # Rosa quemado (énfasis)
 
 # Links
-link: "#a050a0"
-link_hover: "#206468"
+link: "#D76D77"        # Rosa quemado
+link_hover: "#3A1C71"  # Índigo profundo
 
 # Menu
-menu_primary: "#fff"
-menu_text: "#a050a0"
-menu_text_active: "#238D8D"
-menu_title: "#238D8D"
+menu_primary: "#FFFFFF"  # Blanco
+menu_text:   "#3A1C71"   # Índigo profundo
+menu_text_active: "#D76D77"  # Rosa quemado
+menu_title: "#3A1C71"    # Índigo profundo
 
 # Home sections
-home_section_odd: "rgb(255, 255, 255)"
-home_section_even: "rgb(247, 247, 247)"
+home_section_odd:  "rgb(248, 245, 252)"  # Índigo muy pálido
+home_section_even: "rgb(255, 239, 244)"  # Rosa muy pálido
