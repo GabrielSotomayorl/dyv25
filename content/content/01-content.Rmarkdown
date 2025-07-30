@@ -1,9 +1,9 @@
 ---
-title: "Introducción al curso Análisis avanzado de datos"
-linktitle: "1: Introducción al curso Análisis avanzado de datos"
-date: "2024-08-12"
-start_date: "2024-08-12"
-end_date: "2024-08-12"
+title: "Introducción al curso y a la estadística en las ciencias sociales"
+linktitle: "1: Introducción al curso y a la estadística en las ciencias sociales"
+date: "2025-08-11"
+start_date: "2025-08-11"
+end_date: "2025-08-11"
 menu:
   content:
     parent: Contenido
@@ -15,12 +15,13 @@ csl: "../../static/bib/chicago-fullnote-bibliography-no-bib.csl"
 slides: "01-slides"
 ---
 
+
 ```{r slides-videos, echo=FALSE, include=FALSE}
 source(here::here("R", "slide-tabs.R"))
 
 slide_details <- tibble::tribble(
   ~title, ~slide, ~active,
-  "Introducción al curso Análisis avanzado de datos", "0", TRUE
+  "Clase 1: Introducción al curso", "0", TRUE
 )
 ```
 
@@ -32,11 +33,11 @@ slide_details <- tibble::tribble(
 slide_tabs(slide_details, "/slides/01-slides.html")
 ```
 
-{{% div fyi %}} **¿Cómo ocupar**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras estas viendo las slides, podrás ver los comandos específicos para navegar en ellas. {{% /div %}}
+{{% div fyi %}}
+**¿Cómo ocupar las slides?**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras las estás viendo, podrás ver los comandos específicos para navegar en ellas.
+{{% /div %}}
 
-# Materiales de la clase
--   [<i class="fas fa-laptop-code"></i> Práctico](https://aadi2024.netlify.app/example/01-practico/)
 
 # Bibliografía
-- [Esser 2010 Sociología de las Variables](../bib/Esser 2010 Sociología de las Variables.pdf/)  
-- [Lizon 2006 Estadistica y causalidad en sociologia](../bib/Lizon 2006 Estadistica y causalidad en sociologia.pdf/)
+- [Babbie, E. (2000). Capítulo 1 y 2](../bib/Fundamentos De La Investigacion Social (Scan) (Babbie Earl)-1-72.pdf/)
+- [Cea D’Ancona M. (1996). Capítulo 2. Pags. 81 a la 120.](../bib/Cea D’Ancona M. (1996) Metodología Cuantitativa-77-118.pdf/)

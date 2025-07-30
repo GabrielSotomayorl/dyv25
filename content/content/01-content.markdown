@@ -1,9 +1,9 @@
 ---
-title: "Introducción al curso Análisis avanzado de datos"
-linktitle: "1: Introducción al curso Análisis avanzado de datos"
-date: "2024-08-12"
-start_date: "2024-08-12"
-end_date: "2024-08-12"
+title: "Introducción al curso y a la estadística en las ciencias sociales"
+linktitle: "1: Introducción al curso y a la estadística en las ciencias sociales"
+date: "2025-08-11"
+start_date: "2025-08-11"
+end_date: "2025-08-11"
 menu:
   content:
     parent: Contenido
@@ -20,18 +20,22 @@ slides: "01-slides"
 {{% slide-buttons %}}
 
 <ul class="nav nav-tabs" id="slide-tabs" role="tablist">
+
 <li class="nav-item">
-<a class="nav-link active" id="introducción-al-curso-análisis-avanzado-de-datos-tab" data-toggle="tab" href="#introducción-al-curso-análisis-avanzado-de-datos" role="tab" aria-controls="introducción-al-curso-análisis-avanzado-de-datos" aria-selected="true">Introducción al curso Análisis avanzado de datos</a>
+
+<a class="nav-link active" id="clase-1-introducción-al-curso-tab" data-toggle="tab" href="#clase-1-introducción-al-curso" role="tab" aria-controls="clase-1-introducción-al-curso" aria-selected="true">Clase 1: Introducción al curso</a>
 </li>
+
 </ul>
 
 <div id="slide-tabs" class="tab-content">
 
-<div id="introducción-al-curso-análisis-avanzado-de-datos" class="tab-pane fade show active" role="tabpanel" aria-labelledby="introducción-al-curso-análisis-avanzado-de-datos-tab">
+<div id="clase-1-introducción-al-curso" class="tab-pane fade show active" role="tabpanel" aria-labelledby="clase-1-introducción-al-curso-tab">
 
 <div class="embed-responsive embed-responsive-16by9">
 
 <iframe class="embed-responsive-item" src="/slides/01-slides.html#0">
+
 </iframe>
 
 </div>
@@ -40,13 +44,11 @@ slides: "01-slides"
 
 </div>
 
-{{% div fyi %}} **¿Cómo ocupar**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras estas viendo las slides, podrás ver los comandos específicos para navegar en ellas. {{% /div %}}
-
-# Materiales de la clase
-
-- [<i class="fas fa-laptop-code"></i> Práctico](https://aadi2024.netlify.app/example/01-practico/)
+{{% div fyi %}}
+**¿Cómo ocupar las slides?**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras las estás viendo, podrás ver los comandos específicos para navegar en ellas.
+{{% /div %}}
 
 # Bibliografía
 
-- [Esser 2010 Sociología de las Variables](../bib/Esser%202010%20Sociología%20de%20las%20Variables.pdf/)  
-- [Lizon 2006 Estadistica y causalidad en sociologia](../bib/Lizon%202006%20Estadistica%20y%20causalidad%20en%20sociologia.pdf/)
+- [Babbie, E. (2000). Capítulo 1 y 2](../bib/Fundamentos%20De%20La%20Investigacion%20Social%20(Scan)%20(Babbie%20Earl)-1-72.pdf/)
+- [Cea D’Ancona M. (1996). Capítulo 2. Pags. 81 a la 120.](../bib/Cea%20D’Ancona%20M.%20(1996)%20Metodología%20Cuantitativa-77-118.pdf/)
