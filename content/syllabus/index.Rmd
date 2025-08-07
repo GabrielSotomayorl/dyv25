@@ -1,25 +1,19 @@
 ---
-title: Syllabus
-slug: syllabus
-citeproc: true
-bibliography: ../../static/bib/references.bib
-csl: ../../static/bib/chicago-syllabus-no-bib.csl
+title: "Programa de Estudios: Descripción y Visualización de Datos"
+author: "Facultad de Ciencias Sociales e Historia, Escuela de Sociología"
+date: "2º semestre 2025"
 output:
-  blogdown::html_page:
-    toc: true
-    fig_caption: false
-editor_options: 
-  markdown: 
-    wrap: 72
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+    number_sections: yes
+    latex_engine: xelatex
+mainfont: "Garamond"
+fontsize: 11pt
+geometry: "left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm"
 ---
 
-```{r setup, message=FALSE, warning=FALSE, include=FALSE}
-library(dplyr)
-library(tibble)
-library(pander)
-```
-
-`r blogdown::shortcode("courseinfo")`
+\newpage
 
 # I. Identificación
 
@@ -40,7 +34,7 @@ library(pander)
 -   **Ayudante:**
     -   Felipe Adasme ([felipe.adasme@mail.udp.cl](mailto:felipe.adasme@mail.udp.cl))
     -   Francisca Hernández ([francisca.hernandez_c@mail.udp.cl](mailto:francisca.hernandez_c@mail.udp.cl))
-    -   Amanda Sanhueza ([Amanda.sanhueza@mail.udp.cl](mailto:Amanda.sanhueza@mail.udp.cl))
+    -   Romina Zamorano ([romina.zamorano@mail.udp.cl](mailto:romina.zamorano@mail.udp.cl))
 
 # II. Presentación
 
@@ -124,61 +118,9 @@ Los puntos anteriores se realizarán utilizando el lenguaje de programación est
 -   Medidas de asociación: Pearson, spearman, gamma, policóricas.
 -   Más allá de lo descriptivo: la probabilidad como medida de incertidumbre.
 
-## AYUDANTÍAS DE R
-
-Tendremos una serie de 8 ayudantías de R en horario de ayudantía. El objetivo de estas ayudantias es introducirse al lenguaje R para el análisis estadístico y serán guías de estudio para desarrollar las evaluaciones del curso.
-
--   **Ayudantía Nº1 (18-08/25-08):** Introducción a R como lenguaje de programación estadístico.
-    -   R como lenguaje y RStudio como interprete.
-    -   Trabajo con rutas relativas y proyectos.
-    -   Vectores, matrices, listas.
-    -   Operadores lógicos para la programación.
-    -   Construcción de un marco de datos como una lista de vectores.
-    -   Lógica de objetos y funciones en R.
--   **Ayudantía Nº2 (01-09/08-09):** Lectura y exploración de marcos de datos en R.
-    -   Descarga y uso de librerías en R.
-    -   Conocer la variedad de formatos en los que puede estar empaquetada una tabla de datos.
-    -   Importar una tabla de datos desde distintos formatos.
-    -   Explorar las dimensiones de una tabla: filas, columnas, nombres de columnas.
-    -   Identificar el tipo de variable con el que se trabaja.
-    -   Lógica de indexación de las tablas de datos.
-    -   Complementar el análisis con el libro de código.
-    -   Explorar variables: valores atípicos y missing values.
--   **Ayudantía Nº3 (22-09):** Manipulación de marcos de datos en R I.
-    -   Introducción al `tidyverse`.
-    -   Uso de la librería `dplyr`.
-    -   Filtrar una tabla de datos en R (`filter`).
-    -   Seleccionar columnas en una tabla de datos en R (`select`).
-    -   Ordenar tablas de datos en R (`arrange`).
--   **Ayudantía Nº4 (13-10):** Manipulación de marcos de datos en R II.
-    -   Unir tablas de datos por filas y columnas.
-    -   Problemas de `cbind`.
-    -   Uso de Joins y Keys.
-    -   Uso de `rbind` y `add_row`.
-    -   Pivoteo de tablas de datos: long a wide y viceversa.
--   **Ayudantía Nº5 (20-10):** Generación de variables en R.
-    -   Uso de indexación y `mutate`.
-    -   Generación de índices, escalas y tipologías.
-    -   Recodificación de variables: `ifelse` y `case_when`.
--   **Ayudantía Nº6 (27-10):** Visualización de datos en R.
-    -   Uso de `ggplot2` y lógica de capas.
-    -   Construcción de gráficos: barras, histogramas y boxplots.
-    -   Customización de gráficos.
--   **Ayudantía Nº7 (03-11):** Análisis descriptivo univariado en R.
-    -   Plan de análisis univariado.
-    -   Exploración de una tabla de datos real.
-    -   Estadísticos descriptivos y visualizaciones.
-    -   Interpretación de resultados.
--   **Ayudantía Nº8 (10-11):** Análisis descriptivo bivariado en R.
-    -   Plan de análisis bivariado.
-    -   Exploración de una tabla de datos real.
-    -   Estadísticos descriptivos y visualizaciones.
-    -   Interpretación de resultados.
-    -   Exportar tablas de datos en excel.
-
 # V. Metodología
 
-El curso se desarrollará en base a clases teóricas de modalidad expositivas y prácticas tipo taller. En ese sentido, durante las clases en aula se presentaran los contenidos del curso tanto a nivel teórico como práctico a través de ejemplos, además se realizarán guías de ejercicios grupales o individuales orientadas a la aplicación práctica de los contenidos. Algunas de las sesiones de clases serán destinadas al trabajo exclusivo en laboratorio de computación, en donde se abordará el trabajo con el lenguaje de programación R.
+El curso se desarrollará en base a clases teóricas de modalidad expositivas y prácticas tipo taller. En ese sentido, durante las clases en aula se presentaran los contenidos del curso tanto a nivel teórico como práctico a través de ejemplos, además se realizarán guías de ejercicios grupales o individuales orientadas a la aplicación práctica de los contenidos. Algunas de las sesiones de clases serán destinadas al trabajo exclusivo en laboratorio de computación, en donde se abordará el trabajo con el lenguaje de programación R. Los contenidos del curso estarán disponibles en el sitio: <https://dyv25.netlify.app/>
 
 Adicionalmente se realizará una sesión semanal de ayudantía con asistencia obligatoria a cargo de los ayudantes del curso, la que se realizará en el laboratorio de computación en un horario fijado con anterioridad. La ayudantía tendrá como objetivo entregar los elementos necesarios para el desarrollo y aplicación adecuada de los contenidos vistos en clases y la práctica de R como lenguaje de programación.
 
@@ -237,26 +179,27 @@ El ayudante tendrá un rol fundamental en el curso. Estará a cargo de realizar 
 
 | Semana | Fecha | UNIDAD | Tópico | Evaluaciones | Lecturas Obligatorias / Ayudantía |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| 1 | **Clase:** Lunes, <br> 11-08-2025 | Unidad 1: Introducción a la estadística y su relación con las ciencias sociales | - Presentación del curso.<br>- El proceso de conocimiento científico: lógica inductiva y deductiva.<br>- Etapas generales de la investigación social empírica.<br>- Datos: la fuente de información clave para la estadística.<br>- La estadística como una aproximación a preguntas de investigación sociológicas. | | **Clase:**<br>- Babbie, E. (2000). Capítulo 1. Pags. 4 a la 26.<br>- Babbie, E. (2000). Capítulo 2. Pags. 30 a la 48.<br>- Cea D’Ancona M. (1996). Capítulo 2. Pags. 81 a la 120.<br>**Sin ayudantía** |
-| 2 | **Clase:** Lunes, 18-08-2025 <br> **Ayudantía:** Lunes, 18-08-2025 | | - Usos de la estadística en la actualidad: sociología, políticas públicas, otros.<br>- La relevancia de los lenguajes de programación para el análisis estadístico actual. | **Control N°1**<br>(en clases) | **Clase:**<br>- Moore, D. S. (2005). Título Razonamiento estadístico. Pags. 27 a la 37 del PDF.<br>**Ayudantía de R N°1 (parte 1):**<br>- Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Capítulo 1. Introduction. Capítulo 3. Workflow: basics. Capítulo 5. Workflow: code style. Y Capítulo 7. Workflow: scripts and projects. |
-| 3 | **Clase:** Lunes, 25-08-2025 <br> **Laboratorio:** Lunes, 25-08-2025 | Unidad 2: Conceptos claves para la investigación social | - Conceptualización y operacionalización.<br>- Unidad de análisis vs unidad de observación.<br>- Tipos de variables y niveles de medición. | | **Clase:**<br>- Babbie, E. (2000). Capítulo 5. Pags. 96 a la 115.<br>- Babbie, E. (2000). Capítulo 6. Pags. 117 a la 138.<br>- Ritchey F. (2008). Capítulo 2. Pags. 42 a la 48.<br>- Asún, R. (2006). Medir la realidad social: El sentido de la metodología cuantitativa.<br>**Ayudantía de R N°1 (parte 2):**<br>- Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Capítulo 3. Workflow: basics y Capítulo 5. Workflow: code style.<br>- Urdinez, F., & Cruz, A. (2020). Capítulo 1. R Básico. |
-| 4 | **Clase:** Lunes, 01-09-2025 <br> **Laboratorio:** Lunes, 01-09-2025 | | - Muestra y población: estadísticas muestrales y parámetros poblacionales.<br>- Población objetivo, marco muestral, muestra.<br>- Validez y confiabilidad en la medición.<br>- Error de medición y error muestral. | **Control N°2**<br>(en clases)<br>**Tarea 1** | **Clase:**<br>- Babbie, E. (1996). Capítulo 5. Pags. 147 a la 175.<br>- Babbie, E. (2000). Capítulo 4. Pags. 89 a la 91.<br>- Babbie, E. (2000). Capítulo 8. Pags. 176 a la 191.<br>**Ayudantía de R N°2 (parte 1)** |
-| 5 | **Clase:** Lunes, 08-09-2025 <br> **Laboratorio:** Lunes, 08-09-2025 | Unidad 3: Marcos de datos para la investigación social | - Estructura de una tabla de datos: lógica filas, columnas.<br>- Exploración de una tabla de datos en R.<br>- Tipos de variables en una tabla de datos. | **Trabajo Práctico 1**<br>(3 semanas) | **Clase:**<br>- Babbie, E. (2000). Capítulo 14. Pags. 336 a la 342.<br>**Ayudantía de R N°2 (parte 2):**<br>- Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Capítulo 8. Data import. Y Capítulo 11. Exploratory data análisis. |
-| | Lunes, 15-09-2025 | | **SEMANA DE RECESO POR FIESTAS PATRIAS, NO HAY CLASES NI EVALUACIONES** | | |
-| 6 | **Clase:** Lunes, 22-09-2025 <br> **Ayudantía:** Lunes, 22-09-2025 | Unidad 3: Marcos de datos para la investigación social | - Manipulación de tablas de datos I: selecciones, filtros, ordenamiento.<br>- Manipulación de tablas de datos II: uniones y pivot. | | **Ayudantía de R N°3:**<br>- Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Capítulo 4. Data Transformation. Y Capítulo 6. Data tidying.<br>- Urdinez, F., & Cruz, A. (2020). Capítulo 2. Manejo de datos. |
-| 7 | **Clase:** Lunes, 29-09-2025 <br> **Ayudantía:** Lunes, 29-09-2025 | | - Recodificación de variables: uso de estructuras condicionales.<br>- Construcción de variables: índices, escalas y tipologías. | **Control N°3**<br>(en clases) | **Clase:**<br>- Babbie, E. (2000). Capítulo 7. Pags. 144 a la 167.<br>**Ayudantía: Preparación de la solemne I** |
+| 1 | **Clase:** Lunes, <br> 11-08-2025 | Unidad 1 | - Presentación del curso.<br>- El proceso de conocimiento científico.<br>- Etapas generales de la investigación social empírica.<br>- Datos: la fuente de información clave.<br>- La estadística como una aproximación a preguntas sociológicas. | | **Clase:**<br>- Babbie, E. (2000). Cap. 1. Pags. 4-26.<br>- Babbie, E. (2000). Cap. 2. Pags. 30-48.<br>- Cea D'Ancona M. (1996). Cap. 2. Pags. 81-120.<br>**Sin ayudantía** |
+| 2 | **Clase:** Lunes, 18-08-2025 <br> **Ayudantía:** Lunes, 18-08-2025 | | - Usos de la estadística en la actualidad.<br>- La relevancia de los lenguajes de programación. | **Control N°1**<br>(en clases) | **Clase:**<br>- Moore, D. S. (2005). Razonamiento estadístico. Pags. 27-37.<br>**Ayudantía de R N°1 (parte 1)**<br>- Wickham, H., et al. (2023). Cap. 1, 3, 5, 7. |
+| 3 | **Clase:** Lunes, 25-08-2025 <br> **Laboratorio:** Lunes, 25-08-2025 | Unidad 2 | - Conceptualización y operacionalización.<br>- Unidad de análisis vs unidad de observación.<br>- Tipos de variables y niveles de medición. | | **Clase:**<br>- Babbie, E. (2000). Cap. 5. Pags. 96-115.<br>- Babbie, E. (2000). Cap. 6. Pags. 117-138.<br>- Ritchey F. (2008). Cap. 2. Pags. 42-48.<br>- Asún, R. (2006). Medir la realidad social.<br>**Ayudantía de R N°1 (parte 2)**<br>- Wickham, H., et al. (2023). Cap. 3, 5.<br>- Urdinez, F., & Cruz, A. (2020). Cap. 1. R Básico. |
+| 4 | **Clase:** Lunes, 01-09-2025 <br> **Laboratorio:** Lunes, 01-09-2025 | | - Muestra y población.<br>- Población objetivo, marco muestral.<br>- Validez y confiabilidad.<br>- Error de medición y error muestral. | **Control N°2**<br>(en clases)<br>**Tarea 1** | **Clase:**<br>- Babbie, E. (1996). Cap. 5. Pags. 147-175.<br>- Babbie, E. (2000). Cap. 4. Pags. 89-91.<br>- Babbie, E. (2000). Cap. 8. Pags. 176-191.<br>**Ayudantía de R N°2 (parte 1)** |
+| 5 | **Clase:** Lunes, 08-09-2025 <br> **Laboratorio:** Lunes, 08-09-2025 | Unidad 3 | - Estructura de una tabla de datos.<br>- Exploración de una tabla de datos en R.<br>- Tipos de variables en una tabla de datos. | **Trabajo Práctico 1**<br>(3 semanas) | **Clase:**<br>- Babbie, E. (2000). Cap. 14. Pags. 336-342.<br>**Ayudantía de R N°2 (parte 2)**<br>- Wickham, H., et al. (2023). Cap. 8, 11. |
+| | Lunes, 15-09-2025 | | **SEMANA DE RECESO POR FIESTAS PATRIAS** | | |
+| 6 | **Clase:** Lunes, 22-09-2025 <br> **Ayudantía:** Lunes, 22-09-2025 | | - Manipulación de tablas de datos I y II. | | **Ayudantía de R N°3**<br>- Wickham, H., et al. (2023). Cap. 4, 6.<br>- Urdinez, F., & Cruz, A. (2020). Cap. 2. |
+| 7 | **Clase:** Lunes, 29-09-2025 <br> **Ayudantía:** Lunes, 29-09-2025 | | - Recodificación y construcción de variables. | **Control N°3**<br>(en clases) | **Clase:**<br>- Babbie, E. (2000). Cap. 7. Pags. 144-167.<br>**Ayudantía: Preparación de la solemne I** |
 | 8 | Lunes, 06-10-2025 | | **SOLEMNE 1 – CONTENIDO DE LA UNIDAD 1, 2 Y 3** | | |
-| 9 | **Clase:** Lunes, 13-10-2025 <br> **Laboratorio:** Lunes, 13-10-2025 | Unidad 4: Estadística Descriptiva Univariada | - Estadísticos de centro: media, mediana, moda.<br>- Estadísticos de dispersión: rango, varianza, desviación estándar.<br>- Posición: percentiles.<br>- Forma: asimetría y curtosis. | **Tarea 2** | **Clase:**<br>- Moore, D. S. (2005). Capítulo 1. Pags. 32 a la 54.<br>- Ritchey F. (2008). Capítulo 4. Pags. 107 a la 117.<br>- Ritchey F. (2008). Capítulo 4. Pags. 136 a la 154.<br>**Ayudantía de R N°4** |
-| 10 | **Clase:** Lunes, 20-10-2025 <br> **Laboratorio:** Lunes, 20-10-2025 | | - Frecuencias absolutas y relativas.<br>- Porcentajes.<br>- Tasas. | | **Clase:**<br>- Diez, D. M., Barr, C. D., & Çetinkaya-Rundel, M. (2024). Capítulo 2. Pags. 61 a la 71.<br>- Ritchey F. (2008). Capítulo 4. Pags. 52 a la 61.<br>**Ayudantía de R N°5** |
-| 11 | **Clase:** Lunes, 27-10-2025 <br> **Laboratorio:** Lunes, 27-10-2025 | | - Visualización de datos: barras, histogramas y boxplots.<br>- Recomendaciones para la visualización de datos cuantitativos. | **Control N°4**<br>(en clases)<br>**Tarea 3** | **Clase:**<br>- Moore, D. S. (2005). Capítulo 1. Pags. 3 a la 24.<br>**Ayudantía de R Nº6:**<br>- Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). Capítulo 2. Data visualization. |
-| 12 | **Clase:** Lunes, 03-11-2025 <br> **Laboratorio:** Lunes, 03-11-2025 | Unidad 5: Estadística Descriptiva Bivariada | - Tipos de asociaciones entre variables según su naturaleza.<br>- Concepto de independencia.<br>- Construcción de estadísticos por grupo. | **Trabajo Práctico 2**<br>(3 semanas) | **Clase:**<br>- Moore, D. S. (2005). Capítulo 2. Pags. 98 a la 128.<br>**Ayudantía de R Nº7** |
-| 13 | **Clase:** Lunes, 10-11-2025 <br> **Laboratorio:** Lunes, 10-11-2025 | | - Construcción de tablas de contingencia.<br>- Control por tercera variable. | **Tarea 4** | **Clase:**<br>- Moore, D. S. (2005). Capítulo 2. Pags. 173 a la 183.<br>**Ayudantía de R N°8** |
-| 14 | **Clase:** Lunes, 17-11-2025 <br> **Ayudantía:** Lunes, 17-11-2025 | | - Visualizaciones bivariadas: barras, histogramas y boxplots.<br>- Medidas de asociación: Pearson, spearman, gamma.<br>- Más allá de lo descriptivo: la probabilidad como medida de incertidumbre.<br>- Recomendaciones para la visualización de datos cuantitativos. | **Control N°5**<br>(en clases) | **Clase:**<br>- Ritchey F. (2008). Capítulo 3. Pags. 78 a la 94.<br>- Moore, D. S. (2005). Capítulo 2. Pags. 97 a la 127.<br>- Moore, D. S. (2005). Capítulo 4. Pags. 270 a la 288.<br>- Moore, D. S. (2005). Capítulo 5. Pags. 344 a la 355.<br>- Urdinez, F., & Cruz, A. (2020). Capítulo 3. Visualización de datos.<br>**Ayudantía: Preparación de la solemne II** |
-| | Lunes, 24-11-2025 | | - Cierre del curso: uso de la estadística en ciencias sociales<br>- Sesiones de trabajo para el trabajo práctico II | | |
-| 16 | Lunes, 01-12-2025 | | **SOLEMNE II – CONTENIDO DE LA UNIDAD 4 Y 5** | | |
+| 9 | **Clase:** Lunes, 13-10-2025 <br> **Laboratorio:** Lunes | Unidad 4 | - Estadísticos de centro, dispersión y posición. | **Tarea 2** | **Clase:**<br>- Moore, D. S. (2005). Cap. 1. Pags. 32-54.<br>- Ritchey F. (2008). Cap. 4. Pags. 107-117.<br>- Ritchey F. (2008). Cap. 4. Pags. 136-154. |
+| 10 | Lunes, 20-10-2025 | | - Forma: asimetría y curtosis.<br>- Frecuencias, porcentajes y tasas. | | **Clase:**<br>- Diez, D. M., et al. (2024). Cap. 2. Pags. 61-71.<br>- Ritchey F. (2008). Cap. 4. Pags. 52-61.<br>**Ayudantía de R N°4, N°5** |
+| 11 | Lunes, 27-10-2025 | | - Visualización de datos y recomendaciones. | **Tarea 3** | **Clase:**<br>- Moore, D. S. (2005). Cap. 1. Pags. 3-24. |
+| 12 | Lunes, 03-11-2025 | | - Introducción a la gramática de gráficos de ggplot2. | **Control N°4**<br>**Trabajo Práctico 2** | **Ayudantía de R N°6**<br>- Wickham, H., et al. (2023). Cap. 2. |
+| 13 | Lunes, 10-11-2025 | Unidad 5 | - Tipos de asociaciones, independencia, estadísticos por grupo. | | **Clase:**<br>- Moore, D. S. (2005). Cap. 2. Pags. 98-128.<br>**Ayudantía de R N°7** |
+| 14 | Lunes, 17-11-2025 | | - Construcción de tablas de contingencia y control. | **Tarea 4** | **Clase:**<br>- Moore, D. S. (2005). Cap. 2. Pags. 173-183.<br>**Ayudantía de R N°8** |
+| 15 | Lunes, 24-11-2025 | | - Visualizaciones bivariadas: barras, histogramas, boxplots. | **Control N°5**<br>(en clases) | **Clase:**<br>- Ritchey F. (2008). Cap. 3. Pags. 78-94. |
+| 16 | Lunes, 01-12-2025 | | **SOLEMNE II – CONTENIDO DE LA UNIDAD 4 Y 5** | | **Ayudantía: Preparación de la solemne II**<br>- Moore, D.S. (2005). Cap. 2, 4, 5.<br>- Urdinez, F., & Cruz, A. (2020). Cap. 3. |
 | 17 | Lunes, 08-12-2025 | | **PRUEBA RECUPERATIVA** | | |
-| | | | **EXAMEN: FECHA POR CONFIRMAR** | | |  
+| | | | **EXAMEN: FECHA POR CONFIRMAR** | | |
 
+*Nota: al final de cada semana se presentará la literatura obligatoria y complementaria.*
 
 # IX. Bibliografía
 
@@ -336,4 +279,4 @@ Su uso sin autorización puede afectar el aprendizaje de habilidades claves de l
 Es importante realizar la consulta al profesor responsable si existen dudas sobre el uso de una herramienta de IA en una tarea o una evaluación.
 
 <p>Puedes descargar el programa apretando el siguiente botón:
-<a Puedes descargar el programa apretando el siguiente botón class="btn btn-primary" href="../files/Descripción y Visualización de Datos UDP 2º semestre 2025.pdf/" role="button"><i class="far fa-file-pdf"></i></a></p>
+<a Puedes descargar el programa apretando el siguiente botón class="btn btn-primary" href="../files/Descripción y Visualización de Datos UDP 2º semestre 2025.pdf/" role="button"><i class="far fa-file-pdf"></i></a></p>

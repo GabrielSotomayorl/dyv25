@@ -7,8 +7,6 @@ lessons:
     date_start: "11 agosto"
     date_end: "18 agosto"
     bg: 1
-    content: "01-content"
-    #example: "01-practico"
 
   - title: '• Presentación del curso<br>• El proceso de conocimiento científico: lógica inductiva y deductiva<br>• Etapas generales de la investigación social empírica<br>• Datos: la fuente de información clave para la estadística<br>• La estadística como una aproximación a preguntas de investigación sociológicas.'
     session: "Sesión 1"
@@ -72,94 +70,68 @@ lessons:
     bottomborder: True
 
   - title: '<span class="content-title">Unidad 4. Estadística Descriptiva Univariada</span>'
-    date: "13 - 27 de octubre"
+    date: "13 de octubre - 3 de noviembre"
     date_start: "13 octubre"
-    date_end: "27 octubre"
+    date_end: "3 noviembre"
     bg: 1
 
-  - title: '• Estadísticos de centro, dispersión, posición y forma (asimetría y curtosis).<br>• <strong>Entrega Tarea 2</strong>'
+  - title: '• Estadísticos de centro: media, mediana, moda.<br>• Estadísticos de dispersión: rango, varianza, desviación estándar.<br>• Posición: percentiles.<br>• <strong>Entrega Tarea 2</strong>'
     session: "Sesión 8"
     date: "13 octubre"
     bg: 1
 
-  - title: '• Estadístico para variables discretas o categóricas: Frecuencias, porcentajes y tasas.'
+  - title: '• Forma: asimetría y curtosis.<br>• Frecuencias absolutas y relativas. Porcentajes. Tasas.'
     session: "Sesión 9"
     date: "20 octubre"
     bg: 1
 
-  - title: '• Visualización de datos: barras, histogramas y boxplots.<br>• Recomendaciones para la visualización de datos cuantitativos.<br>• <strong>Evaluaciones: Control N°4, Entrega Tarea 3</strong>'
+  - title: '• Visualización de datos: barras, histogramas y boxplots.<br>• Recomendaciones para la visualización de datos cuantitativos.<br>• <strong>Entrega Tarea 3</strong>'
     session: "Sesión 10"
     date: "27 octubre"
+    bg: 1
+    
+  - title: '• Introducción a la gramática de gráficos de ggplot2.<br>• <strong>Evaluaciones: Control N°4, Inicio Trabajo Práctico 2</strong>'
+    session: "Sesión 11"
+    date: "3 noviembre"
     bg: 1
     bottomborder: True
 
   - title: '<span class="content-title">Unidad 5. Estadística Descriptiva Bivariada</span>'
-    date: "3 - 17 de noviembre"
-    date_start: "3 noviembre"
-    date_end: "17 noviembre"
+    date: "10 - 24 de noviembre"
+    date_start: "10 noviembre"
+    date_end: "24 noviembre"
     bg: 2
 
-  - title: '• Tipos de asociaciones entre variables según su naturaleza.<br>• Concepto de independencia.<br>• Construcción de estadísticos por grupo.<br>• <strong>Inicio: Trabajo Práctico 2 (3 semanas)</strong>'
-    session: "Sesión 11"
-    date: "3 noviembre"
-    bg: 2
-
-  - title: '• Construcción de tablas de contingencia.<br>• Control por tercera variable.<br>• <strong>Entrega Tarea 4</strong>'
+  - title: '• Tipos de asociaciones entre variables según su naturaleza.<br>• Concepto de independencia.<br>• Construcción de estadísticos por grupo.'
     session: "Sesión 12"
     date: "10 noviembre"
     bg: 2
 
-  - title: '• Visualizaciones bivariadas y medidas de asociación (Pearson, Spearman, Gamma).<br>• La probabilidad como medida de incertidumbre.<br>• <strong>Evaluación: Control N°5</strong>'
+  - title: '• Construcción de tablas de contingencia.<br>• Control por tercera variable.<br>• <strong>Entrega Tarea 4</strong>'
     session: "Sesión 13"
     date: "17 noviembre"
+    bg: 2
+
+  - title: '• Visualizaciones bivariadas: barras, histogramas y boxplots.<br>• <strong>Evaluación: Control N°5</strong>'
+    session: "Sesión 14"
+    date: "24 noviembre"
     bg: 2
     bottomborder: True
 
   - title: '<span class="content-title">Cierre del Curso y Evaluaciones Finales</span>'
-    date: "24 de noviembre - 8 de diciembre"
-    date_start: "24 noviembre"
+    date: "1 - 8 de diciembre"
+    date_start: "1 diciembre"
     date_end: "8 diciembre"
     bg: 1
 
-  - title: '• Cierre del curso: uso de la estadística en ciencias sociales.<br>• Sesiones de trabajo para el trabajo práctico II.'
-    session: "Sesión 14"
-    date: "24 noviembre"
+  - title: '• Medidas de asociación: Pearson, spearman, gamma.<br>• Más allá de lo descriptivo: la probabilidad como medida de incertidumbre.<br>• Recomendaciones para la visualización de datos cuantitativos.<br>• <strong>SOLEMNE II – Contenido Unidades 4 y 5</strong>'
+    session: "Evaluación Final"
+    date: "1 diciembre"
     bg: 1
     bottomborder: True
     
-  - title: '<strong>• SOLEMNE II – Contenido Unidades 4 y 5</strong>'
-    session: "Evaluación"
-    date: "1 diciembre"
-    bg: 2
-    bottomborder: True
-
   - title: '<strong>• PRUEBA RECUPERATIVA</strong>'
     session: "Evaluación"
     date: "8 diciembre"
-    bg: 1
-    bottomborder: True
-  - title: '• Análisis de Componentes Principales II'
-    session: "Sesión 15"
-    date: "25 noviembre"
-    content: "14-content"
-    example: "14-practico"
-    bg: 1
-    bottomborder: True
-
-  - title: '• Prueba Solemne 2'
-    session: "Sesión 16"
-    date: "2 diciembre"
-    bg: 2
-    bottomborder: True
-
-  - title: '• Prueba Recuperativa y taller de vinculación entre técnicas'
-    session: "Sesión 17"
-    date: "9 diciembre"
-    bg: 1
-    bottomborder: True
-
-  - title: '• Examen'
-    session: "Sesión 18"
-    date: "16 diciembre"
     bg: 2
     bottomborder: True
