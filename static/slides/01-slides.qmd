@@ -15,24 +15,25 @@ format:
 
 La estadística es una herramienta esencial para el quehacer sociológico moderno. Este curso busca entregar las herramientas básicas para relacionar la recolección de datos cuantitativos con las técnicas estadísticas apropiadas para su análisis, lectura e interpretación.
 
-Se abordarán elementos de la estadística descriptiva univariada y bivariada, como la presentación de datos en tablas y gráficos, el cálculo de estadígrafos (tendencia central, dispersión, etc.) y nociones de asociación.
+Se abordarán elementos de la estadística descriptiva univariada y bivariada, como la presentación de datos en tablas y gráficos, el cálculo de estadísticos (tendencia central, dispersión, etc.) y nociones de asociación.
 
 El curso tiene un carácter eminentemente práctico, utilizando lenguajes de programación como **R** para el análisis y presentación de datos, buscando que los y las estudiantes comprendan la relevancia del análisis estadístico en las Ciencias Sociales.
 
 ## Resultados de Aprendizaje {background-color="white"}
 
-**Resultado general:** Aplicar los métodos y herramientas de la estadística descriptiva necesarios para el análisis de datos cuantitativos en las ciencias sociales.
+**Resultado general:** Aplicar los métodos y herramientas de la estadística descriptiva necesarios para el análisis de datos cuantitativos en las ciencias sociales.
 
 ## Resultados Específicos {.smaller background-color="white"}
 
-1.  Comprender el uso y la relevancia de la estadística en las Ciencias Sociales.
-2.  Relacionar metodologías de recolección de datos con las técnicas estadísticas apropiadas.
-3.  Comprender las principales herramientas de la estadística descriptiva.
-4.  Definir correctamente un plan de análisis descriptivo para una tabla de datos.
-5.  Identificar el estadístico apropiado según el tipo de variable analizada.
-6.  Manipular, analizar e interpretar datos cuantitativos a través del lenguaje de programación R.
-7.  Distinguir entre estadística descriptiva e inferencial.
-
+1. Comprender el uso y relevancia de la estadística en las Ciencias Sociales.  
+2. Relacionar metodologías de recolección de datos y las técnicas estadísticas apropiadas para su análisis.  
+3. Comprender las principales herramientas de la estadística descriptiva.  
+4. Definir correctamente un plan de análisis descriptivo para una tabla de datos.  
+5. Identificar el estadístico apropiado según el tipo de variable analizada.  
+6. Manipular y analizar tablas de datos a través del lenguaje de programación R.  
+7. Interpretar datos cuantitativos producidos por investigaciones propias o de terceros.  
+8. Distinguir entre estadística descriptiva e inferencial.  
+  
 ## Contenidos: Unidad 1 {.smaller .dark-background}
 
 ### 1. Introducción a la estadística y su relación con las ciencias sociales
@@ -120,7 +121,7 @@ El curso cuenta con un equipo de tres ayudantes:
 - Grupo 1: Lunes 14:30 - 15:50\
 - Grupo 2: Lunes 14:30 - 15:50
 
-Se realizarán 10 sesiones prácticas en R a lo largo del semestre para apoyar las evaluaciones.
+Se realizarán 10 sesiones prácticas en R a lo largo del semestre, y ayudantías para apoyar las pruebas.
 
 ## Bibliografía Obligatoria (1/2) {.smaller background-color="white"}
 
@@ -152,12 +153,10 @@ Esto es particularmente relevante para solicitudes respecto a evaluaciones o cam
 
 ## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
--   **Distinguir** entre el conocimiento cotidiano y el conocimiento científico.
--   **Identificar** los pilares de la ciencia social: lógica y observación.
--   **Reconocer** los errores comunes en la indagación humana y cómo la ciencia los previene.
--   **Definir** los conceptos de teoría, variables y atributos como el lenguaje fundamental de las ciencias sociales.
--   **Diferenciar** entre las lógicas de investigación inductiva y deductiva.
--   **Esbozar** las etapas generales de un proyecto de investigación.
+- Comprender el rol de la estadística dentro del proceso de investigación social.   
+- Conocer ejemplos de uso de información cuantitativa para conocer la realidad social.  
+- Introducir los procedimientos y supuestos de la cuantificación de la realidad social.  
+
 
 ---
 title_slide_background: "#008080"

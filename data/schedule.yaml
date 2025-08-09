@@ -8,12 +8,12 @@ lessons:
     date_end: "18 agosto"
     bg: 1
 
-  - title: '• Presentación del curso<br>• El proceso de conocimiento científico: lógica inductiva y deductiva<br>• Etapas generales de la investigación social empírica<br>• Datos: la fuente de información clave para la estadística<br>• La estadística como una aproximación a preguntas de investigación sociológicas.'
+  - title: '• Presentación del curso<br>• El proceso de conocimiento científico<br>• Etapas generales de la investigación social empírica<br>• Datos: la fuente de información clave<br>• La estadística como una aproximación a preguntas sociológicas.'
     session: "Sesión 1"
     date: "11 agosto"
     bg: 1
 
-  - title: '• Usos de la estadística en la actualidad: sociología, políticas públicas, otros.<br>• La relevancia de los lenguajes de programación para el análisis estadístico actual.<br>• <strong>Evaluación: Control N°1</strong>'
+  - title: '• Usos de la estadística en la actualidad<br>• La relevancia de los lenguajes de programación.<br>• <strong>Evaluación: Control N°1</strong>'
     session: "Sesión 2"
     date: "18 agosto"
     bg: 1
@@ -30,7 +30,7 @@ lessons:
     date: "25 agosto"
     bg: 2
 
-  - title: '• Muestra y población: estadísticas muestrales y parámetros poblacionales.<br>• Población objetivo, marco muestral, muestra.<br>• Validez y confiabilidad en la medición.<br>• Error de medición y error muestral.<br>• <strong>Evaluaciones: Control N°2, Entrega Tarea 1</strong>'
+  - title: '• Muestra y población<br>• Población objetivo, marco muestral<br>• Validez y confiabilidad<br>• Error de medición y error muestral.<br>• <strong>Evaluaciones: Control N°2, Entrega Tarea 1</strong>'
     session: "Sesión 4"
     date: "1 septiembre"
     bg: 2
@@ -42,7 +42,7 @@ lessons:
     date_end: "29 septiembre"
     bg: 1
 
-  - title: '• Estructura de una tabla de datos: lógica filas, columnas.<br>• Exploración de una tabla de datos en R.<br>• Tipos de variables en una tabla de datos.<br>• <strong>Inicio: Trabajo Práctico 1 (3 semanas)</strong>'
+  - title: '• Estructura de una tabla de datos.<br>• Exploración de una tabla de datos en R.<br>• Tipos de variables en una tabla de datos.<br>• <strong>Inicio: Trabajo Práctico 1 (3 semanas)</strong>'
     session: "Sesión 5"
     date: "8 septiembre"
     bg: 1
@@ -52,12 +52,12 @@ lessons:
     date: "15 septiembre"
     bg: 1
 
-  - title: '• Manipulación de tablas de datos I: selecciones, filtros, ordenamiento.<br>• Manipulación de tablas de datos II: uniones y pivot.'
+  - title: '• Manipulación de tablas de datos I y II.'
     session: "Sesión 6"
     date: "22 septiembre"
     bg: 1
 
-  - title: '• Recodificación de variables: uso de estructuras condicionales.<br>• Construcción de variables: índices, escalas y tipologías.<br>• <strong>Evaluación: Control N°3</strong>'
+  - title: '• Recodificación y construcción de variables.<br>• <strong>Evaluación: Control N°3</strong>'
     session: "Sesión 7"
     date: "29 septiembre"
     bg: 1
@@ -75,17 +75,17 @@ lessons:
     date_end: "3 noviembre"
     bg: 1
 
-  - title: '• Estadísticos de centro: media, mediana, moda.<br>• Estadísticos de dispersión: rango, varianza, desviación estándar.<br>• Posición: percentiles.<br>• <strong>Entrega Tarea 2</strong>'
+  - title: '• Estadísticos de centro, dispersión y posición.<br>• <strong>Entrega Tarea 2</strong>'
     session: "Sesión 8"
     date: "13 octubre"
     bg: 1
 
-  - title: '• Forma: asimetría y curtosis.<br>• Frecuencias absolutas y relativas. Porcentajes. Tasas.'
+  - title: '• Forma: asimetría y curtosis.<br>• Frecuencias, porcentajes y tasas.'
     session: "Sesión 9"
     date: "20 octubre"
     bg: 1
 
-  - title: '• Visualización de datos: barras, histogramas y boxplots.<br>• Recomendaciones para la visualización de datos cuantitativos.<br>• <strong>Entrega Tarea 3</strong>'
+  - title: '• Visualización de datos y recomendaciones.<br>• <strong>Entrega Tarea 3</strong>'
     session: "Sesión 10"
     date: "27 octubre"
     bg: 1
@@ -97,17 +97,17 @@ lessons:
     bottomborder: True
 
   - title: '<span class="content-title">Unidad 5. Estadística Descriptiva Bivariada</span>'
-    date: "10 - 24 de noviembre"
+    date: "10 de noviembre - 1 de diciembre"
     date_start: "10 noviembre"
-    date_end: "24 noviembre"
+    date_end: "1 diciembre"
     bg: 2
 
-  - title: '• Tipos de asociaciones entre variables según su naturaleza.<br>• Concepto de independencia.<br>• Construcción de estadísticos por grupo.'
+  - title: '• Tipos de asociaciones, independencia, estadísticos por grupo.'
     session: "Sesión 12"
     date: "10 noviembre"
     bg: 2
 
-  - title: '• Construcción de tablas de contingencia.<br>• Control por tercera variable.<br>• <strong>Entrega Tarea 4</strong>'
+  - title: '• Construcción de tablas de contingencia y control.<br>• <strong>Entrega Tarea 4</strong>'
     session: "Sesión 13"
     date: "17 noviembre"
     bg: 2
@@ -116,22 +116,15 @@ lessons:
     session: "Sesión 14"
     date: "24 noviembre"
     bg: 2
-    bottomborder: True
-
-  - title: '<span class="content-title">Cierre del Curso y Evaluaciones Finales</span>'
-    date: "1 - 8 de diciembre"
-    date_start: "1 diciembre"
-    date_end: "8 diciembre"
-    bg: 1
-
-  - title: '• Medidas de asociación: Pearson, spearman, gamma.<br>• Más allá de lo descriptivo: la probabilidad como medida de incertidumbre.<br>• Recomendaciones para la visualización de datos cuantitativos.<br>• <strong>SOLEMNE II – Contenido Unidades 4 y 5</strong>'
-    session: "Evaluación Final"
+  
+  - title: '• Medidas de asociación: Pearson, spearman, gamma.<br>• Más allá de lo descriptivo: la probabilidad.<br>• Recomendaciones para la visualización de datos.<br>• <strong>SOLEMNE II – Contenido Unidades 4 y 5</strong>'
+    session: "Sesión 15 / Evaluación Final"
     date: "1 diciembre"
-    bg: 1
+    bg: 2
     bottomborder: True
     
   - title: '<strong>• PRUEBA RECUPERATIVA</strong>'
     session: "Evaluación"
     date: "8 diciembre"
-    bg: 2
+    bg: 1
     bottomborder: True

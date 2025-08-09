@@ -117,8 +117,8 @@ ayudante2:
   email: francisca.hernandez_c@mail.udp.cl
   
 ayudante3: 
-  name: Francisca Hernández
-  email: francisca.hernandez_c@mail.udp.cl
+  name: Romina Zamorano
+  email: romina.zamorano@mail.udp.cl
 
 course:
   number: "SOC8224"
@@ -128,7 +128,7 @@ course:
     Taller sección 1: Lunes 10:00-11:20 /
     Taller sección 2: Lunes 11:30-12:50 /
     
-  location: "Sala Pendiente"
+  location: "Plenaria sala 603 / Taller: Laboratorio 3er piso"
   dates: "Ayudantia: Lunes 14:30-15:50"
   github: "GabrielSotomayorl"
   copyrightYear: "2025. Web developed by Andrew Heiss and custom by"
