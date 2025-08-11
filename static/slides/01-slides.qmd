@@ -213,6 +213,16 @@ Son patrones y corrientes colectivas que trascienden al individuo. Su regla fund
 
 ## El Suicidio {.smaller background-color="white"}
 
+![](img/01/durkheim.png){fig-align="center"}  
+
+## El Suicidio {.smaller background-color="white"}
+
+![](img/01/durkheim2.png){fig-align="center"}  
+
+
+
+## El Suicidio {.smaller background-color="white"}
+
 En *El Suicidio* (1897), Durkheim usó la estadística para demostrar su punto de vista:
 
 -   **La Observación:** Las **tasas de suicidio** eran increíblemente estables en cada país, más que la mortalidad general. Esto probaba que era un fenómeno colectivo, no solo una suma de tragedias individuales.
