@@ -25,15 +25,15 @@ El curso tiene un carácter eminentemente práctico, utilizando lenguajes de pro
 
 ## Resultados Específicos {.smaller background-color="white"}
 
-1. Comprender el uso y relevancia de la estadística en las Ciencias Sociales.  
-2. Relacionar metodologías de recolección de datos y las técnicas estadísticas apropiadas para su análisis.  
-3. Comprender las principales herramientas de la estadística descriptiva.  
-4. Definir correctamente un plan de análisis descriptivo para una tabla de datos.  
-5. Identificar el estadístico apropiado según el tipo de variable analizada.  
-6. Manipular y analizar tablas de datos a través del lenguaje de programación R.  
-7. Interpretar datos cuantitativos producidos por investigaciones propias o de terceros.  
-8. Distinguir entre estadística descriptiva e inferencial.  
-  
+1.  Comprender el uso y relevancia de la estadística en las Ciencias Sociales.\
+2.  Relacionar metodologías de recolección de datos y las técnicas estadísticas apropiadas para su análisis.\
+3.  Comprender las principales herramientas de la estadística descriptiva.\
+4.  Definir correctamente un plan de análisis descriptivo para una tabla de datos.\
+5.  Identificar el estadístico apropiado según el tipo de variable analizada.\
+6.  Manipular y analizar tablas de datos a través del lenguaje de programación R.\
+7.  Interpretar datos cuantitativos producidos por investigaciones propias o de terceros.\
+8.  Distinguir entre estadística descriptiva e inferencial.
+
 ## Contenidos: Unidad 1 {.smaller .dark-background}
 
 ### 1. Introducción a la estadística y su relación con las ciencias sociales
@@ -98,7 +98,7 @@ El curso tiene un carácter eminentemente práctico, utilizando lenguajes de pro
 ## Evaluaciones {.smaller .dark-background}
 
 | Evaluación | Descripción | Ponderación (NP) |
-|:---|:---|:---|
+|:-----------------------|:-----------------------|:-----------------------|
 | **Trabajos Prácticos (TP)** | 2 trabajos en grupo | 30% |
 | **Controles (CONT)** | 5 controles individuales (se borra el peor) | 10% |
 | **Tareas de R (TAR)** | 4 tareas individuales en R | 10% |
@@ -115,7 +115,6 @@ El curso cuenta con un equipo de tres ayudantes:
 -   **Felipe Adasme** [felipe.adasme\@mail.udp.cl](mailto:felipe.adasme@mail.udp.cl)
 -   **Francisca Hernández** [francisca.hernandez_c\@mail.udp.cl](mailto:francisca.hernandez_c@mail.udp.cl)
 -   **Romina Zamorano** [romina.zamorano\@mail.udp.cl](mailto:romina.zamorano@mail.udp.cl)
-
 
 **Horario de Ayudantías:**\
 - Grupo 1: Lunes 14:30 - 15:50\
@@ -168,17 +167,18 @@ title_slide_background: "#008080"
 
 Como sociólogos/as, nuestro objetivo es producir conocimiento **sistemático** sobre la realidad social. Para ello, usamos dos lógicas complementarias en un ciclo constante:
 
-:::::: columns
-:::: {.column width="50%"}
+::::: columns
+::: {.column width="50%"}
 **Lógica Deductiva (De la teoría a los datos)**
 
-1.  Se parte de una **teoría** general.
+1.  Se parte de una **teoría** (general).
 2.  Se deriva una **hipótesis** específica.
 3.  Se recogen **datos** para probarla.
 
 *Ejemplo: La teoría de la modernización sugiere que el desarrollo económico fomenta valores democráticos. **Hipótesis:** "Los países con mayor PIB per cápita tendrán mayores niveles de apoyo a la democracia en las encuestas".*
-::::
-:::: {.column width="50%"}
+:::
+
+::: {.column width="50%"}
 **Lógica Inductiva (De los datos a la teoría)**
 
 1.  Se parte de **observaciones** específicas.
@@ -186,10 +186,11 @@ Como sociólogos/as, nuestro objetivo es producir conocimiento **sistemático** 
 3.  Se desarrolla una **teoría** para explicar esos patrones.
 
 *Ejemplo: Un investigador **observa** a través de entrevistas que muchos trabajadores de plataformas digitales se sienten aislados. Identifica un **patrón** de precariedad y falta de comunidad. Desarrolla una **teoría** sobre la "anomia digital".*
-::::
-::::::
+:::
+:::::
 
 ## Reflexividad: El/la Sociólogo/a como Sujeto Situado {.smaller background-color="white"}
+
 ::: {style="font-size: 0.9em; line-height: 1.2;"}
 A diferencia de otras ciencias, en sociología **somos parte de nuestro objeto de estudio**. No partimos de un "punto cero".
 
@@ -203,6 +204,13 @@ La meta no es la neutralidad imposible, sino la **transparencia y el rigor consc
 
 **Pregunta para reflexionar:** ¿De qué manera creen que la posición social o valores de un investigador podrían influir en una investigación cuantitativa? ¿Cómo se puede manejar eso?
 :::
+
+---
+title_slide_background: "#008080"
+---
+
+# 2. Cuantificando la Realidad Social
+
 ## El Hecho Social: La Mirada de Durkheim {.smaller background-color="white"}
 
 Para Durkheim, la sociología debía estudiar los **hechos sociales**:
@@ -213,13 +221,11 @@ Son patrones y corrientes colectivas que trascienden al individuo. Su regla fund
 
 ## El Suicidio {.smaller background-color="white"}
 
-![](img/01/durkheim.png){fig-align="center"}  
+![](img/01/durkheim.png){fig-align="center"}
 
 ## El Suicidio {.smaller background-color="white"}
 
-![](img/01/durkheim2.png){fig-align="center"}  
-
-
+![](img/01/durkheim2.png){fig-align="center"}
 
 ## El Suicidio {.smaller background-color="white"}
 
@@ -232,11 +238,7 @@ Durkheim parte de la estadística para proponer, según la regularidad de las ci
 
 La cuantificación permitió a Durkheim **hacer visible la estructura social** y sus efectos.
 
----
-title_slide_background: "#008080"
----
 
-# 2. Cuantificando la Realidad Social
 
 ## Los 5 Niveles de una Investigación {.smaller background-color="white"}
 
@@ -274,19 +276,21 @@ La estadística es un momento clave dentro de un proceso más amplio que va desd
 -   En este curso, nos enfocaremos en la **descripción y visualización**, el primer paso fundamental del análisis.
 
 ## Tres Grandes Enfoques Metodológicos {.smaller background-color="white"}
+
 ::: {style="font-size: 0.9em; line-height: 1.2;"}
 En sociología, coexisten al menos tres grandes enfoques metodológicos:
 
-| | **Cuantitativo** | **Cualitativo** | **Dialéctico** |
-|:---|:---|:---|:---|
+|   | **Cuantitativo** | **Cualitativo** | **Dialéctico** |
+|:-----------------|:-----------------|:-----------------|:-----------------|
 | **Muestra/objeto** | Muestras (probabilística) de unidades abstractas, poblaciones | Discursos y significaciones | Prácticas de transformación/producción de la sociedad |
-| **Instrumento de observación** | La encuesta / variabilización ¿Hechos? | Entrevistas - grupos de discusión, etnografía* | Investigación-acción participativa / Educación popular |
+| **Instrumento de observación** | La encuesta / variabilización ¿Hechos? | Entrevistas - grupos de discusión, etnografía\* | Investigación-acción participativa / Educación popular |
 | **Análisis** | Análisis estadístico | Análisis de discurso - ordenamiento de significados. | Reflexión / sistematización / Acción |
 
 *Basado en Canales (2006)*
 
 **Este curso se centra en el enfoque cuantitativo**, pero es crucial entender que es una de varias formas válidas de producir conocimiento.
-::: 
+:::
+
 ---
 title_slide_background: "#008080"
 ---
@@ -295,8 +299,7 @@ title_slide_background: "#008080"
 
 ## ¿Qué es Medir en Ciencias Sociales? {.smaller background-color="white"}
 
-“La investigación cuantitativa es una estrategia de investigación que conceptualmente delimita propiedades de sus sujetos de estudio con el fin de **asignarles números** a las magnitudes, grados o tipos en que éstos las poseen y que utiliza **procedimientos estadísticos** para resumir, manipular y asociar dichos números”
-— Rodrigo Asún (2006)
+“La investigación cuantitativa es una estrategia de investigación que conceptualmente delimita propiedades de sus sujetos de estudio con el fin de **asignarles números** a las magnitudes, grados o tipos en que éstos las poseen y que utiliza **procedimientos estadísticos** para resumir, manipular y asociar dichos números” — Rodrigo Asún (2006)
 
 La cuantificación es un acto teórico y metodológico: decidimos qué propiedades de lo social son importantes y cómo las representaremos numéricamente.
 
@@ -312,20 +315,21 @@ Medir no es solo poner números, es hacerlo de forma que **representen fielmente
 
 Las reglas que usamos determinan el "nivel" o tipo de información que contienen nuestros números y qué podemos hacer con ellos.
 
-:::::: columns
-:::: {.column width="50%"}
+::::: columns
+::: {.column width="50%"}
 **Variables Categóricas**
 
 -   **Nominal:** Los números son solo etiquetas (1=Hombre, 2=Mujer). Solo indican si son iguales o diferentes.
--   **Ordinal:** Los números indican un orden o jerarquía (1=Bajo, 2=Medio, 3=Alto). Sabemos que 3 > 2, pero no por cuánto.
-::::
-:::: {.column width="50%"}
+-   **Ordinal:** Los números indican un orden o jerarquía (1=Bajo, 2=Medio, 3=Alto). Sabemos que 3 \> 2, pero no por cuánto.
+:::
+
+::: {.column width="50%"}
 **Variables Numéricas**
 
 -   **Intervalar:** El orden importa y las distancias entre los números son iguales (ej. Temperatura en °C). El cero es arbitrario.
 -   **De Razón:** Como el intervalar, pero con un cero absoluto que significa "ausencia de" (ej. Ingresos, edad).
-::::
-::::::
+:::
+:::::
 
 **¿Por qué importa?** El nivel de medición determina qué operaciones estadísticas podemos realizar legítimamente. No podemos calcular el "promedio" de una variable nominal.
 
@@ -339,29 +343,23 @@ title_slide_background: "#008080"
 
 La estadística y la visualización son herramientas poderosas para sintetizar información compleja y comunicar hallazgos de gran impacto sociológico.
 
-## El Espacio Social (Bourdieu)  {.smaller background-color="white"}
+## El Espacio Social (Bourdieu) {.smaller background-color="white"}
 
-
-:::::: columns
-:::: {.column width="70%"}
-
+::::: columns
+::: {.column width="70%"}
 ![](img/01/bourdieu.jpg){fig-align="center" width="600"}
+:::
 
-::::
-:::: {.column width="30%"}
-
--   Mapea la estructura de clases no solo por riqueza (capital económico) sino también por educación y gustos (capital cultural).  
+::: {.column width="30%"}
+-   Mapea la estructura de clases no solo por riqueza (capital económico) sino también por educación y gustos (capital cultural).\
 -   La desigualdad es multidimensional y se reproduce a través de estilos de vida y prácticas culturales.
+:::
+:::::
 
+## La Desigualdad de Ingresos (Piketty) {.smaller background-color="white"}
 
-::::
-::::::
-
-## La Desigualdad de Ingresos (Piketty)   {.smaller background-color="white"}
-![](img/01/desigualdad.png){fig-align="center"}
-- Muestra la caída y el posterior resurgimiento de la concentración del ingreso en el 10% más rico durante el siglo XX en EE.UU.    
-- La desigualdad no es un fenómeno natural, sino el resultado de políticas e instituciones que cambian históricamente.  
-
+![](img/01/desigualdad.png){fig-align="center"} - Muestra la caída y el posterior resurgimiento de la concentración del ingreso en el 10% más rico durante el siglo XX en EE.UU.\
+- La desigualdad no es un fenómeno natural, sino el resultado de políticas e instituciones que cambian históricamente.
 
 ## Usos Actuales en Políticas Públicas {.smaller background-color="white"}
 
@@ -372,21 +370,21 @@ La estadística es fundamental para el diseño, monitoreo y evaluación de las p
 -   **Evaluación de Programas Sociales:**
     -   Se comparan grupos que reciben una intervención (ej. un subsidio de empleo) con grupos de control para medir estadísticamente si el programa tuvo el efecto deseado.
 -   **Encuestas de Victimización:**
-    -   Permiten medir la "cifra negra" de la delincuencia (delitos no denunciados), dando una imagen más precisa de la seguridad pública que los registros policiales. 
+    -   Permiten medir la "cifra negra" de la delincuencia (delitos no denunciados), dando una imagen más precisa de la seguridad pública que los registros policiales.
 
 ## Ejercicio Final: Formulen sus Preguntas {.smaller background-color="white"}
 
-**En grupos, elijan uno de los siguientes temas:**  
-1.  Desigualdad de género en el trabajo.  
-2.  Confianza en las instituciones.  
-3.  Percepción de inseguridad.  
-   
-**Para el tema elegido, definan:**  
-1.  Una **pregunta de investigación** que podría responderse con datos cuantitativos.  
-2.  Identifiquen las **variables** principales que necesitarían medir.  
-3.  Sugieran qué **nivel de medición** tendría cada variable.  
+**En grupos, elijan uno de los siguientes temas:**\
+1. Desigualdad de género en el trabajo.\
+2. Confianza en las instituciones.\
+3. Percepción de inseguridad.
 
-## Conclusión  {.smaller background-color="white"}
+**Para el tema elegido, definan:**\
+1. Una **pregunta de investigación** que podría responderse con datos cuantitativos.\
+2. Identifiquen las **variables** principales que necesitarían medir.\
+3. Sugieran qué **nivel de medición** tendría cada variable.
+
+## Conclusión {.smaller background-color="white"}
 
 -   Hemos visto que la estadística es una herramienta fundamental, inserta en un proceso de investigación reflexivo y teóricamente informado. Nos permite traducir conceptos sociológicos en mediciones para descubrir patrones sociales, como lo hizo Durkheim y como se hace hoy, por ejemplo, en las políticas públicas.
 
