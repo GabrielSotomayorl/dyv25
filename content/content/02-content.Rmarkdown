@@ -1,9 +1,9 @@
 ---
-title: "2. Estadística bivariada"
-linktitle: "2. Estadística bivariada"
-date: "2024-08-19"
-start_date: "2024-08-19"
-end_date: "2024-08-19"
+title: "2. El Rol de la Estadística y la Programación en la Sociología"
+linktitle: "2. El Rol de la Estadística y la Programación en la Sociología"
+date: "2025-08-18"
+start_date: "2025-08-18"
+end_date: "2025-08-18"
 menu:
   content:
     parent: Contenido
@@ -38,5 +38,7 @@ slide_tabs(slide_details, "/slides/02-slides.html")
 
 
 # Bibliografía
-- [Moore Cap 2](../bib/David S. Moore - Estadística aplicada básica, cap 2.pdf/) 
+- [Moore - Razonamiento estadístico](../bib/Moore - Estadística aplicada básica-27-37.pdf/) 
 
+# Bibliografía complementaria
+- [ Wright - The Non-Effects of Class on the Gender Division of Labor in the Home](../bib/the non effect.pdf/) 

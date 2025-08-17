@@ -12,11 +12,13 @@ lessons:
     session: "Sesión 1"
     date: "11 agosto"
     bg: 1
+    content: "01-content"
 
   - title: '• Usos de la estadística en la actualidad<br>• La relevancia de los lenguajes de programación.<br>• <strong>Evaluación: Control N°1</strong>'
     session: "Sesión 2"
     date: "18 agosto"
     bg: 1
+    content: "02-content"
     bottomborder: True
 
   - title: '<span class="content-title">Unidad 2. Conceptos claves para la investigación social</span>'
