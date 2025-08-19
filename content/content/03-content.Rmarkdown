@@ -1,9 +1,9 @@
 ---
-title: "Regresión Lineal Simple I"
-linktitle: "3. Regresión Lineal Simple I"
-date: "2024-08-26"
-start_date: "2024-08-26"
-end_date: "2024-08-26"
+title: "Conceptos clave para la investigación social I"
+linktitle: "3. Conceptos clave para la investigación social I"
+date: "2025-08-25"
+start_date: "2025-08-25"
+end_date: "2025-08-25"
 menu:
   content:
     parent: Contenido
@@ -20,7 +20,7 @@ source(here::here("R", "slide-tabs.R"))
 
 slide_details <- tibble::tribble(
   ~title, ~slide, ~active,
-  "Regersión Lineal", "0", TRUE
+  "", "0", TRUE
 )
 ```
 
@@ -38,7 +38,11 @@ slide_tabs(slide_details, "/slides/03-slides.html")
 
 
 # Bibliografía
-- [Moore Cap 2](../bib/David S. Moore - Estadística aplicada básica, cap 2.pdf/) 
+- [Babbie, E. (2000). Capítulo 5. Pags. 96 a la 115](../bib/Babbie -  MANUAL PARA LA PRACTICA DE LA INVESTIGACION SOCIAL cap. 5.pdf/) 
+- [Babbie, E. (2000). Capítulo 6. Pags. 117 a la 138.](../bib/Babbie - MANUAL PARA LA PRACTICA DE LA INVESTIGACION SOCIAL cap. 6.pdf/) 
+- [Ritchey F. (2008). Capítulo 2. Pags. 42 a la 48. ](../bib/Ritchey - Análisis estadistico.pdf/) 
+- [Asún, R. (2006). Medir la realidad social: El sentido de la metodología cuantitativa](../bib/Asun - Medir la realidad social.pdf/) 
+
 
 
 

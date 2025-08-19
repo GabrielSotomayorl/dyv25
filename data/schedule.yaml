@@ -26,6 +26,7 @@ lessons:
     date_start: "25 agosto"
     date_end: "1 septiembre"
     bg: 2
+    content: "03-content"
 
   - title: '• Conceptualización y operacionalización.<br>• Unidad de análisis vs unidad de observación.<br>• Tipos de variables y niveles de medición.'
     session: "Sesión 3"
