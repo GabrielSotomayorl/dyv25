@@ -1,336 +1,297 @@
 ---
-title: "Clase 3 <br> Regresión Lineal Simple"
-subtitle: "Análisis Avanzado de Datos"
+title: "De la Idea a la Medida: Conceptos Clave de la Investigación"
+subtitle: "Unidad 2: Descripción y Visualización de Datos"
 author: "Gabriel Sotomayor"
-format: 
+date: "25-08-2025"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
 ---
 
-# Recordatorio de la clase anterior
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-## Correlación {background-color="white"}
+-   **Diferenciar** entre el proceso de **conceptualización** (definir qué queremos decir) y **operacionalización** (definir cómo lo vamos a medir).
+-   **Identificar** la **unidad de análisis** y la **unidad de observación** en un diseño de investigación.
+-   **Reconocer** y evitar las falacias asociadas a las unidades de análisis (ecológica y reduccionista).
+-   **Clasificar** variables según su función en un modelo (independiente, dependiente).
+-   **Distinguir** entre los cuatro **niveles de medición** (nominal, ordinal, de intervalo, de razón) y comprender sus implicancias.
 
-La correlación mide la fuerza y la dirección de la relación lineal entre dos variables cuantitativas. La correlación se simboliza con la letra r.
+---
+title_slide_background: "#008080"
+---
 
-Si tenemos datos de dos variables x e y para n individuos. Los valores para el primer individuo son x₁ e y₁, para el segundo son x₂ e y₂, etc. Las medias y las desviaciones típicas de las dos variables son x̄ y sₓ para los valores de x, e ȳ y sᵧ para los valores de y. La correlación r entre x e y es:
+# 1. Del Concepto al Indicador
 
-$$
-r = \frac{1}{n-1} \sum \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
-$$
+## El Problema: Los Conceptos Sociológicos son Abstractos {.smaller background-color="white"}
 
-## Características de la correlación (I) {.smaller background-color="white"}
+Nuestros conceptos centrales —clase social, anomia, cohesión, prejuicio— no tienen una existencia tangible. No podemos "ver" o "tocar" el prejuicio.
 
-**Simetría en las Variables:** La correlación no distingue entre variables explicativas y respuesta; es indiferente cuál se llame x o y.\
-**Requisito Cuantitativo:** Las dos variables deben ser cuantitativas para que los cálculos de la correlación tengan sentido. No se puede calcular la correlación entre una variable cuantitativa y una categórica.\
-**Independencia de Unidades:** Como la correlación utiliza valores estandarizados, no cambia si se modifican las unidades de medida de las variables. La correlación es un valor sin unidades.\
-**Significado del Signo:**\
-- Correlación positiva: Indica una asociación positiva entre las variables.\
-- Correlación negativa: Indica una asociación negativa.
+-   Como vimos con Babbie, el prejuicio no es una "cosa" en el mundo, sino un **constructo**: una creación teórica que hemos inventado para dar sentido a un conjunto de observaciones y experiencias.
+-   Un **concepto**, según Abraham Kaplan, es una "familia de concepciones". Es una etiqueta para un conjunto de imágenes mentales que compartimos (de forma imperfecta) como sociedad.
 
-## Características de la correlación (II) {.smaller background-color="white"}
+El primer desafío de la investigación es pasar de estas ideas vagas y abstractas a algo que podamos estudiar sistemáticamente.
 
-**Rango de la Correlación:** La correlación siempre toma valores entre −1 y 1.\
-- Cercanía a 0: Indica una relación lineal débil.\
-- Cercanía a ±1: Indica una relación lineal fuerte. Un valor de ±1 indica una relación lineal perfecta.\
-**Limitación a Relaciones Lineales:** La correlación sólo mide la fuerza de relaciones lineales, no describe adecuadamente las relaciones curvilíneas, aunque estas sean fuertes.\
-**Sensibilidad a Observaciones Atípicas:** La correlación puede verse fuertemente afectada por valores atípicos, lo que puede distorsionar la percepción de la relación entre las variables. Es importante utilizar la correlación con precaución cuando se detectan atípicos.
+## Conceptualización: El Proceso de Especificación {.smaller background-color="white"}
 
-## Graficos de dispersión y correlación {background-color="white"}
+La **conceptualización** es el proceso a través del cual hacemos explícitos y precisos los conceptos abstractos que queremos estudiar. Es el viaje de una idea vaga a una definición teórica clara.
 
-```{r echo=F}
-library(gridExtra)
-library(ggplot2)
-library(dplyr)
-# Función para crear un conjunto de datos con una correlación específica
-crear_datos <- function(n, cor) {
-  x <- rnorm(n)
-  y <- cor * x + sqrt(1 - cor^2) * rnorm(n)
-  data.frame(x = x, y = y)
+-   Implica definir las **dimensiones** de un concepto, es decir, sus diferentes facetas o aspectos.
+-   *Ejemplo: El concepto "capital social" es multidimensional. Podríamos conceptualizarlo en al menos dos dimensiones:*
+    1.  ***Dimensión Estructural:*** Las redes de contactos que una persona tiene.
+    2.  ***Dimensión Cognitiva:*** El nivel de confianza que una persona tiene en los demás.
+
+El producto final es una **definición conceptual** rigurosa que guiará nuestra investigación.
+
+## Operacionalización: El Puente hacia el Mundo Empírico {.smaller background-color="white"}
+
+La **operacionalización** es el desarrollo de **procedimientos de investigación específicos (operaciones)** que nos permitirán observar y medir empíricamente los conceptos que hemos definido.
+
+-   En simple: Es el proceso de decidir **exactamente cómo vamos a medir** cada concepto y cada una de sus dimensiones.
+-   La operacionalización se basa en **indicadores**, que son observaciones que consideramos un reflejo de la variable que nos interesa.
+
+*Ejemplo: Para la dimensión "confianza" del capital social, un **indicador** podría ser el grado de acuerdo con la frase: "En general, se puede confiar en la mayoría de las personas".*
+
+## El Flujo Completo: De la Idea al Dato {.smaller background-color="white"}
+
+![](img/flujo_conceptual.png){fig-align="center"}
+*(Nota: Aquí iría una imagen de un diagrama de flujo simple que muestre los 5 pasos)*
+
+1.  **Concepción Mental** (Idea vaga de "prejuicio").
+2.  **Concepto** (Constructo con nombre: "Prejuicio").
+3.  **Conceptualización** (Definición teórica: "Actitud negativa hacia un grupo social...").
+4.  **Operacionalización** (Procedimiento: Escala de acuerdo con frases sobre inmigrantes).
+5.  **Medición en el Mundo Real** (Aplicación de la escala para obtener un puntaje de prejuicio).
+
+---
+title_slide_background: "#008080"
+---
+
+# 2. ¿A Quién o Qué Estudiamos?
+
+## La Unidad de Análisis {.smaller background-color="white"}
+
+La **unidad de análisis** es el **"qué"** o **"quién"** se está estudiando. Es la unidad sobre la cual queremos sacar conclusiones y hacer afirmaciones.
+
+Tipos comunes de Unidades de Análisis en sociología:
+
+-   **Individuos:** El tipo más común (estudiantes, votantes, trabajadores).
+-   **Grupos:** Familias, equipos de trabajo, círculos de amigos.
+-   **Organizaciones:** Universidades, empresas, partidos políticos, sindicatos.
+-   **Artefactos Sociales:** Artículos de prensa, publicaciones en redes sociales, leyes, programas de televisión.
+
+Definir la unidad de análisis es un paso crucial del diseño de investigación.
+
+## Unidad de Análisis vs. Unidad de Observación {.smaller background-color="white"}
+
+Es fundamental no confundirlas.
+
+-   **Unidad de Análisis:** Aquello sobre lo que queremos **hacer conclusiones**.
+-   **Unidad de Observación:** La unidad de la cual **recolectamos la información**.
+
+A veces son la misma:
+-   Para estudiar el rendimiento de los **estudiantes** (U. de Análisis), les tomamos una prueba a los **estudiantes** (U. de Observación).
+
+A veces son diferentes:
+-   Para estudiar la **dinámica de conflicto en los hogares** (U. de Análisis), podríamos encuestar solo a las **mujeres** de esos hogares (U. de Observación). Aquí, la mujer es nuestra informante sobre el hogar.
+
+## Las Falacias Lógicas en la Investigación {.smaller background-color="white"}
+
+Confundir las unidades de análisis lleva a errores graves de interpretación.
+
+:::::: columns
+::: {.column width="50%"}
+**1. Falacia Ecológica**
+
+-   **Error:** Sacar conclusiones sobre **individuos** basándose únicamente en datos de **grupos o agregados**.
+-   *Ejemplo Clásico:* Un estudio encuentra que las comunas con mayor porcentaje de población inmigrante tienen tasas de delincuencia más altas. Sería una falacia concluir que los **individuos** inmigrantes delinquen más, ya que no tenemos datos individuales para afirmarlo.
+:::
+::: {.column width="50%"}
+**2. Reduccionismo**
+
+-   **Error:** Intentar explicar un fenómeno **social complejo (macro)** únicamente en términos de factores **individuales (micro)**.
+-   *Ejemplo:* Explicar el estallido social de 2019 (fenómeno macro) solo a partir de las motivaciones psicológicas o frustraciones individuales, ignorando factores estructurales como la desigualdad, el sistema político o la historia del país.
+:::
+::::::
+
+## Actividad de Discusión (10 min) {.smaller background-color="white"}
+
+**Escenario de Investigación:**
+
+Un sociólogo analiza los resultados de la prueba PISA a nivel nacional y observa que los países con mayor gasto público en educación obtienen, en promedio, mejores puntajes. En su informe, concluye: *"Esto demuestra que los estudiantes que asisten a escuelas públicas tienen mejor rendimiento que los que asisten a escuelas privadas"*.
+
+**Preguntas para discutir:**  
+1. ¿Cuál es la **unidad de análisis** de los datos que tiene el investigador?  
+2. ¿Sobre qué **unidad de análisis** está sacando sus conclusiones?  
+3. ¿Qué **falacia lógica** está cometiendo? ¿Por qué es un error?  
+
+## Ejemplo Sociológico: ¿Cuál es la Unidad de Análisis de la Clase Social? {.smaller background-color="white"}
+
+El debate sobre cómo integrar a las mujeres en los estudios de clase es un ejemplo perfecto de la importancia de definir la unidad de análisis.
+
+-   **La Perspectiva Convencional (ej. Goldthorpe, 1983):**
+    -   La unidad de análisis es la **familia** (o el hogar).
+    -   **Supuesto 1:** La familia tiene una posición de clase unitaria, ya que todos sus miembros comparten intereses materiales comunes.
+    -   **Supuesto 2:** Esa posición de clase está determinada por la ocupación del **"jefe de hogar" masculino**, debido a su vínculo "más fuerte y duradero" con el mercado laboral.
+    -   *Consecuencia:* La posición de clase de la mujer se **deriva** de la de su marido y su propia ocupación es irrelevante para el análisis.
+
+## Críticas Feministas a la Perspectiva Convencional {.smaller background-color="white"}
+
+Autoras como Joan Acker, Michelle Stanworth y Janeen Baxter criticaron duramente estos supuestos:
+
+1.  **¿Intereses Unitarios?** Asumir que la familia es una unidad sin conflictos internos **oscurece las relaciones de poder y desigualdad de género** que existen dentro del hogar. Los recursos no se distribuyen equitativamente.
+2.  **¿Vínculo Débil?** Ignorar el trabajo remunerado de las mujeres es empíricamente insostenible y desestima cómo su **propia posición de clase** afecta sus oportunidades, poder de negociación y experiencias de vida.
+3.  **¿Homogeneidad de Clase?** Un gran porcentaje de los hogares son de **clase heterogénea** (los cónyuges pertenecen a clases distintas), lo que hace que el modelo convencional sea simplemente inadecuado.
+4.  **¿Qué son los Intereses de Clase?** Se reduce el "interés de clase" solo a los ingresos, ignorando experiencias clave en el trabajo como la autonomía o la dominación.
+
+> "oscurece el grado en que difieren las experiencias de clase de las esposas respecto de los maridos, e ignora el grado en que las desigualdades que dividen a hombres y mujeres son en sí mismas resultado del sistema de clases operante" (Stanworth, 1984).
+
+## Hacia una Solución: Posiciones Directas y Mediadas (Wright, 1989) {.smaller background-color="white"}
+
+Erik Olin Wright propone una solución más sofisticada que supera la dicotomía individuo vs. familia.
+
+-   La posición de clase de una persona se compone de dos elementos:
+    1.  **Posición de Clase Directa:** Derivada de la **propia relación con el mercado laboral** (la propia ocupación).
+    2.  **Posición de Clase Mediada:** Derivada de las **relaciones familiares** (principalmente, la clase del cónyuge).
+
+-   **Unidad de Análisis:** El **individuo dentro de un contexto familiar**.
+-   **Pregunta de Investigación Empírica:** ¿Cuál es el **peso relativo** de la posición directa y la mediada para explicar fenómenos como la identidad de clase, el comportamiento político o la división del trabajo doméstico?
+-   Este peso puede variar para hombres y mujeres, y entre diferentes países.
+
+## Modelo de Wright: Efectos sobre la Identidad de Clase {.smaller background-color="white"}
+
+-   **Posición Directa:** Influye en la identidad a través de las experiencias en la **producción** (interacciones laborales, autonomía, etc.).
+-   **Posición Mediada:** Influye en la identidad a través de los intereses materiales y las experiencias de **consumo** del hogar.
+
+```{dot}
+// Modelo general de los efectos de las posiciones de clase directa y mediada en la identidad de clase
+digraph G {
+  layout=dot;
+  rankdir=LR; 
+  node [shape=box, style=solid, fontcolor=black, width=3.5, height=1.5, fontsize=25];
+
+  // Definición de Nodos
+  directa [label="Posición de clase\ndirecta"];
+  mediada [label="Posición de clase\nmediada"];
+  patrones [label="Patrones de interacción\nlaboral diaria"];
+  intereses [label="Intereses materiales\nde clase"];
+  exp_prod [label="Experiencias de clase\ncentradas en la producción"];
+  exp_cons [label="Experiencias de clase\ncentradas en el consumo"];
+  identidad [label="Identidad\nde clase", width=1.5];
+
+  // Definición de Relaciones (Flechas)
+  directa -> patrones;
+  directa -> intereses;
+  mediada -> intereses;
+  patrones -> exp_prod;
+  intereses -> exp_cons;
+  exp_prod -> identidad;
+  exp_cons -> identidad;
 }
-
-# Crear seis conjuntos de datos con diferentes correlaciones
-set.seed(42)
-datos_0 <- crear_datos(100, 0)
-datos_neg03 <- crear_datos(100, -0.3)
-datos_pos05 <- crear_datos(100, 0.5)
-datos_neg07 <- crear_datos(100, -0.7)
-datos_pos09 <- crear_datos(100, 0.9)
-datos_neg099 <- crear_datos(100, -0.99)
-
-# Función para crear gráficos con líneas de la media
-crear_grafico <- function(data, title) {
-  ggplot(data, aes(x = x, y = y)) + 
-    geom_point() + 
-    geom_vline(xintercept = mean(data$x), color = "red", linetype = "dotted") +  # Línea vertical para la media de x
-    geom_hline(yintercept = mean(data$y), color = "red", linetype = "dotted") +  # Línea horizontal para la media de y
-    labs(title = title) + 
-    theme_minimal()
-}
-
-# Crear los gráficos individuales con líneas de la media
-g0 <- crear_grafico(datos_0, "Correlación r = 0")
-g_neg03 <- crear_grafico(datos_neg03, "Correlación r = -0.3")
-g_pos05 <- crear_grafico(datos_pos05, "Correlación r = 0.5")
-g_neg07 <- crear_grafico(datos_neg07, "Correlación r = -0.7")
-g_pos09 <- crear_grafico(datos_pos09, "Correlación r = 0.9")
-g_neg099 <- crear_grafico(datos_neg099, "Correlación r = -0.99")
-
-# Organizar los gráficos en una cuadrícula 2x3
-grid.arrange(g0,g_pos05, g_pos09,g_neg03, g_neg07, g_neg099, ncol = 3)
-
 ```
 
-## Evaluaciones {.dark-background}
 
-**Tarea 1: 2 de septiembre (la pauta se subirá hoy)**\
-- Gestión de datos\
-- Estadística bivariada\
-**Prueba 1: 9 de Septiembre**\
-- Uso de modelos en ciencias sociales\
-- Estadística bivariada\
-- Regresión lineal simple
+La pregunta clave de Wright es: ¿cuál de estos dos caminos pesa más para hombres y mujeres en diferentes contextos nacionales?
 
-## Objetivo de la sesión {.center background-color="white"}
+## Conclusión del Debate {.smaller background-color="white"}
 
-Introducir y aplicar la regresión lineal simple para entender la relación entre una variable explicativa y una de respuesta.
-
-## Concepto de Regresión Lineal Simple {background-color="white"}
-
-La regresión lineal simple se utiliza para describir la relación entre dos variables, una independiente (explicativa) y una dependiente (respuesta), mediante una recta de regresión. A diferencia de la correlación si asume una direccionalidad.
-
-### Ejemplo: Brecha Salarial de Género y Años de Escolaridad
-
-Consideremos el ejemplo de la brecha salarial de género de una comuna y cómo podría estar influenciada por el promedio de años de escolaridad de la población. La idea es entender cómo varía la brecha salarial en función de los años de escolaridad a través de una recta de regresión.
-
-## Medias condicionales {background-color="white"}
-
-```{r}
-# Crear categorías de escolaridad para calcular medias condicionales
-datos <- readRDS("data/datos.rds") %>% 
-  filter(brecha<40 & brecha > -20 & !is.na(brecha))
-datos <- datos %>%
-  mutate(escolaridad_cat = cut(promedio_anios_escolaridad25_2017, 
-                               breaks = seq(floor(min(promedio_anios_escolaridad25_2017, na.rm = TRUE)), 
-                                            ceiling(max(promedio_anios_escolaridad25_2017, na.rm = TRUE)), 
-                                            by = 1), 
-                               include.lowest = TRUE))
-
-# Calcular medias condicionales
-medias_condicionales <- datos %>%
-  group_by(escolaridad_cat) %>%
-  summarize(
-    media_brecha = mean(brecha, na.rm = TRUE),
-    media_escolaridad = mean(promedio_anios_escolaridad25_2017, na.rm = TRUE)
-  )
-
-# Graficar la relación entre escolaridad y brecha salarial con medias condicionales
-ggplot(datos, aes(x = promedio_anios_escolaridad25_2017, y = brecha)) +
-  geom_point(color = "#0073C2", size = 3, alpha = 0.7) +  # Puntos más grandes y ligeramente transparentes
- # geom_smooth(method = "lm", color = "black", linetype = "solid", se = FALSE) +  # Línea de tendencia en negro
-  geom_vline(xintercept = mean(datos$promedio_anios_escolaridad25_2017, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'promedio_anios_escolaridad25_2017'
-  geom_hline(yintercept = mean(datos$brecha, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'brecha'
-  geom_point(data = medias_condicionales, aes(x = media_escolaridad, y = media_brecha), 
-             color = "darkorange", size = 4, shape = 17) +  # Medias condicionales en color naranja y con forma de triángulo
-  geom_line(data = medias_condicionales, aes(x = media_escolaridad, y = media_brecha), 
-            color = "darkorange", linetype = "dashed", size = 1) +  # Línea que une las medias condicionales
-  labs(
-    x = "Promedio de Años de Escolaridad (2017)",
-    y = "Brecha Salarial de Género (%)",
-    title = "Relación entre Promedio de Años de Escolaridad y Brecha Salarial de Género"
-  ) +
-  theme_minimal(base_size = 16) +  # Tamaño base de letra aumentado
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),  # Título centrado, en negrita y más grande
-    axis.title = element_text(face = "bold", size = 14),               # Títulos de los ejes en negrita y más grandes
-    axis.text = element_text(color = "#333333", size = 12),            # Texto de los ejes más grande
-    panel.grid.major = element_line(color = "#e0e0e0"),                # Líneas de la cuadrícula mayor en gris claro
-    panel.grid.minor = element_blank()                                 # Elimina las líneas de la cuadrícula menor
-  )
-
-```
-
-## Gráfico de regresión {background-color="white"}
-
-```{r echo=F}
-
-mean_brecha <- mean(datos$brecha, na.rm = TRUE)
-
-ggplot(datos, aes(x = promedio_anios_escolaridad25_2017, y = brecha)) +
-  geom_point(color = "#0073C2", size = 3, alpha = 0.7) +  # Puntos más grandes y ligeramente transparentes
-  geom_smooth(method = "lm", color = "black", linetype = "solid", se = FALSE) +  # Línea de tendencia en negro
-  geom_vline(xintercept = mean(datos$promedio_anios_escolaridad25_2017, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'promedio_anios_escolaridad25_2017'
-  geom_hline(yintercept = mean(datos$brecha, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'brecha'
-  labs(
-    x = "Promedio de Años de Escolaridad (2017)",
-    y = "Brecha Salarial de Género (%)",
-    title = "Relación entre Promedio de Años de Escolaridad y Brecha Salarial de Género"
-  ) +
-  theme_minimal(base_size = 16) +  # Tamaño base de letra aumentado
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),  # Título centrado, en negrita y más grande
-    axis.title = element_text(face = "bold", size = 14),               # Títulos de los ejes en negrita y más grandes
-    axis.text = element_text(color = "#333333", size = 12),            # Texto de los ejes más grande
-    panel.grid.major = element_line(color = "#e0e0e0"),                # Líneas de la cuadrícula mayor en gris claro
-    panel.grid.minor = element_blank()                                 # Elimina las líneas de la cuadrícula menor
-  )
-```
-
-## Recta de Regresión Mínimo-Cuadrática {.smaller background-color="white"}
-
-La recta de regresión mínimo-cuadrática de $y$ con relación a $x$ es la recta que hace que la suma de los cuadrados de las distancias verticales de los puntos observados a la recta sea lo más pequeña posible.
-
-#### Fórmula General {background-color="white"}
-
-La recta de regresión se expresa como: $$
-\hat{y} = a + bx
-$$
-
-**Pendiente 𝑏:** Indica el cambio promedio en la variable respuesta𝑦por cada unidad de cambio en la variable explicativa 𝑥.\
-**Ordenada en el origen 𝑎:** Representa el valor predicho de𝑦cuando 𝑥= 0. Sólo tiene significado estadístico cuando x toma valores cercanos a 0.
-
-## Estimación de mínimos cuadrados {background-color="white"}
-
-Para cada observación, halla la distancia vertical de cada punto del diagrama de dispersión a la recta. La regresión mínimo-cuadrática hace que la suma de los cuadrados de estas distancias sea lo más pequeña posible.
-
-Ninguna recta podrá pasar exactamente por todos los puntos del diagrama de dispersión (a no ser que haya correlación perfecta). Queremos que las distancias verticales de los puntos a la recta sean lo más pequeñas posible.
-
-## Visualización de la distancia entre la recta y los casos {background-color="white"}
-
-![](img/03/resid.jpg){fig-align="center"}
-
-## Cálculo de la Pendiente y Ordenada {background-color="white"}
-
-Para calcular la pendiente 𝑏y la ordenada en el origen 𝑎, se utilizan las siguientes fórmulas: $$
-b = r \frac{s_y}{s_x}
-$$
-
-$$
-a = \bar{y} - b \bar{x}
-$$ Donde:
-
-$r$ es la correlación entre $x$ y $y$.
-
-$s_x$ y $s_y$ son las desviaciones estándar de $x$ y $y$.
-
-$\bar{x}$ y $\bar{y}$ son las medias de $x$ y $y$, respectivamente.
-
-## Ejemplo con Datos de Brecha Salarial y Escolaridad {.smaller background-color="white"}
-
-```{r, echo=T}
-# Cálculo de la pendiente y ordenada
-r <- cor(datos$brecha, datos$promedio_anios_escolaridad25_2017)
-sx <- sd(datos$promedio_anios_escolaridad25_2017)
-sy <- sd(datos$brecha)
-mean_x <- mean(datos$promedio_anios_escolaridad25_2017)
-mean_y <- mean(datos$brecha)
-
-b <- r * (sy / sx)
-a <- mean_y - b * mean_x
-
-paste("Pendiente:", round(b, 2), "| Ordenada:", round(a, 2))
-```
-
-Considerando que en las comunas tenemos una correlación de `r round(r, 2)` entre la brecha salarial de género y los años de escolaridad, con una desviación estándar de sy = `r round(sy, 2)` para la brecha salarial y de sx = `r round(sx, 2)` para los años de escolaridad, y medias de mean_y = `r round(mean_y, 2)`% y mean_x = `r round(mean_x, 2)` años respectivamente, la pendiente y la ordenada se calculan como b = `r round(b, 2)` y a = `r round(a, 2)`.
-
-## Gráfico de regresión {background-color="white"}
-
-```{r echo=F}
-
-mean_brecha <- mean(datos$brecha, na.rm = TRUE)
-
-ggplot(datos, aes(x = promedio_anios_escolaridad25_2017, y = brecha)) +
-  geom_point(color = "#0073C2", size = 3, alpha = 0.7) +  # Puntos más grandes y ligeramente transparentes
-  geom_smooth(method = "lm", color = "black", linetype = "solid", se = FALSE) +  # Línea de tendencia en negro
-  geom_vline(xintercept = mean(datos$promedio_anios_escolaridad25_2017, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'promedio_anios_escolaridad25_2017'
-  geom_hline(yintercept = mean(datos$brecha, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'brecha'
-  labs(
-    x = "Promedio de Años de Escolaridad (2017)",
-    y = "Brecha Salarial de Género (%)",
-    title = "Relación entre Promedio de Años de Escolaridad y Brecha Salarial de Género"
-  ) +
-  theme_minimal(base_size = 16) +  # Tamaño base de letra aumentado
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),  # Título centrado, en negrita y más grande
-    axis.title = element_text(face = "bold", size = 14),               # Títulos de los ejes en negrita y más grandes
-    axis.text = element_text(color = "#333333", size = 12),            # Texto de los ejes más grande
-    panel.grid.major = element_line(color = "#e0e0e0"),                # Líneas de la cuadrícula mayor en gris claro
-    panel.grid.minor = element_blank()                                 # Elimina las líneas de la cuadrícula menor
-  )
-```
-
-$$
-\hat{brecha} = -16.451 + 2.852 * escolaridad
-$$
-
-## Gráfico de regresión {background-color="white"}
-
-```{r echo=F}
-mean_brecha <- mean(datos$brecha, na.rm = TRUE)
-
-ggplot(datos, aes(x = promedio_anios_escolaridad25_2017, y = brecha)) +
-  geom_point(color = "#0073C2", size = 3, alpha = 0.7) +  # Puntos más grandes y ligeramente transparentes
-  geom_smooth(method = "lm", color = "black", linetype = "solid", se = FALSE, fullrange = TRUE) +  # Línea de tendencia en negro que se extiende al rango completo
-  geom_vline(xintercept = mean(datos$promedio_anios_escolaridad25_2017, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'promedio_anios_escolaridad25_2017'
-  geom_hline(yintercept = mean(datos$brecha, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'brecha'
-  geom_hline(yintercept = 0, color = "black", linetype = "solid", size = 0.8) +  # Línea negra en y = 0
-  geom_vline(xintercept = 0, color = "black", linetype = "solid", size = 0.8) +  # Línea negra en x = 0
-  labs(
-    x = "Promedio de Años de Escolaridad (2017)",
-    y = "Brecha Salarial de Género (%)",
-    title = "Relación entre Promedio de Años de Escolaridad y Brecha Salarial de Género"
-  ) +
-  xlim(-1, NA) +  # Extiende el eje x hasta -1
-  theme_minimal(base_size = 16) +  # Tamaño base de letra aumentado
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),  # Título centrado, en negrita y más grande
-    axis.title = element_text(face = "bold", size = 14),               # Títulos de los ejes en negrita y más grandes
-    axis.text = element_text(color = "#333333", size = 12),            # Texto de los ejes más grande
-    panel.grid.major = element_line(color = "#e0e0e0"),                # Líneas de la cuadrícula mayor en gris claro
-    panel.grid.minor = element_blank()                                 # Elimina las líneas de la cuadrícula menor
-  )
+-   La "solución" convencional de usar al hombre para definir la clase de la familia es una **simplificación teórica y empíricamente problemática**.
+-   El debate nos muestra que no hay una respuesta única y universal. La elección de la unidad de análisis (**individuo, familia, o individuo-en-familia**) depende de la **pregunta de investigación**.
+    -   Para estudiar la organización de la **producción**, la unidad apropiada podría ser el **individuo**.
+    -   Para estudiar la distribución del **consumo**, la unidad apropiada podría ser la **familia/hogar**.
+-   En lugar de asumir una solución, debemos tratar el peso de las posiciones de clase directa y mediada como una **pregunta empírica a investigar**, como lo hace Wright.
 
 
-```
+---
+title_slide_background: "#008080"
+---
 
-$$
-\hat{brecha} = -16.451 + 2.852 * escolaridad
-$$
+# 3. El Lenguaje de la Medición
 
-## Características de la Regresión {.smaller background-color="white"}
+## Variables Dependientes e Independientes {.smaller background-color="white"}
 
--   **Distinción entre variable explicativa y variable respuesta**:
-    -   La regresión mínimo-cuadrática considera sólo las distancias verticales de los puntos a la recta.
-    -   Cambiar los papeles de las dos variables resulta en una recta de regresión distinta.
+Para probar hipótesis sobre relaciones causales, clasificamos nuestras variables según su función en el modelo teórico.
 
-**Conexión entre correlación y regresión**: - La pendiente de la recta de regresión mínimo-cuadrática se calcula como:
+-   **Variable Independiente (X):** La variable que consideramos la **"causa"** o el factor explicativo. Su variación no depende de otra variable *dentro de nuestro modelo*.
 
-$$
-  b = r \frac{s_y}{s_x}
-$$
+-   **Variable Dependiente (Y):** La variable que consideramos el **"efecto"** o el resultado a explicar. Su valor *depende* de la variable independiente.
 
--   A lo largo de la recta de regresión:
-    -   Un cambio de una desviación típica en x provoca un cambio de r desviaciones típicas en y.
-    -   Cuando r = 1 o r = −1, el cambio en y predicho es igual al cambio en x.
-    -   Si −1 ≤ r ≤ 1, el cambio en y es menor que el cambio en x.
-    -   A menor correlación, menor es la predicción de y en respuesta a x.
+*Ejemplo de hipótesis:*
+El nivel de **educación** (Variable Independiente) influye positivamente en el nivel de **ingresos** (Variable Dependiente) de una persona.
 
-## Características de la Regresión {.smaller background-color="white"}
+## Los Niveles de Medición {.smaller background-color="white"}
 
--   **Punto de paso de la recta de regresión**:
-    -   La recta de regresión mínimo-cuadrática siempre pasa por el punto $(\bar{x}, \bar{y})$.
+No todos los números son iguales. El **nivel de medición** nos dice qué tipo de información contiene una variable y, por lo tanto, qué operaciones matemáticas y estadísticas son lógicas y válidas. Es una decisión clave en la **operacionalización**.
 
-    -   La recta de regresión se describe completamente con $\bar{x}$, $s_x$, $\bar{y}$, $s_y$ y $r$.
+**Hay cuatro niveles principales:**  
+1.  Nominal  
+2.  Ordinal  
+3.  De Intervalo   
+4.  De Razón  
 
-    -   **Correlación r y la fuerza de la relación lineal**:
+## Nivel de Medición: NOMINAL {.smaller background-color="white"}
 
-    -   El cuadrado de la correlación, $r^2$, indica la fracción de la variación de $y$ explicada por la recta de regresión.
+-   **Definición:** Las categorías de la variable no tienen un orden intrínseco. Los números, si se usan, son solo **etiquetas arbitrarias**.
+-   **Propiedad Matemática:** Igualdad / Desigualdad (`=`, `!=`).
+-   **Ejemplos Sociológicos:**
+    -   Género (1=Mujer, 2=Hombre, 3=Otro)
+    -   Afiliación Religiosa (1=Católico, 2=Protestante, 3=Ninguna)
+    -   Región de Residencia (1=Norte, 2=Centro, 3=Sur)
+-   **Operaciones Válidas:** Contar frecuencias, calcular porcentajes y la moda. No tiene sentido calcular un "promedio de género".
 
-    -   $r^2$ se utiliza para medir la calidad de la predicción proporcionada por la regresión.
--   **Relación entre r y** $r^2$:
-    -   Una correlación perfecta ($r = \pm1$) implica que $r^2 = 1$, lo que significa que toda la variación de $y$ se explica por la relación lineal con $x$.
-    -   Si $r = \pm0.7$, entonces $r^2 = 0.49$, indicando que aproximadamente la mitad de la variación se explica con la relación lineal.
+## Nivel de Medición: ORDINAL {.smaller background-color="white"}
+
+-   **Definición:** Las categorías tienen un **orden lógico o jerarquía**, pero la distancia entre ellas no es necesariamente igual o cuantificable.
+-   **Propiedades Matemáticas:** Igualdad / Desigualdad y Orden (`>`, `<`).
+-   **Ejemplos Sociológicos:**
+    -   Nivel Educativo (1=Básica, 2=Media, 3=Superior)
+    -   Clase Social Subjetiva (1=Baja, 2=Media, 3=Alta)
+    -   Escalas de Acuerdo tipo Likert (1=Muy en desacuerdo, ..., 5=Muy de acuerdo)
+-   **Operaciones Válidas:** Mediana, percentiles, cuantiles. El uso de la media es controversial y requiere supuestos fuertes.
+
+## Nivel de Medición: INTERVALO Y RAZÓN {.smaller background-color="white"}
+
+A menudo se agrupan porque sus propiedades estadísticas son muy similares.
+
+-   **Definición:** Los números representan un orden y las **distancias entre ellos son iguales y significativas**.
+-   **Propiedades Matemáticas:** Orden, distancia igual (`+`, `-`).
+-   **Diferencia clave:** Las variables **de razón** tienen un **cero absoluto y real** (significa ausencia de la propiedad), lo que permite formar cocientes (`*`, `/`). Las de intervalo no.
+-   **Ejemplos Sociológicos:**
+    -   **De Razón (la mayoría en sociología):** Edad en años, Ingresos en pesos, Número de hijos, Años de escolaridad.
+    -   **De Intervalo (raras en sociología):** Escalas estandarizadas como el Coeficiente Intelectual (CI) o la temperatura en Celsius.
+-   **Operaciones Válidas:** Todas: media, desviación estándar, correlación, regresión.
+
+## Tabla Resumen de los Niveles de Medición {.smaller background-color="white"}
+
+| Nivel de Medición | Propiedades | Ejemplo Sociológico | Operación Central |
+| :---| :--- | :--- | :--- |
+| **Nominal** | Clasificación en categorías distintas | `Estado Civil` | Frecuencias / Moda |
+| **Ordinal** | Categorías con un orden jerárquico | `Nivel de Acuerdo` | Mediana / Percentiles |
+| **Intervalo** | Orden con distancia igual y significativa | `Puntaje en escala de CI` | Media / Desv. Estándar |
+| **Razón** | Orden, distancia igual y cero absoluto real | `Ingresos ($)` | Todas (incluye razones) |
+
+## Actividad Práctica (15 min) {.smaller background-color="white"}
+
+**Instrucciones:** Para cada una de las siguientes variables, identifiquen la **unidad de análisis** más probable y el **nivel de medición** más adecuado.
+
+1.  La principal razón para elegir una carrera (medida con categorías como "vocación", "ingresos", "prestigio").
+2.  El número de protestas en diferentes ciudades de Chile durante un año.
+3.  El grado de confianza en el gobierno (medido en una escala de 1 a 10, donde 1 es "ninguna" y 10 es "mucha").
+4.  El ingreso total del hogar en pesos.
+5.  La afiliación a un partido político.
+
+## Cierre y Próximos Pasos {.smaller background-color="white"}
+
+**Resumen de la sesión de hoy:**
+
+-   Hemos desglosado el proceso fundamental de pasar de una idea abstracta a un dato medible, definiendo la **conceptualización**, la **operacionalización**, las **unidades de análisis** y los **niveles de medición**.
+-   Comprendimos que estas decisiones técnicas no son triviales: definen lo que estudiamos y determinan el tipo de conclusiones que podemos alcanzar.
+
+**Adelanto de la próxima clase:**
+
+-   En nuestra próxima sesión, abordaremos la segunda parte de los "Conceptos Clave de la Investigación":
+    -   **Muestreo:** ¿Cómo seleccionamos a quiénes estudiar?
+    -   **Validez y Fiabilidad:** ¿Cómo sabemos si estamos midiendo bien?
+    -   **Error de Medición y Error Muestral.**
