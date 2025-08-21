@@ -127,6 +127,16 @@ Un sociólogo analiza los resultados de la prueba PISA a nivel nacional y observ
 2. ¿Sobre qué **unidad de análisis** está sacando sus conclusiones?  
 3. ¿Qué **falacia lógica** está cometiendo? ¿Por qué es un error?  
 
+## {.smaller background-color="white"}
+
+![](img/03/casen.png){fig-align="center"}
+
+## {.smaller background-color="white"}
+
+![](img/03/encla.png){fig-align="center"}
+
+
+
 ## Ejemplo Sociológico: ¿Cuál es la Unidad de Análisis de la Clase Social? {.smaller background-color="white"}
 
 El debate sobre cómo integrar a las mujeres en los estudios de clase es un ejemplo perfecto de la importancia de definir la unidad de análisis.
