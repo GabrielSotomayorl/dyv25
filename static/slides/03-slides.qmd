@@ -1,8 +1,8 @@
 ---
-title: "De la Idea a la Medida: Conceptos Clave de la Investigación"
+title: "Conceptos clave para la investigación social I"
 subtitle: "Unidad 2: Descripción y Visualización de Datos"
 author: "Gabriel Sotomayor"
-date: "25-08-2025"
+date: "08-25-2025"
 format:
   revealjs:
     theme: [dark, custom.scss]
@@ -56,18 +56,192 @@ La **operacionalización** es el desarrollo de **procedimientos de investigació
 
 ## El Flujo Completo: De la Idea al Dato {.smaller background-color="white"}
 
-![](img/flujo_conceptual.png){fig-align="center"}
-*(Nota: Aquí iría una imagen de un diagrama de flujo simple que muestre los 5 pasos)*
-
 1.  **Concepción Mental** (Idea vaga de "prejuicio").
 2.  **Concepto** (Constructo con nombre: "Prejuicio").
 3.  **Conceptualización** (Definición teórica: "Actitud negativa hacia un grupo social...").
 4.  **Operacionalización** (Procedimiento: Escala de acuerdo con frases sobre inmigrantes).
 5.  **Medición en el Mundo Real** (Aplicación de la escala para obtener un puntaje de prejuicio).
 
----
-title_slide_background: "#008080"
----
+## La Jerarquía de la Medición {.smaller background-color="white"}
+
+El viaje desde una idea abstracta hasta un dato observable sigue una jerarquía lógica, un proceso de "descomposición". No todos los conceptos tienen todos los niveles, pero la lógica de ir de lo general a lo específico es siempre la misma.
+
+
+```{dot}
+// Jerarquía de la Medición
+digraph G {
+  layout=dot;
+  rankdir=TB; 
+  node [shape=box, style=solid, fontcolor=black, fontsize=18];
+
+  // Definición de Nodos
+  concepto [label="Concepto\n(Idea abstracta, ej. Bienestar Social)", shape=ellipse, style=filled, fillcolor="#008080", fontcolor=white];
+  dimension [label="Dimensión\n(Faceta del concepto, ej. Bienestar Económico)"];
+  subdimension [label="Sub-dimensión\n(Aspecto específico, ej. Estabilidad de Ingresos)"];
+  indicador [label="Indicador\n(Observación concreta, ej. Pregunta de encuesta)"];
+  
+  // Relaciones
+  concepto -> dimension;
+  dimension -> subdimension;
+  subdimension -> indicador;
+}
+```
+
+
+## Conceptos Unidimensionales vs. Multidimensionales {.smaller background-color="white"}
+
+-   **Concepto Unidimensional:** Se refiere a un fenómeno que puede ser medido adecuadamente a lo largo de una única dimensión o continuo.
+    -   *Ejemplo clásico:* **Edad**. Se mide en una sola escala (años) que captura su esencia.
+
+-   **Concepto Multidimensional:** Se refiere a un fenómeno complejo que se compone de varias dimensiones distintas, las cuales no necesariamente se mueven juntas.
+    -   *Ejemplo clásico:* **Clase social** en la tradición de Bourdieu, que no es solo dinero, sino una combinación de capital económico, cultural y social.
+
+La mayoría de los conceptos interesantes en sociología (poder, anomia, desigualdad, bienestar) son **multidimensionales**.
+
+## Características de un Buen Indicador {.smaller background-color="white"}
+
+Un indicador es la manifestación empírica de nuestro concepto. Para ser útil, debe tener ciertas características:
+
+-   **Relevancia Teórica:** Debe estar lógicamente conectado con la definición conceptual de la dimensión que pretende medir.
+-   **Especificidad:** Debe capturar un aspecto concreto del concepto, evitando la ambigüedad.
+-   **Claridad:** Debe ser fácil de entender tanto para el investigador como para el sujeto de estudio (si es una pregunta de encuesta).
+-   **Sensibilidad:** Debe ser capaz de registrar variaciones o cambios en el fenómeno.
+
+Un buen conjunto de indicadores nos permite "ver" el concepto abstracto en el mundo real.
+
+## Una Pincelada de Calidad: Fiabilidad y Validez {.smaller background-color="white"}
+
+¿Cómo sabemos si nuestros indicadores miden bien? Evaluamos dos criterios clave. (**¡Esto es un adelanto de la próxima clase!**)
+
+:::::: columns
+::: {.column width="50%"}
+**Fiabilidad (Confiabilidad)**  
+-   **Pregunta:** ¿La medición es consistente y estable?  
+-   Si repito la medición, ¿obtengo el mismo resultado?  
+-   Se asocia con el **error aleatorio**.  
+:::
+::: {.column width="50%"}
+**Validez**  
+-   **Pregunta:** ¿Estoy midiendo realmente el concepto que quiero medir?  
+-   ¿Mi indicador refleja el verdadero significado de mi concepto?  
+-   Se asocia con el **error sistemático** (sesgo).  
+:::
+::::::
+
+
+## Ejemplo 1: Inseguridad Alimentaria (CASEN - FIES) {.smaller background-color="white"}
+
+-   **Concepto:** Inseguridad Alimentaria. No es simplemente "tener hambre". La FAO lo define como la falta de **acceso** físico, social y/o económico a alimentos suficientes, inocuos y nutritivos.
+-   **Enfoque de Medición:** La Escala de Experiencia de Inseguridad Alimentaria (FIES) mide el acceso a los alimentos a través de la **experiencia directa** de las personas.
+-   **Dimensión:** La FIES conceptualiza la inseguridad alimentaria como un fenómeno **unidimensional** de **severidad creciente**, que va desde la preocupación por la comida hasta pasar un día entero sin comer.
+
+## Operacionalización de la Inseguridad Alimentaria {.smaller background-color="white"}
+
+La FIES utiliza 8 preguntas (indicadores) que capturan distintos umbrales de esta escala de severidad.Cada respuesta afirmativa acumula evidencia de un mayor grado de severidad en esta única dimensión.
+
+| Indicador (Pregunta Clave de la FIES - CASEN) |
+|:------------------------------------------------|
+| **r8a.** ¿Se preocupó por no tener suficientes alimentos por falta de dinero? |
+| **r8b.** ¿No pudo comer alimentos saludables y nutritivos por falta de dinero? |
+| **r8c.** ¿Comió poca variedad de alimentos por falta de dinero? |
+| **r8d.** ¿Tuvo que dejar de desayunar, almorzar, tomar once o cenar por dinero? |
+| **r8e.** ¿Comió menos de lo que pensaba que debía comer por falta de dinero? |
+| **r8f.** ¿Se quedó sin alimentos por falta de dinero? |
+| **r8g.** ¿Sintió hambre y no comió por falta de dinero? |
+| **r8h.** ¿Dejó de comer todo un día por falta de dinero? |
+
+
+## Ejemplo 2: Clase Social como Capital Multidimensional {.smaller background-color="white"}
+
+-   **Concepto:** Clase Social.
+-   **Punto de Partida Teórico (Bourdieu):** Se supera la visión tradicional que reduce la clase a la ocupación o el ingreso. La clase es una **posición en un espacio social**, definida por el **volumen** y la **composición** de diferentes formas de poder o "capitales".
+-   **Conceptualización (Savage et al., 2013):** Para analizar la estructura de clases contemporánea, se operacionalizan tres dimensiones centrales de capital que determinan las oportunidades y estilos de vida.
+    1.  **Capital Económico:** Recursos financieros y patrimoniales.
+    2.  **Capital Social:** Red de contactos y relaciones sociales.
+    3.  **Capital Cultural:** Conocimientos, gustos y habilidades que confieren prestigio.
+
+## Dimensión 1: Capital Económico {.smaller background-color="white"}
+
+**Definición:** Refleja la riqueza material y los recursos financieros de un hogar. Es la dimensión más directa de la desigualdad.
+
+**Operacionalización en el "Great British Class Survey":** Se utilizaron tres indicadores clave para capturar tanto el flujo de dinero como el patrimonio acumulado.
+
+-   **Indicador 1: Ingresos del Hogar**
+    -   *Ejemplo de Pregunta:* "¿Cuál es el ingreso total combinado de su hogar, de todas las fuentes, antes de impuestos y descuentos?" (se presentan tramos de respuesta).
+
+-   **Indicador 2: Ahorros del Hogar**
+    -   *Ejemplo de Pregunta:* "Aproximadamente, ¿a cuánto ascienden los ahorros totales de su hogar?" (se presentan tramos).
+
+-   **Indicador 3: Valor de la Vivienda**
+    -   *Ejemplo de Pregunta:* "Si tuviera que vender su vivienda hoy, ¿cuál cree que sería su precio de mercado aproximado?".
+
+## Dimensión 2: Capital Social {.smaller background-color="white"}
+
+**Definición:** La red de contactos y relaciones sociales que una persona puede movilizar. No se trata solo de "tener amigos", sino del **alcance y prestigio** de esa red.
+
+**Operacionalización (Método: "Position Generator"):** Se mide la extensión y el estatus de las redes sociales de una persona.
+
+-   **Indicador 1: Amplitud de la Red (Número de Contactos)**
+    -   Mide la diversidad de la red. ¿Con cuántos tipos de personas diferentes se tiene contacto?
+-   **Indicador 2: Estatus de la Red (Prestigio Promedio de los Contactos)**
+    -   Mide la "calidad" de la red en términos de prestigio social.
+
+-   **Ejemplo de Pregunta:** "De la siguiente lista de 37 ocupaciones, por favor, indique si conoce personalmente a alguien que trabaje en cada una de ellas (ej. Abogado/a, Electricista, CEO, Personal de Limpieza, Científico/a, Artista)".
+
+## Dimensión 3: Capital Cultural {.smaller background-color="white"}
+
+**Definición:** Los conocimientos, gustos, habilidades y credenciales que son valorados y confieren prestigio en una sociedad.
+
+**Operacionalización (Savage et al.):** El estudio distinguió dos sub-dimensiones clave del capital cultural, reflejando cambios en lo que se considera "culto" o "valioso".
+
+-   **Sub-dimensión 1: Capital Cultural "Consagrado" (Highbrow)**
+    -   Representa el gusto por las formas culturales tradicionalmente consideradas "de élite" o "legítimas".
+
+-   **Sub-dimensión 2: Capital Cultural "Emergente"**
+    -   Representa la participación en formas culturales más nuevas, contemporáneas y a menudo asociadas con la juventud.
+
+## Indicadores del Capital Cultural {.smaller background-color="white"}
+
+:::::: columns
+::: {.column width="50%"}
+**Capital Cultural "Consagrado"**
+
+-   **Indicadores:**
+    -   Gusto por la música clásica, ópera, jazz.
+    -   Asistencia a teatros.
+    -   Visitas a museos, galerías de arte.
+    -   Visitas a patrimonio histórico (castillos, etc.).
+
+-   **Ejemplo de Pregunta:**
+    > "¿Con qué frecuencia asiste a conciertos de música clásica? (Nunca, Raramente, A veces, Frecuentemente)".
+:::
+::: {.column width="50%"}
+**Capital Cultural "Emergente"**
+
+-   **Indicadores:**
+    -   Gusto por el rock, rap, pop.
+    -   Asistencia a conciertos o "gigs".
+    -   Uso de videojuegos.
+    -   Interacción en redes sociales.
+    -   Práctica de deportes o asistencia al gimnasio.
+
+-   **Ejemplo de Pregunta:**
+    > "¿Con qué frecuencia sale con sus amigos a un bar o pub? (Nunca, Raramente, A veces, Frecuentemente)".
+:::
+::::::
+
+## Conclusión del Ejemplo: Un Mapa de Clases {.smaller background-color="white"}
+
+-   Este ejemplo ilustra cómo un **concepto multidimensional** como la clase social se descompone en **dimensiones**, **sub-dimensiones** e **indicadores** concretos para poder ser medido.
+
+-   La combinación de los puntajes en estos tres capitales (económico, social y cultural) permitió a Savage y sus colegas ir más allá de la simple dicotomía "obrero vs. clase media".
+
+-   **El Resultado:** Mediante un análisis estadístico (Latent Class Analysis), identificaron un nuevo mapa de **siete clases sociales** en el Reino Unido, desde una "Élite" muy rica y conectada hasta un "Precariado" con bajos niveles en todos los capitales.
+
+## La gran calculadora de clases británica {.smaller background-color="white"}
+
+![](img/03/survey.png){fig-align="center"}
+
 
 # 2. ¿A Quién o Qué Estudiamos?
 
@@ -91,10 +265,10 @@ Es fundamental no confundirlas.
 -   **Unidad de Análisis:** Aquello sobre lo que queremos **hacer conclusiones**.
 -   **Unidad de Observación:** La unidad de la cual **recolectamos la información**.
 
-A veces son la misma:
+A veces son la misma:  
 -   Para estudiar el rendimiento de los **estudiantes** (U. de Análisis), les tomamos una prueba a los **estudiantes** (U. de Observación).
 
-A veces son diferentes:
+A veces son diferentes:  
 -   Para estudiar la **dinámica de conflicto en los hogares** (U. de Análisis), podríamos encuestar solo a las **mujeres** de esos hogares (U. de Observación). Aquí, la mujer es nuestra informante sobre el hogar.
 
 ## Las Falacias Lógicas en la Investigación {.smaller background-color="white"}
@@ -145,7 +319,7 @@ El debate sobre cómo integrar a las mujeres en los estudios de clase es un ejem
     -   La unidad de análisis es la **familia** (o el hogar).
     -   **Supuesto 1:** La familia tiene una posición de clase unitaria, ya que todos sus miembros comparten intereses materiales comunes.
     -   **Supuesto 2:** Esa posición de clase está determinada por la ocupación del **"jefe de hogar" masculino**, debido a su vínculo "más fuerte y duradero" con el mercado laboral.
-    -   *Consecuencia:* La posición de clase de la mujer se **deriva** de la de su marido y su propia ocupación es irrelevante para el análisis.
+    -   *Consecuencia:* La posición de clase de la mujer se **deriva** de la de su marido y su propia ocupación es irrelevante para el análisis.  
 
 ## Críticas Feministas a la Perspectiva Convencional {.smaller background-color="white"}
 
@@ -222,7 +396,7 @@ title_slide_background: "#008080"
 
 ## Variables Dependientes e Independientes {.smaller background-color="white"}
 
-Para probar hipótesis sobre relaciones causales, clasificamos nuestras variables según su función en el modelo teórico.
+Para probar hipótesis sobre relaciones causales o de dependencia, clasificamos nuestras variables según su función en el modelo teórico.
 
 -   **Variable Independiente (X):** La variable que consideramos la **"causa"** o el factor explicativo. Su variación no depende de otra variable *dentro de nuestro modelo*.
 
@@ -268,9 +442,9 @@ A menudo se agrupan porque sus propiedades estadísticas son muy similares.
 -   **Definición:** Los números representan un orden y las **distancias entre ellos son iguales y significativas**.
 -   **Propiedades Matemáticas:** Orden, distancia igual (`+`, `-`).
 -   **Diferencia clave:** Las variables **de razón** tienen un **cero absoluto y real** (significa ausencia de la propiedad), lo que permite formar cocientes (`*`, `/`). Las de intervalo no.
--   **Ejemplos Sociológicos:**
-    -   **De Razón (la mayoría en sociología):** Edad en años, Ingresos en pesos, Número de hijos, Años de escolaridad.
-    -   **De Intervalo (raras en sociología):** Escalas estandarizadas como el Coeficiente Intelectual (CI) o la temperatura en Celsius.
+-   **Ejemplos Sociológicos:**  
+    -   **De Intervalo:** Escalas estandarizadas como el Coeficiente Intelectual (CI) o la temperatura en Celsius.  
+    -   **De Razón:** Edad en años, Ingresos en pesos, Número de hijos, Años de escolaridad.  
 -   **Operaciones Válidas:** Todas: media, desviación estándar, correlación, regresión.
 
 ## Tabla Resumen de los Niveles de Medición {.smaller background-color="white"}
@@ -305,3 +479,4 @@ A menudo se agrupan porque sus propiedades estadísticas son muy similares.
     -   **Muestreo:** ¿Cómo seleccionamos a quiénes estudiar?
     -   **Validez y Fiabilidad:** ¿Cómo sabemos si estamos midiendo bien?
     -   **Error de Medición y Error Muestral.**
+
