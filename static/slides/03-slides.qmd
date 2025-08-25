@@ -313,7 +313,7 @@ Un sociólogo analiza los resultados de la prueba PISA a nivel nacional y observ
 
 ## Ejemplo Sociológico: ¿Cuál es la Unidad de Análisis de la Clase Social? {.smaller background-color="white"}
 
-El debate sobre cómo integrar a las mujeres en los estudios de clase es un ejemplo perfecto de la importancia de definir la unidad de análisis.
+El debate sobre cómo integrar a las mujeres en los estudios de clase es un buen ejemplo de la importancia de definir la unidad de análisis.
 
 -   **La Perspectiva Convencional (ej. Goldthorpe, 1983):**
     -   La unidad de análisis es la **familia** (o el hogar).
@@ -329,8 +329,6 @@ Autoras como Joan Acker, Michelle Stanworth y Janeen Baxter criticaron duramente
 2.  **¿Vínculo Débil?** Ignorar el trabajo remunerado de las mujeres es empíricamente insostenible y desestima cómo su **propia posición de clase** afecta sus oportunidades, poder de negociación y experiencias de vida.
 3.  **¿Homogeneidad de Clase?** Un gran porcentaje de los hogares son de **clase heterogénea** (los cónyuges pertenecen a clases distintas), lo que hace que el modelo convencional sea simplemente inadecuado.
 4.  **¿Qué son los Intereses de Clase?** Se reduce el "interés de clase" solo a los ingresos, ignorando experiencias clave en el trabajo como la autonomía o la dominación.
-
-> "oscurece el grado en que difieren las experiencias de clase de las esposas respecto de los maridos, e ignora el grado en que las desigualdades que dividen a hombres y mujeres son en sí mismas resultado del sistema de clases operante" (Stanworth, 1984).
 
 ## Hacia una Solución: Posiciones Directas y Mediadas (Wright, 1989) {.smaller background-color="white"}
 
@@ -377,15 +375,13 @@ digraph G {
 ```
 
 
-La pregunta clave de Wright es: ¿cuál de estos dos caminos pesa más para hombres y mujeres en diferentes contextos nacionales?
-
 ## Conclusión del Debate {.smaller background-color="white"}
 
 -   La "solución" convencional de usar al hombre para definir la clase de la familia es una **simplificación teórica y empíricamente problemática**.
 -   El debate nos muestra que no hay una respuesta única y universal. La elección de la unidad de análisis (**individuo, familia, o individuo-en-familia**) depende de la **pregunta de investigación**.
     -   Para estudiar la organización de la **producción**, la unidad apropiada podría ser el **individuo**.
     -   Para estudiar la distribución del **consumo**, la unidad apropiada podría ser la **familia/hogar**.
--   En lugar de asumir una solución, debemos tratar el peso de las posiciones de clase directa y mediada como una **pregunta empírica a investigar**, como lo hace Wright.
+-   En lugar de asumir una solución, debemos tratar el peso de las posiciones de clase directa y mediada como una **pregunta empírica a investigar**.
 
 
 ---
@@ -398,12 +394,14 @@ title_slide_background: "#008080"
 
 Para probar hipótesis sobre relaciones causales o de dependencia, clasificamos nuestras variables según su función en el modelo teórico.
 
--   **Variable Independiente (X):** La variable que consideramos la **"causa"** o el factor explicativo. Su variación no depende de otra variable *dentro de nuestro modelo*.
+-   **Variable Independiente (X):** La variable que consideramos la "causa" o el factor explicativo. Su variación no depende de otra variable *dentro de nuestro modelo*.
 
--   **Variable Dependiente (Y):** La variable que consideramos el **"efecto"** o el resultado a explicar. Su valor *depende* de la variable independiente.
+-   **Variable Dependiente (Y):** La variable que consideramos el "efecto" o el resultado a explicar. Su valor *depende* de la variable independiente.
 
 *Ejemplo de hipótesis:*
 El nivel de **educación** (Variable Independiente) influye positivamente en el nivel de **ingresos** (Variable Dependiente) de una persona.
+
+*Advertencia:* La causalidad requiere de diseños de investigación específicos para este fin, por lo que a menudo hablamos de "asociación" o "relación" en lugar de causalidad directa.
 
 ## Los Niveles de Medición {.smaller background-color="white"}
 
