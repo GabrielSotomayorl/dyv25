@@ -1,338 +1,304 @@
 ---
-title: "Clase 4 <br> Regresión Lineal Simple II"
-subtitle: "Análisis Avanzado de Datos"
+title: "Conceptos clave para la investigación social II"
+subtitle: "Unidad 2: Muestreo y Población"
 author: "Gabriel Sotomayor"
-format: 
+date: "09-01-2025"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
 ---
 
-# Recordatorio de la clase anterior
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-## Recta de Regresión Mínimo-Cuadrática {.smaller background-color="white"}
+-   **Distinguir** entre población y muestra, y comprender la lógica del muestreo probabilístico.
+-   **Identificar** los conceptos de población objetivo y marco muestral, y reconocer sus desafíos prácticos.
+-   **Comparar** diferentes diseños de muestreo probabilístico (MAS, sistemático, estratificado, conglomerados).
+-   **Analizar** ejemplos de marcos y diseños muestrales utilizados en encuestas chilenas reales.
+-   **Evaluar** la calidad de una medición a través de los criterios de **fiabilidad** y **validez**.
 
-La regresión lineal simple se utiliza para describir la relación entre dos variables, una independiente (explicativa) y una dependiente (respuesta), mediante una recta de regresión. A diferencia de la correlación si asume una direccionalidad.
+---
+title_slide_background: "#008080"
+---
 
-#### Fórmula General {background-color="white"}
+# 1. ¿A quiénes estudiamos? La Lógica del Muestreo
 
-La recta de regresión se expresa como: 
-$$
-\hat{y} = a + bx
-$$
+## Repaso: De la Idea al Dato {.smaller background-color="white"}
 
+En la clase anterior, establecimos el camino para medir un concepto sociológico:
 
-**Pendiente 𝑏:** Indica el cambio promedio en la variable respuesta𝑦por cada unidad de cambio en la variable explicativa 𝑥.\
-**Ordenada en el origen 𝑎:** Representa el valor predicho de𝑦cuando 𝑥= 0. Sólo tiene significado estadístico cuando x toma valores cercanos a 0.
+1.  **Conceptualización:** Definir con precisión teórica qué queremos decir (ej. ¿qué es "clase social"?).
+2.  **Operacionalización:** Decidir cómo lo vamos a medir empíricamente (ej. a través de indicadores de capital económico, social y cultural).
+3.  **Unidad de Análisis:** Determinar sobre quién o qué sacaremos conclusiones (ej. individuos en un contexto familiar).
+4.  **Nivel de Medición:** Elegir la escala adecuada para nuestras variables (nominal, ordinal, etc.).
 
-## Características de la Regresión {.smaller background-color="white"}
+Hoy, respondemos a la siguiente pregunta: una vez que sabemos qué medir y en quiénes, **¿cómo seleccionamos a las unidades de análisis que efectivamente vamos a estudiar?**
 
--   **Distinción entre variable explicativa y variable respuesta**:
-    -   La regresión mínimo-cuadrática considera sólo las distancias verticales de los puntos a la recta.
-    -   Cambiar los papeles de las dos variables resulta en una recta de regresión distinta.
+## ¿Por qué Muestrear? Población vs. Muestra {.smaller background-color="white"}
 
-## Características de la Regresión {.smaller background-color="white"}
+:::::: columns
+::: {.column width="50%"}
+**Población (o Universo)**
+-   Es el **conjunto completo** de todas las unidades de análisis sobre las que queremos hacer afirmaciones (ej. *todos* los estudiantes de pregrado en Chile).  
+-   Estudiar a toda la población se llama **Censo**. Es extremadamente costoso, lento y a menudo impracticable.  
 
-**Conexión entre correlación y regresión**: - La pendiente de la recta de regresión mínimo-cuadrática se calcula como:
+**Muestra**
+-   Es un **subconjunto** de la población que seleccionamos para estudiar.  
+-   El objetivo es usar la información de la muestra para hacer **inferencias** (generalizaciones) sobre la población total.  
+:::
+::: {.column width="50%"}
+![](https://i.imgur.com/8aB3t8g.png){fig-align="center"}
+*La lógica es simple: no necesitamos comernos toda la sopa para saber si está salada. Una cucharada bien revuelta (una buena muestra) es suficiente.*
+:::
+::::::
 
-$$
-  b = r \frac{s_y}{s_x}
-$$
+## La Lógica del Muestreo Probabilístico {.smaller background-color="white"}
 
--   A lo largo de la recta de regresión:
-    -   Un cambio de una desviación típica en x provoca un cambio de r desviaciones típicas en y.
-    -   Cuando r = 1 o r = −1, el cambio en y predicho es igual al cambio en x, en términos de desviaciones estándar.
-    -   Si −1 ≤ r ≤ 1, el cambio en y es menor que el cambio en x.
-    -   A menor correlación, menor es la predicción de y en respuesta a x.
+El **muestreo probabilístico** es el pilar de la investigación cuantitativa que busca generalizar. Su lógica se basa en un principio fundamental:
 
-## Características de la Regresión {.smaller background-color="white"}
+La selección **aleatoria** (al azar).
 
--   **Punto de paso de la recta de regresión**:
-    -   La recta de regresión mínimo-cuadrática siempre pasa por el punto $(\bar{x}, \bar{y})$.
+-   **Principio Clave:** Cada unidad de la población tiene una probabilidad **conocida y no nula** de ser seleccionada para la muestra.
+-   **Ventajas Fundamentales:**
+    1.  **Minimiza el sesgo de selección:** El azar, no la conveniencia ni las preferencias del investigador, decide quién entra en la muestra. Una muestra probabilística bien diseñada es, por definición, **representativa**.
+    2.  **Permite estimar el error muestral:** Nos da acceso a la teoría de la probabilidad, que nos permite calcular con precisión qué tan lejos están probablemente nuestras estimaciones del verdadero valor en la población.
 
-    -   La recta de regresión se describe completamente con $\bar{x}$, $s_x$, $\bar{y}$, $s_y$ y $r$.
+## Población Objetivo vs. Marco Muestral {.smaller background-color="white"}
 
-    -   **Correlación r y la fuerza de la relación lineal**:
+Aquí es donde la teoría se encuentra con la cruda realidad.
 
-    -   El cuadrado de la correlación, $r^2$, indica la fracción de la variación de $y$ explicada por la recta de regresión.
+-   **Población Objetivo:** Es la definición **teórica** y abstracta del grupo que queremos estudiar.
+    -   *Ejemplo:* "Todos los hogares que residen en viviendas particulares en Chile en 2022".
 
-    -   $r^2$ se utiliza para medir la calidad de la predicción proporcionada por la regresión.
--   **Relación entre r y** $r^2$:
-    -   Una correlación perfecta ($r = \pm1$) implica que $r^2 = 1$, lo que significa que toda la variación de $y$ se explica por la relación lineal con $x$.
-    -   Si $r = \pm0.7$, entonces $r^2 = 0.49$, indicando que aproximadamente la mitad de la variación se explica con la relación lineal.
+-   **Marco Muestral:** Es la **lista o dispositivo concreto** del cual extraemos la muestra. Es la **operacionalización** de la población.
+    -   *Ejemplo:* Un listado de todas las viviendas del país, un directorio telefónico, un registro de nacimientos.
 
-## [Evaluaciones]{style="color:#FFFFFF;"} {.dark-background}
+**El problema fundamental:** El marco muestral casi nunca es una representación perfecta de la población objetivo. Esta brecha es una de las principales fuentes de error.
 
-**Tarea 1: 4 de septiembre (la pauta está arriba)**\
-- Gestión de datos\
-- Estadística bivariada\
-- Regresión lineal simple
+## Ejemplo 1: Encuesta CASEN {.smaller background-color="white"}
 
-**Prueba 1: 9 de Septiembre**\
-- Uso de modelos en ciencias sociales\
-- Estadística bivariada\
-- Regresión lineal simple
+-   **Población Objetivo:** "Hogares que habitan viviendas particulares ocupadas y sus residentes habituales" a nivel nacional.
+-   **Marco Muestral:** El Marco Muestral de Viviendas (MMV) del INE, que se construye a partir del Censo y se actualiza periódicamente. Es una lista de "unidades primarias de muestreo" (UPM), que son áreas geográficas (similares a manzanas).
+-   **Ventajas del Marco:** Alta cobertura y calidad, es el mejor marco de viviendas disponible en el país.
+-   **Desafíos y Sesgos Potenciales:**
+    -   **Problema de Cobertura:** El marco **excluye** comunas y UPMs clasificadas como "áreas especiales" de difícil acceso (ej. Ollagüe, Isla de Pascua, Antártica Chilena).
+    -   **Problema de Actualización:** No captura instantáneamente las viviendas nuevas o las que han sido demolidas desde la última actualización.
+    -   *Consecuencia:* Las personas que viven en estas zonas excluidas tienen una probabilidad de selección igual a cero, lo que introduce un **sesgo de cobertura**.
 
-## Objetivo de la sesión {.center background-color="white"}
+## Ejemplo 2: Encuesta CADEM Plaza Pública {.smaller background-color="white"}
 
-Profundizar en la interpretación de la regresión lineal simple y el análisis de los residuos.
+-   **Población Objetivo:** "Hombres y mujeres de 18 años o más, habitantes en las 16 regiones del país".
+-   **Marco Muestral:** Una base de datos propia con más de 18 millones de números de celulares, generada a través de *Random Digit Dialing* (RDD).
+-   **Ventajas del Marco:** Rapidez, bajo costo y alta penetración de la telefonía móvil en Chile.
+-   **Desafíos y Sesgos Potenciales:**
+    -   **Problema de Cobertura:** Excluye sistemáticamente a la población que **no tiene celular**, que suele ser de mayor edad y menor nivel socioeconómico.
+    -   **Sesgo de No Respuesta:** El desafío más grande. La tasa de logro es baja (cerca del 11%). Quienes deciden contestar una encuesta de un número desconocido pueden ser sistemáticamente diferentes (ej. más interesados en política, más confiados) de quienes no contestan. Esto es un **sesgo de autoselección**.
 
-## Residuos: Definición y Significado {.smaller background-color="white"}
+## Ejemplo 3: Encuesta Longitudinal de Primera Infancia (ELPI) {.smaller background-color="white"}
 
-*¿Qué son los Residuos?*
+-   **Población Objetivo:** "Niños y niñas nacidos en Chile entre el 1 de enero de 2006 y el 31 de diciembre de 2016".
+-   **Marco Muestral:** Las partidas de nacimiento del **Servicio de Registro Civil e Identificación (SRCeI)**.
+-   **Ventajas del Marco:** Es un marco de **altísima calidad**. Es prácticamente un censo de todos los nacimientos, lo que lo hace casi perfecto para esta población específica. Permite seguir a las mismas personas a lo largo del tiempo (diseño longitudinal).
+-   **Desafíos y Sesgos Potenciales:**
+    -   **Limitación:** Solo sirve para esa población específica. No es útil para estudios sobre la población general.
+    -   **Atrición:** En estudios longitudinales, el principal desafío es la "mortalidad muestral" o atrición: la pérdida de participantes a lo largo del tiempo, que puede no ser aleatoria.
 
-Un residuo es la diferencia entre el valor observado de la variable respuesta (Y) y el valor predicho por la recta de regresión ($\hat{y}$).\
-Fórmula: residuo = Y observada − Y predicha = $Y$ − $\hat{y}$.
+---
+title_slide_background: "#008080"
+---
 
-*Importancia de los Residuos:*
+# 2. Diseños de Muestreo Probabilístico
 
--   Los residuos representan las desviaciones de los datos respecto a la recta de regresión, indicando qué tan bien el modelo captura la relación entre X e Y.\
--   La media de los residuos es siempre cero, lo que significa que, en promedio, los puntos están equidistantes de la recta.
+## El Ideal: Muestreo Aleatorio Simple (MAS) {.smaller background-color="white"}
 
-## Gráfico de dispersión con recta de regresión {.center background-color="white"}
+-   **Definición:** Cada elemento de la población tiene exactamente la misma probabilidad de ser seleccionado. Es el equivalente a poner todos los nombres en un sombrero y sacar uno por uno.
+-   **Requisito:** Necesita una **lista completa y numerada** de todos los elementos de la población (un marco muestral perfecto).
+-   **Método:** Se usa una tabla de números aleatorios o un software para seleccionar los números de la lista.
 
-```{r}
-library(ggplot2)
-library(dplyr)
+![](https://i.imgur.com/zWz2sC3.png){fig-align="center"}
+*(Nota: Aquí iría un diagrama simple de una población de la que se extraen aleatoriamente individuos para formar la muestra).*
 
-# Crear categorías de escolaridad para calcular medias condicionales
-datos <- readRDS("data/datos.rds") %>% 
-  filter(brecha<40 & brecha > -20 & !is.na(brecha))
-datos <- datos %>%
-  mutate(escolaridad_cat = cut(promedio_anios_escolaridad25_2017, 
-                               breaks = seq(floor(min(promedio_anios_escolaridad25_2017, na.rm = TRUE)), 
-                                            ceiling(max(promedio_anios_escolaridad25_2017, na.rm = TRUE)), 
-                                            by = 1), 
-                               include.lowest = TRUE))
+## ¿Por qué el Muestreo Aleatorio Simple es tan raro en la práctica? {.smaller background-color="white"}
 
-mean_brecha <- mean(datos$brecha, na.rm = TRUE)
+Aunque es el modelo base de la estadística, el MAS casi nunca se usa en encuestas sociales a gran escala por tres razones fundamentales:
 
-ggplot(datos, aes(x = promedio_anios_escolaridad25_2017, y = brecha)) +
-  geom_point(color = "#0073C2", size = 3, alpha = 0.7) +  # Puntos más grandes y ligeramente transparentes
-  geom_smooth(method = "lm", color = "black", linetype = "solid", se = FALSE) +  # Línea de tendencia en negro
-  geom_vline(xintercept = mean(datos$promedio_anios_escolaridad25_2017, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'promedio_anios_escolaridad25_2017'
-  geom_hline(yintercept = mean(datos$brecha, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'brecha'
-  labs(
-    x = "Promedio de Años de Escolaridad (2017)",
-    y = "Brecha Salarial de Género (%)",
-    title = "Relación entre Promedio de Años de Escolaridad y Brecha Salarial de Género"
-  ) +
-  theme_minimal(base_size = 16) +  # Tamaño base de letra aumentado
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),  # Título centrado, en negrita y más grande
-    axis.title = element_text(face = "bold", size = 14),               # Títulos de los ejes en negrita y más grandes
-    axis.text = element_text(color = "#333333", size = 12),            # Texto de los ejes más grande
-    panel.grid.major = element_line(color = "#e0e0e0"),                # Líneas de la cuadrícula mayor en gris claro
-    panel.grid.minor = element_blank()                                 # Elimina las líneas de la cuadrícula menor
-  )
-```
-
-$$
-\hat{brecha} = -16.451 + 2.852 * escolaridad
-$$
-
-## Componentes del $Y$ observado {.smaller background-color="white"}
-
-Después de realizar una regresión, podemos descomponer $Y_i$ en tres componentes:
-
-$$
-Y_i = \bar{Y} + (\hat{Y}_i − \bar{Y}) + (Y_i − \hat{Y}_i)
-$$
-
-Donde:
-
-- **Media General ($\bar{Y}$)**: Es constante para todas las observaciones.
-- **Componente Explicado ($\hat{Y}_i − \bar{Y}$)**: Es la parte de $Y_i$ que es explicada por el modelo a partir de $X$.
-- **Componente No Explicado (Residuos, $Y_i − \hat{Y}_i$)**: Es la parte de $Y_i$ que no es explicada por el modelo, representando el error de predicción.
-
-
-## Componentes del Y observado {.smaller background-color="white"}
-
-Por ejemplo: La comuna de Sierra Gorda tiene una brecha salarial de género de 31,13%, y una escolaridad de 13,19 años. Para ese caso el modelo predice un valor de -16,451+2,852\*13,19 = 21,17. Es decir el residuo es igual a 31,13 - 21,17 = 9,96.\
-$$
-\text{Brecha de Sierra Gorda} = 11,42\% \, (\text{Media General}) \\
-+ 9,75\% \, (\text{Componente Explicado}) \\
-+ 9,96\% \, (\text{Residuos}) \\
-= 31,13\%
-$$
-
-
-## Gráfico de componentes de Y {.center background-color="white"}
-
-```{r}
-# Crear categorías de escolaridad para calcular medias condicionales
-datos <- readRDS("data/datos.rds") %>% 
-  filter(brecha < 40 & brecha > -20 & !is.na(brecha))
-datos <- datos %>%
-  mutate(escolaridad_cat = cut(promedio_anios_escolaridad25_2017, 
-                               breaks = seq(floor(min(promedio_anios_escolaridad25_2017, na.rm = TRUE)), 
-                                            ceiling(max(promedio_anios_escolaridad25_2017, na.rm = TRUE)), 
-                                            by = 1), 
-                               include.lowest = TRUE))
-
-# Calcular la media de brecha salarial
-mean_brecha <- mean(datos$brecha, na.rm = TRUE)
-
-# Extraer el punto específico cuya brecha es igual a 31.13078
-punto_sierra_gorda <- datos %>% filter(abs(brecha - 31.13078) < 0.001)
-
-# Calcular el valor predicho para la escolaridad de ese punto
-prediccion_sierra_gorda <- -16.451 + 2.852 * punto_sierra_gorda$promedio_anios_escolaridad25_2017
-
-# Crear el gráfico con las líneas adicionales
-ggplot(datos, aes(x = promedio_anios_escolaridad25_2017, y = brecha)) +
-  geom_point(color = "#0073C2", size = 3, alpha = 0.7) +  # Puntos más grandes y ligeramente transparentes
-  geom_smooth(method = "lm", color = "black", linetype = "solid", se = FALSE) +  # Línea de tendencia en negro
-  geom_vline(xintercept = mean(datos$promedio_anios_escolaridad25_2017, na.rm = TRUE), color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'promedio_anios_escolaridad25_2017'
-  geom_hline(yintercept = mean_brecha, color = "red", linetype = "dotted", size = 1) +  # Línea roja punteada en la media de 'brecha'
-  
-  # Agregar líneas para el punto específico de Sierra Gorda
-  geom_segment(aes(x = punto_sierra_gorda$promedio_anios_escolaridad25_2017, 
-                   xend = punto_sierra_gorda$promedio_anios_escolaridad25_2017, 
-                   y = mean_brecha, 
-                   yend = prediccion_sierra_gorda), 
-               color = "orange", linetype = "dashed", size = 1.2) +  # Línea del componente explicado
-  
-  geom_segment(aes(x = punto_sierra_gorda$promedio_anios_escolaridad25_2017, 
-                   xend = punto_sierra_gorda$promedio_anios_escolaridad25_2017, 
-                   y = prediccion_sierra_gorda, 
-                   yend = punto_sierra_gorda$brecha), 
-               color = "purple", linetype = "dashed", size = 1.2) +  # Línea del residuo
-
-  geom_point(data = punto_sierra_gorda, aes(x = promedio_anios_escolaridad25_2017, y = brecha), 
-             color = "darkred", size = 4) +  # Resaltar el punto específico
-  
-  labs(
-    x = "Promedio de Años de Escolaridad (2017)",
-    y = "Brecha Salarial de Género (%)",
-    title = "Relación entre Promedio de Años de Escolaridad y Brecha Salarial de Género"
-  ) +
-  theme_minimal(base_size = 16) +  # Tamaño base de letra aumentado
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),  # Título centrado, en negrita y más grande
-    axis.title = element_text(face = "bold", size = 14),               # Títulos de los ejes en negrita y más grandes
-    axis.text = element_text(color = "#333333", size = 12),            # Texto de los ejes más grande
-    panel.grid.major = element_line(color = "#e0e0e0"),                # Líneas de la cuadrícula mayor en gris claro
-    panel.grid.minor = element_blank()                                 # Elimina las líneas de la cuadrícula menor
-  )
-```
-
-## Residuos como Y ajustado por X {.smaller background-color="white"}
-
-Cuando se predice Y a partir de X, los residuos pueden interpretarse como una nueva variable: Y ajustado por X.
-
-Interpretación de los Residuos:
-
--   Si un individuo tiene un residuo positivo, esto indica que su valor de Y es mayor de lo esperado dado su valor de X.\
--   Si un individuo tiene un residuo negativo, esto indica que su valor de Y es mayor de lo esperado dado su valor de X.
-
-## Diagrama de Residuos {.smaller background-color="white"}
-
-*¿Qué es un Diagrama de Residuos?*
-
-Un diagrama de residuos es un gráfico de los residuos contra los valores predichos de la variable dependiente. Es una herramienta clave para evaluar el ajuste del modelo.
-
-**Interpretación del Diagrama de Residuos:**
-
--   Distribución Uniforme: Indica un buen ajuste del modelo. Este caso se denomina homocedasticidad.
--   Formas Curvas: Señalan que la relación no es lineal.
--   Dispersión Creciente/Decreciente: Indica variabilidad no constante en Y, lo que puede afectar la precisión de las predicciones. Esto se denomina heterocedasticidad.
-
-## Digrama de residuos {.smaller background-color="white"}
-
-```{r}
-# Crear el modelo de regresión lineal
-modelo <- lm(brecha ~ promedio_anios_escolaridad25_2017, data = datos)
-
-# Calcular los residuos
-datos$residuos <- resid(modelo)
-datos$predicciones <- predict(modelo)
-
-# Crear el gráfico de residuos
-ggplot(datos, aes(x = predicciones, y = residuos)) +
-  geom_point(color = "#0073C2", size = 3, alpha = 0.7) +  # Puntos más grandes y ligeramente transparentes
-  geom_hline(yintercept = 0, color = "red", linetype = "dotted", size = 1) +  # Línea en y=0 para referencia
-  labs(
-    x = "Valores Predichos",
-    y = "Residuos",
-    title = "Gráfico de Residuos",
-    subtitle = "Brecha Salarial de Género vs. Años de Escolaridad"
-  ) +
-  theme_minimal(base_size = 16) +  # Tamaño base de letra aumentado
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),  # Título centrado, en negrita y más grande
-    plot.subtitle = element_text(hjust = 0.5, face = "italic", size = 14),  # Subtítulo centrado y en cursiva
-    axis.title = element_text(face = "bold", size = 14),  # Títulos de los ejes en negrita y más grandes
-    axis.text = element_text(color = "#333333", size = 12),  # Texto de los ejes más grande
-    panel.grid.major = element_line(color = "#e0e0e0"),  # Líneas de la cuadrícula mayor en gris claro
-    panel.grid.minor = element_blank()  # Elimina las líneas de la cuadrícula menor
-  )
-
-```
-
-## Diagramas de residuos {.smaller background-color="white"}
-
-![](img/04/residuos.jpg) {.smaller background-color="white"}
-
-## Coeficiente de Determinación $R^2$ y Varianza Residual {.smaller background-color="white"}
-
-**¿Qué es** $R^2$? - $R^2$, conocido como el coeficiente de determinación, es una medida estadística que indica la proporción de la varianza en la variable dependiente $Y$ que es explicada por la variable independiente $X$ en un modelo de regresión.
-
--   Se calcula como: $$
-    R^2 = 1 - \frac{\text{Varianza Residual}}{\text{Varianza Total de } Y}
-    $$ Donde:
-    -   **Varianza Residual:** Es la varianza de los residuos, es decir, la parte de $Y$ que no es explicada por $X$.
-    -   **Varianza Total de** $Y$: Es la varianza de los valores observados de $Y$.
-
-## Coeficiente de Determinación $R^2$ y suma de cuadrados {.smaller background-color="white"}
-
-Otra forma de expresar el $R^2$ es la siguiente:
-
--   Se calcula como: $$
-    R^2 = \frac{\text{SSR}}{\text{SST}} = 1 - \frac{\text{SSE}}{\text{SST}}
-    $$ Donde:
-    -   **SSR (Sum of Squares Regression):** Es la suma de los cuadrados de las diferencias entre los valores predichos $\hat{Y}$ y la media $\bar{Y}$.
-    -   **SSE (Sum of Squares Error):** Es la suma de los cuadrados de los residuos, es decir, la parte de $Y$ que no es explicada por $X$.
-    -   **SST (Sum of Squares Total):** Es la suma de los cuadrados de las diferencias entre los valores observados $Y$ y la media $\bar{Y}$.
-
-## Descomposición de $Y$: Relación con $R^2$ {.smaller background-color="white"}
-
--   Cuando descomponemos $Y_i$ en sus componentes, tenemos:
-    $$
-    Y_i = \bar{Y} + (\hat{Y}_i − \bar{Y}) + (Y_i − \hat{Y}_i)
-    $$
-
--   $Y_i$: Valor observado.
-
--   $\hat{Y}_i − \bar{Y}$: Componente explicado por $X$.
-
--   $Y_i − \hat{Y}_i$: Residuos o componente no explicado por $X$.
-
--   **Varianza Residual**: Corresponde a la varianza del componente no explicado $Y_i − \hat{Y}_i$.
-
-## $R^2$ como Proporción Explicada {.smaller background-color="white"}
-
--   $R^2$ indica cuánta de la varianza total de $Y$ es explicada por el modelo.
--   Un $R^2$ cercano a 1 sugiere que la mayor parte de la varianza de $Y$ es explicada por $X$.
--   Un $R^2$ cercano a 0 sugiere que el modelo no explica bien la varianza de $Y$, y la varianza residual es alta.
-
-**Interpretación Práctica de** $R^2$: - Un $R^2$ de 0.18 indica que el 19% de la varianza en $Y$ es explicada por $X$, mientras que el 81% restante es debido a factores no capturados por el modelo (varianza residual).
-
-## Observacions atípicas y observaciones influyentes en regresión {.smaller background-color="white"}
-
--   Una observación **atípica** es aquélla que queda separada de las restantes observaciones.\
--   Una observación es **influyente** con relación a un cálculo estadístico si al eliminarla cambia el resultado del cálculo. En regresión mínimocuadrática, las observaciones atípicas en la dirección del eje de las abscisas son, en general, observaciones influyentes.
-
-## Precauciones con la Correlación y la Regresión {.smaller background-color="white"}
-
-La correlación y la regresión son herramientas poderosas, pero tienen limitaciones.
-
-Precauciones:
-
--   *Extrapolación:* Evita predecir fuera del rango de valores utilizados para calcular la recta de regresión, ya que esto puede llevar a resultados no fiables.\
--   *Medias:* Los estudios que usan medias pueden mostrar correlaciones demasiado altas cuando se aplican a individuos.\
--   *Variables Latentes:* Considera la posibilidad de variables no medidas que pueden estar influyendo en la relación observada.\
--   *Asociación No Implica Causalidad:* Una fuerte asociación entre dos variables no garantiza una relación causa-efecto.
+1.  **Prerrequisito casi imposible:** Rara vez tenemos un **marco muestral completo y actualizado** de la población objetivo (ej. no existe una lista única de "todos los habitantes de Santiago").
+2.  **Ineficiencia y Costo:** Incluso si tuviéramos la lista, una muestra MAS para una encuesta cara a cara sería logísticamente una pesadilla. Los seleccionados estarían dispersos por todo el país, desde Arica hasta Punta Arenas, haciendo el trabajo de campo inviable.
+3.  **No garantiza la representatividad de subgrupos:** Por puro azar, una muestra MAS podría seleccionar muy pocos individuos de un subgrupo pequeño pero importante (ej. una etnia minoritaria), impidiendo hacer análisis sobre ellos.
+
+Por estas razones, se han desarrollado diseños más complejos y eficientes.
+
+## Solución Práctica 1: Muestreo Estratificado {.smaller background-color="white"}
+
+-   **Lógica:** "Divide y vencerás". En lugar de muestrear de la población total, primero la dividimos en subgrupos homogéneos y mutuamente excluyentes llamados **estratos**. Luego, se realiza un muestreo aleatorio *dentro* de cada estrato.
+-   **Objetivo Principal:** Asegurar la **representatividad de subgrupos clave** y aumentar la precisión estadística.
+-   **Ejemplo (CADEM):** La población se estratifica por **Región**. Esto garantiza que cada región del país esté representada en la muestra en la proporción correcta, algo que el MAS no podría asegurar.
+-   **Ejemplo (CASEN):** Los estratos se conforman por la combinación de **Comuna-Área (Urbana/Rural)-Nivel Socioeconómico**.
+
+![](https://i.imgur.com/kS4tqO7.png){fig-align="center"}
+*(Nota: Aquí iría un diagrama que muestre una población dividida en estratos de colores, y flechas indicando que se toma una muestra aleatoria de cada color).*
+
+## Solución Práctica 2: Muestreo por Conglomerados {.smaller background-color="white"}
+
+-   **Lógica:** "Muestrear grupos en lugar de individuos". La población se divide en grupos o **conglomerados** (generalmente geográficos). Se toma una muestra aleatoria de conglomerados y luego se estudian **todas o algunas** de las unidades dentro de los conglomerados seleccionados.
+-   **Objetivo Principal:** **Eficiencia logística y reducción de costos**, especialmente en encuestas presenciales.
+-   **Ejemplo (CASEN - Primera Etapa):** En lugar de seleccionar hogares al azar en todo Chile, primero se selecciona una muestra de **conglomerados** (las "manzanas" o UPMs). El trabajo de campo se concentra solo en esas áreas.
+-   **Trade-off:** Es más barato, pero estadísticamente menos preciso que el MAS o el estratificado, porque las personas dentro de un conglomerado tienden a parecerse entre sí (homogeneidad intraconglomerado).
+
+## Poniendo todo junto: Diseños Muestrales Complejos (Bietápicos) {.smaller background-color="white"}
+
+Las encuestas reales como CASEN combinan estas técnicas en un **diseño muestral complejo y multietápico**.
+
+El diseño de CASEN es **probabilístico, estratificado y bietápico**:
+
+1.  **Estratificación:** La población de viviendas se divide en estratos según Comuna, Área (urbana/rural) y Nivel Socioeconómico.
+2.  **Primera Etapa (Muestreo de Conglomerados):** Dentro de cada estrato, se selecciona aleatoriamente un número de **conglomerados** (UPMs o "manzanas").
+3.  **Segunda Etapa (Muestreo de Unidades Finales):** Dentro de cada conglomerado seleccionado, se realiza un listado de las viviendas y se selecciona una muestra aleatoria de **viviendas** para ser encuestadas.
+
+Este diseño equilibra la representatividad (gracias a la estratificación) con la eficiencia logística (gracias al muestreo por conglomerados).
+
+---
+title_slide_background: "#008080"
+---
+
+# 3. La Calidad de la Medición y el Error Total
+
+## De la Selección a la Calidad {.smaller background-color="white"}
+
+Ya hemos resuelto el problema de **a quiénes** estudiar a través de la lógica del muestreo. Ahora, enfrentamos una pregunta igualmente importante:
+
+**¿Qué tan bien estamos midiendo lo que queremos estudiar?**
+
+La calidad de nuestros datos no solo depende de una buena muestra, sino también de la calidad de nuestros instrumentos de medición. Esto nos introduce a dos conceptos fundamentales: **fiabilidad** y **validez**.
+
+## Fiabilidad: ¿Es consistente nuestra medición? {.smaller background-color="white"}
+
+La **fiabilidad** (o confiabilidad) se refiere a la **consistencia** y **estabilidad** de una medición. Si aplicamos el mismo instrumento repetidamente al mismo objeto bajo las mismas condiciones, ¿obtenemos siempre el mismo resultado?
+
+-   Una medida poco fiable es impredecible y errática.  
+-   Se asocia con el **error aleatorio**: fluctuaciones que no tienen un patrón definido.  
+
+**En sociología, la falta de fiabilidad puede ocurrir si:**.    
+-   Las preguntas de una encuesta son ambiguas y cada persona las interpreta de forma distinta en momentos distintos.  
+-   Los observadores que codifican un comportamiento usan criterios que cambian con el tiempo o entre ellos.
+
+## Validez: ¿Medimos lo que realmente queremos medir? {.smaller background-color="white"}
+
+La **validez** se refiere al grado en que una medida empírica refleja adecuadamente el **significado real del concepto** que pretende medir. Es una pregunta sobre la **exactitud conceptual**.
+
+-   Una medida no válida puede ser muy consistente, pero está midiendo sistemáticamente otra cosa.  
+-   Se asocia con el **error sistemático (sesgo)**: un error que consistentemente desvía la medición en una misma dirección.  
+
+**En sociología, la falta de validez es un riesgo constante porque:**.   
+-   Nuestros conceptos son abstractos (ej. "anomia", "capital social").    
+-   Las personas pueden dar respuestas socialmente deseables en lugar de honestas.    
+-   Nuestros indicadores pueden ser una simplificación excesiva del concepto.   
+
+## Tres Tipos de Validez: ¿Cómo evaluamos la exactitud? {.smaller background-color="white"}
+
+La validez no es un concepto único. En la práctica, la evaluamos de diferentes maneras, cada una respondiendo a una pregunta distinta sobre la calidad de nuestra medición.
+
+**1. Validez de Contenido**
+
+*Pregunta clave: ¿La medida cubre todas las facetas relevantes del concepto?*
+
+Se enfoca en la **amplitud y representatividad** de los indicadores. Se evalúa teóricamente, a menudo con juicio de expertos.
+
+**Ejemplo:** Una medida de "bienestar social" que solo incluye indicadores de ingreso económico tendría baja validez de contenido, pues omite dimensiones cruciales como la salud, las redes sociales o la seguridad.
+
+## Tres Tipos de Validez: ¿Cómo evaluamos la exactitud? {.smaller background-color="white"}
+
+**2. Validez de Criterio (o Predictiva)**
+
+*Pregunta clave: ¿La medida se correlaciona con un resultado o comportamiento externo (criterio) que debería predecir?*
+
+Se enfoca en la **utilidad práctica** de la medida.
+
+**Ejemplo:** Una escala que mide el "riesgo de deserción escolar" tiene alta validez de criterio si los estudiantes con puntajes altos en la escala son, efectivamente, los que tienen más probabilidades de abandonar la escuela al año siguiente.
+
+## Tres Tipos de Validez: ¿Cómo evaluamos la exactitud? {.smaller background-color="white"}
+
+**3. Validez de Constructo**
+
+*Pregunta clave: ¿La medida se comporta de la manera que la teoría sociológica predice que el concepto debería comportarse?*
+
+Es la forma de validez más importante y abstracta.
+
+**Ejemplo:** La teoría dice que el "capital social" se asocia positivamente con la "participación cívica". Si nuestra nueva escala de capital social muestra una fuerte correlación con una medida de participación cívica, es una evidencia a favor de su validez de constructo.
+
+
+## La Analogía del Tiro al Blanco {.smaller background-color="white"}
+
+Una forma clásica de entender la diferencia es con la analogía de un tirador:
+
+![](img/fiabilidad_validez_diagrama.png){fig-align="center"}
+*(Nota: Aquí iría un diagrama visual de cuatro dianas como el de la Figura 5.2 de Babbie).*
+
+-   **Fiable pero no Válido:** Todos los tiros dan en el mismo lugar, pero lejos del centro. La medición es consistente pero incorrecta.
+-   **Válido pero no Fiable:** Los tiros están dispersos alrededor del centro. En promedio aciertan, pero la medición es inconsistente.
+-   **Ni Fiable ni Válido:** Los tiros están dispersos y lejos del centro.
+-   **Fiable y Válido (El Ideal):** Todos los tiros dan consistentemente en el centro.
+
+## La Tensión entre Fiabilidad y Validez {.smaller background-color="white"}
+
+En la práctica, a menudo existe una tensión entre ambos criterios.
+
+Pensemos en medir el "estado de ánimo" de los trabajadores.
+
+-   **Estrategia 1 (Alta Fiabilidad):** Contar el número de quejas formales presentadas al sindicato. Es un dato duro, consistente y fácil de replicar.  
+-   **Estrategia 2 (Alta Validez Potencial):** Realizar una observación etnográfica en la fábrica, hablando con los trabajadores y capturando sus interacciones. Captura la riqueza y complejidad del "estado de ánimo".  
+
+La primera medida es muy **fiable** pero de **validez cuestionable** (el estado de ánimo es más que la ausencia de quejas). La segunda es potencialmente muy **válida** pero **menos fiable** (depende de la interpretación del observador y es difícil de replicar).
+
+El desafío del investigador es encontrar un equilibrio razonable.
+
+## El Error Total de Encuesta: Un Marco Integrador {.smaller background-color="white"}
+
+Nuestras conclusiones no solo dependen de a quiénes seleccionamos (muestreo), sino también de cómo medimos (calidad de la medición).
+
+El **Error Total de Encuesta** es un marco que nos ayuda a pensar en todas las fuentes de imprecisión. Se compone de dos grandes tipos de error:
+
+1.  **Error Muestral:** La diferencia entre un estadístico de la muestra y el parámetro de la población, que existe simplemente porque estudiamos una parte y no el todo. Es el error del **azar**, y es **estimable** en el muestreo probabilístico.
+
+2.  **Error No Muestral (o de Medición):** Todos los demás errores que pueden ocurrir en el proceso. Son **sesgos sistemáticos** y difíciles de cuantificar. Incluye:
+    -   *Error de cobertura:* El marco muestral no cubre a toda la población.
+    -   *Error de no respuesta:* Quienes no responden son distintos de quienes sí lo hacen.
+    -   *Error del instrumento:* Preguntas mal formuladas o ambiguas.
+    -   *Error del entrevistador:* El entrevistador influye en las respuestas.
+    -   *Error de procesamiento:* Errores al digitar o codificar los datos.
+
+## El Error Total como un Desafío de Diseño {.smaller background-color="white"}
+
+El objetivo de un buen diseño de investigación es minimizar el **error total**.
+
+![](img/error_total_triangulo.png){fig-align="center"}
+*(Nota: Aquí iría un diagrama simple como el de Ritchey (Figura 2-2), que muestra el error total como la hipotenusa de un triángulo con el error de muestreo y el error de medición como sus catetos).*
+
+**La Falacia de la Muestra Grande:**
+-   Creer que una muestra muy grande (bajo error muestral) puede compensar mediciones de mala calidad (alto error no muestral). **Esto es falso.**
+-   Si las preguntas de una encuesta son sesgadas, una muestra de un millón de personas solo nos dará una **respuesta equivocada con mucha precisión**.
+-   La calidad de la medición es tan importante, o incluso más, que el tamaño de la muestra.
+
+## Actividad de Aplicación (15 min) {.smaller background-color="white"}
+
+**Escenario de Investigación:** Queremos realizar un estudio sobre el **"bienestar subjetivo de los estudiantes de la UDP"**.  
+
+**En grupos, discutan:**
+1.  **Población y Marco Muestral:** ¿Cuál es la población objetivo? ¿Qué marco muestral usarían (ej. lista de matriculados)? ¿Qué sesgos de cobertura podría tener ese marco (ej. estudiantes con matrícula suspendida)?  
+2.  **Fiabilidad:** Si usan una pregunta como "¿Qué tan feliz es usted en una escala de 1 a 7?", ¿qué problemas de fiabilidad podrían surgir (ej. la interpretación de "feliz" puede cambiar según el día o el estado de ánimo)?  
+3.  **Validez:** ¿La pregunta "¿Qué tan feliz es usted?" es una medida válida de "bienestar subjetivo"? ¿Qué otras dimensiones importantes del bienestar podría estar omitiendo (ej. estrés, sentido de propósito, salud física)?  
+4.  **Error Total:** ¿Cuál creen que sería la mayor fuente de error en este estudio, el error muestral o el error no muestral? ¿Por qué?  
+
+## Cierre de la Unidad 2 y Próximos Pasos {.smaller background-color="white"}
+
+**Resumen de la Unidad 2:**
+
+-   Hemos desglosado el proceso fundamental de pasar de una idea abstracta a un dato medible, definiendo la **conceptualización**, la **operacionalización**, las **unidades de análisis** y los **niveles de medición**.  
+-   Aprendimos la lógica detrás del **muestreo**: cómo y por qué seleccionamos un subconjunto de una población para estudiarla, y los desafíos prácticos de construir un buen **marco muestral**.
+-   Diferenciamos los dos pilares de la calidad de la medición: **fiabilidad** (consistencia) y **validez** (exactitud conceptual).
+-   Integramos los **errores de muestreo y de medición** en un marco de "Error Total", comprendiendo que un buen diseño de investigación debe minimizar ambos.
+
+**Adelanto de la próxima clase:**
+-   Comenzaremos con la **Unidad 3: Marcos de datos para la investigación social**. Aprenderemos cómo se organizan estas mediciones en una base de datos y daremos nuestros primeros pasos para explorarlas con R.
