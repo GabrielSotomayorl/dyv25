@@ -1,6 +1,6 @@
 ---
 title: "Conceptos clave para la investigación social I"
-linktitle: "3. Conceptos clave para la investigación social I"
+linktitle: 3. Conceptos clave para la investigación social I
 date: "2025-08-25"
 start_date: "2025-08-25"
 end_date: "2025-08-25"
@@ -10,7 +10,7 @@ menu:
     weight: 3
 type: docs
 toc: true
-bibliography: "../../static/bib/references.bib"
+bibliography: ../../static/bib/references.bib
 csl: "../../static/bib/chicago-fullnote-bibliography-no-bib.csl"
 slides: "03-slides"
 ---
@@ -50,7 +50,7 @@ slides: "03-slides"
 
 # Bibliografía
 
-- [Babbie, E. (2000). Capítulo 5. Pags. 96 a la 115](../bib/Babbie%20-%20MANUAL%20PARA%20LA%20PRACTICA%20DE%20LA%20INVESTIGACION%20SOCIAL%20cap%205.pdf/)
-- [Babbie, E. (2000). Capítulo 6. Pags. 117 a la 138.](../bib/Babbie%20-%20MANUAL%20PARA%20LA%20PRACTICA%20DE%20LA%20INVESTIGACION%20SOCIAL%20cap.%206.pdf/)
+- [Babbie, E. (2000). Capítulo 5. Pags. 96 a la 115](../bib/Babbie-Fundamentos%20de%20la%20Investigacion%20Social-59-69.pdf/)
+- [Babbie, E. (2000). Capítulo 6. Pags. 117 a la 138.](../bib/Babbie-Fundamentos%20de%20la%20Investigacion%20Social-69-82.pdf/)
 - [Ritchey F. (2008). Capítulo 2. Pags. 42 a la 48.](../bib/Ritchey%20-%20Análisis%20estadistico.pdf/)
 - [Asún, R. (2006). Medir la realidad social: El sentido de la metodología cuantitativa](../bib/Asun%20-%20Medir%20la%20realidad%20social.pdf/)

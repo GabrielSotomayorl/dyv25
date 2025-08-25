@@ -1,9 +1,9 @@
 ---
-title: "Regresión Lineal Simple II"
-linktitle: "4: Regresión Lineal Simple II"
-date: "2024-09-02"
-start_date: "2024-09-02"
-end_date: "2024-09-02"
+title: "Conceptos clave para la investigación social II"
+linktitle: "4: Conceptos clave para la investigación social II"
+date: "2025-09-01"
+start_date: "2025-09-01"
+end_date: "2025-09-01"
 menu:
   content:
     parent: Contenido
@@ -20,7 +20,7 @@ source(here::here("R", "slide-tabs.R"))
 
 slide_details <- tibble::tribble(
   ~title, ~slide, ~active,
-  "Regresión Lineal Simple", "0", TRUE
+  "", "0", TRUE
 )
 ```
 
@@ -35,4 +35,11 @@ slide_tabs(slide_details, "/slides/04-slides.html")
 {{% div fyi %}}
 **¿Cómo ocupar**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras estas viendo las slides, podrás ver los comandos específicos para navegar en ellas.
 {{% /div %}}
+
+# Bibliografía
+
+- [Babbie, E. (2000). Capítulo 5. Pags. 147 a la 175](../bib/Babbie - MANUAL PARA LA PRACTICA DE LA INVESTIGACION SOCIAL cap 5.pdf/) 
+- [Babbie, E. (2000). Cap. 4. Pags. 89-91. - Babbie, E. (2000). Cap. 8. Pags. 176-191.](../bib/Babbie-Fundamentos de la Investigacion Social - MUESTREO CAP 4 Y 8.pdf/) 
+
+
 

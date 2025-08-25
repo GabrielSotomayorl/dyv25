@@ -26,17 +26,19 @@ lessons:
     date_start: "25 agosto"
     date_end: "1 septiembre"
     bg: 2
-    content: "03-content"
+
 
   - title: '• Conceptualización y operacionalización.<br>• Unidad de análisis vs unidad de observación.<br>• Tipos de variables y niveles de medición.'
     session: "Sesión 3"
     date: "25 agosto"
     bg: 2
+    content: "03-content"
 
   - title: '• Muestra y población<br>• Población objetivo, marco muestral<br>• Validez y confiabilidad<br>• Error de medición y error muestral.<br>• <strong>Evaluaciones: Control N°2, Entrega Tarea 1</strong>'
     session: "Sesión 4"
     date: "1 septiembre"
     bg: 2
+    content: "04-content"
     bottomborder: True
 
   - title: '<span class="content-title">Unidad 3. Marcos de datos para la investigación social</span>'
