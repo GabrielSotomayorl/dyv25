@@ -20,12 +20,9 @@ slides: "03-slides"
 {{% slide-buttons %}}
 
 <ul class="nav nav-tabs" id="slide-tabs" role="tablist">
-
 <li class="nav-item">
-
 <a class="nav-link active" id="-tab" data-toggle="tab" href="#" role="tab" aria-controls="" aria-selected="true"></a>
 </li>
-
 </ul>
 
 <div id="slide-tabs" class="tab-content">
@@ -35,7 +32,6 @@ slides: "03-slides"
 <div class="embed-responsive embed-responsive-16by9">
 
 <iframe class="embed-responsive-item" src="/slides/03-slides.html#0">
-
 </iframe>
 
 </div>

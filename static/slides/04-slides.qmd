@@ -39,18 +39,17 @@ Hoy, respondemos a la siguiente pregunta: una vez que sabemos qué medir y en qu
 ## ¿Por qué Muestrear? Población vs. Muestra {.smaller background-color="white"}
 
 :::::: columns
-::: {.column width="50%"}
-**Población (o Universo)**
--   Es el **conjunto completo** de todas las unidades de análisis sobre las que queremos hacer afirmaciones (ej. *todos* los estudiantes de pregrado en Chile).  
--   Estudiar a toda la población se llama **Censo**. Es extremadamente costoso, lento y a menudo impracticable.  
+::: {.column width="65%"}
+**Población (o Universo)**  
+-   Es el **conjunto completo** de todas las unidades de análisis sobre las que queremos hacer afirmaciones (ej. *todos* los estudiantes de pregrado en Chile).    
+-   Estudiar a toda la población se llama **Censo**. Es extremadamente costoso, lento y a menudo impracticable.    
 
-**Muestra**
--   Es un **subconjunto** de la población que seleccionamos para estudiar.  
--   El objetivo es usar la información de la muestra para hacer **inferencias** (generalizaciones) sobre la población total.  
+**Muestra**  
+-   Es un **subconjunto** de la población que seleccionamos para estudiar.    
+-   El objetivo es usar la información de la muestra para hacer **inferencias** (generalizaciones) sobre la población total.    
 :::
-::: {.column width="50%"}
-![](https://i.imgur.com/8aB3t8g.png){fig-align="center"}
-*La lógica es simple: no necesitamos comernos toda la sopa para saber si está salada. Una cucharada bien revuelta (una buena muestra) es suficiente.*
+::: {.column width="35%"}
+![](img/04/01.png){fig-align="center"}
 :::
 ::::::
 
@@ -67,7 +66,7 @@ La selección **aleatoria** (al azar).
 
 ## Población Objetivo vs. Marco Muestral {.smaller background-color="white"}
 
-Aquí es donde la teoría se encuentra con la cruda realidad.
+Aquí es donde la teoría se encuentra con la realidad.
 
 -   **Población Objetivo:** Es la definición **teórica** y abstracta del grupo que queremos estudiar.
     -   *Ejemplo:* "Todos los hogares que residen en viviendas particulares en Chile en 2022".
@@ -75,7 +74,7 @@ Aquí es donde la teoría se encuentra con la cruda realidad.
 -   **Marco Muestral:** Es la **lista o dispositivo concreto** del cual extraemos la muestra. Es la **operacionalización** de la población.
     -   *Ejemplo:* Un listado de todas las viviendas del país, un directorio telefónico, un registro de nacimientos.
 
-**El problema fundamental:** El marco muestral casi nunca es una representación perfecta de la población objetivo. Esta brecha es una de las principales fuentes de error.
+**El problema fundamental:** El marco muestral casi nunca es una representación perfecta de la población objetivo. Esta brecha puede ser una importante fuente de error.
 
 ## Ejemplo 1: Encuesta CASEN {.smaller background-color="white"}
 
@@ -85,7 +84,7 @@ Aquí es donde la teoría se encuentra con la cruda realidad.
 -   **Desafíos y Sesgos Potenciales:**
     -   **Problema de Cobertura:** El marco **excluye** comunas y UPMs clasificadas como "áreas especiales" de difícil acceso (ej. Ollagüe, Isla de Pascua, Antártica Chilena).
     -   **Problema de Actualización:** No captura instantáneamente las viviendas nuevas o las que han sido demolidas desde la última actualización.
-    -   *Consecuencia:* Las personas que viven en estas zonas excluidas tienen una probabilidad de selección igual a cero, lo que introduce un **sesgo de cobertura**.
+    -   **Consecuencia:** Las personas que viven en estas zonas excluidas tienen una probabilidad de selección igual a cero, lo que introduce un **sesgo de cobertura**.
 
 ## Ejemplo 2: Encuesta CADEM Plaza Pública {.smaller background-color="white"}
 
@@ -117,8 +116,6 @@ title_slide_background: "#008080"
 -   **Requisito:** Necesita una **lista completa y numerada** de todos los elementos de la población (un marco muestral perfecto).
 -   **Método:** Se usa una tabla de números aleatorios o un software para seleccionar los números de la lista.
 
-![](https://i.imgur.com/zWz2sC3.png){fig-align="center"}
-*(Nota: Aquí iría un diagrama simple de una población de la que se extraen aleatoriamente individuos para formar la muestra).*
 
 ## ¿Por qué el Muestreo Aleatorio Simple es tan raro en la práctica? {.smaller background-color="white"}
 
@@ -132,22 +129,20 @@ Por estas razones, se han desarrollado diseños más complejos y eficientes.
 
 ## Solución Práctica 1: Muestreo Estratificado {.smaller background-color="white"}
 
--   **Lógica:** "Divide y vencerás". En lugar de muestrear de la población total, primero la dividimos en subgrupos homogéneos y mutuamente excluyentes llamados **estratos**. Luego, se realiza un muestreo aleatorio *dentro* de cada estrato.
+-   **Lógica:** En lugar de muestrear de la población total, primero la dividimos en subgrupos homogéneos y mutuamente excluyentes llamados **estratos**. Luego, se realiza un muestreo aleatorio *dentro* de cada estrato.
 -   **Objetivo Principal:** Asegurar la **representatividad de subgrupos clave** y aumentar la precisión estadística.
 -   **Ejemplo (CADEM):** La población se estratifica por **Región**. Esto garantiza que cada región del país esté representada en la muestra en la proporción correcta, algo que el MAS no podría asegurar.
 -   **Ejemplo (CASEN):** Los estratos se conforman por la combinación de **Comuna-Área (Urbana/Rural)-Nivel Socioeconómico**.
 
-![](https://i.imgur.com/kS4tqO7.png){fig-align="center"}
-*(Nota: Aquí iría un diagrama que muestre una población dividida en estratos de colores, y flechas indicando que se toma una muestra aleatoria de cada color).*
 
 ## Solución Práctica 2: Muestreo por Conglomerados {.smaller background-color="white"}
 
--   **Lógica:** "Muestrear grupos en lugar de individuos". La población se divide en grupos o **conglomerados** (generalmente geográficos). Se toma una muestra aleatoria de conglomerados y luego se estudian **todas o algunas** de las unidades dentro de los conglomerados seleccionados.
+-   **Lógica:** Muestrear grupos en lugar de individuos. La población se divide en grupos o **conglomerados** (generalmente geográficos). Se toma una muestra aleatoria de conglomerados y luego se estudian **todas o algunas** de las unidades dentro de los conglomerados seleccionados.
 -   **Objetivo Principal:** **Eficiencia logística y reducción de costos**, especialmente en encuestas presenciales.
 -   **Ejemplo (CASEN - Primera Etapa):** En lugar de seleccionar hogares al azar en todo Chile, primero se selecciona una muestra de **conglomerados** (las "manzanas" o UPMs). El trabajo de campo se concentra solo en esas áreas.
 -   **Trade-off:** Es más barato, pero estadísticamente menos preciso que el MAS o el estratificado, porque las personas dentro de un conglomerado tienden a parecerse entre sí (homogeneidad intraconglomerado).
 
-## Poniendo todo junto: Diseños Muestrales Complejos (Bietápicos) {.smaller background-color="white"}
+## Poniendo todo junto: Diseños Muestrales Complejos (Multietápicos) {.smaller background-color="white"}
 
 Las encuestas reales como CASEN combinan estas técnicas en un **diseño muestral complejo y multietápico**.
 
@@ -233,8 +228,7 @@ Es la forma de validez más importante y abstracta.
 
 Una forma clásica de entender la diferencia es con la analogía de un tirador:
 
-![](img/fiabilidad_validez_diagrama.png){fig-align="center"}
-*(Nota: Aquí iría un diagrama visual de cuatro dianas como el de la Figura 5.2 de Babbie).*
+![](img/04/03.png){fig-align="center"}
 
 -   **Fiable pero no Válido:** Todos los tiros dan en el mismo lugar, pero lejos del centro. La medición es consistente pero incorrecta.
 -   **Válido pero no Fiable:** Los tiros están dispersos alrededor del centro. En promedio aciertan, pero la medición es inconsistente.
@@ -262,6 +256,8 @@ El **Error Total de Encuesta** es un marco que nos ayuda a pensar en todas las f
 
 1.  **Error Muestral:** La diferencia entre un estadístico de la muestra y el parámetro de la población, que existe simplemente porque estudiamos una parte y no el todo. Es el error del **azar**, y es **estimable** en el muestreo probabilístico.
 
+## El Error Total de Encuesta: Un Marco Integrador {.smaller background-color="white"}
+
 2.  **Error No Muestral (o de Medición):** Todos los demás errores que pueden ocurrir en el proceso. Son **sesgos sistemáticos** y difíciles de cuantificar. Incluye:
     -   *Error de cobertura:* El marco muestral no cubre a toda la población.
     -   *Error de no respuesta:* Quienes no responden son distintos de quienes sí lo hacen.
@@ -269,36 +265,42 @@ El **Error Total de Encuesta** es un marco que nos ayuda a pensar en todas las f
     -   *Error del entrevistador:* El entrevistador influye en las respuestas.
     -   *Error de procesamiento:* Errores al digitar o codificar los datos.
 
+
+----
+## {.smaller background-color="white"}
+![](img/04/04.png){fig-align="center"}
+
+
 ## El Error Total como un Desafío de Diseño {.smaller background-color="white"}
 
 El objetivo de un buen diseño de investigación es minimizar el **error total**.
 
-![](img/error_total_triangulo.png){fig-align="center"}
-*(Nota: Aquí iría un diagrama simple como el de Ritchey (Figura 2-2), que muestra el error total como la hipotenusa de un triángulo con el error de muestreo y el error de medición como sus catetos).*
 
-**La Falacia de la Muestra Grande:**
--   Creer que una muestra muy grande (bajo error muestral) puede compensar mediciones de mala calidad (alto error no muestral). **Esto es falso.**
--   Si las preguntas de una encuesta son sesgadas, una muestra de un millón de personas solo nos dará una **respuesta equivocada con mucha precisión**.
--   La calidad de la medición es tan importante, o incluso más, que el tamaño de la muestra.
+**La Falacia de la Muestra Grande:**     
+-   Creer que una muestra muy grande (bajo error muestral) puede compensar mediciones de mala calidad (alto error no muestral). **Esto es falso.**    
+-   Si las preguntas de una encuesta son sesgadas, una muestra de un millón de personas solo nos dará una **respuesta equivocada con mucha precisión**.    
+-   La calidad de la medición es tan importante, o incluso más, que el tamaño de la muestra.    
+
+
 
 ## Actividad de Aplicación (15 min) {.smaller background-color="white"}
 
 **Escenario de Investigación:** Queremos realizar un estudio sobre el **"bienestar subjetivo de los estudiantes de la UDP"**.  
 
-**En grupos, discutan:**
-1.  **Población y Marco Muestral:** ¿Cuál es la población objetivo? ¿Qué marco muestral usarían (ej. lista de matriculados)? ¿Qué sesgos de cobertura podría tener ese marco (ej. estudiantes con matrícula suspendida)?  
+**En grupos, discutan:**  
+1.  **Población y Marco Muestral:** ¿Cuál es la población objetivo? ¿Qué marco muestral usarían (ej. lista de matriculados)? ¿Qué sesgos de cobertura podría tener ese marco (ej. estudiantes con matrícula suspendida)?    
 2.  **Fiabilidad:** Si usan una pregunta como "¿Qué tan feliz es usted en una escala de 1 a 7?", ¿qué problemas de fiabilidad podrían surgir (ej. la interpretación de "feliz" puede cambiar según el día o el estado de ánimo)?  
 3.  **Validez:** ¿La pregunta "¿Qué tan feliz es usted?" es una medida válida de "bienestar subjetivo"? ¿Qué otras dimensiones importantes del bienestar podría estar omitiendo (ej. estrés, sentido de propósito, salud física)?  
 4.  **Error Total:** ¿Cuál creen que sería la mayor fuente de error en este estudio, el error muestral o el error no muestral? ¿Por qué?  
 
 ## Cierre de la Unidad 2 y Próximos Pasos {.smaller background-color="white"}
-
-**Resumen de la Unidad 2:**
+::: {style="font-size: 0.9em; line-height: 1.2;"}
 
 -   Hemos desglosado el proceso fundamental de pasar de una idea abstracta a un dato medible, definiendo la **conceptualización**, la **operacionalización**, las **unidades de análisis** y los **niveles de medición**.  
 -   Aprendimos la lógica detrás del **muestreo**: cómo y por qué seleccionamos un subconjunto de una población para estudiarla, y los desafíos prácticos de construir un buen **marco muestral**.
 -   Diferenciamos los dos pilares de la calidad de la medición: **fiabilidad** (consistencia) y **validez** (exactitud conceptual).
 -   Integramos los **errores de muestreo y de medición** en un marco de "Error Total", comprendiendo que un buen diseño de investigación debe minimizar ambos.
 
-**Adelanto de la próxima clase:**
+**Adelanto de la próxima clase:**  
 -   Comenzaremos con la **Unidad 3: Marcos de datos para la investigación social**. Aprenderemos cómo se organizan estas mediciones en una base de datos y daremos nuestros primeros pasos para explorarlas con R.
+::: 
