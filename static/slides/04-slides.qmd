@@ -122,7 +122,7 @@ title_slide_background: "#008080"
 Aunque es el modelo base de la estadística, el MAS casi nunca se usa en encuestas sociales a gran escala por tres razones fundamentales:
 
 1.  **Prerrequisito casi imposible:** Rara vez tenemos un **marco muestral completo y actualizado** de la población objetivo (ej. no existe una lista única de "todos los habitantes de Santiago").
-2.  **Ineficiencia y Costo:** Incluso si tuviéramos la lista, una muestra MAS para una encuesta cara a cara sería logísticamente una pesadilla. Los seleccionados estarían dispersos por todo el país, desde Arica hasta Punta Arenas, haciendo el trabajo de campo inviable.
+2.  **Ineficiencia y Costo:** Incluso si tuviéramos la lista, una muestra MAS para una encuesta cara a cara sería logísticamente muy compleja. Los seleccionados estarían dispersos por todo el país, desde Arica hasta Punta Arenas, haciendo el trabajo de campo inviable.
 3.  **No garantiza la representatividad de subgrupos:** Por puro azar, una muestra MAS podría seleccionar muy pocos individuos de un subgrupo pequeño pero importante (ej. una etnia minoritaria), impidiendo hacer análisis sobre ellos.
 
 Por estas razones, se han desarrollado diseños más complejos y eficientes.
@@ -132,7 +132,7 @@ Por estas razones, se han desarrollado diseños más complejos y eficientes.
 -   **Lógica:** En lugar de muestrear de la población total, primero la dividimos en subgrupos homogéneos y mutuamente excluyentes llamados **estratos**. Luego, se realiza un muestreo aleatorio *dentro* de cada estrato.
 -   **Objetivo Principal:** Asegurar la **representatividad de subgrupos clave** y aumentar la precisión estadística.
 -   **Ejemplo (CADEM):** La población se estratifica por **Región**. Esto garantiza que cada región del país esté representada en la muestra en la proporción correcta, algo que el MAS no podría asegurar.
--   **Ejemplo (CASEN):** Los estratos se conforman por la combinación de **Comuna-Área (Urbana/Rural)-Nivel Socioeconómico**.
+ 
 
 
 ## Solución Práctica 2: Muestreo por Conglomerados {.smaller background-color="white"}
@@ -288,9 +288,9 @@ El objetivo de un buen diseño de investigación es minimizar el **error total**
 **Escenario de Investigación:** Queremos realizar un estudio sobre el **"bienestar subjetivo de los estudiantes de la UDP"**.  
 
 **En grupos, discutan:**  
-1.  **Población y Marco Muestral:** ¿Cuál es la población objetivo? ¿Qué marco muestral usarían (ej. lista de matriculados)? ¿Qué sesgos de cobertura podría tener ese marco (ej. estudiantes con matrícula suspendida)?    
-2.  **Fiabilidad:** Si usan una pregunta como "¿Qué tan feliz es usted en una escala de 1 a 7?", ¿qué problemas de fiabilidad podrían surgir (ej. la interpretación de "feliz" puede cambiar según el día o el estado de ánimo)?  
-3.  **Validez:** ¿La pregunta "¿Qué tan feliz es usted?" es una medida válida de "bienestar subjetivo"? ¿Qué otras dimensiones importantes del bienestar podría estar omitiendo (ej. estrés, sentido de propósito, salud física)?  
+1.  **Población y Marco Muestral:** ¿Cuál es la población objetivo? ¿Qué marco muestral usarían? ¿Qué sesgos de cobertura podría tener ese marco?    
+2.  **Fiabilidad:** Si usan una pregunta como "¿Qué tan feliz es usted en una escala de 1 a 7?", ¿qué problemas de fiabilidad podrían surgir?  
+3.  **Validez:** ¿La pregunta "¿Qué tan feliz es usted?" es una medida válida de "bienestar subjetivo"? ¿Qué otras dimensiones importantes del bienestar podría estar omitiendo?  
 4.  **Error Total:** ¿Cuál creen que sería la mayor fuente de error en este estudio, el error muestral o el error no muestral? ¿Por qué?  
 
 ## Cierre de la Unidad 2 y Próximos Pasos {.smaller background-color="white"}
