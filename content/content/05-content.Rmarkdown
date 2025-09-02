@@ -1,9 +1,9 @@
 ---
-title: "Análisis de regresión lineal múltiple"
-linktitle: "5: Análisis de regresión lineal múltiple"
-date: "2024-09-23"
-start_date: "2024-09-23"
-end_date: "2024-09-23"
+title: "Marcos de datos para la investigación social"
+linktitle: "5: Marcos de datos para la investigación social I"
+date: "2025-09-08"
+start_date: "2025-09-08"
+end_date: "2025-09-08"
 menu:
   content:
     parent: Contenido
@@ -20,7 +20,7 @@ source(here::here("R", "slide-tabs.R"))
 
 slide_details <- tibble::tribble(
   ~title, ~slide, ~active,
-  "Análisis de regresión lineal múltiple", "0", TRUE
+  "", "0", TRUE
 )
 ```
 
@@ -35,3 +35,9 @@ slide_tabs(slide_details, "/slides/05-slides.html")
 {{% div fyi %}}
 **¿Cómo ocupar**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras estas viendo las slides, podrás ver los comandos específicos para navegar en ellas.
 {{% /div %}}
+
+# Bibliografía
+
+
+- [Babbie, E. (2000). Cap. 14. Pags. 336-342](../bib/Babbie-Fundamentos de la Investigacion Social-177-180.pdf/) 
+

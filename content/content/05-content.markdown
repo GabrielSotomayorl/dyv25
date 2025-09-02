@@ -1,18 +1,18 @@
 ---
-title: "Conceptos clave para la investigación social II"
-linktitle: "4: Conceptos clave para la investigación social II"
-date: "2025-09-01"
-start_date: "2025-09-01"
-end_date: "2025-09-01"
+title: "Marcos de datos para la investigación social"
+linktitle: "5: Marcos de datos para la investigación social I"
+date: "2025-09-08"
+start_date: "2025-09-08"
+end_date: "2025-09-08"
 menu:
   content:
     parent: Contenido
-    weight: 4
+    weight: 5
 type: docs
 toc: true
 bibliography: "../../static/bib/references.bib"
 csl: "../../static/bib/chicago-fullnote-bibliography-no-bib.csl"
-slides: "04-slides"
+slides: "05-slides"
 ---
 
 # Slides
@@ -34,7 +34,7 @@ slides: "04-slides"
 
 <div class="embed-responsive embed-responsive-16by9">
 
-<iframe class="embed-responsive-item" src="/slides/04-slides.html#0">
+<iframe class="embed-responsive-item" src="/slides/05-slides.html#0">
 
 </iframe>
 
@@ -50,5 +50,4 @@ slides: "04-slides"
 
 # Bibliografía
 
-- [Babbie, E. (1996). Capítulo 5. Pags. 147 a la 175](../bib/Babbie%20-%20MANUAL%20PARA%20LA%20PRACTICA%20DE%20LA%20INVESTIGACION%20SOCIAL%20cap%205.pdf/)
-- [Babbie, E. (2000). Cap. 4. Pags. 89-91. - Babbie, E. (2000). Cap. 8. Pags. 176-191.](../bib/Babbie-Fundamentos%20de%20la%20Investigacion%20Social%20-%20MUESTREO%20CAP%204%20Y%208.pdf/)
+- [Babbie, E. (2000). Cap. 14. Pags. 336-342](../bib/Babbie-Fundamentos%20de%20la%20Investigacion%20Social-177-180.pdf/)
