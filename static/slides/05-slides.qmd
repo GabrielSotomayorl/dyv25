@@ -1,388 +1,372 @@
 ---
-title: "Clase 5 <br> Regresión Lineal Múltiple I"
-subtitle: "Análisis Avanzado de Datos"
+title: "La Estructura de los Datos en R"
+subtitle: "Unidad 3: Descripción y Visualización de Datos"
 author: "Gabriel Sotomayor"
-format: 
+date: "09-08-2025"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
 ---
 
-## Revisión de la prueba {.smaller background-color="white"}
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-1)  ¿Cuál de las siguientes afirmaciones sobre la correlación es FALSA?
+-   **Comprender** la estructura fundamental de una tabla de datos (observaciones, variables, valores).
+-   **Reconocer** los tipos de datos atómicos en R (`character`, `numeric`, `logical`) y el concepto de coerción.
+-   **Aprender** un flujo de trabajo básico y reproducible para la exploración inicial de una base de datos.
+-   **Aplicar** funciones básicas de R para realizar una "radiografía" inicial a un conjunto de datos real.
 
-```{=html}
-<!-- -->
+---
+title_slide_background: "#008080"
+---
+
+# 1. Introducción
+
+## Conectando con la Unidad Anterior {.smaller background-color="white"}
+
+En las clases pasadas, establecimos el camino teórico de la medición:
+
+Conceptualización → Operacionalización → Variables e Indicadores
+
+Hoy, damos el salto a la práctica: **¿Cómo se organizan esas mediciones en el mundo real de los datos?**
+
+Esta unidad se centrará en los primeros y más cruciales pasos del proceso de análisis:
+
+![](https://es.r4ds.hadley.nz/diagrams_w_text_as_path/es/data-science-explore.svg)
+
+
+# 2. Los "Átomos" de los Datos en R
+
+## Tipos de Datos Fundamentales {.smaller background-color="white"}
+
+En R, cada columna de nuestra base de datos tendrá un "tipo" de dato específico. Comprender estos tipos es crucial para evitar errores. Los más comunes son:
+
+| Tipo en R | Descripción | Nivel de Medición Típico |
+|:---|:---|:---|
+| **`character`** | Texto o cadenas de caracteres. | Nominal |
+| **`numeric`** | Números, ya sean enteros o con decimales. | Intervalo / Razón |
+| **`logical`** | Valores de Verdadero (`TRUE`) o Falso (`FALSE`). | Nominal (Dicotómica) |
+| **`factor`** | Variable categórica con niveles predefinidos. | Nominal / Ordinal |
+
+Podemos inspeccionar el tipo de una variable con la función `class()`.
+
+## El Concepto de Coerción {.smaller background-color="white"}
+
+Una regla fundamental en R es que **todos los elementos de un vector deben ser del mismo tipo**.
+
+Si intentamos combinar diferentes tipos, R forzará o **"coercerá"** los elementos al tipo más flexible para no perder información. La jerarquía de flexibilidad es:  
+`logical` < `numeric` < `character`.
+
+```{r, eval=FALSE, echo=TRUE}
+# Creamos un vector con números y un texto
+vector_mixto <- c(1, 10, "No sabe")
+
+# ¿Qué tipo de dato tendrá el vector?
+class(vector_mixto)
+# [1] "character"
+
+# ¿Qué le pasó a los números?
+vector_mixto
+# [1] "1"  "10"  "No sabe" # ¡Se convirtieron en texto!
 ```
-a)  La correlación es simétrica, lo que significa que no distingue entre variables explicativas y de respuesta.
-b)  Valores cercanos a +1 o -1 indican una mayor fuerza de la relación.
-c)  Un valor de correlación cercano a 0 indica una relación lineal débil o nula entre las variables.
-d)  La correlación siempre describe con precisión la relación entre variables, incluso si la relación no es lineal.
-e)  El valor de la correlación no cambia si se modifican las unidades de medida de las variables.
 
-## Revisión de la prueba {.smaller background-color="white"}
+**¡Cuidado!** La coerción implícita puede causar errores silenciosos. Si una columna de ingresos tiene un valor de texto ("No responde"), toda la columna puede ser leída como `character`, impidiendo cálculos matemáticos.
 
-1)  ¿Cuál de las siguientes afirmaciones sobre la correlación es FALSA?
+## Coerción Explícita {.smaller background-color="white"}
 
-```{=html}
-<!-- -->
+Para evitar problemas, la mejor práctica es realizar una **coerción explícita**: nosotros le decimos a R a qué tipo de dato debe convertir una variable.
+
+Usamos la familia de funciones `as.*()`:  
+-   `as.numeric()`: Convierte a número.  
+-   `as.character()`: Convierte a texto.  
+-   `as.factor()`: Convierte a factor.  
+
+```{r, eval=FALSE, echo=TRUE}
+# Un vector de texto que en realidad son números
+edad_texto <- c("25", "42", "37")
+class(edad_texto)
+# [1] "character"
+
+# No podemos calcular el promedio
+mean(edad_texto)
+# Error: 'trim' must be numeric
+
+# Lo solucionamos con coerción explícita
+edad_numerica <- as.numeric(edad_texto)
+class(edad_numerica)
+# [1] "numeric"
+mean(edad_numerica)
+# [1] 34.66667
 ```
-a)  La correlación es simétrica, lo que significa que no distingue entre variables explicativas y de respuesta.
-b)  Valores cercanos a +1 o -1 indican una mayor fuerza de la relación.
-c)  Un valor de correlación cercano a 0 indica una relación lineal débil o nula entre las variables.
-d)  **La correlación siempre describe con precisión la relación entre variables, incluso si la relación no es lineal.**
-e)  El valor de la correlación no cambia si se modifican las unidades de medida de las variables.
 
-## Revisión de la prueba {.smaller background-color="white"}
+## Estructuras de Datos: Los Contenedores de Información {.smaller background-color="white"}
 
-2)  El R² o coeficiente de determinación da cuenta de:
+Una vez que entendemos los *tipos* de datos (`numeric`, `character`, etc.), necesitamos saber cómo se *organizan*. En R, los datos se guardan en diferentes "contenedores" o estructuras.
 
-```{=html}
-<!-- -->
+Cada estructura tiene sus propias reglas y usos. Pasaremos de la más simple a la más compleja y útil para nosotros.
+
+1.  **Vector** (La base de todo)
+2.  **Lista** (El contenedor flexible)
+3.  **Matriz** (La tabla numérica)
+4.  **Data Frame** (Nuestra tabla de datos estándar)
+
+## 1. El Vector: La Variable Individual {.smaller background-color="white"}
+
+El **vector** es la estructura de datos más fundamental en R. Piénsalo como **una sola columna o "variable"** de nuestra base de datos.
+
+-   **Regla Clave:** Todos sus elementos deben ser del **mismo tipo** (homogéneo).
+-   Se crean con la función `c()` (concatenar o combinar).
+
+**Ejemplos de vectores:**
+```{r, eval=FALSE, echo=TRUE}
+# Un vector numérico (variable de razón)
+edades <- c(25, 30, 22, 45, 38)
+
+# Un vector de texto o "character" (variable nominal)
+regiones <- c("Metropolitana", "Valparaíso", "Biobío")
+
+# Un vector lógico (variable nominal dicotómica)
+asiste_a_clases <- c(TRUE, TRUE, FALSE, TRUE)
 ```
-a)  La proporción de la variabilidad total en la variable dependiente que el modelo NO puede explicar.
-b)  La relación causal entre una variable independiente y una variable dependiente.
-c)  La precisión con la que el modelo puede predecir valores futuros de la variable independiente.
-d)  La diferencia entre los valores observados y los valores predichos en un modelo de regresión.
-e)  El porcentaje de la varianza en la variable dependiente que puede ser explicado por la varianza en la variable independiente.
+La mayoría de las operaciones en R están "vectorizadas", es decir, se aplican a cada elemento del vector a la vez.
 
-## Revisión de la prueba {.smaller background-color="white"}
+## 2. La Lista: El Contenedor Flexible {.smaller background-color="white"}
 
-2)  El R² o coeficiente de determinación da cuenta de:
+Una **lista** es como un "súper vector". Es un contenedor que puede guardar cualquier tipo de objeto, incluso de diferentes tipos y tamaños.
 
-```{=html}
-<!-- -->
-```
-a)  La proporción de la variabilidad total en la variable dependiente que el modelo NO puede explicar.
-b)  La relación causal entre una variable independiente y una variable dependiente.
-c)  La precisión con la que el modelo puede predecir valores futuros de la variable independiente.
-d)  La diferencia entre los valores observados y los valores predichos en un modelo de regresión.
-e)  **El porcentaje de la varianza en la variable dependiente que puede ser explicado por la varianza en la variable independiente.**
+-   **Regla Clave:** Es **heterogénea**. Puede contener vectores, otros data frames, resultados de modelos, etc.
+-   Se crean con la función `list()`.
 
-## Revisión de la prueba {.smaller background-color="white"}
-
-3)  ¿Cuál es la interpretación correcta de un coeficiente beta (𝑏) o pendiente en un modelo de regresión lineal simple?
-
-```{=html}
-<!-- -->
-```
-a)  La cantidad de varianza en la variable independiente (X) que puede ser explicada por la variable dependiente (Y).
-b)  El valor promedio de la variable dependiente (Y) cuando la variable independiente (X) es cero.
-c)  El grado de asociación entre la variable dependiente (Y) y la variable independiente (X).
-d)  La cantidad de cambio en la variable dependiente (Y) cuando la variable independiente (X) aumenta en una unidad.
-e)  La fuerza de la relación entre dos variables, similar al coeficiente de correlación.
-
-## Revisión de la prueba {.smaller background-color="white"}
-
-3)  ¿Cuál es la interpretación correcta de un coeficiente beta (𝑏) o pendiente en un modelo de regresión lineal simple?
-
-```{=html}
-<!-- -->
-```
-a)  La cantidad de varianza en la variable independiente (X) que puede ser explicada por la variable dependiente (Y).
-b)  El valor promedio de la variable dependiente (Y) cuando la variable independiente (X) es cero.
-c)  El grado de asociación entre la variable dependiente (Y) y la variable independiente (X).
-d)  **La cantidad de cambio en la variable dependiente (Y) cuando la variable independiente (X) aumenta en una unidad.**
-e)  La fuerza de la relación entre dos variables, similar al coeficiente de correlación.
-
-## Revisión de la prueba {.smaller background-color="white"}
-
-4)  ¿Cuál es la interpretación correcta del intercepto (a) en un modelo de regresión lineal simple?
-
-```{=html}
-<!-- -->
-```
-a)  El cambio esperado en la variable dependiente (Y) por cada unidad de aumento en la variable independiente
-b)  El valor esperado de la variable independiente (X) cuando la variable dependiente (Y) es cero.
-c)  El valor esperado de la variable dependiente (Y) cuando la variable independiente (X) es cero.
-d)  La cantidad de variación en la variable dependiente (Y) que puede ser explicada por el modelo.
-e)  La pendiente de la línea de regresión.
-
-## Revisión de la prueba {.smaller background-color="white"}
-
-4)  ¿Cuál es la interpretación correcta del intercepto (a) en un modelo de regresión lineal simple?
-
-```{=html}
-<!-- -->
-```
-a)  El cambio esperado en la variable dependiente (Y) por cada unidad de aumento en la variable independiente
-b)  El valor esperado de la variable independiente (X) cuando la variable dependiente (Y) es cero.
-c)  **El valor esperado de la variable dependiente (Y) cuando la variable independiente (X) es cero.**
-d)  La cantidad de variación en la variable dependiente (Y) que puede ser explicada por el modelo.
-e)  La pendiente de la línea de regresión.
-
-## Revisión de la prueba {.smaller background-color="white"}
-
-5)  ¿Qué es un residuo en un modelo de regresión lineal?
-
-```{=html}
-<!-- -->
-```
-a)  Es la diferencia entre el valor predicho y el valor promedio de la variable dependiente (Y).
-b)  La suma de los errores cometidos por el modelo al predecir los valores de la variable independiente (X).
-c)  La diferencia entre el valor observado de la variable dependiente (Y) y el valor predicho (ŷ) por la recta de regresión.
-d)  El valor promedio de la variable dependiente (Y) en el modelo.
-e)  El valor predicho de la variable independiente (X) en el modelo.
-
-## Revisión de la prueba {.smaller background-color="white"}
-
-5)  ¿Qué es un residuo en un modelo de regresión lineal?
-
-```{=html}
-<!-- -->
-```
-a)  Es la diferencia entre el valor predicho y el valor promedio de la variable dependiente (Y).
-b)  La suma de los errores cometidos por el modelo al predecir los valores de la variable independiente (X).
-c)  **La diferencia entre el valor observado de la variable dependiente (Y) y el valor predicho (ŷ) por la recta de regresión.**
-d)  El valor promedio de la variable dependiente (Y) en el modelo.
-e)  El valor predicho de la variable independiente (X) en el modelo.
-
-## Revisión de la prueba {.smaller background-color="white"}
-
-6)  En el texto Esser, este plantea (al menos) cinco críticas a el enfoque que llama “Sociología de las Variables” el cual define como un enfoque en que se identifica una variable dependiente (explanandum) y se propone un conjunto de variables independientes (explanans) que podrían influir en ella, y la explicación se considera lograda cuando se puede atribuir la varianza de la variable dependiente a los efectos de las variables independientes. **Mencione y explique dos de las críticas planteadas por Esser a este enfoque.**
-
-## Problemas de la Sociología de las Variables {.smaller background-color="white"}
-
-**Incompletitud:** Las relaciones entre variables establecidas en un contexto pueden no ser aplicables en otros, revelando la falta de leyes sociológicas generales y estables. La SV, al intentar explicar fenómenos sociales, frecuentemente se queda en explicaciones ad hoc, lo que limita su alcance y efectividad.
-
-**Significado Variable:** Las variables estructurales pueden tener significados diferentes según el contexto cultural o social. Este problema de equivalencia funcional implica que las mismas variables no siempre tienen el mismo impacto en diferentes escenarios, lo que dificulta la creación de explicaciones universales.
-
-**Reduccionismo:** Al reducir fenómenos sociales a simples relaciones entre variables, la SV pierde de vista la complejidad de las decisiones individuales y colectivas, y cómo estas influyen en los resultados sociales.
-
-## Problemas de la Sociología de las Variables {.smaller background-color="white"}
-
-**Interdependencia:** Las estructuras sociales son procesos dinámicos donde las interacciones entre individuos y procesos son complejas. La SV no aborda adecuadamente cómo estas interdependencias afectan los resultados sociales, limitando la capacidad de la SV para explicar fenómenos complejos.
-
-**Falta de Sentido:** La SV ignora el sentido subjetivo de las acciones individuales, centrándose solo en relaciones entre variables. Esto deja de lado la dimensión interpretativa crucial para una explicación sociológica completa, que considera las decisiones conscientes de los individuos.
-
-## Revisión de la prueba {.smaller background-color="white"}
-
-**a) Interpretación de los coeficientes del modelo (intercepto y beta de regresión):**
-
-Intercepto (-272.321): El valor del intercepto indica que, cuando una persona tiene cero años de escolaridad, su ingreso esperado sería -272.321 pesos. Aunque este valor no tiene sentido en términos prácticos (ya que no es posible tener ingresos negativos), sirve como punto de referencia en el modelo.
-
-Beta para Años de escolaridad (77.114): Este coeficiente indica que, por cada año adicional de escolaridad, el ingreso esperado aumenta en 77.114 pesos. En otras palabras, la educación tiene un impacto positivo en los ingresos laborales.
-
-**b) Interpretación y evaluación del ajuste del modelo (R²):**
-
-R² = 0.13: El valor de R² nos indica que el 13% de la variabilidad en los ingresos laborales puede ser explicada por los años de escolaridad. Aunque el modelo tiene una relación positiva entre la educación y los ingresos, el bajo valor de R² sugiere que hay muchos otros factores que también influyen en los ingresos y que no están considerados en este modelo.
-
-## [Evaluaciones]{style="color:#FFFFFF;"} {.dark-background}
-
-**Tarea 2: 9 de octubre**\
-- Regresión lineal múltiple
-
-**Informe 1: 30 de Octubre**\
-- Regresión lineal múltiple o regresión logística
-
-# Recordatorio de RLS
-
-## Recta de Regresión Mínimo-Cuadrática {.smaller background-color="white"}
-
-La regresión lineal simple se utiliza para describir la relación entre dos variables, una independiente (explicativa) y una dependiente (respuesta), mediante una recta de regresión.
-
-#### Fórmula General {background-color="white"}
-
-La recta de regresión se expresa como: $$
-\hat{y} = a + bx
-$$
-
-**Pendiente 𝑏:** Indica el cambio promedio en la variable respuesta𝑦por cada unidad de cambio en la variable explicativa 𝑥.\
-**Ordenada en el origen 𝑎:** Representa el valor predicho de𝑦cuando 𝑥= 0. Sólo tiene significado estadístico cuando x toma valores cercanos a 0.
-
-## Coeficiente de Determinación $R^2$ y Varianza Residual {.smaller background-color="white"}
-
-**¿Qué es** $R^2$? - $R^2$, conocido como el coeficiente de determinación, es una medida estadística que indica la proporción de la varianza en la variable dependiente $Y$ que es explicada por la variable independiente $X$ en un modelo de regresión.
-
--   Se calcula como: $$
-    R^2 = 1 - \frac{\text{Varianza Residual}}{\text{Varianza Total de } Y}
-    $$ Donde:
-    -   **Varianza Residual:** Es la varianza de los residuos, es decir, la parte de $Y$ que no es explicada por $X$.
-    -   **Varianza Total de** $Y$: Es la varianza de los valores observados de $Y$.
-
-## $R^2$ como Proporción Explicada {.smaller background-color="white"}
-
--   $R^2$ indica cuánta de la varianza total de $Y$ es explicada por el modelo.
--   Un $R^2$ cercano a 1 sugiere que la mayor parte de la varianza de $Y$ es explicada por $X$.
--   Un $R^2$ cercano a 0 sugiere que el modelo no explica bien la varianza de $Y$, y la varianza residual es alta.
-
-**Interpretación Práctica de** $R^2$: - Un $R^2$ de 0.18 indica que el 19% de la varianza en $Y$ es explicada por $X$, mientras que el 81% restante es debido a factores no capturados por el modelo (varianza residual).
-
-## Objetivo de la sesión {.center background-color="white"}
-
-Introducir el concepto de control estadístico y el uso de regresión lineal múltiple.
-
-## El problema del control estadístico. {.smaller background-color="white"}
-
-El control estadístico consiste en ajustar los análisis para "controlar" el efecto de otras variables (covariadas) que podrían estar influyendo en la relación entre las variables de interés.
-
-Ejemplo: En un estudio sobre diferencias salariales entre hombres y mujeres, las covariadas pueden incluir años de empleo o nivel educativo.
-
-## Distintas formas de control {.smaller background-color="white"}
-
-Podemos controlar por otras variables que pueden influir en nuestros resultados a partir del diseño de nuestra investigación: A partir de asignación aleatoria en un experimento.
-
-Por otro lado podemos controlar estadísticamente: Control Ajuste matemático que no requiere manipulación directa de datos o exclusión de casos. Es lo que comunmente tendremos que hacer en el contexto de estudios observacionales.
-
-## Ventajas del control estadístico {.smaller background-color="white"}
-
--   No se manipulan participantes ni condiciones.
--   No requiere excluir datos.
--   Permite "mantener constantes" ciertas variables para observar el efecto "puro" de la variable independiente.
--   Limitaciones: Requiere medición precisa de las covariadas y puede haber desacuerdo sobre qué variables controlar.
-
-# Regresión lineal múltiple
-
-## Introducción al Modelo de Regresión Múltiple {.smaller background-color="white"}
-
-Un modelo de regresión múltiple examina la relación entre una **variable dependiente** y **varias variables independientes o predictores**.\
-La regresión múltiple permite **controlar otras variables** mientras se evalúa el efecto de una variable predictora específica.\
-Ejemplo: Si estudiamos la relación entre el ejercicio y la pérdida de peso, también podemos controlar la cantidad de alimentos consumidos para aislar su efecto.
-
-Ecuación básica del modelo:
-
-$$ Y = b_0 + b_1 X_1 + b_2 X_2 + \dots + b_k X_k + \epsilon $$ Donde $Y$ es la variable dependiente, $b_0$ es la constante o intercepto, $X_1, X_2, \dots X_k$ son las variables independientes, $b_1, b_2, \dots b_k$ son los coeficientes de regresión, y $\epsilon$ es el error.
-
-## Asociación Parcial {.smaller background-color="white"}
-
-La asociación parcial mide la relación entre dos variables manteniendo constantes otras variables.
-
-Ejemplo: En un estudio sobre pérdida de peso, podemos medir la relación entre la ingesta de alimentos y la pérdida de peso, controlando la cantidad de ejercicio realizado.
-
-Veamos cómo las asociaciones cambian al controlar variables adicionales.
-
-## Ejemplo {.smaller background-color="white"}
-
-| ID           | Frecuencia de ejercicio (horas semanales promedio) $X_1$ | Ingesta diaria promedio de alimentos (100s de calorías por encima del recomendado) $X_2$ | Pérdida de peso semanal promedio (100s de gramos) $Y$ |
-|--------------|----------------|----------------------------|---------------|
-| 1            | 0                                                        | 2                                                                                        | 6                                                     |
-| 2            | 0                                                        | 4                                                                                        | 2                                                     |
-| 3            | 0                                                        | 6                                                                                        | 4                                                     |
-| 4            | 2                                                        | 2                                                                                        | 8                                                     |
-| 5            | 2                                                        | 4                                                                                        | 9                                                     |
-| 6            | 2                                                        | 6                                                                                        | 8                                                     |
-| 7            | 2                                                        | 8                                                                                        | 5                                                     |
-| 8            | 4                                                        | 4                                                                                        | 11                                                    |
-| 9            | 4                                                        | 6                                                                                        | 13                                                    |
-| 10           | 4                                                        | 8                                                                                        | 9                                                     |
-| **Promedio** | **2**                                                    | **5**                                                                                    | **7.5**                                               |
-
-## Correlación simple entre ejercicio y perdida de peso {.smaller background-color="white"}
-
-La correlación entre ejercicio y pérdida de peso es positiva ($r_{X_1Y} = 0.864$).
-
-**Interpretación:** Los participantes que hacen más ejercicio tienden a perder más peso.
-
-**Conclusión:** Más ejercicio está asociado con mayor pérdida de peso.
-
-## Correlación simple entre ejercicio y perdida de peso {.smaller background-color="white"}
-
-```{r}
-library(tidyverse)
-data <- data.frame(
-  id = 1:10,
-  ej = c(0, 0, 0, 2, 2, 2, 2, 4, 4, 4),  # Frecuencia de ejercicio (horas semanales promedio)
-  cal = c(2, 4, 6, 2, 4, 6, 8, 4, 6, 8),  # Ingesta diaria promedio de alimentos (100s de calorías sobre el recomendado)
-  ppeso  = c(6, 2, 4, 8, 9, 8, 5, 11, 13, 9) # Pérdida de peso semanal promedio (100s de gramos)
+```{r, eval=FALSE, echo=TRUE}
+# Creamos una lista con información de un encuestado
+encuestado_1 <- list(
+  nombre = "Ana",
+  edad = 34,
+  hijos = c("Pedro", "Javiera"),
+  trabaja = TRUE
 )
 
-ggplot(data, aes(x = ej, y = ppeso)) +
-  geom_point() +  # Agregar los puntos de dispersión
-  geom_smooth(method = "lm", se = FALSE, color = "blue") +  # Agregar la línea de regresión
-  labs(
-    title = "Relación entre ejercicio y pérdida de peso",
-    x = "Horas de ejercicio semanales (X1)",
-    y = "Pérdida de peso (100s de gramos, Y)"
-  ) +
-  theme_minimal()
+# Podemos acceder a sus elementos con el signo $
+encuestado_1$nombre
+# [1] "Ana"
+
+encuestado_1$hijos
+# [1] "Pedro"  "Javiera"
+```
+Las listas son extremadamente poderosas para organizar resultados complejos, aunque no las usaremos tanto para guardar datos primarios.
+
+## 3. La Matriz y el Data Frame {.smaller background-color="white"}
+
+Ambos son estructuras de dos dimensiones (filas y columnas), como una hoja de cálculo, pero con una diferencia crucial.
+
+:::::: columns
+::: {.column width="50%"}
+**Matriz (`matrix`)**  
+-   **Regla:** Es **homogénea**. Todas las celdas deben contener el mismo tipo de dato (generalmente numérico).  
+-   **Uso:** Principalmente para operaciones matemáticas y álgebra lineal. Menos común para datos de encuesta.  
+:::
+::: {.column width="50%"}
+**Data Frame (`data.frame`)**  
+-   **Regla:** Es **heterogéneo** por columnas. Cada columna (vector) puede tener un tipo de dato diferente, pero todas deben tener la misma longitud.  
+-   **Uso:** **Es la estructura estándar para almacenar y analizar datos en sociología.** Es nuestra tabla de datos.  
+:::
+::::::
+Un `data.frame` es, conceptualmente, una **lista de vectores de igual longitud**.
+
+## 4. El Data Frame: Nuestra Tabla de Datos Estándar {.smaller background-color="white"}
+
+Un `data.frame` organiza nuestros datos de la manera "ordenada" (tidy) que discutimos: cada fila es una observación y cada columna es una variable.
+
+```{r, eval=FALSE, echo=TRUE}
+# Creamos vectores individuales
+id_sujeto <- c(1, 2, 3)
+edad_sujeto <- c(28, 45, 33)
+satisfaccion_vida <- c("Alta", "Media", "Alta")
+
+# Los combinamos en un data.frame
+mi_encuesta <- data.frame(
+  id = id_sujeto,
+  edad = edad_sujeto,
+  satisfaccion = satisfaccion_vida
+)
+
+# Así se ve nuestra base de datos
+mi_encuesta
+#   id edad satisfaccion
+# 1  1   28         Alta
+# 2  2   45        Media
+# 3  3   33         Alta
+```
+Al importar datos de un archivo (como haremos en el práctico), R los cargará directamente como un `data.frame` (o un `tibble`, su versión moderna del tidyverse).
+
+## La Lógica de una Tabla de Datos {.smaller background-color="white"}
+
+Independientemente de la encuesta o la fuente, los datos cuantitativos se organizan en una estructura tabular con una lógica universal:
+
+| folio | region | sexo | edad | esc | ingreso_hog |
+| :---: | :---: | :---: |:---:|:---:| :---: |
+| 101 | 13 | Mujer | 45 | 16 | 1,500,000 |
+| 102 | 5 | Hombre | 32 | 12 | 800,000 |
+| 102 | 5 | Mujer | 30 | 14 | 800,000 |
+| 103 | 8 | Hombre | 67 | 8 | 450,000 |
+
+-   Cada **Fila** es una **Observación** (o caso). Generalmente, corresponde a nuestra **unidad de análisis** (ej. una persona).
+-   Cada **Columna** es una **Variable**. Corresponde a un **atributo** o característica que hemos medido.
+
+## El Ideal: Datos Ordenados (Tidy Data) {.smaller background-color="white"}
+
+Para que el análisis de datos sea eficiente y libre de errores, buscamos un formato estándar conocido como **"datos ordenados"**. Este formato sigue tres reglas simples:
+
+1.  **Cada variable tiene su propia columna.**
+2.  **Cada observación tiene su propia fila.**
+3.  **Cada valor tiene su propia celda.**
+
+![](https://es.r4ds.hadley.nz/diagrams_w_text_as_path/es/tidy-1.svg)
+
+Afortunadamente, la mayoría de las encuestas sociológicas (como CASEN o EBS) ya vienen en este formato. Nuestro trabajo es mantener este orden.
+
+---
+title_slide_background: "#008080"
+---
+
+---
+title_slide_background: "#008080"
+---
+
+# 3. Un Flujo de Trabajo para Explorar Datos
+
+## Buenas Prácticas: Script vs. Consola {.smaller background-color="white"}
+
+Antes de analizar, es crucial establecer un flujo de trabajo **reproducible**.
+
+:::::: columns
+::: {.column width="50%"}
+**La Consola**  
+-   Es la ventana donde R ejecuta los comandos.  
+-   Es interactiva y útil para pruebas rápidas y experimentos.  
+-   **No guarda un registro de tu trabajo**. Lo que escribes en la consola se pierde cuando cierras RStudio.  
+:::
+::: {.column width="50%"}
+**El Script (.R) o R Markdown (.qmd)**  
+-   Son archivos de texto plano donde escribimos y guardamos nuestro código.  
+-   Crean un **registro permanente y reproducible** de cada paso de nuestro análisis.  
+-   **Siempre debemos trabajar en un script o en un R Markdown.**  
+:::
+::::::
+*Sugerencia: Usar **Proyectos de RStudio (.Rproj)** para mantener todos los archivos de una investigación (datos, scripts, informes) organizados en una sola carpeta.*
+
+## Buenas Prácticas para un Código Reproducible {.smaller background-color="white"}
+::: {style="font-size: 0.7em; line-height: 1.2;"}
+La regla de oro de la reproducibilidad es: **todo debe estar en el script**. Una vez que nos comprometemos con eso, el siguiente paso es asegurarnos de que nuestro código sea claro, robusto y portable.
+
+:::::: columns
+::: {.column width="50%"}
+**Para que TÚ (y otros) entiendan tu código:**
+
+-   **Comentar el código (`#`):**
+    -   Usa comentarios para explicar el **"porqué"** de tu código, no el "qué". La función `mean()` ya dice que calcula una media; el comentario debe explicar *por qué* necesitas esa media.
+
+-   **Nombrar bien las cosas:**
+    -   Usa nombres de variables y objetos que sean descriptivos y consistentes.
+    -   **Estilo recomendado:** `snake_case` (minúsculas y guiones bajos).
+    -   *Mal:* `x <- mean(v1)`
+    -   *Bien:* `edad_promedio <- mean(edad_encuestados)`
+
+-   **Indentar el código:**
+    -   La indentación (sangría) revela la estructura lógica de tu código, especialmente al usar `%>%`. RStudio lo hace en gran parte de forma automática.
+:::
+::: {.column width="50%"}
+**Para que tu código SIEMPRE funcione:**
+
+-   **Nunca hacer trabajo manual:**
+    -   El script debe ser autocontenido. Desde cargar los paquetes y los datos hasta el resultado final, todo debe ser ejecutable sin que tengas que "arreglar algo a mano en Excel".
+
+-   **Cargar paquetes al inicio:**
+    -   Toda sesión debe comenzar cargando los paquetes necesarios (ej. `library(tidyverse)`). Así, cualquiera que ejecute tu script sabrá qué necesita instalar.
+
+-   **Usar rutas relativas (con Proyectos de RStudio):**
+    -   Nunca uses rutas absolutas a archivos (ej. `"C:/Users/Gabriel/Desktop/datos.csv"`). Este código fallará en cualquier otro computador.
+    -   Al usar un Proyecto de RStudio, puedes usar rutas relativas (ej. `"datos/casen2022.csv"`), que funcionarán en cualquier máquina.
+:::
+::::::
+::: 
+
+## La "Radiografía" Inicial de los Datos {.smaller background-color="white"}
+
+Cuando recibimos una nueva base de datos, nuestro primer paso es siempre realizar una exploración inicial para entender su estructura y contenido. Estas funciones son nuestro "kit de diagnóstico" básico:
+
+| Función | ¿Qué hace? |
+|:---|:---|
+| `dim(datos)` | Muestra las **dimensiones** (filas, columnas). |
+| `names(datos)` | Lista los **nombres** de todas las variables. |
+| `head(datos)` | Muestra las primeras 6 **filas**. |
+| `tail(datos)` | Muestra las últimas 6 **filas**. |
+| `str(datos)` | Muestra la **estructura** detallada del objeto. |
+
+## Interpretando `str()` {.smaller background-color="white"}
+
+La función `str()` (de *structure*) es quizás la más informativa al principio. Nos da un resumen compacto y detallado de cualquier objeto de R, especialmente de las bases de datos (`data.frame`).
 
 ```
+'data.frame':	150 obs. of  5 variables:
+ $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 ...
+ $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 ...
+ $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 ...
+ $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 ...
+ $ Species     : Factor w/ 3 levels "setosa",..: 1 1 1 1 1 ...
+```
+1.  **`'data.frame':`** El tipo de objeto que estamos inspeccionando.
+2.  **`150 obs. of 5 variables:`** Las dimensiones del `data.frame`. Tiene **150 observaciones (filas)** y **5 variables (columnas)**.
+3.  **`$ Variable.Name:`** El signo `$` precede al nombre de cada una de las 5 variables.
+4.  **`: tipo de dato`** Después del nombre de la variable, nos indica su tipo (`num` para numérico, `Factor` para categórica, `chr` para texto, etc.).
+5.  **`... valores ...`** Finalmente, nos muestra los primeros valores de esa variable para que tengamos una idea de su contenido. Para los factores, también nos indica sus "niveles" o categorías.
 
-## Correlación simple entre consumo de comida y Pérdida de Peso {.smaller background-color="white"}
+## Descripción básica: `summary()` y `table()` {.smaller background-color="white"}
 
-La correlación entre ingesta de alimentos y pérdida de peso es pequeña y positiva ($r_{X_2Y} = 0.047$).
+Una vez que entendemos la estructura, pasamos a revisar la calidad del contenido.
 
-**Contraintuitivo:** Se esperaría que comer más implique perder menos peso, pero los datos sugieren lo contrario.
+-   **`summary(datos)`:**
+    -   Proporciona un resumen estadístico para **cada variable**.
+    -   Para variables numéricas: Muestra el mínimo, máximo, media, mediana y cuartiles. **Esencial para detectar valores imposibles** (ej. una edad de -99 o 200).
+    -   Nos informa cuántos **valores perdidos (`NA's`)** hay en cada variable.
 
-**Pregunta:** ¿Qué está pasando aquí? El ejercicio puede estar ocultando la verdadera relación entre comida y pérdida de peso.
+-   **`table(datos$variable)`:**
+    -   Genera una **tabla de frecuencias** para una variable categórica.
+    -   Nos permite ver todas las categorías presentes y cuántos casos hay en cada una. Útil para verificar la codificación.
 
-## Correlación simple entre consumo de comida y Pérdida de Peso {.smaller background-color="white"}
+## Actividad de Discusión (10 min) {.smaller background-color="white"}
 
-```{r}
-# Gráfico de dispersión entre ingesta de alimentos y pérdida de peso con línea de regresión
-ggplot(data, aes(x = cal, y = ppeso)) +
-  geom_point() +  # Agregar los puntos de dispersión
-  geom_smooth(method = "lm", se = FALSE, color = "red") +  # Agregar la línea de regresión
-  labs(
-    title = "Relación entre ingesta de alimentos y pérdida de peso",
-    x = "Ingesta diaria de alimentos (100s de calorías, X2)",
-    y = "Pérdida de peso (100s de gramos, Y)"
-  ) +
-  theme_minimal()
+Un sociólogo recibe una base de datos sobre trabajadores y ejecuta `summary(datos)`. Parte del resultado es el siguiente:
+
+```
+##       edad          ingreso_mensual       contrato  
+##  Min.   : 18.00   Min.   : -99000     Temporal: 250  
+##  1st Qu.: 29.00   1st Qu.: 450000     Indefinido:600  
+##  Median : 38.00   Median : 680000     Honorarios:150  
+##  Mean   : 40.23   Mean   : 715000                     
+##  3rd Qu.: 51.00   3rd Qu.: 950000                     
+##  Max.   : 99.00   Max.   :25000000                     
+##                   NA's   : 150
 ```
 
-## Relación entre consumo de comida y perdida de peso, controlando por ejercicio {background-color="white"}
+**En grupos, identifiquen al menos dos "banderas rojas" o problemas potenciales en estos datos que requerirían una investigación más a fondo antes de comenzar a analizar.**
 
-```{r}
-# Convertir las horas de ejercicio en un factor
-data$ej_factor <- as.factor(data$ej)
+## Cierre y Próximos Pasos {.smaller background-color="white"}
+::: {style="font-size: 0.9em; line-height: 1.2;"}
+**Resumen de la sesión de hoy:**
 
-# Gráfico de dispersión con diferentes colores para las horas de ejercicio y líneas de regresión separadas
-ggplot(data, aes(x = cal, y = ppeso, color = ej_factor)) +
-  geom_point() +  # Agregar los puntos de dispersión
-  geom_smooth(method = "lm", se = FALSE) +  # Agregar la línea de regresión separada por cada nivel de ejercicio
-  labs(
-    title = "Relación entre ingesta de alimentos y pérdida de peso",
-    x = "Ingesta diaria de alimentos (100s de calorías, X2)",
-    y = "Pérdida de peso (100s de gramos, Y)",
-    color = "Horas de ejercicio (X1)"
-  ) +
-  theme_minimal()
-```
+-   Hemos aprendido que los datos cuantitativos se organizan en una **estructura de filas (observaciones) y columnas (variables)**.
+-   Entendimos los **tipos de datos básicos en R** y la importancia de controlar la **coerción**.
+-   Establecimos un **flujo de trabajo inicial** para explorar cualquier nueva base de datos (`dim`, `str`, `summary`, etc.).
+-   Subrayamos la importancia de las **buenas prácticas** como el uso de scripts para la reproducibilidad.
 
-## Relación entre consumo de comida y perdida de peso, controlando por ejercicio {background-color="white"}
+**En el práctico de hoy:**
 
-Al controlar el nivel de ejercicio, podemos ver la verdadera relación entre la ingesta de alimentos y la pérdida de peso.
+-   Aplicarán este flujo de trabajo para realizar una **exploración inicial completa** a la Encuesta CASEN.
 
-Comer más realmente se asocia con perder menos peso, pero este efecto estaba oculto debido al impacto del ejercicio.
+**Adelanto de la próxima clase:**
 
-## Modelo de Regresión Múltiple {.smaller background-color="white"}
-
-**Ecuación:**
-
-$$
-Y = 6 + 2X_1 - 0.5X_2
-$$
-
-**Interpretación:**
-
--   $b_0 = 6$: La pérdida de peso esperada (en cientos de gramos) para alguien que no hace ejercicio ni consume calorías extra.
--   $b_1 = 2$: Por cada hora adicional de ejercicio semanal, se espera una pérdida de peso adicional de 200 gramos, manteniendo constante la ingesta de alimentos.
--   $b_2 = -0.5$: Por cada 100 calorías extra consumidas, se espera perder 50 gramos menos, manteniendo constante el ejercicio.
-
-El modelo permite aislar los efectos de cada predictor, controlando por los demás.
-
-## Modelo de Regresión Múltiple {.smaller background-color="white"}
-
-![](img/05/plano.jpg)
-
-## Ajuste del modelo y residuos {.smaller background-color="white"}
-
-**Método de mínimos cuadrados:**
-- El ajuste del modelo se realiza utilizando el método de mínimos cuadrados.
-- Este método busca minimizar la suma de los residuos al cuadrado, que son las diferencias entre los valores observados ($Y$) y los valores predichos ($\hat{Y}$) por el modelo.
-  
-**Minimización de los residuos:**
-- Los residuos ($e_i$) se calculan como la diferencia entre el valor observado y el valor predicho:
-  
-  $$ e_i = Y_i - \hat{Y}_i $$
-
-- El objetivo del modelo es minimizar la suma de los residuos al cuadrado:
-  
-  $$ \sum (Y_i - \hat{Y}_i)^2 $$
-
-El uso de mínimos cuadrados garantiza que el plano de regresión ajustado se acerque lo más posible a los puntos de datos observados.
+-   Aprenderemos la "gramática de la manipulación de datos" con el paquete `dplyr` para **seleccionar, filtrar y transformar** nuestros datos.
+::: 

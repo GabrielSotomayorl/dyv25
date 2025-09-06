@@ -50,6 +50,8 @@ lessons:
   - title: '• Estructura de una tabla de datos.<br>• Exploración de una tabla de datos en R.<br>• Tipos de variables en una tabla de datos.<br>• <strong>Inicio: Trabajo Práctico 1 (3 semanas)</strong>'
     session: "Sesión 5"
     date: "8 septiembre"
+    content: "05-content"
+    example: "05-practico"
     bg: 1
 
   - title: '<strong>• SEMANA DE RECESO POR FIESTAS PATRIAS</strong>'
