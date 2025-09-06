@@ -325,23 +325,23 @@ mean(casen_sub$edad)
 edad_promedio <- mean(casen_sub$edad, na.rm = TRUE)
 desv_est_edad <- sd(casen_sub$edad, na.rm = TRUE)
 
-# Imprimimos los resultados formateados
-print(paste("La edad promedio de la muestra es:", round(edad_promedio, 1), "años"))
+# Imprimimos los resultados 
+edad_promedio
 ```
 
 ```
-## [1] "La edad promedio de la muestra es: 39.3 años"
+## [1] 39.32292
 ```
 
 ```r
-print(paste("La desviación estándar de la edad es:", round(desv_est_edad, 1), "años"))
+desv_est_edad
 ```
 
 ```
-## [1] "La desviación estándar de la edad es: 23 años"
+## [1] 23.03013
 ```
 
-**Actividad Aplicada (Desafío):** Calcula e interpreta el promedio de años de escolaridad (`esc`) y el ingreso total del hogar (`ytotcorh`). No olvides usar `na.rm = TRUE`. ¿Qué te llama la atención de estos valores?
+**Actividad Aplicada:** Calcula e interpreta el promedio de años de escolaridad (`esc`) y el ingreso total del hogar (`ytotcorh`). No olvides usar `na.rm = TRUE`. ¿Qué te llama la atención de estos valores?
 
 ## 6. Reflexiones Finales y Próximos Pasos
 
