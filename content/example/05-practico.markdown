@@ -1,5 +1,5 @@
 ---
-title: "Exploración Inicial de Datos en R: Una Radiografía a la Encuesta CASEN 2022"
+title: "Exploración Inicial de Datos en R: Encuesta CASEN 2022"
 linktitle: "5: La Estructura de los Datos en R"
 date: "2025-09-08"
 menu:
@@ -51,7 +51,7 @@ R base tiene muchas funciones, pero su verdadero poder reside en los **paquetes*
 Para este práctico, usaremos `haven` para importar datos y `tidyverse` para buenas prácticas generales.
 
 
-```r
+``` r
 # Cargar paquetes necesarios para la sesión
 # Si no los tienes, debes instalarlos primero ejecutando en la consola:
 # install.packages("haven")
@@ -72,7 +72,7 @@ Este es el método estándar para trabajar. Implica descargar el archivo y guard
 3.  Carga los datos usando la función `read_sav()` del paquete `haven` y una ruta relativa.
 
 
-```r
+``` r
 # Ejemplo de cómo cargarías el archivo si lo guardaste en una carpeta 'datos'
 casen <- haven::read_sav("datos/Base de datos Casen 2022 SPSS_18 marzo 2024.sav")
 ```
@@ -98,7 +98,7 @@ unlink(temp); remove(temp)
 Veamos las dimensiones de nuestra base de datos recién cargada.
 
 
-```r
+``` r
 dim(casen)
 ```
 
@@ -113,7 +113,7 @@ Como pueden ver, la CASEN 2022 tiene **202,231 casos (filas)** y **917 variables
 Usaremos la sintaxis de corchetes de R base `[filas, columnas]` para crear un nuevo `data.frame` más pequeño y manejable. Dejamos el espacio de las filas en blanco para seleccionar **TODAS** las filas, y en el espacio de las columnas, le damos un vector con los nombres de las variables que queremos conservar.
 
 
-```r
+``` r
 # Creamos un vector con los nombres de las variables de interés
 variables_seleccionadas <- c("region", "sexo", "edad", "esc", "ind_hacina", "ytotcorh")
 
@@ -130,7 +130,7 @@ dim(casen_sub)
 
 ¡Mucho mejor! Ahora trabajaremos con este objeto `casen_sub` que es más liviano y enfocado.
 
-## 4. La "Radiografía" Inicial de Nuestros Datos
+## 4. La exploración inicial de nuestros datos
 
 Ahora que tenemos un conjunto de datos manejable, apliquemos el protocolo de exploración.
 
@@ -139,7 +139,7 @@ Ahora que tenemos un conjunto de datos manejable, apliquemos el protocolo de exp
 Usemos `str()` para ver la estructura de nuestro nuevo objeto.
 
 
-```r
+``` r
 str(casen_sub)
 ```
 
@@ -183,7 +183,7 @@ str(casen_sub)
 La función `as_factor()` del paquete `haven` convierte estas variables etiquetadas en **factores**, que es el tipo de dato que R usa para variables categóricas. Esta función reemplaza los números por sus correspondientes etiquetas de texto.
 
 
-```r
+``` r
 # Convirtamos la variable de hacinamiento a factor para ver sus etiquetas
 casen_sub$hacinamiento_factor <- as_factor(casen_sub$ind_hacina)
 
@@ -195,7 +195,7 @@ class(casen_sub$ind_hacina)
 ## [1] "haven_labelled" "vctrs_vctr"     "double"
 ```
 
-```r
+``` r
 class(casen_sub$hacinamiento_factor)
 ```
 
@@ -208,7 +208,7 @@ class(casen_sub$hacinamiento_factor)
 `summary()` nos da un resumen estadístico de cada variable, ideal para un control de calidad.
 
 
-```r
+``` r
 summary(casen_sub)
 ```
 
@@ -251,7 +251,7 @@ summary(casen_sub)
 Veamos la diferencia al tabular la variable numérica original versus la versión convertida a factor.
 
 
-```r
+``` r
 # Tabla con la variable numérica (menos informativa, solo vemos códigos)
 table(casen_sub$ind_hacina)
 ```
@@ -262,7 +262,7 @@ table(casen_sub$ind_hacina)
 ##    150 189513   9682   2079    807
 ```
 
-```r
+``` r
 # Tabla con la variable convertida a factor (mucho más clara, vemos las categorías)
 table(casen_sub$hacinamiento_factor)
 ```
@@ -284,7 +284,7 @@ table(casen_sub$hacinamiento_factor)
 Para obtener los porcentajes, usamos `prop.table()`.
 
 
-```r
+``` r
 # Calculamos la proporción y multiplicamos por 100 para obtener el porcentaje
 prop.table(table(casen_sub$hacinamiento_factor)) * 100
 ```
@@ -310,7 +310,7 @@ prop.table(table(casen_sub$hacinamiento_factor)) * 100
 Para las variables numéricas, nos interesan las medidas de tendencia central y dispersión. El principal desafío son los valores perdidos (`NA`).
 
 
-```r
+``` r
 # La variable edad en CASEN no tiene valores perdidos, por lo que podemos calcularla directamente
 mean(casen_sub$edad)
 ```
@@ -319,7 +319,7 @@ mean(casen_sub$edad)
 ## [1] 39.32292
 ```
 
-```r
+``` r
 # Sin embargo, la buena práctica es usar siempre na.rm = TRUE
 # por si trabajamos con otras variables que sí tengan NAs.
 edad_promedio <- mean(casen_sub$edad, na.rm = TRUE)
@@ -333,7 +333,7 @@ edad_promedio
 ## [1] 39.32292
 ```
 
-```r
+``` r
 desv_est_edad
 ```
 

@@ -14,9 +14,9 @@ format:
 ## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
 -   **Comprender** la estructura fundamental de una tabla de datos (observaciones, variables, valores).
--   **Reconocer** los tipos de datos atómicos en R (`character`, `numeric`, `logical`) y el concepto de coerción.
+-   **Reconocer** los tipos de datos básicos en R (`character`, `numeric`, `logical`) y el concepto de coerción.
 -   **Aprender** un flujo de trabajo básico y reproducible para la exploración inicial de una base de datos.
--   **Aplicar** funciones básicas de R para realizar una "radiografía" inicial a un conjunto de datos real.
+-   **Aplicar** funciones básicas de R para realizar una exploración inicial a un conjunto de datos real.
 
 ---
 title_slide_background: "#008080"
@@ -37,7 +37,7 @@ Esta unidad se centrará en los primeros y más cruciales pasos del proceso de a
 ![](https://es.r4ds.hadley.nz/diagrams_w_text_as_path/es/data-science-explore.svg)
 
 
-# 2. Los "Átomos" de los Datos en R
+# 2. Los tipos de datos en R
 
 ## Tipos de Datos Fundamentales {.smaller background-color="white"}
 
@@ -107,9 +107,9 @@ Una vez que entendemos los *tipos* de datos (`numeric`, `character`, etc.), nece
 
 Cada estructura tiene sus propias reglas y usos. Pasaremos de la más simple a la más compleja y útil para nosotros.
 
-1.  **Vector** (La base de todo)
-2.  **Lista** (El contenedor flexible)
-3.  **Matriz** (La tabla numérica)
+1.  **Vector** 
+2.  **Lista** 
+3.  **Matriz** 
 4.  **Data Frame** (Nuestra tabla de datos estándar)
 
 ## 1. El Vector: La Variable Individual {.smaller background-color="white"}
@@ -134,7 +134,7 @@ La mayoría de las operaciones en R están "vectorizadas", es decir, se aplican 
 
 ## 2. La Lista: El Contenedor Flexible {.smaller background-color="white"}
 
-Una **lista** es como un "súper vector". Es un contenedor que puede guardar cualquier tipo de objeto, incluso de diferentes tipos y tamaños.
+Una **lista** es un contenedor que puede guardar cualquier tipo de objeto, incluso de diferentes tipos y tamaños.
 
 -   **Regla Clave:** Es **heterogénea**. Puede contener vectores, otros data frames, resultados de modelos, etc.
 -   Se crean con la función `list()`.
@@ -225,7 +225,7 @@ Para que el análisis de datos sea eficiente y libre de errores, buscamos un for
 
 ![](https://es.r4ds.hadley.nz/diagrams_w_text_as_path/es/tidy-1.svg)
 
-Afortunadamente, la mayoría de las encuestas sociológicas (como CASEN o EBS) ya vienen en este formato. Nuestro trabajo es mantener este orden.
+Afortunadamente, la mayoría de las encuestas (como CASEN o EBS) ya vienen en este formato. Nuestro trabajo es mantener este orden.
 
 ---
 title_slide_background: "#008080"
@@ -258,11 +258,9 @@ Antes de analizar, es crucial establecer un flujo de trabajo **reproducible**.
 *Sugerencia: Usar **Proyectos de RStudio (.Rproj)** para mantener todos los archivos de una investigación (datos, scripts, informes) organizados en una sola carpeta.*
 
 ## Buenas Prácticas para un Código Reproducible {.smaller background-color="white"}
-::: {style="font-size: 0.7em; line-height: 1.2;"}
+::: {style="font-size: 0.8em; line-height: 1.2;"}
 La regla de oro de la reproducibilidad es: **todo debe estar en el script**. Una vez que nos comprometemos con eso, el siguiente paso es asegurarnos de que nuestro código sea claro, robusto y portable.
 
-:::::: columns
-::: {.column width="50%"}
 **Para que TÚ (y otros) entiendan tu código:**
 
 -   **Comentar el código (`#`):**
@@ -276,12 +274,16 @@ La regla de oro de la reproducibilidad es: **todo debe estar en el script**. Una
 
 -   **Indentar el código:**
     -   La indentación (sangría) revela la estructura lógica de tu código, especialmente al usar `%>%`. RStudio lo hace en gran parte de forma automática.
-:::
-::: {.column width="50%"}
+::: 
+
+
+## Buenas Prácticas para un Código Reproducible {.smaller background-color="white"}
+::: {style="font-size: 0.8em; line-height: 1.2;"}
+
 **Para que tu código SIEMPRE funcione:**
 
 -   **Nunca hacer trabajo manual:**
-    -   El script debe ser autocontenido. Desde cargar los paquetes y los datos hasta el resultado final, todo debe ser ejecutable sin que tengas que "arreglar algo a mano en Excel".
+    -   El script debe ser autocontenido. Desde cargar los paquetes y los datos hasta el resultado final, todo debe ser ejecutable sin que tengas que hacer algo con botones que no quede registrado o "arreglar algo a mano en Excel".
 
 -   **Cargar paquetes al inicio:**
     -   Toda sesión debe comenzar cargando los paquetes necesarios (ej. `library(tidyverse)`). Así, cualquiera que ejecute tu script sabrá qué necesita instalar.
@@ -289,11 +291,10 @@ La regla de oro de la reproducibilidad es: **todo debe estar en el script**. Una
 -   **Usar rutas relativas (con Proyectos de RStudio):**
     -   Nunca uses rutas absolutas a archivos (ej. `"C:/Users/Gabriel/Desktop/datos.csv"`). Este código fallará en cualquier otro computador.
     -   Al usar un Proyecto de RStudio, puedes usar rutas relativas (ej. `"datos/casen2022.csv"`), que funcionarán en cualquier máquina.
-:::
-::::::
+
 ::: 
 
-## La "Radiografía" Inicial de los Datos {.smaller background-color="white"}
+## La exploración Inicial de los Datos {.smaller background-color="white"}
 
 Cuando recibimos una nueva base de datos, nuestro primer paso es siempre realizar una exploración inicial para entender su estructura y contenido. Estas funciones son nuestro "kit de diagnóstico" básico:
 
@@ -336,22 +337,6 @@ Una vez que entendemos la estructura, pasamos a revisar la calidad del contenido
     -   Genera una **tabla de frecuencias** para una variable categórica.
     -   Nos permite ver todas las categorías presentes y cuántos casos hay en cada una. Útil para verificar la codificación.
 
-## Actividad de Discusión (10 min) {.smaller background-color="white"}
-
-Un sociólogo recibe una base de datos sobre trabajadores y ejecuta `summary(datos)`. Parte del resultado es el siguiente:
-
-```
-##       edad          ingreso_mensual       contrato  
-##  Min.   : 18.00   Min.   : -99000     Temporal: 250  
-##  1st Qu.: 29.00   1st Qu.: 450000     Indefinido:600  
-##  Median : 38.00   Median : 680000     Honorarios:150  
-##  Mean   : 40.23   Mean   : 715000                     
-##  3rd Qu.: 51.00   3rd Qu.: 950000                     
-##  Max.   : 99.00   Max.   :25000000                     
-##                   NA's   : 150
-```
-
-**En grupos, identifiquen al menos dos "banderas rojas" o problemas potenciales en estos datos que requerirían una investigación más a fondo antes de comenzar a analizar.**
 
 ## Cierre y Próximos Pasos {.smaller background-color="white"}
 ::: {style="font-size: 0.9em; line-height: 1.2;"}

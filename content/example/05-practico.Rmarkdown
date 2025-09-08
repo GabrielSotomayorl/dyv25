@@ -1,5 +1,5 @@
 ---
-title: "Exploración Inicial de Datos en R: Una Radiografía a la Encuesta CASEN 2022"
+title: "Exploración Inicial de Datos en R: Encuesta CASEN 2022"
 linktitle: "5: La Estructura de los Datos en R"
 date: "2025-09-08"
 menu:
@@ -117,7 +117,7 @@ dim(casen_sub)
 
 ¡Mucho mejor! Ahora trabajaremos con este objeto `casen_sub` que es más liviano y enfocado.
 
-## 4. La "Radiografía" Inicial de Nuestros Datos
+## 4. La exploración inicial de nuestros datos
 
 Ahora que tenemos un conjunto de datos manejable, apliquemos el protocolo de exploración.
 
