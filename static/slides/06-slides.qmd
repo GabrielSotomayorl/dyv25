@@ -2,7 +2,7 @@
 title: "La Gramática de la Manipulación de Datos"
 subtitle: "Unidad 3: Descripción y Visualización de Datos"
 author: "Gabriel Sotomayor"
-date: "09-15-2025"
+date: "09-22-2025"
 format:
   revealjs:
     theme: [dark, custom.scss]
@@ -52,7 +52,7 @@ El **Tidyverse** no es solo un paquete, es una **colección de paquetes** diseñ
 
 Al cargar el paquete `tidyverse` con `library(tidyverse)`, se cargan automáticamente los paquetes más importantes de este ecosistema.
 
-```{r, eval=TRUE, echo=TRUE, message=TRUE, warning=TRUE}
+```{r, eval=TRUE, echo=TRUE, message=TRUE, warning=F}
 # Al cargar 'tidyverse', nos informa qué paquetes se adjuntan
 library(tidyverse)
 ```
@@ -76,13 +76,13 @@ Esta gramática consistente es lo que permite que las funciones se encadenen de 
 
 ## El Operador Pipe `%>%`: Escribiendo Código como se Piensa {.smaller background-color="white"}
 
-::: {style="font-size: 0.9em; line-height: 1.2;"}
+::: {style="font-size: 0.87em; line-height: 1.2;"}
 El *pipe* (tubería) es el operador `%>%` y es la pieza central que hace que el código del Tidyverse sea tan legible.
 
 -   **¿Qué hace?** Toma el resultado del código a su izquierda y lo pasa como el **primer argumento** de la función a su derecha.
 -   **¿Por qué es útil?** Nos permite encadenar operaciones de izquierda a derecha, como si estuviéramos leyendo una frase, en lugar de anidar funciones.
 
-**Sin pipe (difícil de leer "de adentro hacia afuera"):**
+**Sin pipe (difícil de leer "de adentro hacia afuera"):**  
 `summarise(group_by(filter(casen, region == 13), sexo), edad_promedio = mean(edad, na.rm = TRUE))`
 
 **Con pipe (claro y secuencial "de izquierda a derecha"):**
@@ -111,10 +111,9 @@ casen |>
   summarise(edad_promedio = mean(edad, na.rm = TRUE))
 ```
 
-**Diferencias:**
 
 -   El pipe nativo `|>` es un poco más rápido pero, por ahora, ligeramente **menos flexible** que `%>%`. Algunas funciones y paquetes más antiguos del Tidyverse aún no son totalmente compatibles con él.
-
+-   Se puede escribir el pipe pulsando CTRL + SHIFT + M. Se peude cambiar el pipe escrito con dicho atajo en las opciones de RStudio.
 
 ---
 title_slide_background: "#008080"
@@ -152,26 +151,58 @@ casen_sin_ids <- casen %>%
 ```
 `select()` tiene "helpers" muy útiles como `starts_with("y_")` para seleccionar todas las variables que empiezan con "y_", o `everything()` para mover columnas de lugar.
 
-## `filter()`: Trabajando con Filas {.smaller background-color="white"}
+## La Lógica del Filtrado: Operadores de Comparación {.smaller background-color="white"}
 
-`filter()` nos permite quedarnos solo con las observaciones que cumplen una o más condiciones lógicas.
+Antes de usar `filter()`, necesitamos entender cómo construir las "condiciones lógicas". El primer paso es usar **operadores de comparación** para crear una pregunta que R pueda responder con `TRUE` o `FALSE`.
+  
+::: {style="font-size: 0.7em; line-height: 1.2;"}  
 
-**Sintaxis:** `datos %>% filter(condicion_logica)`
 
--   **Operadores de Comparación:** `==` (igual a), `!=` (no igual a), `>` (mayor que), `<` (menor que).
--   **Operadores Lógicos:** `&` (y), `|` (o), `!` (no).
--   **Operador de Pertenencia:** `%in%`.
+| Operador | Significado | Ejemplo |
+|:---:|:---|:---|
+| `==` | **Igual a** | `region == 13` (¿La región es igual a 13?) |
+| `!=` | **No igual a** | `sexo != 1` (¿El sexo es distinto de 1?) |
+| `>` | **Mayor que** | `edad > 60` (¿La edad es mayor a 60?) |
+| `>=` | **Mayor o igual que** | `esc >= 12` (¿La escolaridad es 12 años o más?) |
+| `<` | **Menor que** | `ingreso < 500000` (¿El ingreso es menor a 500.000?) |
+| `<=` | **Menor o igual que** | `num_hijos <= 2` (¿El número de hijos es 2 o menos?) |
+| `%in%` | **Pertenece a un conjunto** | `region %in% c(5, 8)` (¿La región es 5 u 8?) |
+
+:::
+
+## Combinando Condiciones: Operadores Lógicos {.smaller background-color="white"}
+
+A menudo, nuestras preguntas de investigación requieren combinar varias condiciones. Para esto, usamos los **operadores lógicos**.  
+
+::: {style="font-size: 0.7em; line-height: 1.2;"}  
+
+| Operador | Significado | Lógica | Ejemplo |
+|:---:|:---|:---|:---|
+| `&` | **Y (AND)** | Devuelve `TRUE` solo si **ambas** condiciones son verdaderas. | `sexo == 2 & edad > 60` (Personas que son mujeres **Y** mayores de 60). |
+| `|` | **O (OR)** | Devuelve `TRUE` si **al menos una** de las condiciones es verdadera. | `region == 5 | region == 8` (Personas que son de la región 5 **O** de la región 8. Es equivalente a `region %in% c(5, 8)`). |
+| `!` | **NO (NOT)** | Invierte una condición lógica. Devuelve `TRUE` si la condición es falsa. | `!is.na(ingreso)` (Personas cuyo ingreso **NO** es un valor perdido). |
+:::
+El orden de las operaciones importa. Al igual que en matemáticas, es una buena práctica usar paréntesis `()` para agrupar condiciones complejas y asegurar que R las evalúe en el orden que queremos.
+
+
+
+## `filter()`: Aplicando la Lógica para Seleccionar Filas {.smaller background-color="white"}
+
+Ahora sí, la función `filter()` toma estas condiciones lógicas y las usa para seleccionar solo las filas (observaciones) de nuestra base de datos donde la condición completa es `TRUE`.
+
+**Sintaxis:** `datos %>% filter(condicion_logica_1 & condicion_logica_2)`
 
 ```{r, eval=FALSE, echo=TRUE}
-# Filtrar para quedarse solo con personas de la Región Metropolitana (código 13)
+# Ejemplo 1: Filtrar para quedarse solo con personas de la Región Metropolitana (código 13)
 casen_rm <- casen %>% 
   filter(region == 13)
 
-# Filtrar por mujeres (código 2) mayores de 60 años
+# Ejemplo 2: Filtrar por mujeres (código 2) mayores de 60 años
 mujeres_mayores <- casen %>% 
   filter(sexo == 2 & edad > 60)
 
-# Filtrar por personas de las regiones de Valparaíso (5) o Biobío (8)
+# Ejemplo 3: Filtrar por personas de las regiones de Valparaíso (5) o Biobío (8)
+# Usamos %in% por ser más compacto que usar el operador | (o)
 casen_v_viii <- casen %>% 
   filter(region %in% c(5, 8))
 ```
@@ -235,7 +266,7 @@ title_slide_background: "#008080"
 
 # 3. Análisis por Grupos: `group_by()` + `summarise()`
 
-## La Combinación más Poderosa {.smaller background-color="white"}
+## Obteniendo estadísticos por grupo {.smaller background-color="white"}
 
 La combinación de `group_by()` y `summarise()` es el flujo de trabajo estándar para el análisis descriptivo en el Tidyverse. Nos permite responder preguntas del tipo: "¿Cuál es [estadístico] por [grupo]?".
 

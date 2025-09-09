@@ -1,7 +1,7 @@
 ---
-title: "Análisis de regresión lineal múltiple II"
-linktitle: "6: Análisis de regresión lineal múltiple II"
-date: "2023-09-30"
+title: "Manipulación de Datos con dplyr: Respondiendo Preguntas con datos sociales"
+linktitle: "6: Manipulación de Datos con dplyr"
+date: "2025-09-22"
 menu:
   example:
     parent: Ejemplos
@@ -12,198 +12,237 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r set up, echo = F}
-knitr::opts_knit$set(sql.max.print = 10)
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es aprender a manipular y transformar datos en R utilizando la "gramática" del paquete `dplyr`. Al finalizar, serás capaz de:
+
+*   Seleccionar y filtrar datos usando tanto R base como `dplyr`, comprendiendo sus diferencias.
+*   Entender y aplicar el operador *pipe* (`%>%`) para crear flujos de trabajo legibles.
+*   Utilizar los cinco verbos principales de `dplyr` (`select`, `filter`, `arrange`, `mutate`, `summarise`).
+*   Responder preguntas de investigación simples mediante la combinación de `group_by()` y `summarise()`.
+
+## 1. Preparación del Entorno (Recordatorio)
+
+Un flujo de trabajo reproducible comienza con una buena organización. **No olvides realizar estos pasos cada vez que inicies un nuevo análisis.**
+
+### 1.1 Crear un Proyecto de RStudio
+
+Siempre trabaja dentro de un **Proyecto (`.Rproj`)**. Esto asegura que tus rutas a los archivos sean relativas y que tu código funcione en cualquier computador.
+
+**Acción:** Si no lo has hecho, crea un Proyecto de RStudio para esta unidad. Guarda este archivo `.qmd` y la base de datos CASEN en carpetas dentro de tu proyecto.
+
+### 1.2 Cargar Paquetes
+
+Recuerda la regla de oro: los paquetes **se instalan una vez** con `install.packages()`, pero **se cargan siempre** al inicio de cada sesión con `library()`.
+
+```{r setup, message=FALSE, warning=FALSE}
+# Cargar los paquetes que usaremos hoy
+library(haven)
+library(tidyverse)
 ```
 
-## 0. Objetivo del práctico
+### 1.3 Cargar la Base de Datos
 
-En este práctico aprenderemos a aplicar la **regresión lineal múltiple** en R, utilizando variables continuas, **dicotómicas y categóricas**, para entender cómo influencian una variable dependiente. También profundizaremos en el proceso de **parcialización** para controlar el efecto de las variables independientes y aislar el efecto de cada predictor.
+Vamos a cargar la Encuesta CASEN 2022. Para ello, seguiremos el método estándar de trabajo: descargar el archivo y cargarlo en R desde nuestro proyecto.
 
+**Paso 1: Descargar los datos**
 
-## 1. Cargar los datos de la encuesta CASEN
+Primero, debes descargar la base de datos oficial. Puedes encontrarla en el sitio del **Observatorio Social del Ministerio de Desarrollo Social y Familia**.
 
-Primero, cargamos los datos de la CASEN y seleccionamos las variables que nos interesan: los ingresos del trabajo, los años de escolaridad, la edad, el sexo y el nivel educativo.
+-   **Enlace de descarga:** [Encuesta CASEN 2022 - Base de Datos SPSS](https://observatorio.ministeriodesarrollosocial.gob.cl/encuesta-casen-2022)
+-   **Acción:** Descarga el archivo `.zip` que contiene la base de datos en formato SPSS (`.sav`).
 
+**Paso 2: Organizar tus archivos**
 
-```{r}
-if (!require(pacman)) {
-  install.packages("pacman")
-}
+Una vez descargado, descomprime el archivo `.zip` y guarda el archivo `.sav` (que se llama "Base de datos Casen 2022 SPSS_18 marzo 2024.sav") en una carpeta llamada `datos` dentro de tu Proyecto de RStudio.
 
-pacman::p_load(haven, dplyr, texreg, corrplot)
+**Paso 3: Cargar los datos en R**
 
-temp <- tempfile() #Creamos un archivo temporal
-download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2022/Base%20de%20datos%20Casen%202022%20SPSS.sav.zip",temp) #descargamos los datos
-casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav")) #cargamos los datos
-unlink(temp); remove(temp) #eliminamos el archivo temporal
+Ahora que el archivo está en su lugar, usamos la función `read_sav()` del paquete `haven` para importarlo a nuestro entorno de R. Le asignamos el nombre `casen` a nuestra base de datos.
 
-casen2 <- casen %>% 
-  select(esc, sexo, ytrabajocor, edad, educ) 
+```{r load-manual, eval=FALSE, echo=TRUE}
+# Usamos una ruta relativa porque el archivo está dentro de nuestro proyecto
+casen <- haven::read_sav("datos/Base de datos Casen 2022 SPSS_18 marzo 2024.sav")
 ```
 
-## 2. Relación entre los ingresos la escolaridad y la edad
+---
 
-Primero, analizamos cómo los años de escolaridad y la edad afectan los ingresos del trabajo. Empezamos con una exploración de las correlaciones entre estas variables y realizamos regresiones lineales simples y múltiples.
+*Nota sobre la reproducibilidad:* Para que este práctico y el sitio web del curso funcionen de manera autocontenida, a continuación se incluye un código que realiza la descarga y carga de forma automática. **No necesitas ejecutar este código si ya cargaste la base manualmente**, pero es una buena práctica conocerlo.
 
-```{r }
-# Seleccionamos las variables del modelo
-variables_modelo <- casen2 %>% 
-  select(ytrabajocor, esc, edad)
-
-# Calculamos la matriz de correlación
-matriz_correlacion <- cor(variables_modelo, use = "complete.obs")
-
-# Generamos el corrplot
-corrplot(matriz_correlacion, method = "color", type = "upper", 
-         tl.col = "black", tl.srt = 45, 
-         addCoef.col = "black", number.cex = 0.7, 
-         cl.cex = 0.8, tl.cex = 0.8, mar = c(0,0,1,0),
-         title = "Matriz de Correlación")
+```{r load-casen, message=FALSE, warning=FALSE, cache=TRUE}
+# Código automático para cargar los datos
+temp <- tempfile() 
+download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2022/Base%20de%20datos%20Casen%202022%20SPSS.sav.zip", temp)
+casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav"))
+unlink(temp); remove(temp)
 ```
 
-Ahora realizamos regresiones para analizar el efecto de la escolaridad y la edad sobre los ingresos, primero de forma separada y luego conjuntamente a fin de observar al diferencia en la relación de las variables al introducir controles.
+---
 
-```{r, results='asis'}
-modelo1 <- lm(ytrabajocor ~ esc , data = casen2)
-modelo2 <- lm(ytrabajocor ~ edad, data = casen2)
-modelo3 <- lm(ytrabajocor ~ esc + edad, data = casen2)
+Ahora que tenemos nuestra base `casen` cargada, crearemos una submuestra más pequeña para trabajar de manera más cómoda y eficiente.
 
-htmlreg(list(modelo1,modelo2,modelo3))
-#screenreg(list(modelo1,modelo2,modelo3))
-
-```
- 
-
-**Modelo 1 (Escolaridad):**
-El coeficiente para escolaridad es 77,114. Esto significa que por cada año adicional de escolaridad, los ingresos del trabajo aumentan en promedio 77,114 unidades monetarias.
-
-
-**Modelo 2 (Edad):**
-El coeficiente para edad es -1,403. Esto sugiere que, por cada año adicional de edad, los ingresos disminuyen en promedio 1,403 unidades, lo que podría reflejar efectos de antigüedad o envejecimiento en el mercado laboral.
-
-**Modelo 3 (Escolaridad y Edad):**
-
-Al considerar ambos predictores juntos, el coeficiente de escolaridad aumenta a 88,022, lo que sugiere que parte del impacto de la escolaridad estaba siendo "ocultado" por la edad. El coeficiente de edad cambia a 7,681, lo que indica que, al controlar por la escolaridad, la edad tiene un efecto positivo en los ingresos.
-
-
-## 3. Incluir predictores dicotómicos en el modelo
-
-
-El sexo es una variable dicotómica en este modelo. Las variables dicótomicas deben ser codificadas como 0 y 1 para integrarlas apropiadamente al modelo, y poder interpretar el beta como la diferencia promedio entre los grupos, controlando por las demás variables del modelo. R hace automáticamente esto si la variable introducida es de tipo factor (o le decimos que la trate como tal con la función factor())
-
-```{r, results='asis'}
-modelo1 <- lm(ytrabajocor ~ esc , data = casen2)
-modelo2 <- lm(ytrabajocor ~ factor(sexo), data = casen2)
-modelo3 <- lm(ytrabajocor ~ esc + factor(sexo), data = casen2)
-
-htmlreg(list(modelo1,modelo2,modelo3))
-#screenreg(list(modelo1,modelo2,modelo3))
+```{r create-subset}
+# Creamos una submuestra con las variables que usaremos hoy
+casen_sub <- casen[, c("folio", "pco1", "region", "sexo", "edad", "esc", "ytotcorh")]
 ```
 
-**Modelo 2 (Sexo):**
-El coeficiente para sexo es -167,442. Esto significa que los hombres ganan en promedio 167,442 unidades más que las mujeres, cuando no se controla por ninguna otra variable.
+## 2. R Base vs. `dplyr`: Un Contraste
 
-**Modelo 3 (Escolaridad y Sexo):**
-Al incluir tanto la escolaridad como el sexo, los hombres ganan 235,612 unidades más que las mujeres en promedio, lo que sugiere que la brecha salarial de género se mantiene incluso después de controlar por los años de escolaridad.
+Antes de sumergirnos en `dplyr`, comparemos cómo se realizan dos tareas básicas en R base para apreciar las ventajas de la nueva gramática.
 
+### 2.1 Seleccionar Variables
 
-## 4. Inclusión de variables categóricas politómicas en RLM
+**Objetivo:** Crear un `data.frame` solo con `edad`, `sexo` y `esc`.
 
-Vamos a transformar la variable de nivel educativo en un conjunto de variables dummies para incluirlas en el modelo. Esto nos permitirá comparar distintos niveles educativos entre sí.
+**Con R Base:**
+```{r select-base}
+casen_base_select <- casen_sub[, c("edad", "sexo", "esc")]
+head(casen_base_select)
+```
+Usamos la notación de corchetes `[filas, columnas]`. Dejamos el espacio de las filas en blanco para indicar que queremos *todas las filas*, y le pasamos un vector de nombres de columnas `c("edad", "sexo", "esc")` para seleccionar solo esas variables.
 
-```{r}
-casen2 <- casen2 %>% 
-  mutate(educ_simple = case_when(
-    educ %in% c(0, 1, 2, 3, 4) ~ 1,  # Sin educación o Básica
-    educ %in% c(5, 6) ~ 2,           # Media completa o incompleta
-    educ %in% c(7, 8) ~ 3,           # Técnico nivel superior
-    educ %in% c(9, 10, 11, 12) ~ 4   # Profesional o Posgrado
-  ))   %>%
+**Con `dplyr`:**
+```{r select-dplyr}
+casen_dplyr_select <- select(casen_sub, edad, sexo, esc)
+head(casen_dplyr_select)
+```
+La función `select()` es más explícita. El primer argumento es la base de datos, y los siguientes son los nombres de las variables que queremos mantener, sin comillas.
+
+### 2.2 Filtrar Casos
+
+**Objetivo:** Quedarnos solo con las personas mayores de 65 años.
+
+**Con R Base:**
+```{r filter-base}
+casen_base_filter <- casen_sub[casen_sub$edad > 65, ]
+dim(casen_base_filter)
+```
+Aquí, la condición lógica `casen_sub$edad > 65` se aplica en el espacio de las filas. R evalúa esta condición para cada fila y se queda solo con aquellas donde el resultado es `TRUE`.
+
+**Con `dplyr`:**
+```{r filter-dplyr}
+casen_dplyr_filter <- filter(casen_sub, edad > 65)
+dim(casen_dplyr_filter)
+```
+El verbo `filter()` hace la misma operación, pero de una forma más legible: "Filtra la base `casen_sub` donde la edad sea mayor a 65".
+
+## 3. La Gramática de `dplyr` y el Poder del *Pipe* `%>%`
+
+### 3.1 La Lógica de las Funciones de `dplyr`
+
+El paquete `dplyr` es tan poderoso porque sus funciones ("verbos") siguen una **gramática simple y consistente**:
+
+1.  **El primer argumento es siempre un `data.frame`**.
+2.  Los argumentos siguientes describen qué hacer, usando los nombres de las variables **sin comillas**.
+3.  **El resultado es siempre un nuevo `data.frame`**. `dplyr` nunca modifica tus datos originales.
+
+### 3.2 ¿Por qué funciona el *Pipe*?
+
+El operador *pipe* (`%>%`) toma lo que está a su izquierda y lo pone como **primer argumento** de la función a su derecha.
+
+Esta es la razón por la que `dplyr` y el *pipe* son la combinación perfecta: como todos los verbos de `dplyr` esperan un `data.frame` como primer argumento, podemos encadenarlos fluidamente.
+
+**Sin el *pipe* (funciones anidadas):**
+El código se lee "de adentro hacia afuera", lo que es poco intuitivo.
+```{r nested-code}
+casen_anidado <- filter(
+  select(casen_sub, region, edad, ytotcorh),
+  region == 13 # Usamos el código numérico de la RM
+)
+head(casen_anidado)
+```
+
+**Con el *pipe* (`%>%`):**
+El código se lee de izquierda a derecha. ¡Mucho más intuitivo!
+```{r pipe-code}
+# Atajo para el pipe: Ctrl + Shift + M
+casen_pipe <- casen_sub %>%
+  select(region, edad, ytotcorh) %>%
+  filter(region == 13)
+
+head(casen_pipe)
+```
+**A partir de ahora, usaremos el *pipe* para todas nuestras operaciones.**
+
+## 4. Aplicando los Verbos de `dplyr`
+
+Ahora, usemos esta nueva gramática para responder preguntas de investigación.
+
+### 4.1 `arrange()`: Ordenando los datos
+
+**Pregunta:** ¿Cuáles son los 5 hogares con mayor ingreso (`ytotcorh`) en nuestra submuestra?
+
+```{r arrange-example}
+# Usamos arrange() con desc() para ordenar de mayor a menor
+casen_sub %>%
+  filter(pco1 == 1) %>% # 1. Filtramos solo jefes de hogar
+  arrange(desc(ytotcorh)) %>%
+  head(5) # Usamos head() para ver solo los primeros 5 resultados
+```
+**Interpretación del output:** La tabla muestra las 5 filas que corresponden a los jefes de los hogares con los ingresos más altos en toda la muestra.
+
+### 4.2 `mutate()`: Creando nuevas variables
+
+`mutate()` nos permite crear nuevas columnas. La **buena práctica** es crear nuevas columnas con nombres diferentes (ej. `sexo_factor`) para no perder la información original (ej. `sexo`).
+
+**Objetivo:** Crear una variable con la edad en meses y convertir `sexo` y `region` a factores para que sean más legibles.
+
+```{r mutate-example}
+casen_procesada <- casen_sub %>%
   mutate(
-    dummy_media_completa = ifelse(educ_simple == 2, 1, 0),
-    dummy_superior_tecnica = ifelse(educ_simple == 3, 1, 0),
-    dummy_superior_profesional = ifelse(educ_simple == 4, 1, 0)
+    edad_meses = edad * 12, # Un cálculo aritmético simple
+    sexo_factor = as_factor(sexo), # Creamos una nueva variable factor
+    region_factor = as_factor(region) # Creamos otra variable factor
+  )
+
+# Veamos las nuevas columnas (al final a la derecha)
+head(casen_procesada)
+```
+**Interpretación del output:** Nuestra nueva base de datos `casen_procesada` ahora tiene 10 columnas. Las tres últimas son las que acabamos de crear. `sexo_factor` y `region_factor` ahora contienen texto legible en lugar de códigos numéricos.
+
+### 4.3 `group_by()` y `summarise()`: El corazón del análisis descriptivo
+
+**Pregunta 1:** ¿Cuál es el promedio de años de escolaridad (`esc`) por sexo?
+
+Ahora podemos usar nuestra nueva variable `sexo_factor` para que el resultado sea más claro.
+
+```{r groupby-summarise-1}
+casen_procesada %>%
+  group_by(sexo_factor) %>% # Agrupamos los datos por la variable factor
+  summarise(
+    escolaridad_promedio = mean(esc, na.rm = TRUE), # Calculamos la media para cada grupo
+    n_casos = n() # n() es una función especial que cuenta los casos por grupo
+  )
+```
+**Interpretación del output:** La tabla resultante muestra que, en promedio, los hombres en la muestra tienen 11.2 años de escolaridad, mientras que las mujeres tienen 11.1. La columna `n_casos` nos informa sobre el número de personas en cada grupo.
+
+**Pregunta 2 (más compleja):** ¿Cuál es el ingreso promedio del hogar (`ytotcorh`) en cada región, pero considerando solo a los jefes de hogar (`pco1 == 1`)? Ordena los resultados de mayor a menor.
+
+```{r groupby-summarise-2}
+casen %>% # Volvemos a la base original porque necesitamos pco1
+  mutate(region_factor = as_factor(region)) %>% # Creamos el factor de región
+  filter(pco1 == 1) %>% # 1. Filtramos solo jefes de hogar
+  group_by(region_factor) %>% # 2. Agrupamos por la región (factor)
+  summarise(
+    ingreso_hog_promedio = mean(ytotcorh, na.rm = TRUE) # 3. Calculamos la media
   ) %>%
-  mutate(educ_simple_factor = factor(educ_simple,
-                                     levels = c(1, 2, 3, 4),
-                                     labels = c("Menos que Media", "Media Completa", 
-                                                "Superior Técnica", "Superior Profesional")))
-  
-  
+  arrange(desc(ingreso_hog_promedio)) # 4. Ordenamos el resultado
 ```
+**Interpretación del output:** Esta tabla nos muestra un ranking de las regiones según el ingreso promedio de sus hogares. Podemos ver claramente que la Región Metropolitana tiene el promedio más alto, mientras que la Región de Ñuble tiene el más bajo, revelando patrones de desigualdad territorial.
 
-| educ_simple_factor    | dummy_media_completa | dummy_superior_tecnica | dummy_superior_profesional |
-|-----------------------|----------------------|------------------------|----------------------------|
-| Menos que Media        | 0                    | 0                      | 0                          |
-| Media Completa         | 1                    | 0                      | 0                          |
-| Superior Técnica       | 0                    | 1                      | 0                          |
-| Superior Profesional   | 0                    | 0                      | 1                          |
+## 5. Actividad de Desafío
 
+Ahora te toca a ti. Usando la base `casen_procesada` y la gramática de `dplyr`, escribe el código necesario para responder la siguiente pregunta de investigación:
 
+**Pregunta:** ¿Cuál es la **edad promedio** y el **promedio de años de escolaridad** para cada **región**? Asegúrate de que los resultados estén ordenados de mayor a menor años de escolaridad promedio.
 
-```{r, results='asis'}
-modelo1 <- lm(ytrabajocor ~ edad, data = casen2)
-modelo2 <- lm(ytrabajocor ~ factor(educ_simple_factor), data = casen2)
-modelo2.2 <- lm(ytrabajocor ~ dummy_media_completa+ dummy_superior_tecnica + dummy_superior_profesional, data = casen2)
-modelo3 <- lm(ytrabajocor ~ edad + factor(educ_simple_factor), data = casen2)
-
-htmlreg(list(modelo1,modelo2,modelo2.2,modelo3), custom.coef.names = c("Intercepto", "Edad","Media completa (ref. menos que media)",
-                                                             "Superior Técnica", "Superior Profesional" ,"Media completa (ref. menos que media)",
-                                                             "Superior Técnica", "Superior Profesional"))
+```{r, eval=FALSE, echo=TRUE}
+# 
 
 ```
 
-### Interpretación de los coeficientes (Modelo 4)
+## 6. Reflexiones Finales
 
-1. **Intercepto**: 
-   - El intercepto de **123,364** indica el ingreso promedio estimado para una persona con **menos que educación media** y cuya **edad es 0**. Aunque este valor no tiene un significado práctico directo (ya que la edad 0 no es realista), es necesario para el ajuste del modelo.
+En este práctico, hemos aprendido a usar la poderosa gramática de `dplyr` para manipular datos de forma eficiente y reproducible. Hemos visto que con unos pocos verbos (`select`, `filter`, `arrange`, `mutate`, `summarise`) y el operador `%>%`, podemos pasar de una base de datos cruda a una tabla de resultados que responde a nuestras preguntas de investigación.
 
-2. **Edad**:
-   - El coeficiente para la edad es **5,178.45**. Esto indica que por cada año adicional de edad, los ingresos aumentan en promedio en **5,178.45** unidades, **controlando** por el nivel educativo. Es decir, si mantenemos constante el nivel educativo, las personas más viejas tienden a ganar más.
-
-3. **Media Completa (referencia: menos que media)**:
-   - El coeficiente de **185,782.88** sugiere que las personas que completaron la **educación media** ganan en promedio **185,782.88** unidades más que aquellas con **menos que educación media**, manteniendo constante la edad.
-
-4. **Superior Técnica**:
-   - El coeficiente de **344,560.44** indica que las personas con **educación técnica superior** ganan en promedio **344,560.44** unidades más que aquellas con **menos que media**, ajustando por edad.
-
-5. **Superior Profesional**:
-   - El coeficiente de **868,457.15** indica que las personas con **educación superior profesional** ganan en promedio **868,457.15** unidades más que aquellas con **menos que media**, manteniendo constante la edad.
-
-### Interpretación de R² y R² ajustado
-
-- **R² = 0.15**: Esto significa que el **15% de la variabilidad** en los ingresos del trabajo está siendo explicada por el modelo, que incluye la edad y el nivel educativo.
-  
-- **R² ajustado = 0.15**: El valor ajustado penaliza el número de predictores incluidos en el modelo, pero como es igual a R², indica que la inclusión de los predictores educativos y de edad es válida para explicar la variabilidad en los ingresos.
-
-En resumen, el modelo sugiere que tanto la **edad** como los **niveles educativos superiores** están asociados con mayores ingresos, y estos efectos son moderadamente explicativos (15%) de la variabilidad en los ingresos laborales.
-
-
-## 5. Proceso de parcialización
-### ¿Qué es la parcialización?
-Cuando tenemos varias variables independientes relacionadas entre sí, como edad y escolaridad, el efecto de cada una puede estar influenciado por la otra. La parcialización consiste en ajustar una variable predictora eliminando el efecto de las otras.
-
-### Crear residuos parciales
-Podemos ilustrar el proceso de parcialización al ajustar cada variable por las otras y obtener sus residuos.
-```{r}
-casen2p<-casen2 %>% 
-  select(ytrabajocor, edad, esc) %>% 
-  filter(!is.na(ytrabajocor) & !is.na(esc) & !is.na(edad))
-
-mod_esc <- lm(esc ~ edad, data = casen2p)
-mod_edad <- lm(edad ~ esc, data = casen2p)
-
-casen2pp<-data.frame(casen2p,  mod_esc$residuals, mod_edad$residuals)
-head(casen2pp)
-```
-
-Ahora obtenemos la regresión lineal múltiple y las regresiones lineales pero utilizando las variables parcializadas, es decir, los residuos de la construcción de los modelos anteriores.
- 
-```{r, results='asis'}
-
-htmlreg(list(lm(ytrabajocor ~ mod_esc.residuals  , data = casen2pp),
-             lm(ytrabajocor ~ mod_edad.residuals  , data = casen2pp),
-             lm(ytrabajocor ~  esc + edad , data = casen2p)))
-```
- 
+En la próxima clase, profundizaremos en la creación de variables más complejas, como índices, usando `mutate()` y `case_when()`.

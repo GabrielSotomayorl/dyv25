@@ -1,208 +1,227 @@
 ---
-title: "Clase 7 <br> Regresión Lineal Múltiple III Inferencia Estadística"
-subtitle: "Análisis Avanzado de Datos"
+title: "Creación, Reestructuración y Combinación de Datos"
+subtitle: "Unidad 3: Descripción y Visualización de Datos"
 author: "Gabriel Sotomayor"
-format: 
+date: "09-29-2025"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
 ---
 
-## [Evaluaciones]{style="color:#FFFFFF;"} {.dark-background}
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-**Tarea 2: 10 de octubre**\
-- Regresión lineal múltiple
+-   **Aprender** técnicas de recodificación de variables usando `case_when()`.
+-   **Comprender y aplicar** la lógica de reestructurar datos de formato ancho a largo (`pivot_longer()`).
+-   **Aprender** a combinar o cruzar dos tablas de datos diferentes usando `left_join()`.
+-   **Distinguir** conceptualmente entre la construcción de índices y tipologías.
 
-**Informe 1: 30 de Octubre**\
-- Regresión lineal múltiple o regresión logística  
-- Se subirà la pauta la pròxima semana  
+---
+title_slide_background: "#008080"
+---
 
-# Recordatorio clase anterior
+# 1. Creando Variables con Lógica Condicional
 
-## Introducción al Modelo de Regresión Múltiple {.smaller background-color="white"}
+## Repaso y Conexión {.smaller background-color="white"}
 
-Un modelo de regresión múltiple examina la relación entre una **variable dependiente** y **varias variables independientes o predictores**.\
-La regresión múltiple permite **controlar otras variables** mientras se evalúa el efecto de una variable predictora específica.\
-Ejemplo: Si estudiamos la relación entre el ejercicio y la pérdida de peso, también podemos controlar la cantidad de alimentos consumidos para aislar su efecto.
+En la clase anterior, aprendimos la "gramática" de `dplyr` para manipular tablas:
 
-Ecuación básica del modelo:
+-   **`select()`** para columnas.
+-   **`filter()`** para filas.
+-   **`arrange()`** para ordenar.
+-   **`group_by()` + `summarise()`** para resúmenes por grupo.
 
-$$ Y = b_0 + b_1 X_1 + b_2 X_2 + \dots + b_k X_k + \epsilon $$ Donde $Y$ es la variable dependiente, $b_0$ es la constante o intercepto, $X_1, X_2, \dots X_k$ son las variables independientes, $b_1, b_2, \dots b_k$ son los coeficientes de regresión, y $\epsilon$ es el error.
+Hoy nos enfocaremos en el verbo más creativo, **`mutate()`**, y en tareas más avanzadas: crear nuevas variables a partir de condiciones, cambiar la forma de nuestras tablas y unir diferentes bases de datos.
 
-## Objetivo de la sesión {.center background-color="white"}
+## Recodificación Condicional: `ifelse()` vs. `case_when()` {.smaller background-color="white"}
 
-Introducir la inferencia estadística en el contexto de Regresión Lineal Múltiple.
+Para crear variables basadas en condiciones, tenemos dos herramientas principales:
 
-## $R^2$ en Regresión Lineal Múltiple {.smaller background-color="white"}
+:::::: columns
+::: {.column width="50%"}  
 
--   **Definición de** $R^2$:
-    -   El $R^2$ mide la proporción de la **variabilidad explicada** por el modelo en relación a la variabilidad total.
-    -   Se interpreta como el porcentaje de la variación en la variable dependiente que es explicado por las variables independientes.
-
-$$ R^2 = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2} $$ - Donde: - $\hat{y}_i$ son los valores predichos. - $y_i$ son los valores observados. - $\bar{y}$ es el promedio de la variable dependiente.
-
--   **Limitaciones**:
-    -   El $R^2$ puede aumentar al agregar más predictores, incluso si no aportan significativamente al modelo.
-
-------------------------------------------------------------------------  
-
-## $R^2$ Ajustado y su Utilidad {.smaller background-color="white"}
-
--   El $R^2$ ajustado corrige la sobreestimación del $R^2$ al penalizar por el número de predictores en el modelo.
-
--   Tiene en cuenta tanto el **número de predictores** como el **tamaño de la muestra**.
-
--   **Cálculo**:
-
-    -   $$ R^2_{ajustado} = 1 - \left( \frac{(1 - R^2)(n - 1)}{n - k - 1} \right) $$
-    -   Donde:
-        -   $n$ es el número de observaciones.
-        -   $k$ es el número de predictores en el modelo.
-    -   A diferencia del $R^2$, el $R^2$ ajustado **disminuye** si se agregan predictores que no mejoran el modelo, ayudando a evitar el sobreajuste.
-    -   Es más útil cuando se compara la calidad de diferentes modelos con un número distinto de predictores.
-
-
-## Ejemplo con CASEN {.smaller background-color="white"}
-
-Trabajaremos con CASEN utilizando como variable dependiente los ingresos del trabajo, y como variable predictora la edad y los años de escolaridad. Utilizaremos esto como base para introducir los conceptos de inferencia respecto de los coeficientes de regresión.
-
-```{r}
-library(haven)
-library(tidyverse)
-library(texreg)
-
-casen2 <- read_sav("data/casen.sav")
-
-casen2 %>% 
-  filter(!is.na(ytrabajocor)) %>% 
-  select(ytrabajocor, esc, edad) %>% 
-  head()
-
+**`ifelse()`**  
+-   **Sintaxis:** `ifelse(condicion, valor_si_verdadero, valor_si_falso)`  
+-   **Uso ideal:** Para recodificaciones **binarias** (dos resultados posibles).  
+-   **Ejemplo:** Crear una variable "mayor de edad".  
+```{r, eval=FALSE, echo=TRUE}
+datos %>%
+  mutate(mayor_edad = ifelse(edad >= 18, "Sí", "No"))
 ```
-
-## Ejemplo con CASEN {.smaller background-color="white"}
-
-
-```{r, results='asis'}
-modelo3 <- lm(ytrabajocor ~ esc + edad, data = casen2)
-
-htmlreg(list(modelo3))
-
-```
-
-## Estadístico vs. Parámetro {.smaller background-color="white"}
-
-- **Estadístico**: Es un valor calculado a partir de los datos de una muestra. Ejemplos incluyen la media muestral ($\bar{x}$), la desviación estándar ($s$) y los coeficientes de regresión estimados ($b_j$).
-- **Parámetro**: Es un valor que describe una característica de una población. Ejemplos incluyen la media poblacional ($\mu$) y el coeficiente de regresión verdadero ($\beta_j$).
-- Los **estadísticos** se utilizan para hacer **inferencia** sobre los **parámetros** desconocidos de la población.
-
-## Variabilidad de las Muestras {.smaller background-color="white"}
-
-- La variabilidad de las muestras se refiere a cómo los **estadísticos** pueden cambiar de una muestra a otra. Esto se debe a la **aleatoriedad** inherente en el proceso de muestreo.
-- La **distribución muestral** de un estadístico describe cómo varía dicho estadístico en múltiples muestras de una misma población.
-- Ejemplo: Si tomamos varias muestras de una población, el valor del coeficiente de regresión estimado ($b_j$) puede ser diferente en cada muestra.
-
-## Inferencia en la Regresión Lineal {.smaller background-color="white"}
-
-- En regresión lineal, utilizamos los **estadísticos muestrales** (por ejemplo, $b_0$, $b_1$, $b_2$, etc.) para hacer inferencias sobre los **parámetros poblacionales** ($\beta_0$, $\beta_1$, $\beta_2$, etc.).
-- Debido a la **variabilidad muestral**, cada estimación está sujeta a **incertidumbre**. Esta incertidumbre se cuantifica a través del **error estándar** y se refleja en los **intervalos de confianza**.
-- La **significancia estadística** nos ayuda a determinar si un coeficiente de regresión es diferente de cero en la población.
-
-## Estimación e Interpretación de los Betas {.smaller background-color="white"}
-
-- **Estimación**: Los coeficientes de regresión ($b_j$) se estiman utilizando el método de **mínimos cuadrados ordinarios (OLS)**, que minimiza la suma de los residuos al cuadrado.
-- **Interpretación**:
-  - Cada **beta ($\beta_j$)** representa el cambio esperado en la variable dependiente ($Y$) por un cambio unitario en la variable independiente ($X_j$), manteniendo las demás variables constantes.
-  - Ejemplo: En la regresión de los ingresos del trabajo sobre escolaridad y edad, el coeficiente de escolaridad representa el cambio en los ingresos por cada año adicional de educación, manteniendo la edad constante.
-
-## Relación entre el Beta y el Error Estándar  {.smaller background-color="white"}
-
-- **Coeficiente Beta ($b_j$)**: Representa la magnitud y dirección del efecto de la variable independiente ($X_j$) sobre la variable dependiente ($Y$).
-- **Error Estándar (SE)**: Mide la precisión de la estimación del coeficiente. Un error estándar más pequeño indica una estimación más precisa del coeficiente.
-- **Prueba de Hipótesis**: Para determinar si un coeficiente ($b_j$) es significativamente diferente de cero, realizamos una prueba de hipótesis. La hipótesis nula ($H_0$) establece que el coeficiente es igual a cero ($b_j = 0$), es decir, que no hay efecto de la variable $X_j$ sobre $Y$.
-
-## Ejemplo con el modelo de ingresos   {.smaller background-color="white"}
-
-- Para el coeficiente de **escolaridad (esc)**:
-  - $b_j = 88022.20$
-  - $SE = 704.29$
-  - Valor t: 
-  $$
-  t = \frac{88022.20}{704.29} = 124.99
-  $$
-  - Valor p: Con un valor t tan alto, el valor p será menor a 0.001, indicando que el coeficiente es **altamente significativo**.
-
-## Ejemplo con el modelo de ingresos   {.smaller background-color="white"}
-
-- Para el coeficiente de **edad**:
-  - $b_j = 7681.28$
-  - $SE = 189.88$
-  - Valor t: 
-  $$
-  t = \frac{7681.28}{189.88} = 40.45
-  $$
-  - Valor p: Dado que el valor t es muy alto, el valor p también será menor que 0.001, indicando que el coeficiente es **altamente significativo**.
-
-
-## Relación entre el Beta y el Error Estándar {.smaller background-color="white"}
-
-- **Valor t**: Se calcula dividiendo el coeficiente estimado ($b_j$) por su error estándar ($SE$). El valor t se utiliza para determinar si rechazamos la hipótesis nula.
-  - Fórmula: $$ t = \frac{b_j}{SE} $$
-- **Valor p**: El valor p asociado al valor t nos indica la probabilidad de observar un coeficiente tan extremo como el estimado, bajo la hipótesis nula. Si el valor p es menor a un nivel de significancia predefinido (por ejemplo, 0.05), rechazamos la hipótesis nula y concluimos que el coeficiente es significativamente diferente de cero.
-- Un **valor p** pequeño (por ejemplo, < 0.05) indica que es improbable que encontremos los resultados que tenemos, si en la población el coeficiente sea cero, sugiriendo que existe una relación significativa (distinta de 0) entre la variable independiente y la dependiente.
-
-
-## Interpretación de los Coeficientes Beta en Regresión Lineal Múltiple {.smaller background-color="white"}
-
--   **Tamaño, Dirección del Efecto y Significancia Estadística**:
-    -   Cada coeficiente beta ($\beta$) indica el **cambio en la variable dependiente** por **cada unidad de cambio en la variable independiente** correspondiente.
-    -   **Dirección**:
-        -   $\beta > 0$: Indica un **efecto positivo** (la variable dependiente aumenta).
-        -   $\beta < 0$: Indica un **efecto negativo** (la variable dependiente disminuye).
-    -   **Significancia Estadística**: Indica si el efecto observado es **estadísticamente diferente de cero** en la población. Un valor p pequeño (por ejemplo < 0.05) indica que es poco probable que el coeficiente sea igual a cero.
-
     
-## Interpretación de los Coeficientes Beta en Regresión Lineal Múltiple {.smaller background-color="white"}
+:::
+::: {.column width="50%"}
+**`case_when()`**  
+-   **Sintaxis:** `case_when(condicion1 ~ valor1, condicion2 ~ valor2, ...)`  
+-   **Uso ideal:** Para recodificaciones con **múltiples condiciones y resultados**. Es mucho más legible y seguro que anidar `ifelse()`.  
+-   **Ejemplo:** Crear tramos de edad.  
+```{r, eval=FALSE, echo=TRUE}
+datos %>%
+  mutate(tramo_edad = case_when(...))
+```  
+    
+:::
+::::::
 
--   **Controlando por las demás variables del modelo**:
-    -   El valor de $\beta$ refleja el **efecto neto** de la variable independiente, es decir, **ajustado por todas las otras variables** incluidas en el modelo.
-    -   Permite evaluar el efecto **aislado** de cada variable independiente mientras se **controlan** los posibles efectos de las demás.  
--   **Tamaño del Efecto vs. Significancia Estadística**:
-    -   **Tamaño del Efecto**: Se refiere a la magnitud del impacto que tiene una variable independiente sobre la variable dependiente. Un beta grande implica un cambio considerable en $Y$ por cada unidad de $X$.
-    -   **Significancia Estadística**: Nos dice si el efecto observado es diferente de cero, pero no necesariamente cuán grande o importante es el efecto. Un coeficiente puede ser estadísticamente significativo, pero con un tamaño de efecto pequeño.
+## `case_when()` en Acción: Creando Tramos de Edad {.smaller background-color="white"}
 
-------------------------------------------------------------------------
+`case_when()` se lee como una serie de instrucciones lógicas. R evalúa cada condición en orden y asigna el valor de la primera que sea `TRUE`.
 
-## Interpretación de Coeficientes Beta para Variables Categóricas {.smaller background-color="white"}
+**Sintaxis y Lógica:**
+```{r, eval=FALSE, echo=TRUE}
+casen %>%
+  mutate(
+    tramo_edad = case_when(
+      edad <= 29              ~ "Joven (0-29)",
+      edad >= 30 & edad <= 59 ~ "Adulto (30-59)",
+      edad >= 60              ~ "Mayor (60+)",
+      TRUE                    ~ "Dato perdido o sin edad" # Captura todo lo demás
+    )
+  )
+```
+-   La `~` (tilde) se lee como "entonces asigna este valor".
+-   `&` significa que ambas condiciones deben ser verdaderas.
+-   `TRUE ~ ...`: Esta última línea es una "catch-all" o cláusula por defecto. Si ninguna de las condiciones anteriores se cumple, se asignará este valor. Es una muy buena práctica incluirla siempre.
 
--   **Diferencia con la Categoría de Referencia**:
-    -   El coeficiente beta para una variable categórica representa la **diferencia promedio** en la variable dependiente entre el grupo correspondiente y la **categoría de referencia**.
-    -   Si $\beta$ es positivo, indica que el grupo en cuestión tiene una **mayor** media en comparación con la categoría de referencia. Si $\beta$ es negativo, la media es **menor**.
--   **Controlando por las demás variables del modelo**:
-    -   Al igual que en las variables continuas, los efectos están **ajustados** por las demás variables independientes, lo que permite interpretar el efecto de la categoría como si las otras variables permanecieran **constantes**.
+---
+title_slide_background: "#008080"
+---
 
-## Ejemplo con CASEN {.smaller background-color="white"}
+# 2. Reestructurando Datos con `tidyr`
 
+## El Problema de los Datos "Anchos" (Wide) {.smaller background-color="white"}
 
-```{r, results='asis'}
-modelo3 <- lm(ytrabajocor ~ esc + edad, data = casen2)
+A veces, los datos no vienen en formato "ordenado" (tidy). Un problema común es el formato **ancho**, donde los valores de una misma variable se distribuyen en múltiples columnas.
 
-htmlreg(list(modelo3))
+**Ejemplo: Datos de panel sobre satisfacción con la vida.**
 
+| id | satisfaccion_2020 | satisfaccion_2021 | satisfaccion_2022 |
+|:--:|:-----------------:|:-----------------:|:-----------------:|
+| 1 | 7 | 8 | 8 |
+| 2 | 5 | 5 | 6 |
+| 3 | 9 | 8 | 7 |
+
+**Problema:** Este formato es difícil de analizar. No podemos, por ejemplo, calcular fácilmente la satisfacción promedio por año o graficar la evolución en el tiempo. "Año" está atrapado en los nombres de las columnas.
+
+## La Solución: `pivot_longer()` {.smaller background-color="white"}
+
+El paquete `tidyr` (parte del Tidyverse) nos permite reestructurar datos. La función `pivot_longer()` convierte los datos de formato ancho a **largo** (formato tidy).
+
+**Lógica:** "Toma estas columnas, y pon sus *nombres* en una nueva columna y sus *valores* en otra".
+
+**Sintaxis:**
+`datos %>% pivot_longer(cols = columnas_a_unir, names_to = "nombre_nueva_col_categoria", values_to = "nombre_nueva_col_valor")`
+
+```{r, eval=FALSE, echo=TRUE}
+# Aplicando a nuestro ejemplo
+datos_wide %>%
+  pivot_longer(
+    cols = c(satisfaccion_2020, satisfaccion_2021, satisfaccion_2022),
+    names_to = "año",
+    values_to = "satisfaccion"
+  )
 ```
 
+## `pivot_longer()` en Acción: El Resultado {.smaller background-color="white"}
 
-## Ejemplo con CASEN {.smaller background-color="white"}
+La tabla se transforma, y ahora sí está en formato **ordenado (tidy)**.
 
-**Intercepto (b_0)**:  
-El intercepto de -742,740.49 indica el valor esperado de los ingresos cuando tanto la escolaridad como la edad son cero, lo cual no tiene una interpretación práctica debido a la falta de sentido de esta situación en el contexto real. Este valor es estadísticamente significativo (p < 0.001).
+**Tabla Original (Ancha):**
 
-**Escolaridad (esc)**:  
-El coeficiente de la escolaridad es 88,022.20, indicando que, por cada año adicional de escolaridad, los ingresos del trabajo aumentan en promedio 88,022.20 pesos, manteniendo constante la edad. Este coeficiente es estadísticamente significativo (p < 0.001).
+| id | satisfaccion_2020 | satisfaccion_2021 | satisfaccion_2022 |
+|:--:|:-----------------:|:-----------------:|:-----------------:|
+| 1 | 7 | 8 | 8 |
+| 2 | 5 | 5 | 6 |
 
-**Edad**:  
-El coeficiente de la edad es 7,681.28, lo que implica que cada año adicional de edad se asocia con un aumento promedio de 7,681.28 pesos en los ingresos, manteniendo constante la escolaridad. Este coeficiente también es estadísticamente significativo (p < 0.001).
+## `pivot_longer()` en Acción: El Resultado {.smaller background-color="white"}
 
+**Tabla Transformada (Larga):**
+
+| id | año | satisfaccion |
+|:--:|:---:|:------------:|
+| 1 | satisfaccion_2020 | 7 |
+| 1 | satisfaccion_2021 | 8 |
+| 1 | satisfaccion_2022 | 8 |
+| 2 | satisfaccion_2020 | 5 |
+| 2 | satisfaccion_2021 | 5 |
+
+Ahora, "año" y "satisfacción" son variables en sus propias columnas, lo que facilita enormemente el análisis (ej. `group_by(año) %>% summarise(...)`) y la visualización.
+
+---
+title_slide_background: "#008080"
+---
+
+# 3. Combinando Tablas de Datos con `dplyr`
+
+## La Necesidad de Unir Datos {.smaller background-color="white"}
+
+Rara vez toda la información que necesitamos está en una sola tabla. En la investigación real, es muy común tener que **combinar o cruzar diferentes fuentes de datos**.  
+
+**Ejemplos sociológicos:**    
+-   Unir una **encuesta de personas** con una **base de datos de características de sus comunas** (ej. tasa de pobreza, nivel de delincuencia).  
+-   Unir **distintos cuestionarios de un misma encuesta** por ej. el ceustionario al NNA y el cuestionario al Responsable Principal del nna.  
+-   Cruzar una **encuesta de hogares** con una **base de datos de personas** para asignar las características del hogar a cada miembro.  
+-   Combinar **dos rondas de una encuesta de panel** para analizar cambios en el tiempo.  
+
+## La Clave de la Unión: La "Llave" (`key`) {.smaller background-color="white"}
+
+Para que R sepa cómo conectar las filas de dos tablas, necesita una (o más) variables **"llave"** (`key`).  
+
+-   **Definición:** Una variable llave es un **identificador único** que existe en **ambas** tablas de datos.  
+-   Su función es decirle a R: "Esta fila de la tabla A corresponde a esta otra fila de la tabla B".  
+
+**Ejemplos de llaves:**  
+-   `folio`: Para unir personas con sus hogares.  
+-   `id_comuna`: Para unir datos de encuestas con datos comunales.  
+-   `RUT`: Para unir registros administrativos de una misma persona.  
+
+La calidad de la unión depende de la calidad de la llave.
+
+## `left_join()`: La Unión más Común {.smaller background-color="white"}
+
+Las funciones `_join()` de `dplyr` nos permiten combinar tablas. La más utilizada es `left_join()`.
+
+**Lógica:** "Toma todas las filas de la tabla de la **izquierda** (`x`) y pégale la información de la tabla de la **derecha** (`y`) que coincida según la llave".  
+
+**Sintaxis:** `left_join(tabla_izquierda, tabla_derecha, by = "nombre_variable_llave")`  
+
+![](img/07/left_join.png){fig-align="center"}
+
+-   Si una fila en la tabla izquierda no tiene correspondencia en la derecha, las nuevas columnas se rellenarán con `NA`.  
+-   Si una fila en la tabla derecha no tiene correspondencia en la izquierda, se descarta.  
+
+## Otros `joins` {.smaller background-color="white"}
+
+`dplyr` ofrece una familia completa de `joins` para diferentes necesidades.
+
+:::::: columns
+::: {.column width="50%"}
+
+-   **`inner_join(x, y)`:** Se queda **únicamente con las filas que tienen correspondencia** en ambas tablas. Es útil para "limpiar" datos y trabajar solo con los casos completos.
+-   **`full_join(x, y)`:** Se queda con **todas las filas de ambas tablas**, rellenando con `NA` donde no hay correspondencia.
+-   **`anti_join(x, y)`:** Una herramienta de diagnóstico muy poderosa. Devuelve **todas las filas de la tabla izquierda que NO tienen correspondencia** en la tabla derecha. Es ideal para encontrar problemas de codificación en las llaves. 
+:::
+::: {.column width="50%"}
+![](img/07/joins.png){fig-align="center"}
+  
+:::
+::::::
+
+
+## Cierre y Próximos Pasos {.smaller background-color="white"}
+
+**Resumen de la sesión de hoy:**
+
+-   Hemos aprendido a realizar **recodificaciones complejas** de forma legible y segura con `case_when()`.
+-   Entendimos la lógica de los datos "anchos" y "largos" y aprendimos a **reestructurarlos** con `pivot_longer()`.
+-   Descubrimos cómo **combinar diferentes bases de datos** usando la poderosa familia de funciones `_join()`.
+-   Con estas herramientas, hemos completado nuestro kit básico para la limpieza y preparación de datos.
+
+**En el práctico de hoy:**
+
+-   Aplicarán estas tres técnicas avanzadas (`case_when`, `pivot_longer`, `left_join`) en ejercicios prácticos con la Encuesta CASEN y tablas de ejemplo.
+
+**Adelanto de la Unidad 4:**
+-   ¡Ahora que tenemos los datos listos, comenzaremos a analizarlos! La próxima unidad se centrará en la **Estadística Descriptiva Univariada**.
