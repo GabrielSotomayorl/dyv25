@@ -1,6 +1,6 @@
 ---
-title: "Clase 1: Introducción al Curso"
-subtitle: "Descripción y Visualización de Datos"
+title: "Introducción al Curso"
+subtitle: "Unidad 1: Introducción a la estadística y su relación con las ciencias sociales"
 author: "Gabriel Sotomayor"
 date: "08-11-2025"
 format:
@@ -9,6 +9,13 @@ format:
     slide-number: true
     auto-fit: true
     logo: images/logo.png
+include-in-header:
+  - text: |
+      <style>
+      #title-slide .title {
+        font-size: 1.9em;
+      }
+      </style>
 ---
 
 ## Presentación {.smaller background-color="white"}

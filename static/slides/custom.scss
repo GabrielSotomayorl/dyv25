@@ -32,21 +32,10 @@ $link-color: #D76D77;  /* Rosa quemado (enlaces)  */
 .reveal .slides pre .hljs-function { color: #3A1C71 !important; } /* Índigo */
 .reveal .slides pre .hljs-operator { color: #E36209 !important; } /* Naranja */
 
-/* Justificación de párrafos y alineación de encabezados */
-.reveal .slides section { text-align: justify; }
-.reveal .slides h1,
-.reveal .slides h2,
-.reveal .slides h3,
-.reveal .slides h4,
-.reveal .slides h5,
-.reveal .slides h6 { text-align: left; }
-
-/* Títulos h2 sobre fondos claros */
+/* Títulos h2 sobre fondos claros (esta regla no aplica con el tema oscuro, pero no daña) */
 .reveal .slides section:not(.dark-background) h2 {
   color: #D76D77; /* Rosa quemado */
 }
 
 /* Enlaces al pasar el cursor */
 .reveal a:hover { color: #3A1C71; }
-
-
