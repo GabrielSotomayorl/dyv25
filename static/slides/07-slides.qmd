@@ -9,6 +9,13 @@ format:
     slide-number: true
     auto-fit: true
     logo: images/logo.png
+include-in-header:
+  - text: |
+      <style>
+      #title-slide .title {
+        font-size: 2em;
+      }
+      </style>
 ---
 
 ## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
@@ -43,6 +50,7 @@ Para crear variables basadas en condiciones, tenemos dos herramientas principale
 ::: {.column width="50%"}  
 
 **`ifelse()`**  
+
 -   **Sintaxis:** `ifelse(condicion, valor_si_verdadero, valor_si_falso)`  
 -   **Uso ideal:** Para recodificaciones **binarias** (dos resultados posibles).  
 -   **Ejemplo:** Crear una variable "mayor de edad".  
@@ -54,6 +62,7 @@ datos %>%
 :::
 ::: {.column width="50%"}
 **`case_when()`**  
+
 -   **Sintaxis:** `case_when(condicion1 ~ valor1, condicion2 ~ valor2, ...)`  
 -   **Uso ideal:** Para recodificaciones con **múltiples condiciones y resultados**. Es mucho más legible y seguro que anidar `ifelse()`.  
 -   **Ejemplo:** Crear tramos de edad.  
@@ -159,7 +168,8 @@ title_slide_background: "#008080"
 
 Rara vez toda la información que necesitamos está en una sola tabla. En la investigación real, es muy común tener que **combinar o cruzar diferentes fuentes de datos**.  
 
-**Ejemplos sociológicos:**    
+**Ejemplos sociológicos:**     
+
 -   Unir una **encuesta de personas** con una **base de datos de características de sus comunas** (ej. tasa de pobreza, nivel de delincuencia).  
 -   Unir **distintos cuestionarios de un misma encuesta** por ej. el ceustionario al NNA y el cuestionario al Responsable Principal del nna.  
 -   Cruzar una **encuesta de hogares** con una **base de datos de personas** para asignar las características del hogar a cada miembro.  
@@ -173,6 +183,7 @@ Para que R sepa cómo conectar las filas de dos tablas, necesita una (o más) va
 -   Su función es decirle a R: "Esta fila de la tabla A corresponde a esta otra fila de la tabla B".  
 
 **Ejemplos de llaves:**  
+
 -   `folio`: Para unir personas con sus hogares.  
 -   `id_comuna`: Para unir datos de encuestas con datos comunales.  
 -   `RUT`: Para unir registros administrativos de una misma persona.  
