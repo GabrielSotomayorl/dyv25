@@ -1,9 +1,9 @@
 ---
-title: "Análisis de regresión lineal múltiple III"
-linktitle: "7: Análisis de regresión lineal múltiple III"
-date: "2024-10-07"
-start_date: "2024-10-07"
-end_date: "2024-10-07"
+title: "Creación, Reestructuración y Combinación de Datos"
+linktitle: "7: Marcos de datos para la investigación social III"
+date: "2025-09-29"
+start_date: "2025-09-29"
+end_date: "2025-09-29"
 menu:
   content:
     parent: Contenido
@@ -20,7 +20,7 @@ source(here::here("R", "slide-tabs.R"))
 
 slide_details <- tibble::tribble(
   ~title, ~slide, ~active,
-  "Análisis de regresión lineal múltiple III", "0", TRUE)
+  "", "0", TRUE)
 ```
 
 # Slides

@@ -29,7 +29,7 @@ include-in-header:
 title_slide_background: "#008080"
 ---
 
-# 1. Creando Variables con Lógica Condicional
+# 1. Creando Nuevas Variables
 
 ## Repaso y Conexión {.smaller background-color="white"}
 
@@ -93,6 +93,70 @@ casen %>%
 -   La `~` (tilde) se lee como "entonces asigna este valor".
 -   `&` significa que ambas condiciones deben ser verdaderas.
 -   `TRUE ~ ...`: Esta última línea es una "catch-all" o cláusula por defecto. Si ninguna de las condiciones anteriores se cumple, se asignará este valor. Es una muy buena práctica incluirla siempre.
+
+## Más Allá de la Recodificación: Creando Nuevo Conocimiento {.smaller background-color="white"}
+
+A menudo, un solo indicador (una sola pregunta de encuesta) no es suficiente para capturar la complejidad de un concepto sociológico. Para medir fenómenos como "bienestar social", "precariedad laboral" o "capital cultural", necesitamos combinar múltiples indicadores.
+
+"(...) el conjunto de herramientas metodológicas que pretenden **cuantificar de modo sintético las características de fenómenos sociales complejos**, no directamente observables por la vía de las estadísticas sociales tradicionalmente disponibles..." (Márquez, 2006).
+
+En esta sección, veremos dos formas de construir estas nuevas variables compuestas: **Índices** y **Tipologías**. La herramienta principal para crearlas en R seguirá siendo `mutate()`.
+
+## Índices: La Suma de las Partes {.smaller background-color="white"}
+
+Un **índice** es una variable compuesta, generalmente numérica, que se crea a partir de la **suma o promedio** de varios indicadores.
+
+-   **Supuesto Clave:** Se asume que todos los indicadores tienen un peso similar y miden la misma dimensión subyacente.
+-   **Ejemplo:** La Escala Breve de Satisfacción con la Vida para Estudiantes (BMSLSS) mide el bienestar a través de 6 ítems en una escala de 0 a 10.
+
+**Indicadores de la BMSLSS:**  
+1.  Satisfacción con la **vida familiar**.  
+2.  Satisfacción con los **amigos/as**.  
+3.  Satisfacción con el **barrio**.  
+4.  Satisfacción con la **experiencia en el colegio**.  
+5.  Satisfacción **contigo mismo/a**.  
+6.  Satisfacción con **toda tu vida en general**.  
+
+El índice se construye promediando las respuestas de estos 6 ítems para obtener un puntaje global de satisfacción.
+
+## Tipologías: Creando Perfiles {.smaller background-color="white"}
+
+Una **tipología** es una variable **categórica** (nominal u ordinal) que se crea al **cruzar dos o más variables** para clasificar a las observaciones en "tipos" o "perfiles" cualitativamente distintos.
+
+-   **Ejemplo Clásico:** La clasificación de **Grupos Socioeconómicos (GSE)** utilizada en investigación de mercado y social en Chile. No es una sola variable, sino el resultado de cruzar tres dimensiones:
+    1.  **Nivel Educacional** del principal sostenedor del hogar (PSH).
+    2.  **Ocupación** del PSH.
+    3.  **Tramos de Ingreso** del hogar.
+
+## {.smaller background-color="white"}
+
+![](img/07/aim.jpg){fig-align="center"}
+
+## Operacionalizando una Tipología: El GSE en R {.smaller background-color="white"}
+
+La creación de una tipología es la aplicación perfecta de `case_when()` con condiciones complejas unidas por el operador `&`. El código traduce directamente las reglas de la matriz de clasificación.
+
+```{r, eval=FALSE, echo=TRUE}
+# Ejemplo conceptual para crear la variable GSE
+# (suponiendo que educ_psh y ocu_psh son numéricas y están codificadas según el manual de AIM)
+datos %>%
+  mutate(
+    gse = case_when(
+      # Condición para el grupo AB (el más alto)
+      educ_psh >= 5 & ocu_psh >= 6 & tramo_ingreso == "YPCE7" ~ "AB",
+      
+      # Dos ejemplos de condiciones para el grupo C1a
+      educ_psh >= 5 & ocu_psh >= 5 & tramo_ingreso == "YPCE6" ~ "C1a",
+      educ_psh == 4 & ocu_psh >= 6 & tramo_ingreso == "YPCE7" ~ "C1a",
+      
+      # ... (y así sucesivamente para todas las demás combinaciones de la matriz)...
+      
+      # Una regla por defecto para los casos que no calcen en ninguna categoría
+      TRUE ~ "Sin clasificación" 
+    )
+  )
+```
+
 
 ---
 title_slide_background: "#008080"

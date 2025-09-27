@@ -49,7 +49,8 @@ Como siempre, un flujo de trabajo reproducible comienza con una buena organizaci
 
 Cargamos los paquetes que usaremos hoy. `haven` es esencial porque nos permite leer datos de otros software estadísticos como Stata y SPSS.
 
-```{r setup, message=FALSE, warning=FALSE}
+
+```r
 library(haven)
 library(tidyverse)
 ```
@@ -58,7 +59,8 @@ library(tidyverse)
 
 Ahora, cargaremos los datos en R. Fíjate que usamos una función diferente para cada tipo de archivo: `read_dta()` para Stata y `read_sav()` para SPSS.
 
-```{r load-manual, eval=FALSE, echo=TRUE}
+
+```r
 # Cargar la base de datos del Cuidador Principal (formato Stata)
 elpicp <- haven::read_dta("datos/Base_Cuidador_Principal_ELPI_III(STATA)_241010.dta")
 
@@ -70,7 +72,8 @@ elpinna <- haven::read_sav("datos/Base Niños y Niñas ELPI III (SPSS).sav")
 
 *Nota sobre la reproducibilidad:* Para que este práctico funcione de manera autocontenida, a continuación se incluye el código que realiza la descarga y carga de forma automática. **No necesitas ejecutarlo si ya cargaste las bases manualmente.**
 
-```{r load-auto, message=FALSE, warning=FALSE, cache=TRUE}
+
+```r
 # Carga Base Cuidador Principal (STATA)
 temp_cp <- tempfile() 
 download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/elpi/2017/Base_Cuidador_Principal_ELPI_III(STATA)_241010.dta.zip", temp_cp)
@@ -92,7 +95,8 @@ Antes de unir las tablas, debemos prepararlas para asegurarnos de que contengan 
 
 Esta base contiene información de todos los miembros del hogar, pero a nosotros nos interesan las características del hogar y socioeconómicas asociadas al **niño/a ELPI**. Además, solo queremos a los niños/as de la cohorte más antigua, que son quienes contestaron el cuestionario de bienestar.
 
-```{r clean-cp}
+
+```r
 elpicp_limpia <- elpicp %>%
   # 1. Filtramos para quedarnos solo con las filas que corresponden al niño/a (tipopersona == 1)
   filter(tipopersona == 1) %>%
@@ -106,13 +110,18 @@ elpicp_limpia <- elpicp %>%
 # Verificamos las dimensiones de nuestra base limpia
 dim(elpicp_limpia)
 ```
+
+```
+## [1] 10230     3
+```
 **Interpretación:** Nuestra base de datos del cuidador principal ahora solo tiene 10,230 filas, que corresponden a los niños/as de la cohorte de interés, y 3 columnas con la información que necesitamos.
 
 ### 3.2 Base de Niños y Niñas (`elpinna`)
 
 Esta base contiene las respuestas de bienestar. La limpiaremos y renombraremos las variables para que sea más fácil de usar.
 
-```{r clean-nna}
+
+```r
 elpinna_limpia <- elpinna %>%
   # 1. Seleccionamos el identificador del hogar y las 6 preguntas de satisfacción, renombrándolas
   select(folio, 
@@ -126,20 +135,61 @@ elpinna_limpia <- elpinna %>%
 # Vemos un resumen para verificar la limpieza
 summary(elpinna_limpia)
 ```
+
+```
+##      folio        satisf_familia  satisf_amigos   satisf_colegio 
+##  Min.   :100011   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:171306   1st Qu.:6.000   1st Qu.:6.000   1st Qu.:6.000  
+##  Median :244591   Median :7.000   Median :7.000   Median :7.000  
+##  Mean   :270664   Mean   :6.487   Mean   :6.282   Mean   :6.167  
+##  3rd Qu.:346484   3rd Qu.:7.000   3rd Qu.:7.000   3rd Qu.:7.000  
+##  Max.   :601271   Max.   :7.000   Max.   :7.000   Max.   :7.000  
+##                   NA's   :5085    NA's   :5085    NA's   :5085   
+##  satisf_contigo  satisf_barrio    satisf_vida   
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:6.000   1st Qu.:5.000   1st Qu.:6.000  
+##  Median :7.000   Median :7.000   Median :7.000  
+##  Mean   :6.336   Mean   :5.912   Mean   :6.489  
+##  3rd Qu.:7.000   3rd Qu.:7.000   3rd Qu.:7.000  
+##  Max.   :7.000   Max.   :7.000   Max.   :7.000  
+##  NA's   :5085    NA's   :5085    NA's   :5085
+```
 **Interpretación:** El resumen nos muestra que las 6 variables de satisfacción tienen 5,085 `NA's`. Esto es esperable, ya que la base `elpinna` contiene a todos los niños/as de la encuesta, pero solo la cohorte más antigua contestó estas preguntas. Al unir las bases, este número debería disminuir.
 
 ## 4. Combinando las Bases con `left_join()` (Paso Central)
 
 Ahora que tenemos nuestras dos tablas limpias, las uniremos. La **variable llave** que conecta ambas tablas es `folio`, el identificador del hogar.
 
-```{r join-elpi}
+
+```r
 # Unimos las dos bases de datos.
 # La tabla del cuidador es la "izquierda" (la principal), y le "pegamos" las respuestas de los niños/as.
 elpi_completa <- left_join(elpicp_limpia, elpinna_limpia, by = "folio")
 
 # Verificamos el resultado
 head(elpi_completa)
+```
+
+```
+## # A tibble: 6 × 9
+##    folio idregion         qaut_casen satisf_familia satisf_amigos satisf_colegio
+##    <dbl> <dbl+lbl>        <dbl+lbl>  <dbl+lbl>      <dbl+lbl>     <dbl+lbl>     
+## 1 100011 15 [Regi\xf3n d… 2 [II]     5 [5]          4 [4]         4 [4]         
+## 2 100081 15 [Regi\xf3n d… 1 [I]      7 [7. Muy sat… 7 [7. Muy sa… 7 [7. Muy sat…
+## 3 100091 15 [Regi\xf3n d… 1 [I]      7 [7. Muy sat… 7 [7. Muy sa… 7 [7. Muy sat…
+## 4 100121 15 [Regi\xf3n d… 3 [III]    7 [7. Muy sat… 4 [4]         7 [7. Muy sat…
+## 5 100131 15 [Regi\xf3n d… 4 [IV]     6 [6]          5 [5]         4 [4]         
+## 6 100151 15 [Regi\xf3n d… 1 [I]      5 [5]          7 [7. Muy sa… 4 [4]         
+## # ℹ 3 more variables: satisf_contigo <dbl+lbl>, satisf_barrio <dbl+lbl>,
+## #   satisf_vida <dbl+lbl>
+```
+
+```r
 dim(elpi_completa)
+```
+
+```
+## [1] 10230     9
 ```
 **Interpretación:** ¡Éxito! Ahora tenemos una única base de datos (`elpi_completa`) con 10,230 filas y 9 columnas, que contiene, para cada niño/a, tanto sus características socioeconómicas (región, quintil) como sus respuestas de bienestar.
 
@@ -151,7 +201,8 @@ Con nuestra base unificada, podemos crear las variables que necesitamos para nue
 
 **Objetivo:** Crear un puntaje global de satisfacción con la vida promediando las 6 preguntas.
 
-```{r create-index}
+
+```r
 elpi_completa <- elpi_completa %>%
   mutate(
     # Sumamos las 6 variables y dividimos por 6 para obtener el promedio
@@ -160,15 +211,26 @@ elpi_completa <- elpi_completa %>%
 
 # Exploremos la distribución de nuestro nuevo índice
 summary(elpi_completa$indice_bienestar)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   1.000   6.000   6.500   6.279   6.833   7.000    4617
+```
+
+```r
 hist(elpi_completa$indice_bienestar, main = "Distribución del Índice de Bienestar", xlab = "Puntaje Promedio (1-7)")
 ```
+
+<img src="/example/07-practico_files/figure-html/create-index-1.png" width="672" />
 **Interpretación:** El `summary` nos muestra que el promedio del índice de bienestar es 6.28, con la mayoría de los casos concentrados en los valores altos de la escala (la mediana es 6.5). El histograma confirma esta distribución, sesgada hacia la izquierda (altos niveles de satisfacción).
 
 ### 5.2 Construcción de una Tipología Socio-Territorial
 
 **Objetivo:** Crear perfiles de estudiantes según si viven en la Región Metropolitana (código 13) y si pertenecen a los quintiles de mayores ingresos (4 y 5).
 
-```{r create-typology}
+
+```r
 elpi_final <- elpi_completa %>%
   mutate(
     tipo_perfil = case_when(
@@ -184,11 +246,20 @@ elpi_final <- elpi_completa %>%
 table(elpi_final$tipo_perfil)
 ```
 
+```
+## 
+##       Otras Regiones - Quintil Alto Otras Regiones - Quintil Bajo/Medio 
+##                                1248                                5768 
+##                   RM - Quintil Alto             RM - Quintil Bajo/Medio 
+##                                 669                                2545
+```
+
 ## 6. Análisis Descriptivo Final
 
 **Pregunta de Investigación:** ¿Existen diferencias en el bienestar subjetivo (nuestro índice) según el perfil socio-territorial de los niños y niñas?
 
-```{r final-analysis}
+
+```r
 elpi_final %>%
   # Agrupamos por nuestra nueva tipología
   group_by(tipo_perfil) %>%
@@ -199,6 +270,16 @@ elpi_final %>%
   ) %>%
   # Ordenamos para ver los resultados más claramente
   arrange(desc(bienestar_promedio))
+```
+
+```
+## # A tibble: 4 × 3
+##   tipo_perfil                         bienestar_promedio n_casos
+##   <chr>                                            <dbl>   <int>
+## 1 Otras Regiones - Quintil Alto                     6.38    1248
+## 2 Otras Regiones - Quintil Bajo/Medio               6.31    5768
+## 3 RM - Quintil Alto                                 6.25     669
+## 4 RM - Quintil Bajo/Medio                           6.16    2545
 ```
 
 **Actividad de Interpretación:** Observa la tabla de resultados. ¿Qué grupo presenta el mayor promedio de bienestar? ¿Y el menor? ¿Te sorprenden estos resultados? ¿Qué hipótesis sociológica podrías formular a partir de esta tabla para una futura investigación?
@@ -215,7 +296,7 @@ Ahora te toca a ti.
 3.  Calcula el promedio de `satisf_familia` y `satisf_colegio` para cada quintil.
 4.  No olvides manejar los `NA` y contar el número de casos por grupo.
 
-```{r, eval=FALSE, echo=TRUE}
-# Escribe tu código aquí
 
+```r
+# Escribe tu código aquí
 ```
