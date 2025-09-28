@@ -93,14 +93,14 @@ Antes de unir las tablas, debemos prepararlas para asegurarnos de que contengan 
 
 ### 3.1 Base del Cuidador Principal (`elpicp`)
 
-Esta base contiene información de todos los miembros del hogar, pero nos interesan las características asociadas al **niño/a ELPI**. Además, solo queremos a los niños/as de 10 años o más, ya que son quienes, por los lineamientos de aplicación de la escala de bienestar, contestaron el cuestionario autoaplicado.
+Esta base contiene información de todos los miembros del hogar, pero nos interesan las características asociadas al **niño/a ELPI**. Además, solo queremos a los niños/as de 10 años o más, ya que son quienes, por los lineamientos de aplicación de la escala de bienestar, contestaron dicho módulo.
 
 
 ```r
 elpicp_limpia <- elpicp %>%
   # 1. Filtramos para quedarnos solo con las filas que corresponden al niño/a (tipopersona == 1)
   filter(tipopersona == 1) %>%
-  # 2. Filtramos para quedarnos solo con los nna de 10 años o más (variable h3 es la edad del niño/a)
+  # 2. Filtramos para quedarnos solo con los nna de 10 años o más (variable h3 es la edad)
   filter(h3 >= 10) %>%
   # 3. Seleccionamos las variables que nos interesan para nuestro análisis
   select(folio, idregion, qaut_casen)
