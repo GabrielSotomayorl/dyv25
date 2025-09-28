@@ -28,7 +28,7 @@ La **Encuesta Longitudinal de Primera Infancia (ELPI)** es un estudio a nivel na
 
 La ELPI recolecta información de diferentes fuentes y a través de distintos cuestionarios. Hoy trabajaremos con dos de ellos de la ronda 2017:
 1.  La base del **Cuidador Principal**, que contiene información socioeconómica detallada del hogar.
-2.  La base de **Niños y Niñas**, que contiene las respuestas de un cuestionario auto-aplicado sobre bienestar a los niños de la cohorte más antigua.
+2.  La base de **Niños y Niñas**, que contiene las respuestas de un cuestionario auto-aplicado contestado por los niños y niñas de 7 años o más.
 
 Nuestro primer desafío será unir estas dos fuentes para poder analizar cómo las características del hogar se relacionan con el bienestar de los niños/as.
 
@@ -90,16 +90,14 @@ Antes de unir las tablas, debemos prepararlas para asegurarnos de que contengan 
 
 ### 3.1 Base del Cuidador Principal (`elpicp`)
 
-Esta base contiene información de todos los miembros del hogar, pero a nosotros nos interesan las características del hogar y socioeconómicas asociadas al **niño/a ELPI**. Además, solo queremos a los niños/as de la cohorte más antigua, que son quienes contestaron el cuestionario de bienestar.
+Esta base contiene información de todos los miembros del hogar, pero a nosotros nos interesan las características del hogar y socioeconómicas asociadas al **niño/a ELPI**. Además, solo queremos a los niños/as de 10 años o más, que son quienes contestaron el cuestionario de bienestar.
 
 ```{r clean-cp}
 elpicp_limpia <- elpicp %>%
   # 1. Filtramos para quedarnos solo con las filas que corresponden al niño/a (tipopersona == 1)
   filter(tipopersona == 1) %>%
-  # 2. Filtramos para quedarnos solo con la cohorte que contestó el cuestionario.
-  # La variable 'orden_10' solo existe para los niños de la cohorte más antigua.
-  # !is.na() significa "no es NA", por lo que nos quedamos con las filas que NO tienen un valor perdido en esa variable.
-  filter(!is.na(orden_10)) %>%
+  # 2. Filtramos para quedarnos solo con los nna de 10 años o más, ya que son quienes contesaron el cuestionario de bienestar.
+  filter(h3>=10) %>%
   # 3. Seleccionamos las variables que nos interesan
   select(folio, idregion, qaut_casen)
 
@@ -114,6 +112,7 @@ Esta base contiene las respuestas de bienestar. La limpiaremos y renombraremos l
 
 ```{r clean-nna}
 elpinna_limpia <- elpinna %>%
+  filter(edad >= 10) %>%  # Nos quedamos solo con los niños/as de 10 años o más
   # 1. Seleccionamos el identificador del hogar y las 6 preguntas de satisfacción, renombrándolas
   select(folio, 
          satisf_familia = e1, 
