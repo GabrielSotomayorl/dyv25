@@ -296,7 +296,7 @@ Las funciones `_join()` de `dplyr` nos permiten combinar tablas. La más utiliza
 
 **En el práctico de hoy:**
 
--   Aplicarán estas tres técnicas avanzadas (`case_when`, `pivot_longer`, `left_join`) en ejercicios prácticos con la Encuesta CASEN y tablas de ejemplo.
+-   Aplicarán estas tres técnicas avanzadas (`case_when`, `pivot_longer`, `left_join`) en ejercicios prácticos con la Encuesta ELPI 2017.
 
 **Adelanto de la Unidad 4:**
 -   ¡Ahora que tenemos los datos listos, comenzaremos a analizarlos! La próxima unidad se centrará en la **Estadística Descriptiva Univariada**.
