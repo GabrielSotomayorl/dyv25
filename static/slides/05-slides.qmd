@@ -356,7 +356,7 @@ Una vez que entendemos la estructura, pasamos a revisar la calidad del contenido
 
 **En el práctico de hoy:**
 
--   Aplicarán este flujo de trabajo para realizar una **exploración inicial completa** a la Encuesta CASEN.
+-   Aplicarán este flujo de trabajo para realizar una **exploración inicial** a la Encuesta CASEN.
 
 **Adelanto de la próxima clase:**
 
