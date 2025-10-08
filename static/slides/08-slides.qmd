@@ -1,404 +1,207 @@
 ---
-title: "Clase 8 <br> Análisis de regresión Logística "
-subtitle: "Análisis Avanzado de Datos"
+title: "Descripción de Variables Categóricas"
+subtitle: "Unidad 4: Estadística Descriptiva Univariada"
 author: "Gabriel Sotomayor"
-format: 
+date: "10-13-2025"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
+include-in-header:
+  - text: |
+      <style>
+      #title-slide .title {
+        font-size: 2em;
+      }
+      </style>
 ---
 
-# Modelos de probabilidad lineal
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-## Regresiones para variables dicotómicas {.smaller background-color="white"}
+-   **Revisar** la distinción entre variables categóricas y cuantitativas.
+-   **Calcular e interpretar** tablas de frecuencias absolutas, relativas y porcentajes.
+-   **Identificar** la **moda** como la medida de tendencia central apropiada para datos categóricos.
+-   **Comprender** el concepto y la utilidad de las **tasas** en el análisis sociológico.
+-   **Crear e interpretar** gráficos de barras, discutiendo buenas prácticas de visualización.
 
-Las semanas anteriores revisamos los modelos de regresión lineal múltiple, que nos permiten analizar la relación de una variable dependiente continua y variables independientes de cualquier nivel de medida. Ahora cabe la pregunta:
+---
+title_slide_background: "#008080"
+---
 
-**¿Cómo podemos modelar variables dicotómicas?**
+# 1. El Primer Paso del Análisis: Describir
 
-## Modelos de probabilidad lineal {.smaller background-color="white"}
+## Repaso y Conexión {.smaller background-color="white"}
 
-Una opción son los modelos de probabilidad lineal, los cuales consisten en usar una regresión estimada mediante mínimos cuadrados ordinarios para una variable dicotómica (valores 0 y 1). En estos los valores beta pueden interpretarse como cambios promedio en la probabilidad.
+En la Unidad 3, aprendimos a **preparar y manipular** nuestras bases de datos en R. Ahora que tenemos los datos limpios y ordenados, comenzamos a **analizarlos**.
 
-+----------------------------------------------------+-----------------------+
-|                                                    | Pobreza según sexo JH |
-+====================================================+=======================+
-| Intercepto                                         | 0.08^\*\*\*^          |
-+----------------------------------------------------+-----------------------+
-|                                                    | (0.00)                |
-+----------------------------------------------------+-----------------------+
-| Mujer (ref.hombre)                                 | 0.04^\*\*\*^          |
-+----------------------------------------------------+-----------------------+
-|                                                    | (0.00)                |
-+----------------------------------------------------+-----------------------+
-| R^2^                                               | 0.00                  |
-+----------------------------------------------------+-----------------------+
-| Adj. R^2^                                          | 0.00                  |
-+----------------------------------------------------+-----------------------+
-| Num. obs.                                          | 62911                 |
-+----------------------------------------------------+-----------------------+
-| ^\*\*\*^p \< 0.001; ^\*\*^p \< 0.01; ^\*^p \< 0.05 |                       |
-+----------------------------------------------------+-----------------------+
+El primer paso de cualquier análisis de datos es la **estadística descriptiva univariada**: el arte de resumir y describir cada variable por sí sola.
 
-: Statistical models
+> "Empieza examinando cada variable de forma separada. Luego, pasa al estudio de las relaciones entre variables. Empieza con los gráficos. Luego, añade resúmenes numéricos..."
+> — David S. Moore (2005)
 
-</ul>
+## La Distinción Fundamental {.smaller background-color="white"}
 
-## Modelos de probabilidad lineal {.smaller background-color="white"}
+Las herramientas que usamos para describir una variable dependen fundamentalmente de su tipo. Recordemos la distinción clave:
 
-A pesar de la simpleza de su interpretación, los modelos de probabilidad lineal cuentan con dos problemas:
+:::::: columns
+::: {.column width="50%"}
+**Variables Categóricas**
 
-1)  Pueden entregar variables predichos más allá del rango 0-1 lo cual no tiene sentido en el caso de una probabilidad
+-   **Definición:** Indican a qué grupo o categoría pertenece una observación.  
+-   **Niveles de Medición:** Nominal, Ordinal.  
+-   **Ejemplos:** `sexo`, `region`, `nivel_educacional`.  
+-   **Análisis:** Se basa en **conteos** de casos por categoría.  
+:::
+::: {.column width="50%"}
+**Variables Cuantitativas (o Numéricas)**
 
-2)  No entregan un buen ajuste en términos de cumplimiento de los supuestos del modelo y ajuste a los datos
+-   **Definición:** Toman valores numéricos sobre los cuales las operaciones aritméticas tienen sentido.  
+-   **Niveles de Medición:** Intervalo, Razón.  
+-   **Ejemplos:** `edad`, `ingreso`, `años_escolaridad`.  
+-   **Análisis:** Se basa en la descripción de la **distribución** de los valores.  
+:::
+::::::
 
-# Modelo de regresión logística binaria
+**Hoy, nos enfocaremos exclusivamente en las variables categóricas.**
 
-## Regresión logística {.smaller background-color="white"}
+---
+title_slide_background: "#008080"
+---
 
-Una solución a los problemas anteriormente revisado es utilizar otro tipo de modelo: un modelo de regresión logística binaria. En lugar de modelar la probabilidad directamente, hacemos una transformación la variable dependiente: modelamos el logaritmo de los odds (chances).
+# 2. Resúmenes Numéricos para Variables Categóricas
 
-$$
-\log\left(\frac{P}{1 - P}\right) = \beta_0 + \beta_1 X
-$$
+## Tablas de Frecuencia: La Herramienta Central {.smaller background-color="white"}
 
-## Regresión logística {.smaller background-color="white"}
+La forma más básica y fundamental de describir una variable categórica es a través de una **tabla de frecuencias**. Esta tabla nos muestra la **distribución** de la variable: qué valores toma y con qué frecuencia.
 
-$$
-\log\left(\frac{P}{1 - P}\right) = \beta_0 + \beta_1 X
-$$
+-   **Frecuencia Absoluta (`n`):** Es el **conteo simple** del número de casos u observaciones en cada categoría.
 
--   $\log\left(\frac{P}{1 - P}\right)$: Esto representa el **logit** o **log odds**. El término $P$ es la probabilidad de que ocurra el evento de interés, y $1 - P$ es la probabilidad de que no ocurra. Al tomar el logaritmo de las "odds" o probabilidades, transformamos el rango de $P$ (que va de 0 a 1) a un rango de $-\infty$ a $\infty$.
+**Ejemplo: Distribución de la variable `sexo` en una muestra de 10 personas.**
 
--   $\beta_0$: Es el **intercepto**. Este valor indica el valor de los log odds cuando la variable independiente $X$ es igual a 0.
+| Categoría (Sexo) | Frecuencia Absoluta (n) |
+|:----------------:|:-----------------------:|
+| Hombre | 4 |
+| Mujer | 6 |
+| **Total** | **10** |
 
--   $\beta_1 X$: Es el **coeficiente** que acompaña a la variable independiente $X$. Representa el cambio en los log odds por cada unidad adicional de $X$. Si $X$ aumenta en una unidad, los log odds se incrementarán o disminuirán dependiendo del valor de $\beta_1$.
+Nos dice *cuántos* hay en cada grupo, pero es difícil de comparar si los totales son diferentes.
 
-Este es un modelo de regresión logística, donde la relación entre $X$ y la probabilidad $P$ de un evento se modela de manera no lineal, usando la función logit para transformar la probabilidad.
+## De Conteos a Comparaciones: Frecuencias Relativas {.smaller background-color="white"}
 
-## Regresión logistica {.smaller background-color="white"}
+::: {style="font-size: 0.9em; line-height: 1.2;"}
+Para comparar la distribución de una variable entre grupos de diferentes tamaños, necesitamos estandarizar los conteos. Para esto usamos las **frecuencias relativas**.
 
-![](https://www.statdeveloper.com/wp-content/uploads/2020/02/regresion-lineal-vs-regresion-logistica.png)
+-   **Proporción:** Es la frecuencia de una categoría dividida por el número total de casos. El valor va de 0 a 1.
+    -   *Fórmula:* `Proporción = n_categoria / n_total`
+-   **Porcentaje:** Es la proporción multiplicada por 100. Es más fácil de interpretar y comunicar.
+    -   *Fórmula:* `Porcentaje = (n_categoria / n_total) * 100`
 
-# Probabilidad, odds y odds ratio
+| Categoría (Sexo) | Frecuencia (n) | Proporción | Porcentaje (%) |
+|:----------------:|:--------------:|:----------:|:--------------:|
+| Hombre | 4 | 0.4 | 40% |
+| Mujer | 6 | 0.6 | 60% |
+| **Total** | **10** | **1.0** | **100%** |
 
-## Probabilidad y Odds {.smaller background-color="white"}
+Ahora podemos decir que "el 60% de la muestra son mujeres", una afirmación comparable con otras encuestas.
+::: 
 
-- **Probabilidad (`p`)**: Representa la probabilidad de ocurrencia de un evento y toma valores entre 0 y 1.
-- **Odds**: Es la razón entre la probabilidad de que ocurra un evento y la probabilidad de que no ocurra, es decir: 
-  $$ \text{Odds} = \frac{p}{1 - p} $$
+## La Moda: El Centro de las Categorías {.smaller background-color="white"}
 
-## Probabilidad y Odds {.smaller background-color="white"}
+Para las variables categóricas, la única medida de tendencia central que podemos calcular es la **moda**.
 
-```{r, echo=TRUE}
-p <- seq(0, 1, 0.1)
-odds <- p / (1 - p)
+-   **Definición:** La **moda** es la categoría que tiene la **mayor frecuencia** en una distribución.
+-   Es la categoría "más típica" o "más común".
 
-print(data.frame(p,odds))
-```
+**Ejemplo: Afiliación religiosa en una muestra.**
 
-## Gráfico: Odds según valores de `p` {.smaller background-color="white"}
+| Religión | Frecuencia |
+|:---|:---:|
+| Católica | 450 |
+| Evangélica | 300 |
+| Ninguna | 250 |
 
-Este gráfico ilustra cómo varían los odds a medida que cambia la probabilidad (`p`). Podemos observar que, cuando `p` se acerca a 1, los odds tienden a crecer exponencialmente.
+**La moda es "Católica"**, ya que es la categoría con el mayor número de casos (450).
 
-```{r, echo=FALSE}
-library(ggplot2)
+*Importante:* La moda es la **categoría** ("Católica"), no el número de casos (450).
 
-p <- seq(0, 1, 0.01)
-odds <- p / (1 - p)
-ggplot(data = data.frame(p, odds), aes(x = p, y = odds)) +
-  geom_line(color = "darkgreen", size = 1.1) +
-  labs(title = "Odds según valores de p", x = "p", y = "Odds = p / (1 - p)") +
-  theme_minimal()
-```
+## Tasas: Una Medida Estandarizada para la Comparación {.smaller background-color="white"}
 
-## Ejemplo de Odds {.smaller background-color="white"}
+Una **tasa** es un tipo especial de frecuencia relativa que se usa para comparar la ocurrencia de un evento entre poblaciones de diferentes tamaños.
 
-Los odds (chances) corresponden a la razón entre la probabilidad de que algo ocurra dividido por la probabilidad de que algo no ocurra.
+-   **Definición:** Relaciona el número de eventos de interés con el total de la población "en riesgo" de experimentar ese evento, multiplicado por una constante (generalmente 1.000, 10.000 o 100.000).
+-   **Fórmula:** `Tasa = (N° de eventos / Población total en riesgo) * k`
+-   **Uso Común:** Tasas de natalidad, mortalidad, desempleo, homicidios, etc.
 
-$$Odds = {p\over1-p}$$ Ejemplo en CASEN 2020, odds de ser pobre
+## Tasas: Una Medida Estandarizada para la Comparación {.smaller background-color="white"}
 
+**Ejemplo:** Tasa de homicidios.
 
-Odds pobreza = 0.095/0.905 = 0.105
+-   **Comuna A:** 10 homicidios en una población de 50.000.  
+-   **Comuna B:** 20 homicidios en una población de 500.000.  
 
-Es decir, de acuerdo a la CASEN 2020, las chances de ser pobre son de 0.105
+¿Dónde es más "violento"?  
 
-## Concepto de Odds {.smaller background-color="white"}
+-   **Tasa A:** `(10 / 50.000) * 100.000 = 20` homicidios por cada 100.000 habitantes.  
+-   **Tasa B:** `(20 / 500.000) * 100.000 = 4` homicidios por cada 100.000 habitantes.  
 
-Odds de **1** significa que existen chances iguales de la correncia o no ocurrencia de cierto hecho.
+**Conclusión:** Aunque la Comuna B tuvo más homicidios en términos absolutos, la Comuna A tiene una tasa de homicidios 5 veces mayor. Las tasas nos permiten hacer comparaciones justas.  
 
-Odds **menores de 1** dan cuenta de chances negativas (es más probable que no ocurra a que ocurra)
+#Incluir algo sobre la tasa de nataliudad 
 
-Odds **mayores a 1** dan cuenta de chances positivas (es más probable que ocurra a que no ocurra)
+---
+title_slide_background: "#008080"
+---
 
-## Logit {.smaller background-color="white"}
+# 3. Visualización de Variables Categóricas
 
-- **Logit**: La función logit se define como el logaritmo natural de los odds:
-  $$ \text{Logit} = \ln \left( \frac{p}{1 - p} \right) $$
-  Es la función de enlace que utilizamos en la regresión logística para transformar la probabilidad en un valor continuo entre $(-\infty, \infty)$.
+## Gráfico de Barras: La Herramienta Estándar {.smaller background-color="white"}
 
-```{r}
-logit <- log(p / (1 - p))
-```
+El **gráfico de barras** es la forma más clara y efectiva de visualizar la distribución de una variable categórica.
 
-## Probabilidad, Odds y logaritmo de los odds (logit) {.smaller background-color="white"}
+-   Cada barra representa una categoría.
+-   La **altura** de la barra representa la frecuencia (absoluta o porcentual) de esa categoría.
 
-```{r, echo=TRUE}
-p <- seq(0, 1, 0.1)
-odds <- p / (1 - p)
-logit <- log(p / (1 - p))
+**Ejemplo: Distribución de Nivel Educacional (datos ficticios).**
+![](img/barplot_example.png){fig-align="center"}
+*(Nota: Aquí iría un gráfico de barras simple con las categorías de nivel educacional en el eje X y el porcentaje en el eje Y).*
 
-print(data.frame(p,odds,logit))
-```
+Nos permite ver de un vistazo cuál es la categoría modal ("Media Completa") y comparar visualmente el tamaño de cada grupo.
 
-## Gráfico: Logit según valores de `p` {.smaller background-color="white"}
+## ¿Por qué no Gráficos de Torta (Pie Charts)? {.smaller background-color="white"}
 
-Este gráfico muestra cómo varía el logit con respecto a `p`. A diferencia de los odds, el logit transforma la probabilidad en una escala lineal, lo cual es esencial para poder aplicar un modelo lineal en la regresión logística.
+Aunque son populares, los estadísticos y expertos en visualización de datos generalmente desaconsejan el uso de gráficos de torta.
 
-```{r, echo=FALSE}
+-   **El Problema:** El ojo humano es muy malo para comparar **ángulos** y **áreas**, pero es muy bueno para comparar **longitudes** en una escala común.
+-   En un gráfico de barras, es fácil ver que una barra es el doble de alta que otra. En un gráfico de torta, es casi imposible juzgar si un trozo es el doble de grande que otro, especialmente si no están uno al lado del otro.
 
-p <- seq(0, 1, 0.01)
-odds <- p / (1 - p)
-logit <- log(p / (1 - p))
+**Regla General:** Para comparar categorías, **prefiere siempre un gráfico de barras**. Un gráfico de torta solo es aceptable si tienes muy pocas categorías (2 o 3) y solo quieres mostrar la composición de un todo.
 
-ggplot(data = data.frame(p, logit), aes(x = p, y = logit)) +
-  geom_line(color = "steelblue", size = 1.1) +
-  labs(title = "Logit según valores de p", x = "p", y = "Logit = ln(p / (1 - p))") +
-  theme_minimal() +
-  ylim(-6, 6)
-```
+## Buenas Prácticas en Gráficos de Barras {.smaller background-color="white"}
 
+Para que un gráfico de barras sea informativo y honesto, debe seguir algunas reglas:
 
+1.  **Etiquetar los ejes claramente:** El eje X debe indicar qué variable se está graficando. El eje Y debe indicar si la escala es de frecuencia, porcentaje o proporción.
+2.  **El eje Y debe comenzar en cero:** Empezar el eje en un valor mayor a cero es una práctica engañosa muy común que exagera visualmente las diferencias entre las barras.
+3.  **Ordenar las barras de forma lógica:** A menudo es útil ordenar las barras de mayor a menor frecuencia (o viceversa) para facilitar la lectura, a menos que la variable tenga un orden intrínseco (como el nivel educacional).
+4.  **Incluir un título informativo y la fuente de los datos.**
 
-## Odds de dos grupos {.smaller background-color="white"}
+## Cierre y Próximos Pasos {.smaller background-color="white"}
 
-En nuestro ejemplo original queremos ver como cambia la probabilidad de que un hogar este en la pobreza según sexo del jefe de hogar.
+::: {style="font-size: 0.9em; line-height: 1.2;"}
+**Resumen de la sesión de hoy:**
 
-$$Odds_{JH- Hombre} = 0.076/0.924=0.08225 $$
+-   Hemos aprendido que la descripción de **variables categóricas** se basa en el **conteo**.
+-   Las **tablas de frecuencia** (absolutas y relativas) y la **moda** son nuestras herramientas numéricas fundamentales.
+-   Las **tasas** nos permiten hacer comparaciones justas entre grupos de diferentes tamaños.
+-   El **gráfico de barras** es la herramienta visual estándar y más efectiva para este tipo de variables.
 
-$$Odds_{JH- Mujer} = 0.114/0.886=0.1286 $$ Es decir, existen 8,22 hogares con jefatura masculina en situación de pobreza por cada 100 que no lo están, mientras que 12,86 hogares con jefatura femenina en situación de pobreza por cada 100 que no lo están.
+**En el práctico de hoy:**
 
-## Concepto de Odds ratio {.smaller background-color="white"}
+-   Aplicarán estas técnicas en R. Usarán `dplyr::count()` para crear tablas de frecuencia y `ggplot2::geom_bar()` para crear sus primeros gráficos de barras, poniendo en práctica las buenas prácticas de visualización.
 
-Los odds ratio resultan útiles para comparar la asociación entre las chances de dos variables dicotómicas.
+**Adelanto de la próxima clase:**
 
-OR de pobreza de un hogar con jefatura masculina / OR de pobreza de un hogar con jefatura masculina
-
-$$Odds\: ratio = {{p_{m}(1-p_{m})}\over p_{h}(1-p_{h})}$$ $$= {0.114/0.886 \over 0.076/0.924} = {0.1286\over 0.08225}= 1.564 $$
-
-## Concepto de Odds ratio {.smaller background-color="white"}
-
-Las chances de un hogar con jefatura femenina de encontrarse esn situación de pobreza son 1,564 veces mayores a las chanches de un hogar con jefatura masculina.
-
-**Los odds ratio nos permiten resumir en un número la relación entre dos variables categóricas**
-
-Ahora con estos conceptos en mente pasemos a ver como se ajusta un modelo de regresión logística.
-
-# Cálculo de modelos e interpretación de coeficientes
-
-## Cálculo de modelo en R: función GLM {.smaller background-color="white"}
-
-Para estimar un modelo de regresión logística binaria en R debemos usar la función glm, incluida en r base
-
-```{r, echo= TRUE, eval=FALSE}
-glm(pobre~as_factor(sexo), 
-    data=base[base$pco1==1,], # filtro por JH
-    family="binomial")
-```
-
-Especificamos la formula igual que en una regresión lineal (la variable dependiente debe estar en formato 0-1). Debemos especificar la familia de modelos (ya que la función glm sirve para calcular distintos tipos de modelos lineales generalizados).
-
-## Interpretación de coeficiente {.smaller background-color="white"}
-
-Los beta de un modelo de regresión logística están puestos en términos del logaritmo de los odds.
-
-Es decir, el beta de mujer nos indica que los log-odds de encontrarse en situación de pobreza aumentan en 0.41 en las mujeres en relación a los hombres.
-
-```{r, results='asis', echo=FALSE}
-library(haven)
-library(dplyr)
-library(texreg)
-temp <- tempfile() #Creamos un archivo temporal
-download.file("http://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2020/Casen_en_Pandemia_2020_revisada202209.sav.zip",temp) #descargamos los datos
-casen <- haven::read_sav(unz(temp, "Casen_en_Pandemia_2020_revisada202209.sav")) #cargamos los datos
-unlink(temp); remove(temp) #eliminamos el archivo temporal
-
-casen <- casen %>%
-  mutate(pobre = case_when(
-    pobreza %in% 1:2 ~ 1,
-    pobreza == 3 ~ 0
-  ))
-
-modelo<- glm(pobre~as_factor(sexo), 
-    data=casen[casen$pco1==1,], # filtro por JH
-    family="binomial")
-
-htmlreg(modelo, custom.coef.names = c("Intercepto","Mujer (ref.hombre)" ))
-
-```
-
-## Interpretación de coeficientes {.smaller background-color="white"}
-
-Para poder realizar una interpretación con sentido de los coeficientes del modelo debemos realizar una transformación, de forma que el beta quede expresado como odds. Para esto debemos hacer una **exponenciación** de los coeficientes.
-
-```{r, eval=FALSE, echo=TRUE}
-exp(0.41)=1.506818
-```
-
-Es decir, los odds (chances) de ser pobre para un hogar con jefatura femenina son 1,506818 veces más que las de uno con jefatura masculina.
-
-## Interpretación de coeficientes {.smaller background-color="white"}
-
-```{r, results='asis'}
-or <- texreg::extract(modelo)
-or@coef <- exp(or@coef)
-
-
-htmlreg(or,
-        custom.coef.names = c("Intercepto","Mujer (ref.hombre)"),
-        custom.model.names = "Pobreza según sexo JH (odd ratio)",single.row = T)
-```
-
-
-## Modelos con múltiples variables independientes {.smaller background-color="white"}
-
-```{r, results='asis'}
-htmlreg(glm(pobre~as_factor(sexo)+edad, data=casen[casen$pco1==1,], family = "binomial"),
-        custom.coef.names = c("Intercepto","Mujer (ref.hombre)","Edad"),
-        custom.model.names = "Pobreza según sexo JH",single.row = T)
-```
-
-
-## Modelos con múltiples variables independientes {.smaller background-color="white"}
-
-En el caso de un modelo de regresión logística con múltiples predictores o variables independientes la interpretación es similar, pero integrando el concepto de control estadístico.
-
-En este caso podemos decir que los log-odds predichos de encontrarse en situación de pobreza aumentan en 0,39 en los hogares con jefatura femenina respecto aquellos con jefatura masculina **controlando por edad**
-
-En el mismo sentido, los log-odds predichos de ser encontrarse en situación de pobreza disminuyen en 0.03 por cada año más de edad del jefe de hogar, **controlando por sexo**.
-
-## Modelos con múltiples variables independientes {.smaller background-color="white"}
-
-```{r, results='asis'}
-
-modelo2<-glm(pobre~as_factor(sexo)+edad, data=casen[casen$pco1==1,], family = "binomial")
-or <- texreg::extract(modelo2)
-or@coef <- exp(or@coef)
-
-
-htmlreg(or,
-        custom.coef.names = c("Intercepto","Mujer (ref.hombre)","Edad"),
-        custom.model.names = "Pobreza según sexo JH (odd ratios)",single.row = T)
-```
-
-## Interpretación de Resultados de Regresión Logística en Odds Ratios {.smaller background-color="white"}
-
-En el siguiente modelo de regresión logística, se analiza la probabilidad de encontrarse en situación de pobreza según sexo del jefe de hogar (JH) y su edad.
-
-
-- **Mujer (ref. hombre, 1.47)**: Los odds de estar en situación de pobreza son 1.47 veces mayores en los hogares con jefatura femenina, comparado con los hogares con jefatura masculina, manteniendo constante la edad. Esto indica que las mujeres jefas de hogar tienen una mayor probabilidad de encontrarse en situación de pobreza.
-- **Edad (0.97)**: Por cada año adicional de edad del jefe de hogar, los odds o chances de encontrarse en situación de pobreza disminuyen un 3%, manteniendo constante el sexo del jefe de hogar.
-
-## Interpretación de los Coeficientes en Términos de Odds Ratios: Comparación de Grupos {.smaller background-color="white"}
-
-Al interpretar un coeficiente de regresión logística en términos de odds ratios para la comparación entre grupos, se deben considerar los siguientes criterios:
-
-1. **Valor mayor a 1**: Si el odds ratio es mayor a 1, significa que el grupo comparado tiene una mayor chances del evento estudiado en comparación con el grupo de referencia. Por ejemplo, un odds ratio de 1.47 indica que la chances del evento es un 47% mayor en el grupo comparado, manteniendo constantes las demás variables. Esto implica que el grupo comparado tiene un mayor riesgo o chances del evento en relación con el grupo de referencia.
-
-2. **Valor menor a 1**: Si el odds ratio es menor a 1, indica que el grupo comparado tiene una menor chances del evento estudiado en comparación con el grupo de referencia. Esto implica un efecto protector o una reducción de la chances del evento para el grupo comparado.
-
-## Interpretación de los Coeficientes en Términos de Odds Ratios: Comparación de Grupos {.smaller background-color="white"}
-
-
-3. **Valores cercanos a 1**: Valores cercanos a 1, como el 1.01 o 0.99, implican que la variable tiene poco o ningún efecto sobre los odds del evento, es decir, el impacto de dicha variable es mínimo.
-
-4. **Significancia Estadística**: Para determinar si el coeficiente tiene un efecto significativo sobre la variable dependiente, se consideran los valores p (***p < 0.001; **p < 0.01; *p < 0.05). En este caso, todos los coeficientes son significativos al nivel del 0.001.
-
-## Interpretación de los Coeficientes en Términos de Odds Ratios: Variable Continua {.smaller background-color="white"}
-
-Al interpretar un coeficiente de regresión logística en términos de odds ratios para una variable continua, se deben considerar los siguientes criterios:
-
-1. **Valor mayor a 1**: Si el odds ratio es mayor a 1, significa que por cada unidad adicional de la variable continua, la chances del evento estudiado aumenta. Esto implica que la variable tiene un efecto positivo en la chances del evento. Un valor mayor que 1 sugiere un incremento proporcional en los odds del evento.
-
-2. **Valor menor a 1**: Si el odds ratio es menor a 1, indica que por cada unidad adicional de la variable continua, la chances del evento disminuye. Por ejemplo, un odds ratio de 0.97 implica que, por cada año adicional de edad del jefe de hogar, los odds de estar en situación de pobreza disminuyen en un 3%. Un valor menor que 1 indica un efecto protector o una reducción en los odds del evento conforme aumenta la variable.
-
-## Interpretación de los Coeficientes en Términos de Odds Ratios: Variable Continua {.smaller background-color="white"}
-
-3. **Valores cercanos a 1**: Valores cercanos a 1, como el 1.01 o 0.99, implican que la variable tiene poco o ningún efecto sobre los odds del evento, es decir, el impacto de dicha variable es mínimo.
-
-4. **Significancia Estadística**: Para determinar si el coeficiente tiene un efecto significativo sobre la variable dependiente, se consideran los valores p (***p < 0.001; **p < 0.01; *p < 0.05). En este caso, todos los coeficientes son significativos al nivel del 0.001.
-
-## Diferencia entre un Coeficiente de Comparación de Grupos y uno de una Variable Continua {.smaller background-color="white"}
-
-En un modelo de regresión logística, los coeficientes pueden representar comparaciones entre grupos o el efecto de variables continuas:
-
-- **Coeficiente de Comparación de Grupos**: Este tipo de coeficiente se utiliza para variables categóricas, donde se compara un grupo específico con un grupo de referencia. Por ejemplo, en el caso de la variable **sexo** del jefe de hogar, el coeficiente de **Mujer (ref. hombre, 1.47)** representa la comparación entre los hogares con jefatura femenina y aquellos con jefatura masculina. En este caso, el odds ratio de 1.47 indica que los hogares con jefatura femenina tienen un 47% más de chances de encontrarse en situación de pobreza comparado con los hogares con jefatura masculina, manteniendo constante la edad. Los coeficientes de comparación de grupos siempre se interpretan en relación con una categoría de referencia.
-
-## Diferencia entre un Coeficiente de Comparación de Grupos y uno de una Variable Continua {.smaller background-color="white"}
-
-
-- **Coeficiente de una Variable Continua**: Este tipo de coeficiente se utiliza para variables numéricas que pueden tomar un rango de valores, como la **edad** del jefe de hogar. En este caso, el coeficiente de **Edad (0.97)** indica el cambio en los odds de encontrarse en situación de pobreza por cada año adicional de edad del jefe de hogar, manteniendo constante el sexo. Un odds ratio de 0.97 significa que, por cada año adicional de edad, los odds de estar en situación de pobreza disminuyen en un 3%. A diferencia de los coeficientes de comparación de grupos, los coeficientes de variables continuas reflejan un cambio incremental en los odds del evento por cada unidad adicional de la variable independiente.
-
-
-# Estadísticos de ajuste y selección de modelos
-
-## Estadísticos de ajuste {.smaller background-color="white"}
-
-En los modelos de regresión logística no contamos con una sola medida de ajuste, por lo que el análisis de ajuste se suele realizar de forma comparativa entre diferentes modelos. Las principales aproximaciones incluyen:
-
-- **Devianza**: Evalúa la calidad del modelo ajustado.
-- **Test de Razón de Verosimilitud**: Compara la bondad de ajuste entre modelos.
-- **Pseudo R²**: Proporciona una medida de la variabilidad explicada.
-- **Criterios de Información (AIC y BIC)**: Comparan modelos considerando tanto el ajuste como la complejidad.
-
-## Devianza {.smaller background-color="white"}
-
-La devianza es una medida de ajuste que se utiliza para evaluar la calidad de un modelo de regresión logística binaria. Representa la diferencia entre la log-verosimilitud del modelo ajustado y la log-verosimilitud del modelo nulo, multiplicada por -2. Por esta razón, también se conoce como **devianza residual**. Cuanto menor sea el valor de la devianza, mejor se ajusta el modelo a los datos.
-
-- Fórmula: $$ \text{Devianza} = -2 \times \log(\text{verosimilitud}) $$
-
-## Test de razón de verosimilitud {.smaller background-color="white"}
-
-El **Test de razón de verosimilitud (LR)** es un test estadístico utilizado para comparar dos modelos: uno más simple (modelo nulo) y otro más complejo (modelo ajustado). Se basa en la comparación de las devianzas de ambos modelos para determinar si el modelo ajustado mejora significativamente la predicción en comparación con el modelo nulo. Si el test muestra una mejora significativa, podemos concluir que el modelo más complejo proporciona un mejor ajuste a los datos.
-
-## Criterios de información (AIC y BIC) {.smaller background-color="white"}
-
-Los **Criterios de Información** son medidas utilizadas para comparar diferentes modelos y seleccionar el más adecuado. Los dos criterios más comunes son el **Akaike Information Criterion (AIC)** y el **Bayesian Information Criterion (BIC)**. Ambos criterios consideran tanto la bondad de ajuste del modelo como su complejidad, penalizando los modelos excesivamente complejos para evitar el sobreajuste. Un valor más bajo de AIC o BIC indica un mejor equilibrio entre ajuste y simplicidad del modelo.
-
-## Pseudo R² {.smaller background-color="white"}
-
-Los **Pseudo R²** son medidas de la variabilidad explicada por un modelo de regresión logística. No deben interpretarse como una proporción de la varianza explicada, como en los modelos con variables dependientes continuas, pero ofrecen una idea del desempeño del modelo. Entre los tipos de Pseudo R², uno de los más comunes es el **Pseudo R² de McFadden**, que se define como:
-
-$$ 1 - \left( \frac{LL(LM)}{LL(L0)} \right) $$
-
-donde:
-
-- **LL** es la log-verosimilitud del modelo.
-- **LM** es el modelo ajustado (con más predictores).
-- **L0** es el modelo nulo.
-
-Un valor cercano a 1 indica que el modelo explica una gran cantidad de la variabilidad en los datos, mientras que un valor cercano a 0 sugiere que el modelo tiene un poder explicativo limitado.
-
-## Ejemplo estadísticos de ajuste  {.smaller background-color="white"}
-
-```{r, results='asis'}
-mod1 <- glm(pobre~as_factor(sexo), data=casen[casen$pco1==1,], family = "binomial")
-mod2<- glm(pobre~as_factor(sexo)+edad, data=casen[casen$pco1==1,], family = "binomial")
-
-htmlreg(list(mod1,
-              mod2),
-        custom.coef.names = c("Intercepto","Mujer (ref.hombre)","Edad"),single.row = F)
-```
-
-
-## Ejemplo estadísticos de ajuste  {background-color="white"}
-
-```{r, echo=TRUE, message=FALSE}
-library(DescTools)
-DescTools::PseudoR2(mod1)
-DescTools::PseudoR2(mod2)
-
-```
+-   Nos adentraremos en el mundo de las **variables cuantitativas**, aprendiendo a describir su forma, centro y dispersión con herramientas como el **histograma** y el **boxplot**.
+:::  
