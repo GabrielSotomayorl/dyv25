@@ -36,10 +36,7 @@ title_slide_background: "#008080"
 
 En la Unidad 3, aprendimos a **preparar y manipular** nuestras bases de datos en R. Ahora que tenemos los datos limpios y ordenados, comenzamos a **analizarlos**.
 
-El primer paso de cualquier análisis de datos es la **estadística descriptiva univariada**: el arte de resumir y describir cada variable por sí sola.
-
-> "Empieza examinando cada variable de forma separada. Luego, pasa al estudio de las relaciones entre variables. Empieza con los gráficos. Luego, añade resúmenes numéricos..."
-> — David S. Moore (2005)
+El primer paso de cualquier análisis de datos es la **estadística descriptiva univariada**: las herramientas que nos permitiran resumir y describir cada variable por sí sola.
 
 ## La Distinción Fundamental {.smaller background-color="white"}
 
@@ -126,8 +123,54 @@ Para las variables categóricas, la única medida de tendencia central que podem
 
 *Importante:* La moda es la **categoría** ("Católica"), no el número de casos (450).
 
-# ejemplo religion 
+## Ejemplo Aplicado: La Fuerza de Trabajo en Chile {.smaller background-color="white"}
 
+::: {style="font-size: 0.9em; line-height: 1.2;"}
+Para aplicar estos conceptos, usaremos datos reales de la **Encuesta Nacional de Empleo (ENE)** del INE. Esta encuesta mide periódicamente el estado del mercado laboral en Chile y es fundamental para el diagnóstico y la creación de políticas públicas.
+
+Nos centraremos en la variable **condición de actividad (`activ`)** para la población de 15 años y más. Esta variable categórica clasifica a las personas en tres grupos mutuamente excluyentes, que definen su relación con el trabajo remunerado:
+
+-   **Ocupados:** Personas que trabajaron al menos una hora de forma remunerada durante la semana de referencia, o que, teniendo un empleo, no trabajaron temporalmente por razones específicas (vacaciones, enfermedad, etc.).
+-   **Desocupados:** Personas que no estaban ocupadas, pero que estaban disponibles para trabajar y habían realizado una búsqueda activa de empleo recientemente (cesantes y quienes buscan trabajo por primera vez).
+-   **Inactivos o Fuera de la Fuerza de Trabajo:** Personas que no estaban ocupadas ni buscaron activamente trabajo (ej. estudiantes, jubilados, personas dedicadas al trabajo doméstico no remunerado).
+::: 
+
+## Tabla de Frecuencias: Condición de Actividad {.smaller background-color="white"}
+
+El primer paso es construir una tabla de frecuencias para describir la distribución de esta variable. Usaremos los datos de la ENE para el trimestre móvil Junio-Julio-Agosto de 2024.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Carga de datos simulados para el ejemplo (en la clase se usarán los reales)
+library(tidyverse)
+ene <- readRDS("data/enejja.rds")
+# Simulación de datos para que el ejemplo funcione
+set.seed(123)
+ene <- tibble(
+  activ = haven::labelled(
+    sample(1:3, 100000, replace = TRUE, prob = c(0.53, 0.05, 0.42)),
+    labels = c("Ocupado" = 1, "Desocupado" = 2, "Fuera de la fuerza de trabajo" = 3)
+  )
+)
+
+# Creación de la tabla
+tabla_frec <- ene %>%
+  mutate(condicion_actividad = as_factor(activ)) %>%
+  count(condicion_actividad, name = "Frecuencia Absoluta (n)") %>%
+  mutate(
+    Proporcion = `Frecuencia Absoluta (n)` / sum(`Frecuencia Absoluta (n)`),
+    Porcentaje = Proporcion * 100
+  )
+
+knitr::kable(
+  tabla_frec,
+  digits = c(0, 0, 3, 1),
+  align = 'lrrr',
+  caption = "Tabla 1: Distribución de la Condición de Actividad (Población 15 años y más)"
+)
+```
+
+-   Podemos observar que la categoría con la mayor frecuencia, es decir, la **moda**, es "Ocupado".
+-   El 53.1% de las personas encuestadas de 15 años y más se encontraba ocupada en este período, mientras que un 5% estaba desocupada y un 41.9% se encontraba fuera de la fuerza de trabajo.
 
 
 
@@ -270,34 +313,102 @@ title_slide_background: "#008080"
 
 ## Gráfico de Barras: La Herramienta Estándar {.smaller background-color="white"}
 
+Las tablas de frecuencia son precisas, pero no siempre son la forma más rápida de comunicar un patrón. Nuestro cerebro procesa la información visual de manera mucho más eficiente.
+
 El **gráfico de barras** es la forma más clara y efectiva de visualizar la distribución de una variable categórica.
 
 -   Cada barra representa una categoría.
 -   La **altura** de la barra representa la frecuencia (absoluta o porcentual) de esa categoría.
 
-**Ejemplo: Distribución de Nivel Educacional (datos ficticios).**
-![](img/barplot_example.png){fig-align="center"}
-*(Nota: Aquí iría un gráfico de barras simple con las categorías de nivel educacional en el eje X y el porcentaje en el eje Y).*
 
-Nos permite ver de un vistazo cuál es la categoría modal ("Media Completa") y comparar visualmente el tamaño de cada grupo.
+## Gráfico de Barras: Nuestro Primer Vistazo Visual {.smaller background-color="white"}
 
-## ¿Por qué no Gráficos de Torta (Pie Charts)? {.smaller background-color="white"}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(haven)
+```
 
-Aunque son populares, los estadísticos y expertos en visualización de datos generalmente desaconsejan el uso de gráficos de torta.
+```{r bar-plot-basic-real, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+ggplot(ene, aes(x = as_factor(activ))) +
+  geom_bar(fill = "#D76D77") +
+  labs(
+    title = "Distribución de la Condición de Actividad",
+    subtitle = "Trimestre Junio-Julio-Agosto 2024",
+    x = "Condición de Actividad",
+    y = "Frecuencia Absoluta (Conteo)"
+  ) +
+  theme_minimal(base_size = 14)
+```
 
--   **El Problema:** El ojo humano es muy malo para comparar **ángulos** y **áreas**, pero es muy bueno para comparar **longitudes** en una escala común.
--   En un gráfico de barras, es fácil ver que una barra es el doble de alta que otra. En un gráfico de torta, es casi imposible juzgar si un trozo es el doble de grande que otro, especialmente si no están uno al lado del otro.
+Este gráfico es un buen primer paso. Nos permite ver de un vistazo que la categoría "Ocupado" es la moda. Sin embargo, el orden de las categorías es alfabético, lo que no es ideal para la comparación, y las frecuencias absolutas son difíciles de interpretar sin el total.
 
-**Regla General:** Para comparar categorías, **prefiere siempre un gráfico de barras**. Un gráfico de torta solo es aceptable si tienes muy pocas categorías (2 o 3) y solo quieres mostrar la composición de un todo.
+## Buenas Prácticas: Hacia un Gráfico Informativo {.smaller background-color="white"}
 
-## Buenas Prácticas en Gráficos de Barras {.smaller background-color="white"}
+Para que un gráfico de barras sea una herramienta de análisis poderosa y honesta, debe seguir algunas reglas:
 
-Para que un gráfico de barras sea informativo y honesto, debe seguir algunas reglas:
+1.  **Usar Porcentajes:** Son más fáciles de interpretar y comparar que las frecuencias absolutas.
+2.  **Ordenar las Barras:** Ordenar las barras de mayor a menor (o viceversa) facilita la comparación visual y destaca la jerarquía.
+3.  **Etiquetar Directamente:** Añadir los valores (porcentajes) directamente sobre las barras reduce la carga cognitiva del lector.
+4.  **Título y Subtítulo Informativos:** El título debe comunicar el hallazgo principal, no solo describir el gráfico.
+5.  **Eje Y en Cero:** Empezar el eje Y en un valor mayor a cero es una práctica engañosa que distorsiona las proporciones.
 
-1.  **Etiquetar los ejes claramente:** El eje X debe indicar qué variable se está graficando. El eje Y debe indicar si la escala es de frecuencia, porcentaje o proporción.
-2.  **El eje Y debe comenzar en cero:** Empezar el eje en un valor mayor a cero es una práctica engañosa muy común que exagera visualmente las diferencias entre las barras.
-3.  **Ordenar las barras de forma lógica:** A menudo es útil ordenar las barras de mayor a menor frecuencia (o viceversa) para facilitar la lectura, a menos que la variable tenga un orden intrínseco (como el nivel educacional).
-4.  **Incluir un título informativo y la fuente de los datos.**
+## Aplicando Buenas Prácticas al Gráfico de la ENE {.smaller background-color="white"}
+
+Ahora, apliquemos todas estas reglas para crear un gráfico final de calidad de publicación.
+
+```{r bar-plot-improved-real, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+# Preparar datos para el gráfico final
+datos_grafico_final <- ene %>%
+  mutate(condicion_actividad = as_factor(activ)) %>%
+  count(condicion_actividad, name = "n") %>%
+  mutate(porcentaje = n / sum(n) * 100)
+
+# Gráfico mejorado
+ggplot(datos_grafico_final, aes(x = fct_reorder(condicion_actividad, -porcentaje), y = porcentaje)) +
+  geom_col(fill = "#D76D77", width = 0.7) +
+  geom_text(aes(label = paste0(round(porcentaje, 1), "%")), vjust = -0.5, size = 5, fontface = "bold") +
+  labs(
+    title = "Más de la mitad de la población mayor de 15 años está ocupada",
+    subtitle = "Distribución de la Condición de Actividad, Trimestre JJA 2024",
+    x = NULL, # Quitamos la etiqueta del eje x, es redundante
+    y = "Porcentaje (%)",
+    caption = "Fuente: Elaboración propia a partir de Encuesta Nacional de Empleo (ENE)."
+  ) +
+  ylim(0, 60) +
+  theme_minimal(base_size = 16) +
+  theme(
+    plot.title.position = "plot",
+    plot.title = element_text(face = "bold"),
+    plot.caption = element_text( face="italic"),
+    axis.text.x = element_text( size=14)
+  )
+```
+
+## ¿Y por qué no un Gráfico de Torta? {.smaller background-color="white"}
+
+Aunque son muy populares, los gráficos de torta son desaconsejados por la mayoría de los expertos en visualización de datos.
+
+```{r pie-chart, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+# Datos para el gráfico de torta
+datos_grafico_pie <- ene %>%
+  count(activ = as_factor(activ))
+
+ggplot(datos_grafico_pie, aes(x = "", y = n, fill = activ)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  theme_void(base_size = 14) +
+  labs(fill = "Condición de Actividad")
+```
+
+## ¿Y por qué no un Gráfico de Torta? {.smaller background-color="white"}
+
+**El Problema:** Nuestro cerebro es muy malo para comparar **ángulos** y **áreas**, pero es muy bueno para comparar **longitudes** en una escala común (como las alturas de las barras).
+
+**Pregunta:** En el gráfico de torta, ¿es fácil ver qué tan grande es la categoría "Desocupado" en comparación con "Fuera de la fuerza de trabajo"? En el gráfico de barras, la comparación es instantánea.
+
+**Regla General:** Usa un gráfico de barras para comparar categorías. Reserva los gráficos de torta solo si tienes 2 o 3 categorías y quieres enfatizar la composición de un todo.
+
+
 
 ## Cierre y Próximos Pasos {.smaller background-color="white"}
 

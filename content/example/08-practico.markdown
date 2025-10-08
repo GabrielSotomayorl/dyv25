@@ -38,7 +38,8 @@ Hoy trabajaremos con los datos del trimestre móvil **Junio-Julio-Agosto de 2025
 
 ### 2.2 Carga de Paquetes
 
-```{r setup, message=FALSE, warning=FALSE}
+
+```r
 library(haven)
 library(tidyverse)
 ```
@@ -47,7 +48,8 @@ library(tidyverse)
 
 Vamos a cargar los datos usando `read_dta()` del paquete `haven`, ya que es un archivo de Stata.
 
-```{r load-manual, eval=FALSE, echo=TRUE}
+
+```r
 # Cargar la base de datos de la ENE desde tu carpeta local
 ene <- haven::read_dta("datos/ene-2025-07-jja.dta")
 ```
@@ -55,7 +57,8 @@ ene <- haven::read_dta("datos/ene-2025-07-jja.dta")
 ---
 *Nota sobre la reproducibilidad:* Para que este práctico funcione de manera autocontenida, a continuación se incluye el código que realiza la descarga y carga de forma automática.
 
-```{r load-auto, message=FALSE, warning=FALSE, cache=TRUE}
+
+```r
 # Este código cargará automáticamente los datos desde la web
 temp <- tempfile(fileext = ".dta")
 download.file("https://www.ine.gob.cl/docs/default-source/ocupacion-y-desocupacion/bbdd/2025/stata/ene-2025-07-jja.dta?sfvrsn=3f9c9348_5&download=true", temp, mode="wb")
@@ -71,7 +74,8 @@ El primer paso para describir una variable categórica es crear una tabla de fre
 
 La función `table()` es la forma más rápida de obtener un conteo de **frecuencias absolutas**.
 
-```{r table-base}
+
+```r
 # Primero, convertimos la variable 'activ' a factor para que sea legible
 ene$condicion_actividad <- as_factor(ene$activ)
 
@@ -80,12 +84,29 @@ frec_abs <- table(ene$condicion_actividad)
 frec_abs
 ```
 
+```
+## 
+##                   Ocupados/as                Desocupados/as 
+##                         42467                          3918 
+## Fuera de la fuerza de trabajo 
+##                         36286
+```
+
 Para obtener **frecuencias relativas (porcentajes)**, podemos aplicar la función `prop.table()` al resultado de `table()`.
 
-```{r prop-table}
+
+```r
 # El resultado es una proporción, por lo que multiplicamos por 100
 frec_rel <- prop.table(frec_abs) * 100
 frec_rel
+```
+
+```
+## 
+##                   Ocupados/as                Desocupados/as 
+##                     51.368678                      4.739268 
+## Fuera de la fuerza de trabajo 
+##                     43.892054
 ```
 
 **Interpretación:** Los outputs nos muestran el conteo de personas y luego el porcentaje en cada una de las tres categorías. Es un método rápido, pero requiere dos pasos y el resultado es menos prolijo que con otras alternativas.
@@ -99,7 +120,8 @@ Existen paquetes que ofrecen funciones más completas. Por ejemplo, la función 
 
 Para mantener la coherencia con el curso, usaremos el flujo de `dplyr`. Un paso importante es filtrar primero la base para quedarnos solo con la **población en edad de trabajar (15 años o más)**, ya que la condición de actividad solo se define para este grupo.
 
-```{r table-dplyr}
+
+```r
 # Explicación del código:
 # 1. Filtramos la base para incluir solo a personas con edad >= 15.
 # 2. count() cuenta el número de casos para cada categoría de 'condicion_actividad'.
@@ -117,11 +139,21 @@ tabla_frec <- ene %>%
 tabla_frec
 ```
 
+```
+## # A tibble: 3 × 3
+##   condicion_actividad           Frecuencia_Absoluta Porcentaje
+##   <fct>                                       <int>      <dbl>
+## 1 Ocupados/as                                 42467      51.4 
+## 2 Desocupados/as                               3918       4.74
+## 3 Fuera de la fuerza de trabajo               36286      43.9
+```
+
 ## 4. Presentando Tablas con `knitr::kable()`
 
 Las tablas que R muestra en la consola son funcionales, pero no muy estéticas. Para crear tablas de presentación (para informes o publicaciones), podemos usar la función `kable()` del paquete `knitr`.
 
-```{r table-kable}
+
+```r
 knitr::kable(
   tabla_frec,
   # Le damos formato a los números: 0 decimales para Frecuencia, 1 para Porcentaje
@@ -133,6 +165,16 @@ knitr::kable(
 )
 ```
 
+
+
+Table: <span id="tab:table-kable"></span>Table 1: Distribución de la Condición de Actividad (Población 15 años o más)
+
+|Condición de Actividad        | Frecuencia| Porcentaje (%)|
+|:-----------------------------|----------:|--------------:|
+|Ocupados/as                   |      42467|           51.4|
+|Desocupados/as                |       3918|            4.7|
+|Fuera de la fuerza de trabajo |      36286|           43.9|
+
 **Interpretación:** La tabla es ahora mucho más clara y profesional. Vemos que la **moda** es "Ocupados/as" (51.4%) y que un 43.9% de la población en edad de trabajar se encuentra fuera de la fuerza de trabajo.
 
 ## 5. Visualización: Gráficos de Barras
@@ -143,7 +185,8 @@ Ahora, vamos a visualizar la información de nuestra tabla.
 
 La función `barplot()` de R base crea gráficos de barras. Requiere que le entreguemos una tabla de frecuencias ya calculada. Es una herramienta rápida para una exploración inicial.
 
-```{r barplot-base}
+
+```r
 # 1. Creamos la tabla de frecuencias que vamos a graficar, filtrando por edad
 frecuencias_pet <- table(ene$condicion_actividad[ene$edad >= 15])
 
@@ -157,13 +200,16 @@ barplot(
   ylim = c(0, 60000) # Límite del eje Y para dar más espacio arriba
 )
 ```
+
+<img src="/example/08-practico_files/figure-html/barplot-base-1.png" width="672" />
 **Análisis:** El gráfico nos da una idea visual rápida de las magnitudes. Su principal ventaja es la simplicidad y la velocidad, pero su personalización es menos intuitiva que con `ggplot2`.
 
 ### 5.2 Gráfico de Barras con `ggplot2`
 
 `ggplot2` nos permite construir gráficos por capas, dándonos un control total. `geom_bar()` puede calcular las frecuencias por nosotros directamente desde los datos.
 
-```{r barplot-ggplot-simple}
+
+```r
 # Explicación del código:
 # 1. ggplot(data, aes(x)): Iniciamos el gráfico, definimos los datos y el mapeo estético principal (qué va en el eje x).
 # 2. geom_bar(): Añadimos la capa geométrica. Al no especificar un eje 'y', `geom_bar` cuenta automáticamente los casos por cada categoría de 'x'.
@@ -182,6 +228,8 @@ ene %>%
   ) +
   theme_minimal()
 ```
+
+<img src="/example/08-practico_files/figure-html/barplot-ggplot-simple-1.png" width="672" />
 **Análisis:** Este gráfico es más estético y fácil de etiquetar. Sin embargo, como vimos en clase, podemos mejorarlo aún más, por ejemplo, ordenando las barras y usando porcentajes.
 
 ## 6. Actividad de Desafío
@@ -190,10 +238,10 @@ ene %>%
 2.  **Crear un gráfico de barras:** Usando `ggplot2`, crea un gráfico de barras que muestre la distribución de personas por `region`.
 
 
-```{r, eval=FALSE, echo=TRUE}
+
+```r
 # Escribe tu código para la tabla aquí
 
 
 # Escribe tu código para el gráfico aquí
-
 ```
