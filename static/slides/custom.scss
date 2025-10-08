@@ -39,3 +39,12 @@ $link-color: #D76D77;  /* Rosa quemado (enlaces)  */
 
 /* Enlaces al pasar el cursor */
 .reveal a:hover { color: #3A1C71; }
+
+
+/* Estilos para las citas (blockquote) */
+.reveal .slides blockquote {
+  color: #D76D77; /* Rosa quemado */
+  border-left: 3px solid #D76D77; /* Borde izquierdo del mismo color */
+  background-color: rgba(0, 0, 0, 0.1); /* Fondo oscuro semitransparente para destacar */
+  padding-left: 15px; /* Espacio interior para que no se pegue al borde */
+}

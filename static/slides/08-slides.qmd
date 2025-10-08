@@ -126,6 +126,11 @@ Para las variables categóricas, la única medida de tendencia central que podem
 
 *Importante:* La moda es la **categoría** ("Católica"), no el número de casos (450).
 
+# ejemplo religion 
+
+
+
+
 ## Tasas: Una Medida Estandarizada para la Comparación {.smaller background-color="white"}
 
 Una **tasa** es un tipo especial de frecuencia relativa que se usa para comparar la ocurrencia de un evento entre poblaciones de diferentes tamaños.
@@ -148,7 +153,114 @@ Una **tasa** es un tipo especial de frecuencia relativa que se usa para comparar
 
 **Conclusión:** Aunque la Comuna B tuvo más homicidios en términos absolutos, la Comuna A tiene una tasa de homicidios 5 veces mayor. Las tasas nos permiten hacer comparaciones justas.  
 
-#Incluir algo sobre la tasa de nataliudad 
+
+## Tasas en Acción: Analizando la Crisis de Natalidad en Chile {.smaller background-color="white"}
+
+Para ilustrar el poder de las tasas en el análisis sociológico, examinaremos uno de los cambios demográficos más profundos del Chile contemporáneo: la drástica caída de la natalidad. Para ello, usaremos dos indicadores clave.
+
+-   **Tasa Bruta de Natalidad:**
+    -   *¿Qué mide?* El número de nacidos vivos por cada 1.000 habitantes en un año determinado.
+    -   *Utilidad:* Es una medida general de la frecuencia con que ocurren nacimientos en toda la población.
+
+-   **Tasa Global de Fecundidad (TGF):**
+    -   *¿Qué mide?* El número promedio de hijos/as que tendría una mujer al final de su vida fértil si mantuviera las tasas de fecundidad actuales.
+    -   *Utilidad:* Es el indicador más preciso para medir el comportamiento reproductivo. Una TGF de **2,1** es considerada la "tasa de reemplazo" poblacional.
+
+
+## La Caída de la Fecundidad en Chile (1992-2024) {.smaller background-color="white"}
+
+El siguiente gráfico visualiza la evolución de ambos indicadores. La línea roja punteada marca la tasa de reemplazo poblacional de 2,1 hijos por mujer.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', out.width='90%'}
+# Cargar paquetes
+library(tidyverse)
+
+# Crear el data frame con los datos
+fecundidad_chile <- tibble::tribble(
+  ~anio, ~tasa_bruta_natalidad, ~tasa_global_fecundidad,
+  1992,                  21.4,                     2.51,
+  1993,                  20.7,                     2.45,
+  1994,                  20.1,                     2.39,
+  1995,                  19.2,                     2.29,
+  1996,                  18.7,                     2.25,
+  1997,                  18.0,                     2.18,
+  1998,                  17.5,                     2.14,
+  1999,                  16.8,                     2.07,
+  2000,                  16.4,                     2.04,
+  2001,                  16.0,                     2.01,
+  2002,                  15.4,                     1.94,
+  2003,                  14.9,                     1.89,
+  2004,                  14.5,                     1.85,
+  2005,                  14.3,                     1.83,
+  2006,                  14.3,                     1.82,
+  2007,                  14.7,                     1.87,
+  2008,                  14.9,                     1.90,
+  2009,                  15.0,                     1.92,
+  2010,                  14.7,                     1.89,
+  2011,                  14.4,                     1.86,
+  2012,                  14.0,                     1.81,
+  2013,                  13.8,                     1.79,
+  2014,                  14.2,                     1.85,
+  2015,                  13.7,                     1.79,
+  2016,                  12.8,                     1.69,
+  2017,                  11.9,                     1.57,
+  2018,                  11.8,                     1.56,
+  2019,                  11.0,                     1.44,
+  2020,                  10.0,                     1.30,
+  2021,                   9.0,                     1.17,
+  2022,                   9.6,                     1.25,
+  2023,                   8.7,                     1.16,
+  2024,                   7.7,                     1.03
+  )
+
+# Factor de escalamiento para el eje secundario
+escala <- 10
+
+# Gráfico
+ggplot(fecundidad_chile, aes(x = anio)) +
+  geom_line(aes(y = tasa_bruta_natalidad, color = "Tasa Bruta de Natalidad"), linewidth = 1.2) +
+  geom_line(aes(y = tasa_global_fecundidad * escala, color = "Tasa Global de Fecundidad"), linewidth = 1.2) +
+  geom_hline(yintercept = 2.1 * escala, linetype = "dashed", color = "red", linewidth = 1) +
+  scale_y_continuous(
+    name = "Tasa Bruta de Natalidad (nacidos por 1.000 hab.)",
+    sec.axis = sec_axis(~ . / escala, name = "Tasa Global de Fecundidad (hijos por mujer)")
+  ) +
+  scale_color_manual(values = c("Tasa Bruta de Natalidad" = "#3A1C71", "Tasa Global de Fecundidad" = "#D76D77")) +
+  labs(
+    title = "Caída de la Natalidad y Fecundidad en Chile (1992-2024)",
+    subtitle = "La línea roja punteada marca la tasa de reemplazo poblacional (2.1 hijos por mujer)",
+    x = "Año",
+    y = "Tasa Bruta de Natalidad",
+    color = "Indicador",
+    caption = "Fuente: Elaboración propia con datos de estadísticas vitales del INE."
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", size = 18),
+    axis.title.y.right = element_text(color = "#D76D77"),
+    axis.line.y.right = element_line(color = "#D76D77"),
+    axis.ticks.y.right = element_line(color = "#D76D77"),
+    axis.text.y.right = element_text(color = "#D76D77"),
+    axis.title.y.left = element_text(color = "#3A1C71"),
+    axis.line.y.left = element_line(color = "#3A1C71"),
+    axis.ticks.y.left = element_line(color = "#3A1C71"),
+    axis.text.y.left = element_text(color = "#3A1C71")
+  )
+```
+
+## Contexto Sociológico: ¿Por qué hay menos nacimientos? {.smaller background-color="white"}
+
+La socióloga Martina Yopo, experta en género y reproducción, ofrece un diagnóstico complejo que va más allá de las decisiones individuales.
+
+> "Mucha gente piensa que no hay futuro para hacer familia en Chile"
+> — Martina Yopo
+
+**Algunas claves del fenómeno:**
+
+-   **Infertilidades Estructurales:** No se trata solo de que las personas "no quieran" tener hijos, sino de la "falta de condiciones sociales para tener y criar hijos".
+-   **Tensiones Estructurales:** Existe un conflicto entre el mundo del trabajo y la vida familiar, que recae desproporcionadamente sobre las mujeres. La maternidad a menudo obstaculiza el desarrollo laboral y personal.
+-   **Futuro Incierto:** La crisis climática, la inestabilidad política y la precariedad económica generan una "desesperanza estructural" que desincentiva la formación de familias.
 
 ---
 title_slide_background: "#008080"
@@ -205,3 +317,7 @@ Para que un gráfico de barras sea informativo y honesto, debe seguir algunas re
 
 -   Nos adentraremos en el mundo de las **variables cuantitativas**, aprendiendo a describir su forma, centro y dispersión con herramientas como el **histograma** y el **boxplot**.
 :::  
+
+
+
+
