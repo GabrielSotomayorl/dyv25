@@ -137,20 +137,15 @@ Nos centraremos en la variable **condición de actividad (`activ`)** para la pob
 
 ## Tabla de Frecuencias: Condición de Actividad {.smaller background-color="white"}
 
-El primer paso es construir una tabla de frecuencias para describir la distribución de esta variable. Usaremos los datos de la ENE para el trimestre móvil Junio-Julio-Agosto de 2024.
+El primer paso es construir una tabla de frecuencias para describir la distribución de esta variable. Usaremos los datos de la ENE para el trimestre móvil Junio-Julio-Agosto de 5.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Carga de datos simulados para el ejemplo (en la clase se usarán los reales)
 library(tidyverse)
+library(haven)
 ene <- readRDS("data/enejja.rds")
 # Simulación de datos para que el ejemplo funcione
-set.seed(123)
-ene <- tibble(
-  activ = haven::labelled(
-    sample(1:3, 100000, replace = TRUE, prob = c(0.53, 0.05, 0.42)),
-    labels = c("Ocupado" = 1, "Desocupado" = 2, "Fuera de la fuerza de trabajo" = 3)
-  )
-)
+
 
 # Creación de la tabla
 tabla_frec <- ene %>%
@@ -172,6 +167,79 @@ knitr::kable(
 -   Podemos observar que la categoría con la mayor frecuencia, es decir, la **moda**, es "Ocupado".
 -   El 53.1% de las personas encuestadas de 15 años y más se encontraba ocupada en este período, mientras que un 5% estaba desocupada y un 41.9% se encontraba fuera de la fuerza de trabajo.
 
+
+## De la Muestra a la Población: Un Problema de Representatividad {.smaller background-color="white"}
+
+::: {style="font-size: 0.9em; line-height: 1.2;"}
+Hasta ahora, hemos contado los casos directamente de nuestra muestra (`n`). Sin embargo, si quisiéramos que nuestras conclusiones fueran representativas de todo Chile, **usar las frecuencias absolutas o relativas directas sería un error.**
+
+**El Problema:** En una encuesta real y compleja como la ENE, no todas las personas tienen la misma probabilidad de ser seleccionadas y, además, no todas las personas seleccionadas aceptan responder.  
+
+Esto genera dos desafíos:
+
+1.  **Diseño Muestral Complejo:** Personas en regiones rurales o menos pobladas pueden tener, por diseño, una mayor probabilidad de ser seleccionadas que alguien en Santiago.
+2.  **No Respuesta Diferencial:** Ciertos grupos (ej. jóvenes, hombres, personas de mayores ingresos) tienden a responder menos a las encuestas.
+
+Si no corregimos esto, nuestra muestra no reflejará correctamente la estructura demográfica de Chile y nuestras estimaciones serán **sesgadas**.
+:::
+
+## La Solución: Ponderadores o Factores de Expansión {.smaller background-color="white"}
+
+Para resolver este problema, los equipos estadísticos calculan una variable especial llamada **ponderador** o **factor de expansión**.
+
+-   **¿Qué es?** Es un **peso numérico** que se le asigna a cada persona en la encuesta. Este peso indica **a cuántas personas de la población total representa esa única persona entrevistada**.
+-   **¿Cómo se calcula?** Es un proceso complejo que busca corregir varios problemas a la vez. El peso final de una persona se ajusta por:
+    -   Su probabilidad de selección original (diseño muestral).
+    -   La no respuesta de su grupo demográfico.
+    -   Otros ajustes (como **cobertura** del marco muestral y **post-estratificación**) para "calibrar" la muestra final con las proyecciones de población oficiales del INE (ej. por región, sexo y tramo de edad).
+
+## Ponderadores en la Práctica {.smaller background-color="white"}
+
+::: {style="font-size: 0.9em; line-height: 1.2;"}
+Al usar el ponderador, pasamos de describir la muestra a **estimar las características de la población**.
+
+-   **¿Cómo se usa?** Al calcular cualquier estadística, en lugar de contar cada persona como "1", la contamos según el valor de su ponderador.
+-   **En R:** En las bases de datos, esta variable suele llamarse `fact_cal` (en la ENE), `fexp`, `pond` o `weights`.
+-   **Aplicación:** Para calcular el conteo poblacional en nuestra tabla de frecuencias, usamos el argumento `wt` dentro de la función `count()`.
+:::
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Carga de datos
+library(tidyverse)
+library(haven)
+ene <- readRDS("data/enejja.rds") # Se asume que este archivo está disponible
+```
+```{r}
+# Creamos la tabla ponderada
+tabla_frec_ponderada <- ene %>%
+  filter(edad >= 15) %>%
+  mutate(condicion_actividad = as_factor(activ)) %>%
+  # El argumento 'wt = fact_cal' le dice a count que use el ponderador
+  count(condicion_actividad, wt = fact_cal, name = "Poblacion_Estimada") %>%
+  mutate(
+    Porcentaje = (Poblacion_Estimada / sum(Poblacion_Estimada)) * 100
+  )
+
+tabla_frec_ponderada
+```
+
+**Nota sobre análisis avanzado:** El análisis correcto de encuestas complejas (para calcular errores estándar, intervalos de confianza, etc.) requiere paquetes especializados como `survey`. Este es un tema avanzado, pero por ahora, es fundamental que sepan que **para obtener estimaciones poblacionales, siempre deben usar el ponderador**.
+
+## Tabla Ponderada: Condición de Actividad en la Población {.smaller background-color="white"}
+
+Al aplicar el factor de expansión, nuestra tabla ya no describe la muestra, sino que **estima la distribución para toda la población de 15 años y más en Chile**. Estos porcentajes son los que coinciden con las cifras oficiales publicadas por el INE.
+
+```{r tabla-ponderada-kable, echo=FALSE, message=FALSE, warning=FALSE}
+# La tabla que creamos en la diapositiva anterior, ahora presentada con kable
+knitr::kable(
+  tabla_frec_ponderada,
+  digits = c(0, 0, 1),
+  col.names = c("Condición de Actividad", "Población Estimada (n)", "Porcentaje (%)"),
+  caption = "Tabla 2: Estimación de la Condición de Actividad (Población 15 años y más, ponderada)"
+)
+```
+
+**Interpretación:** Ahora podemos afirmar con propiedad que, para el trimestre Junio-Julio-Agosto de 2025, se estima que un 58.6% de la población de 15 años y más se encontraba ocupada, un 5.3% desocupada, y un 36.1% fuera de la fuerza de trabajo.
 
 
 ## Tasas: Una Medida Estandarizada para la Comparación {.smaller background-color="white"}
@@ -329,15 +397,26 @@ library(haven)
 ```
 
 ```{r bar-plot-basic-real, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
-ggplot(ene, aes(x = as_factor(activ))) +
-  geom_bar(fill = "#D76D77") +
+
+
+datos_grafico_final <- ene %>%
+ filter(edad >= 15)  %>%
+  mutate(condicion_actividad = as_factor(activ)) %>%
+  count(condicion_actividad, name = "n", wt = fact_cal) %>%
+  mutate(porcentaje = n / sum(n) * 100)
+
+# Gráfico mejorado
+ggplot(datos_grafico_final, aes(y = n, x = condicion_actividad)) +
+  geom_col(fill = "#D76D77") +
   labs(
     title = "Distribución de la Condición de Actividad",
-    subtitle = "Trimestre Junio-Julio-Agosto 2024",
+    subtitle = "Trimestre Junio-Julio-Agosto 2025",
     x = "Condición de Actividad",
     y = "Frecuencia Absoluta (Conteo)"
   ) +
   theme_minimal(base_size = 14)
+
+
 ```
 
 Este gráfico es un buen primer paso. Nos permite ver de un vistazo que la categoría "Ocupado" es la moda. Sin embargo, el orden de las categorías es alfabético, lo que no es ideal para la comparación, y las frecuencias absolutas son difíciles de interpretar sin el total.
@@ -359,8 +438,9 @@ Ahora, apliquemos todas estas reglas para crear un gráfico final de calidad de 
 ```{r bar-plot-improved-real, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 # Preparar datos para el gráfico final
 datos_grafico_final <- ene %>%
+ filter(edad >= 15)  %>%
   mutate(condicion_actividad = as_factor(activ)) %>%
-  count(condicion_actividad, name = "n") %>%
+  count(condicion_actividad, name = "n", wt = fact_cal) %>%
   mutate(porcentaje = n / sum(n) * 100)
 
 # Gráfico mejorado
@@ -369,7 +449,7 @@ ggplot(datos_grafico_final, aes(x = fct_reorder(condicion_actividad, -porcentaje
   geom_text(aes(label = paste0(round(porcentaje, 1), "%")), vjust = -0.5, size = 5, fontface = "bold") +
   labs(
     title = "Más de la mitad de la población mayor de 15 años está ocupada",
-    subtitle = "Distribución de la Condición de Actividad, Trimestre JJA 2024",
+    subtitle = "Distribución de la Condición de Actividad, Trimestre JJA 2025",
     x = NULL, # Quitamos la etiqueta del eje x, es redundante
     y = "Porcentaje (%)",
     caption = "Fuente: Elaboración propia a partir de Encuesta Nacional de Empleo (ENE)."
@@ -391,7 +471,8 @@ Aunque son muy populares, los gráficos de torta son desaconsejados por la mayor
 ```{r pie-chart, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 # Datos para el gráfico de torta
 datos_grafico_pie <- ene %>%
-  count(activ = as_factor(activ))
+  filter(edad >= 15)  %>%
+  count(activ = as_factor(activ), wt = fact_cal)
 
 ggplot(datos_grafico_pie, aes(x = "", y = n, fill = activ)) +
   geom_bar(stat = "identity", width = 1) +
