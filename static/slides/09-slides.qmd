@@ -1,0 +1,347 @@
+---
+title: "Visualizando Distribuciones y Medidas Robustas"
+subtitle: "Unidad 4: Estadística Descriptiva Univariada"
+author: "Gabriel Sotomayor"
+date: "2025-10-20"
+format:
+  revealjs:
+    theme: [dark, custom.scss]
+    slide-number: true
+    auto-fit: true
+    logo: images/logo.png
+include-in-header:
+  - text: |
+      <style>
+      #title-slide .title {
+        font-size: 2em;
+      }
+      </style>
+---
+
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
+
+-   **Introducir** el marco para describir una variable cuantitativa: **Forma, Centro y Dispersión**.
+-   **Aprender** a visualizar la **forma** de una distribución usando **Histogramas**.
+-   **Calcular e interpretar** las medidas de **centro** y **dispersión robustas**: **Mediana**, **Cuartiles** y **Rango Intercuartil (IQR)**.
+-   **Construir e interpretar** el **Resumen de Cinco Números** y su visualización: el **Boxplot**.
+
+---
+title_slide_background: "#008080"
+---
+
+# 1. Descripción de Variables Cuantitativas
+
+## De las Categorías a los Números {.smaller background-color="white"}
+
+En la clase anterior, aprendimos a describir variables categóricas contando casos y mostrando porcentajes (`table`, `count`, `geom_bar`).
+
+Hoy, pasamos a las **variables cuantitativas** (de intervalo o razón), como la edad, los ingresos o los años de escolaridad.
+
+Con estas variables, un simple conteo no es suficiente. Necesitamos herramientas para describir su **distribución**: cómo se reparten los valores a lo largo de un rango numérico.
+
+## El Mantra del Análisis Exploratorio de Datos (EDA) {.smaller background-color="white"}
+
+Al enfrentarnos a una variable cuantitativa, nuestro objetivo es describir tres características fundamentales de su distribución:
+
+1.  **Forma:** ¿Cuál es el aspecto general de la distribución? ¿Es simétrica o asimétrica? ¿Tiene uno o varios picos (modas)?
+2.  **Centro:** ¿Alrededor de qué valor se agrupan los datos? ¿Cuál es el "caso típico"?
+3.  **Dispersión (o Variabilidad):** ¿Qué tan extendidos o concentrados están los datos?
+
+Además, siempre debemos estar atentos a la presencia de **valores atípicos (outliers)**, que son observaciones que se desvían marcadamente del patrón general.
+
+---
+title_slide_background: "#008080"
+---
+
+# 2. Visualizando la Forma: Histogramas
+
+## El Histograma: Un Retrato de la Distribución {.smaller background-color="white"}
+
+El **histograma** es la principal herramienta gráfica para visualizar la forma de la distribución de una variable cuantitativa.
+
+-   **¿Cómo se construye?**
+    1.  El rango de la variable se divide en intervalos de igual ancho, llamados "bins" o "clases".
+    2.  Se cuenta cuántas observaciones caen dentro de cada intervalo.
+    3.  Se dibuja una barra para cada intervalo, donde la altura de la barra es proporcional a la frecuencia.
+
+A diferencia de un gráfico de barras, en un histograma el eje X es continuo y las barras van juntas.
+
+## Ingreso del Trabajo Principal en Chile {.smaller background-color="white"}
+
+Para ilustrar estos conceptos, usaremos la **Encuesta Suplementaria de Ingresos (ESI) 2024** del INE. Nos centraremos en la variable `ing_t_p` (ingreso del trabajo principal) para los ocupados de referencia.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Carga de paquetes y datos
+library(tidyverse)
+library(haven)
+
+# Carga de datos ESI 2024
+load("data/esi_2024.rdata")
+esi <- base
+
+```
+
+```{r histograma-ingreso, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+esi %>%
+  filter(ocup_ref == 1, ing_t_p < 5000000) %>% # Filtramos y acotamos para visualizar mejor
+  ggplot(aes(x = ing_t_p, weight = fact_cal_esi)) +
+  geom_histogram(binwidth = 100000, fill = "#D76D77", color = "white") +
+  labs(
+    title = "Distribución del Ingreso del Trabajo Principal en Chile",
+    subtitle = "Se observa una fuerte asimetría a la derecha",
+    x = "Ingreso del Trabajo Principal ($ CLP)",
+    y = "Población Estimada (frecuencia ponderada)",
+    caption = "Fuente: Elaboración propia a partir de ESI 2024."
+  ) +
+  theme_minimal(base_size = 14)
+```
+
+## Interpretando la Forma: Asimetría (Sesgo) {.smaller background-color="white"}
+
+::::::::: {style="font-size: 0.9em; line-height: 1.2;"}
+
+La asimetría describe si la distribución está "cargada" o tiene una cola más larga hacia un lado.
+
+:::::: columns
+::: {.column width="45%"}
+-   **Simétrica:** Las colas izquierda y derecha son un espejo aproximado. La mayoría de los casos se agrupan simétricamente alrededor del centro.
+
+-   **Asimétrica a la derecha (sesgo positivo):** La cola derecha es mucho más larga. Indica la presencia de muchos valores bajos/medios y unos pocos valores muy altos. **Ejemplo sociológico clásico: el ingreso.**
+
+-   **Asimétrica a la izquierda (sesgo negativo):** La cola izquierda es mucho más larga. Indica muchos valores altos y pocos valores muy bajos. Ejemplo: notas en un examen que resultó ser muy fácil.
+:::
+::: {.column width="55%"}
+```{r plot-asimetria, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8}
+library(tidyverse)
+set.seed(123)
+data_simetrica <- tibble(valor = rnorm(1000, 50, 10), tipo = "Simétrica")
+data_as_der <- tibble(valor = rlnorm(1000, 3.5, 0.5), tipo = "Asimétrica a la Derecha")
+data_as_izq <- tibble(valor = 100 - rlnorm(1000, 3.5, 0.5), tipo = "Asimétrica a la Izquierda")
+datos_asimetria <- bind_rows(data_simetrica, data_as_der, data_as_izq)
+
+ggplot(datos_asimetria, aes(x = valor)) +
+  geom_histogram(aes(fill = tipo), color = "white", bins = 30, show.legend = FALSE) +
+  facet_wrap(~tipo, scales = "free", ncol = 1) +
+  theme_minimal(base_size = 12) +
+  labs(x = NULL, y = NULL) +
+  theme(strip.text = element_text(face = "bold", size = 14))
+```
+:::
+::::::
+:::::::::
+
+## Interpretando la Forma: Modalidad {.smaller background-color="white"}
+
+::::::::: {style="font-size: 0.9em; line-height: 1.2;"}
+La modalidad se refiere al número de picos o modas que tiene una distribución.
+
+:::::: columns
+::: {.column width="45%"}
+-   **Unimodal:** La distribución tiene un solo pico principal. Es la forma más común, indicando que hay un valor o rango de valores claramente más frecuente que los demás.
+
+-   **Bimodal:** La distribución tiene dos picos distintos. A menudo es una señal importante de que nuestros datos provienen de **dos subgrupos diferentes** que no hemos separado.
+    -   *Ejemplo:* La distribución de estaturas en una muestra que mezcla hombres y mujeres probablemente será bimodal.
+
+-   **Multimodal:** Tiene varios picos.
+:::
+::: {.column width="55%"}
+```{r plot-modalidad, echo=FALSE, message=FALSE, warning=FALSE, fig.height=10}
+library(tidyverse)
+set.seed(456)
+data_unimodal <- tibble(valor = rnorm(1000, 50, 10), tipo = "Unimodal")
+data_bimodal <- tibble(valor = c(rnorm(500, 40, 5), rnorm(500, 60, 5)), tipo = "Bimodal (dos grupos)")
+datos_modalidad <- bind_rows(data_unimodal, data_bimodal)
+
+ggplot(datos_modalidad, aes(x = valor)) +
+  geom_histogram(aes(fill = tipo), color = "white", bins = 30, show.legend = FALSE) +
+  facet_wrap(~tipo, scales = "free_x", ncol = 1) +
+  theme_minimal(base_size = 12) +
+  labs(x = NULL, y = NULL) +
+  theme(strip.text = element_text(face = "bold", size = 14))
+```
+:::
+::::::
+:::::::::
+
+---
+title_slide_background: "#008080"
+---
+
+# 3. Medidas de Centro y Dispersión Robustas
+
+## ¿Qué es una Medida Robusta? {.smaller background-color="white"}
+
+Una medida estadística es **robusta** si **no se ve afectada significativamente** por la presencia de valores extremos (outliers) o por la asimetría de la distribución.
+
+**Ejemplo:**
+
+-   Datos: `1, 2, 3, 4, 100`
+-   La presencia del `100` es un outlier.
+-   Una medida robusta del centro debería estar cerca de `3`, ignorando la influencia desproporcionada del `100`.
+
+Hoy nos centraremos en las medidas robustas, que son ideales para describir distribuciones como la del ingreso.
+
+## La Mediana (M o Q2): El Centro Geométrico {.smaller background-color="white"}
+
+La **mediana** es el valor que se encuentra en el punto medio exacto de los datos, una vez que han sido ordenados de menor a mayor.
+
+-   **Definición:** Es el **percentil 50**. Deja al 50% de las observaciones por debajo y al 50% por encima.
+-   **Propiedad Clave:** Es una medida de centro **robusta**. Su valor depende de la posición de los datos, no de su magnitud.
+
+**Ejemplo:**
+
+-   Datos ordenados: `1, 2, **3**, 4, 100` -> La mediana es **3**.
+-   Datos ordenados: `1, 2, **3**, 4, 10000` -> La mediana sigue siendo **3**.
+
+El outlier no afecta a la mediana. Por eso es la medida preferida para describir el "ingreso típico" en una población.
+
+## Cuartiles y Rango Intercuartil (IQR) {.smaller background-color="white"}
+
+Así como la mediana divide los datos en dos mitades, los **cuartiles** los dividen en cuatro partes iguales.
+
+-   **Primer Cuartil (Q1):** Es el percentil 25. Deja al 25% de los datos por debajo.
+-   **Tercer Cuartil (Q3):** Es el percentil 75. Deja al 75% de los datos por debajo.
+
+A partir de los cuartiles, construimos la principal medida de dispersión robusta:
+
+-   **Rango Intercuartil (IQR):** Es la distancia entre el tercer y el primer cuartil (`IQR = Q3 - Q1`).
+-   **Interpretación:** El IQR representa el **rango en el que se encuentra el 50% central de los datos**. Al igual que la mediana, es una medida de dispersión **robusta** porque ignora los valores en las colas de la distribución.
+
+## El Resumen de Cinco Números y el Boxplot {.smaller background-color="white"}
+
+El **resumen de cinco números** es el conjunto estándar de estadísticas robustas para describir una variable cuantitativa.
+
+**Componentes:**
+
+1.  **Mínimo**
+2.  **Primer Cuartil (Q1)**
+3.  **Mediana (M o Q2)**
+4.  **Tercer Cuartil (Q3)**
+5.  **Máximo**
+
+Este resumen se visualiza directamente a través de un **diagrama de caja y bigotes** o **boxplot**.
+
+
+## El Resumen de Cinco Números en la Práctica {.smaller background-color="white"}
+
+Apliquemos estos conceptos a nuestra variable `ing_t_p` (ingreso del trabajo principal) de la ESI 2024. Este es el resumen numérico estándar para describir una distribución, especialmente si es asimétrica como la del ingreso.
+
+**Componentes:** Mínimo, Primer Cuartil (Q1), Mediana, Tercer Cuartil (Q3) y Máximo.
+
+```{r cinco-numeros-esi, echo=FALSE, message=FALSE, warning=FALSE}
+# Carga de paquetes y datos
+library(tidyverse)
+library(haven)
+library(DescTools)
+library(knitr)
+load("data/esi_2024.rdata")
+esi <- base
+
+# Filtro de la población de referencia
+esi_filtrada <- esi %>%
+  filter(ocup_ref == 1, ing_t_p > 0) # Filtramos ocupados de referencia e ingresos positivos
+
+# Cálculo ponderado
+resumen <- tibble(
+  Estadístico = c("Mínimo", "Q1 (Percentil 25)", "Mediana (Percentil 50)", "Q3 (Percentil 75)", "Máximo"),
+  Valor = c(
+    min(esi_filtrada$ing_t_p, na.rm = TRUE),
+    Quantile(esi_filtrada$ing_t_p, weights = esi_filtrada$fact_cal_esi, probs = 0.25, na.rm = TRUE),
+    Median(esi_filtrada$ing_t_p, weights = esi_filtrada$fact_cal_esi, na.rm = TRUE),
+    Quantile(esi_filtrada$ing_t_p, weights = esi_filtrada$fact_cal_esi, probs = 0.75, na.rm = TRUE),
+    max(esi_filtrada$ing_t_p, na.rm = TRUE)
+  )
+)
+
+kable(resumen, 
+      digits = 0,
+      caption = "Resumen de Cinco Números para el Ingreso del Trabajo Principal ($ CLP)",
+      col.names = c("Medida", "Ingreso Mensual"),
+      format.args = list(big.mark = "."))
+```
+
+
+## La Anatomía de un Boxplot {.smaller background-color="white"}
+
+::::::::: {style="font-size: 0.9em; line-height: 1.2;"}
+Un **diagrama de caja y bigotes** o **boxplot** es la visualización directa del resumen de cinco números y una de las herramientas más informativas de la estadística descriptiva.
+
+:::::: columns
+::: {.column width="45%"}
+-   **La Caja:** Representa el **Rango Intercuartil (IQR)**. Su longitud es una medida visual de la dispersión del 50% central de los datos.
+-   **La Línea Central:** Marca la **mediana** (Q2 o percentil 50).
+-   **Los Bigotes:** Se extienden hasta los valores mínimo y máximo "típicos" (generalmente 1.5 veces el IQR desde la caja).
+-   **Los Puntos:** Representan **valores atípicos (outliers)**, que son observaciones que caen más allá de los bigotes, permitiendo identificarlos fácilmente.
+:::
+::: {.column width="55%"}
+```{r boxplot-anatomia, echo=FALSE, message=FALSE, warning=FALSE, fig.height=10}
+
+set.seed(123)
+df_boxplot <- data.frame(y = c(rnorm(100, 50, 10), 10, 90, 95))
+
+ggplot(df_boxplot, aes(x = "", y = y)) +
+  geom_boxplot(fill = "#D76D77", width = 0.2, alpha = 0.8) + # Hice la caja un poco más delgada
+  stat_summary(fun = "mean", geom = "point", shape = 23, size = 4, fill = "white") +
+  
+  # Anotaciones ajustadas para la orientación vertical
+  annotate("text", x = 1.25, y = 60, label = "Tercer Cuartil (Q3)", hjust = 0, size = 4.5) +
+  annotate("text", x = 1.25, y = 50, label = "Mediana (Q2)", hjust = 0, size = 4.5) +
+  annotate("text", x = 1.25, y = 40, label = "Primer Cuartil (Q1)", hjust = 0, size = 4.5) +
+  
+  annotate("text", x = 0.85, y = 75, label = "Bigote\nSuperior", hjust = 1, size = 4.5) +
+  annotate("text", x = 0.85, y = 92, label = "Outliers", hjust = 1, size = 4.5) +
+  
+  annotate("text", x = 1.25, y = 55, label = "Caja = IQR", hjust = 0, size = 4.5) +
+  
+  # Segmentos (flechas) para señalar las partes
+  geom_segment(aes(x = 1.2, xend = 1.15, y = 58.5, yend = 58.5), arrow = arrow(length = unit(0.2, "cm"))) + # Caja
+  geom_segment(aes(x = 1.2, xend = 1.05, y = 50, yend = 50), arrow = arrow(length = unit(0.2, "cm"))) +   # Mediana
+  geom_segment(aes(x = 0.9, xend = 0.95, y = 75, yend = 68), arrow = arrow(length = unit(0.2, "cm"))) +  # Bigote
+  geom_segment(aes(x = 0.9, xend = 0.98, y = 92, yend = 91), arrow = arrow(length = unit(0.2, "cm"))) +  # Outlier
+  
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+
+```
+:::
+::::::
+:::::::::
+
+## El Boxplot  de Ingreso del Trabajo Principal {.smaller background-color="white"}
+
+Apliquemos el boxplot a la variable de ingreso de la ESI 2024. Este gráfico nos permite ver de un solo vistazo la forma, el centro, la dispersión y la enorme cantidad de outliers.
+
+```{r boxplot-real, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+esi %>%
+  filter(ocup_ref == 1) %>%
+  ggplot(aes(x = "", y = ing_t_p)) +
+  geom_boxplot(fill = "#3A1C71", outlier.color = "#D76D77", outlier.alpha = 0.3) +
+  scale_y_log10(labels = scales::dollar_format(prefix = "$", big.mark = ".")) +
+  coord_flip() +
+  labs(
+    title = "Boxplot del Ingreso del Trabajo Principal en Chile",
+    subtitle = "La compresión de la caja revela una fuerte asimetría y muchos outliers",
+    y = "Ingreso Mensual (escala logarítmica)",
+    x = "",
+    caption = "Fuente: ESI 2024"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(plot.title.position = "plot")
+```
+
+## Cierre y Próximos Pasos {.smaller background-color="white"}
+
+**Resumen de la sesión de hoy:**
+
+-   Introdujimos el marco **Forma-Centro-Dispersión** para describir variables cuantitativas.
+-   Aprendimos a usar **histogramas** para visualizar la forma (asimetría, modalidad).
+-   Definimos y calculamos las **medidas robustas** de centro (**mediana**) y dispersión (**IQR**).
+-   Vimos cómo el **resumen de cinco números** se traduce en un **boxplot**, una poderosa herramienta visual.
+
+**En el práctico de hoy:**
+
+-   Aplicarán estas técnicas en R para describir variables de la Encuesta CASEN, usando `geom_histogram`, `geom_boxplot`, `summary()` y `quantile()`.
+
+**Adelanto de la próxima clase:**
+
+-   Exploraremos el otro par de medidas descriptivas: la **media** y la **desviación estándar**. Veremos por qué no son robustas y cuándo es apropiado usarlas.
