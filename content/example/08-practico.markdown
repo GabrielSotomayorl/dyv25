@@ -41,7 +41,8 @@ Hoy trabajaremos con los datos del trimestre móvil **Junio-Julio-Agosto de 2025
 
 ``` r
 library(haven)
-library(tidyverse)
+library(tidyverse) #incluye ggplot2
+library(knitr)
 ```
 
 ### 2.3 Carga de la Base de Datos
@@ -146,7 +147,7 @@ Ahora, presentemos nuestra tabla ponderada de una forma más profesional.
 
 
 ``` r
-knitr::kable(
+kable(
   tabla_frec_pob,
   digits = c(0, 0, 1),
   col.names = c("Condición de Actividad", "Población Estimada", "Porcentaje (%)"),
@@ -164,7 +165,7 @@ Table: <span id="tab:table-kable"></span>Table 1: Estimación de la Condición d
 |Desocupados/as                |             875888|            5.3|
 |Fuera de la fuerza de trabajo |            6312197|           38.2|
 
-**Interpretación:** Esta tabla es una estimación para la población total de Chile. Ahora sí podemos decir que, para este trimestre, se estima que un **58.6%** de la población en edad de trabajar estaba ocupada. Estos son los números que se acercan a las cifras oficiales del INE.
+**Interpretación:** Esta tabla es una estimación para la población total de Chile. Ahora sí podemos decir que, para este trimestre, se estima que un **56.5%** de la población en edad de trabajar estaba ocupada. Estos son los números que se acercan a las cifras oficiales del INE.
 
 ## 5. Visualización: Gráficos de Barras
 

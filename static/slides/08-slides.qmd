@@ -149,6 +149,7 @@ ene <- readRDS("data/enejja.rds")
 
 # Creación de la tabla
 tabla_frec <- ene %>%
+  filter(edad >= 15) %>%
   mutate(condicion_actividad = as_factor(activ)) %>%
   count(condicion_actividad, name = "Frecuencia Absoluta (n)") %>%
   mutate(
@@ -165,7 +166,7 @@ knitr::kable(
 ```
 
 -   Podemos observar que la categoría con la mayor frecuencia, es decir, la **moda**, es "Ocupado".
--   El 53.1% de las personas encuestadas de 15 años y más se encontraba ocupada en este período, mientras que un 5% estaba desocupada y un 41.9% se encontraba fuera de la fuerza de trabajo.
+-   El 51.4% de las personas encuestadas de 15 años y más se encontraba ocupada en este período, mientras que un 4.7% estaba desocupada y un 43.9% se encontraba fuera de la fuerza de trabajo.
 
 
 ## De la Muestra a la Población: Un Problema de Representatividad {.smaller background-color="white"}
@@ -199,7 +200,7 @@ Para resolver este problema, los equipos estadísticos calculan una variable esp
 Al usar el ponderador, pasamos de describir la muestra a **estimar las características de la población**.
 
 -   **¿Cómo se usa?** Al calcular cualquier estadística, en lugar de contar cada persona como "1", la contamos según el valor de su ponderador.
--   **En R:** En las bases de datos, esta variable suele llamarse `fact_cal` (en la ENE), `fexp`, `pond` o `weights`.
+-   **En R:** En las bases de datos, esta variable suele llamarse `fact_cal` (en la ENE), `fexp`, `pond`, `expr` o `weights`. entre otros.
 -   **Aplicación:** Para calcular el conteo poblacional en nuestra tabla de frecuencias, usamos el argumento `wt` dentro de la función `count()`.
 :::
 
@@ -239,7 +240,7 @@ knitr::kable(
 )
 ```
 
-**Interpretación:** Ahora podemos afirmar con propiedad que, para el trimestre Junio-Julio-Agosto de 2025, se estima que un 58.6% de la población de 15 años y más se encontraba ocupada, un 5.3% desocupada, y un 36.1% fuera de la fuerza de trabajo.
+**Interpretación:** Ahora podemos afirmar con propiedad que, para el trimestre Junio-Julio-Agosto de 2025, se estima que un 56.5% de la población de 15 años y más se encontraba ocupada, un 5.3% desocupada, y un 38.2% fuera de la fuerza de trabajo.
 
 
 ## Tasas: Una Medida Estandarizada para la Comparación {.smaller background-color="white"}
