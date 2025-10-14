@@ -11,6 +11,8 @@ toc: true
 editor_options: 
   chunk_output_type: console
 ---
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 ## 0. Objetivos del Práctico
 
@@ -43,6 +45,7 @@ Hoy trabajaremos con los datos del trimestre móvil **Junio-Julio-Agosto de 2025
 library(haven)
 library(tidyverse) #incluye ggplot2
 library(knitr)
+library(kableExtra)
 ```
 
 ### 2.3 Carga de la Base de Datos
@@ -59,12 +62,14 @@ ene <- haven::read_dta("datos/ene-2025-07-jja.dta")
 *Nota sobre la reproducibilidad:* Para que este práctico funcione de manera autocontenida, a continuación se incluye el código que realiza la descarga y carga de forma automática.
 
 
-```r
+``` r
 # Este código cargará automáticamente los datos desde la web
 temp <- tempfile(fileext = ".dta")
 download.file("https://www.ine.gob.cl/docs/default-source/ocupacion-y-desocupacion/bbdd/2025/stata/ene-2025-07-jja.dta?sfvrsn=3f9c9348_5&download=true", temp, mode="wb")
 ene <- haven::read_dta(temp)
 unlink(temp); remove(temp)
+
+knitr::opts_knit$set(bookdown.internal.label = FALSE)
 ```
 
 ## 3. Tablas de Frecuencia
@@ -143,7 +148,7 @@ tabla_frec_pob
 
 ## 4. Presentando Tablas con `knitr::kable()`
 
-Ahora, presentemos nuestra tabla ponderada de una forma más profesional.
+Presentemos la tabla de forma limpia y profesional: `kable()` crea la tabla a partir del data frame (aplica formato y el caption) y `kable_styling()` le da el aspecto visual (estilos HTML) para que se vea bien en el Viewer de RStudio.
 
 
 ``` r
@@ -152,18 +157,37 @@ kable(
   digits = c(0, 0, 1),
   col.names = c("Condición de Actividad", "Población Estimada", "Porcentaje (%)"),
   caption = "Estimación de la Condición de Actividad (Población 15 años y más, ponderada)"
-)
+) |> 
+  kable_styling()
 ```
 
-
-
-Table: <span id="tab:table-kable"></span>Table 1: Estimación de la Condición de Actividad (Población 15 años y más, ponderada)
-
-|Condición de Actividad        | Población Estimada| Porcentaje (%)|
-|:-----------------------------|------------------:|--------------:|
-|Ocupados/as                   |            9355097|           56.5|
-|Desocupados/as                |             875888|            5.3|
-|Fuera de la fuerza de trabajo |            6312197|           38.2|
+<table class="table" style="color: black; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:unnamed-chunk-1"></span>Table 1: Estimación de la Condición de Actividad (Población 15 años y más, ponderada)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Condición de Actividad </th>
+   <th style="text-align:right;"> Población Estimada </th>
+   <th style="text-align:right;"> Porcentaje (%) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Ocupados/as </td>
+   <td style="text-align:right;"> 9355097 </td>
+   <td style="text-align:right;"> 56.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Desocupados/as </td>
+   <td style="text-align:right;"> 875888 </td>
+   <td style="text-align:right;"> 5.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Fuera de la fuerza de trabajo </td>
+   <td style="text-align:right;"> 6312197 </td>
+   <td style="text-align:right;"> 38.2 </td>
+  </tr>
+</tbody>
+</table>
 
 **Interpretación:** Esta tabla es una estimación para la población total de Chile. Ahora sí podemos decir que, para este trimestre, se estima que un **56.5%** de la población en edad de trabajar estaba ocupada. Estos son los números que se acercan a las cifras oficiales del INE.
 

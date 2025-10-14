@@ -42,6 +42,7 @@ Hoy trabajaremos con los datos del trimestre móvil **Junio-Julio-Agosto de 2025
 library(haven)
 library(tidyverse) #incluye ggplot2
 library(knitr)
+library(kableExtra)
 ```
 
 ### 2.3 Carga de la Base de Datos
@@ -62,6 +63,8 @@ temp <- tempfile(fileext = ".dta")
 download.file("https://www.ine.gob.cl/docs/default-source/ocupacion-y-desocupacion/bbdd/2025/stata/ene-2025-07-jja.dta?sfvrsn=3f9c9348_5&download=true", temp, mode="wb")
 ene <- haven::read_dta(temp)
 unlink(temp); remove(temp)
+
+knitr::opts_knit$set(bookdown.internal.label = FALSE)
 ```
 
 ## 3. Tablas de Frecuencia
@@ -111,15 +114,16 @@ tabla_frec_pob
 
 ## 4. Presentando Tablas con `knitr::kable()`
 
-Ahora, presentemos nuestra tabla ponderada de una forma más profesional.
+Presentemos la tabla de forma limpia y profesional: `kable()` crea la tabla a partir del data frame (aplica formato y el caption) y `kable_styling()` le da el aspecto visual (estilos HTML) para que se vea bien en el Viewer de RStudio.
 
-```{r table-kable}
+```{r}
 kable(
   tabla_frec_pob,
   digits = c(0, 0, 1),
   col.names = c("Condición de Actividad", "Población Estimada", "Porcentaje (%)"),
   caption = "Estimación de la Condición de Actividad (Población 15 años y más, ponderada)"
-)
+) |> 
+  kable_styling()
 ```
 
 **Interpretación:** Esta tabla es una estimación para la población total de Chile. Ahora sí podemos decir que, para este trimestre, se estima que un **56.5%** de la población en edad de trabajar estaba ocupada. Estos son los números que se acercan a las cifras oficiales del INE.
