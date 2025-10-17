@@ -199,6 +199,19 @@ Gabriel Sotomayor
 <p>Para ilustrar estos conceptos, usaremos la <strong>Encuesta Suplementaria de Ingresos (ESI) 2024</strong> del INE. Nos centraremos en la variable <code>ing_t_p</code> (ingreso del trabajo principal) para los ocupados de referencia.</p>
 
 <img data-src="09-slides_files/figure-revealjs/histograma-ingreso-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="la-fuente-de-datos-encuesta-suplementaria-de-ingresos-esi" class="slide level2 smaller" data-background-color="white">
+<h2>La Fuente de Datos: Encuesta Suplementaria de Ingresos (ESI)</h2>
+<ul>
+<li><p><strong>¿Qué es?</strong> La ESI es un módulo que se aplica anualmente (en el trimestre octubre-diciembre) a una submuestra de los hogares que participan en la <strong>Encuesta Nacional de Empleo (ENE)</strong>. Es la principal fuente de datos sobre ingresos en Chile.</p></li>
+<li><p><strong>Objetivo Principal:</strong> Caracterizar en detalle los ingresos de las personas y los hogares, yendo mucho más allá de lo que la ENE puede capturar por sí sola. Mide:</p>
+<ul>
+<li>Ingresos del trabajo principal y secundario.</li>
+<li>Ingresos de fuentes no laborales (jubilaciones, arriendos, etc.).</li>
+<li>Ingresos por trabajador/a por cuenta propia.</li>
+</ul></li>
+<li><p><strong>Relevancia Sociológica:</strong> Los datos de la ESI son cruciales para analizar la <strong>desigualdad económica</strong>, la <strong>brecha salarial de género</strong> y la estructura del mercado laboral en Chile. Cuando leemos en las noticias sobre la “mediana del ingreso” en el país, esa cifra proviene de esta encuesta.</p></li>
+</ul>
+</section>
 <section id="interpretando-la-forma-asimetría-sesgo" class="slide level2 smaller" data-background-color="white">
 <h2>Interpretando la Forma: Asimetría (Sesgo)</h2>
 <div style="font-size: 0.9em; line-height: 1.2;">
@@ -376,6 +389,25 @@ Gabriel Sotomayor
 <p>Apliquemos el boxplot a la variable de ingreso de la ESI 2024. Este gráfico nos permite ver de un solo vistazo la forma, el centro, la dispersión y la enorme cantidad de outliers.</p>
 
 <img data-src="09-slides_files/figure-revealjs/boxplot-real-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="la-escala-logarítmica" class="slide level2 smaller" data-background-color="white">
+<h2>La Escala Logarítmica</h2>
+<p>En el gráfico anterior, para poder visualizar la distribución del ingreso, aplicamos una transformación al eje: una <strong>escala logarítmica</strong>. Esta es una herramienta fundamental cuando trabajamos con variables que, como el ingreso, tienen una <strong>fuerte asimetría positiva</strong>.</p>
+<ul>
+<li><strong>El Problema de la Asimetría:</strong> Cuando unos pocos valores muy altos (como los ingresos de las personas más ricas) son miles de veces más grandes que la mayoría, “aplastan” el resto del gráfico. La caja y los bigotes del boxplot, o un histograma, se comprimen tanto en la parte inferior que se vuelven casi invisibles, y perdemos toda la información sobre el 50% o 75% inferior de la población.</li>
+</ul>
+</section>
+<section id="la-escala-logarítmica-1" class="slide level2 smaller" data-background-color="white">
+<h2>La Escala Logarítmica</h2>
+<p><strong>¿Qué hace una Escala Logarítmica?</strong></p>
+<p>Una escala estándar (lineal) muestra los valores en sus unidades absolutas. La distancia entre 100.000 y 200.000 es la misma que entre 2.000.000 y 2.100.000.</p>
+<p>Una escala logarítmica, en cambio, representa <strong>órdenes de magnitud</strong>. La distancia en el eje es la misma para cada <strong>multiplicación</strong> (usualmente x10). La distancia entre $100.000 y $1.000.000 (x10) es la misma que entre $1.000.000 y $10.000.000 (x10).</p>
+<p><strong>El Efecto Práctico:</strong></p>
+<ol type="1">
+<li><strong>Comprime la cola derecha:</strong> Reduce visualmente la distancia entre los valores altos y extremos.</li>
+<li><strong>Expande la base:</strong> Estira la parte inferior de la distribución, permitiéndonos ver con claridad la posición de la mediana, la forma de la caja (el IQR) y la distribución de la mayoría de los casos.</li>
+<li><strong>Facilita la interpretación:</strong> Nos ayuda a pensar en términos de <strong>cambios relativos</strong> (ej. “duplicar el ingreso”) en lugar de cambios absolutos, lo cual puede ser más relevante sociológicamente.</li>
+</ol>
+</section>
 <section id="cierre-y-próximos-pasos" class="slide level2 smaller" data-background-color="white">
 <h2>Cierre y Próximos Pasos</h2>
 <p><strong>Resumen de la sesión de hoy:</strong></p>
@@ -612,42 +644,80 @@ Gabriel Sotomayor
       });
     </script>
     
+
     <script>
+
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
       // slide changes (different for each slide format).
+
       (function () {
+
         // dispatch for htmlwidgets
+
         function fireSlideEnter() {
+
           const event = window.document.createEvent("Event");
+
           event.initEvent("slideenter", true, true);
+
           window.document.dispatchEvent(event);
+
         }
+
+    
 
         function fireSlideChanged(previousSlide, currentSlide) {
+
           fireSlideEnter();
 
+    
+
           // dispatch for shiny
+
           if (window.jQuery) {
+
             if (previousSlide) {
+
               window.jQuery(previousSlide).trigger("hidden");
+
             }
+
             if (currentSlide) {
+
               window.jQuery(currentSlide).trigger("shown");
+
             }
+
           }
+
         }
+
+    
 
         // hookup for slidy
+
         if (window.w3c_slidy) {
+
           window.w3c_slidy.add_observer(function (slide_num) {
+
             // slide_num starts at position 1
+
             fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
           });
+
         }
 
+    
+
       })();
+
     </script>
+
+    
 
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {

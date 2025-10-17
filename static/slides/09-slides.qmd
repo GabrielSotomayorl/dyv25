@@ -96,6 +96,18 @@ esi %>%
   theme_minimal(base_size = 14)
 ```
 
+## La Fuente de Datos: Encuesta Suplementaria de Ingresos (ESI) {.smaller background-color="white"}
+
+*   **¿Qué es?** La ESI es un módulo que se aplica anualmente (en el trimestre octubre-diciembre) a una submuestra de los hogares que participan en la **Encuesta Nacional de Empleo (ENE)**. Es la principal fuente de datos sobre ingresos en Chile.
+
+*   **Objetivo Principal:** Caracterizar en detalle los ingresos de las personas y los hogares, yendo mucho más allá de lo que la ENE puede capturar por sí sola. Mide:
+    *   Ingresos del trabajo principal y secundario.
+    *   Ingresos de fuentes no laborales (jubilaciones, arriendos, etc.).
+    *   Ingresos por trabajador/a por cuenta propia.
+
+*   **Relevancia Sociológica:** Los datos de la ESI son cruciales para analizar la **desigualdad económica**, la **brecha salarial de género** y la estructura del mercado laboral en Chile. Cuando leemos en las noticias sobre la "mediana del ingreso" en el país, esa cifra proviene de esta encuesta.
+
+
 ## Interpretando la Forma: Asimetría (Sesgo) {.smaller background-color="white"}
 
 ::::::::: {style="font-size: 0.9em; line-height: 1.2;"}
@@ -180,6 +192,7 @@ Una medida estadística es **robusta** si **no se ve afectada significativamente
 -   Una medida robusta del centro debería estar cerca de `3`, ignorando la influencia desproporcionada del `100`.
 
 Hoy nos centraremos en las medidas robustas, que son ideales para describir distribuciones como la del ingreso.
+
 
 ## La Mediana (M o Q2): El Centro Geométrico {.smaller background-color="white"}
 
@@ -328,6 +341,28 @@ esi %>%
   theme_minimal(base_size = 14) +
   theme(plot.title.position = "plot")
 ```
+
+## La Escala Logarítmica  {.smaller background-color="white"}
+
+
+En el gráfico anterior, para poder visualizar la distribución del ingreso, aplicamos una transformación al eje: una **escala logarítmica**. Esta es una herramienta fundamental cuando trabajamos con variables que, como el ingreso, tienen una **fuerte asimetría positiva**.
+
+*   **El Problema de la Asimetría:** Cuando unos pocos valores muy altos (como los ingresos de las personas más ricas) son miles de veces más grandes que la mayoría, "aplastan" el resto del gráfico. La caja y los bigotes del boxplot, o un histograma, se comprimen tanto en la parte inferior que se vuelven casi invisibles, y perdemos toda la información sobre el 50% o 75% inferior de la población.
+
+## La Escala Logarítmica  {.smaller background-color="white"}
+
+**¿Qué hace una Escala Logarítmica?**
+
+Una escala estándar (lineal) muestra los valores en sus unidades absolutas. La distancia entre 100.000 y 200.000 es la misma que entre 2.000.000 y 2.100.000.
+
+Una escala logarítmica, en cambio, representa **órdenes de magnitud**. La distancia en el eje es la misma para cada **multiplicación** (usualmente x10). La distancia entre \$100.000 y \$1.000.000 (x10) es la misma que entre \$1.000.000 y \$10.000.000 (x10).
+
+**El Efecto Práctico:**
+
+1.  **Comprime la cola derecha:** Reduce visualmente la distancia entre los valores altos y extremos.
+2.  **Expande la base:** Estira la parte inferior de la distribución, permitiéndonos ver con claridad la posición de la mediana, la forma de la caja (el IQR) y la distribución de la mayoría de los casos.
+3.  **Facilita la interpretación:** Nos ayuda a pensar en términos de **cambios relativos** (ej. "duplicar el ingreso") en lugar de cambios absolutos, lo cual puede ser más relevante sociológicamente.
+
 
 ## Cierre y Próximos Pasos {.smaller background-color="white"}
 

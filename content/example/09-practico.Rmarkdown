@@ -1,103 +1,207 @@
 ---
-title: "Análisis Factorial Confirmatorio con Indicadores Categóricos"
-linktitle: "9: Análisis Factorial Confirmatorio con Indicadores Categóricos"
-date: "2023-05-12"
+title: "Visualizando Distribuciones y Medidas Robustas: Histogramas y Boxplots en R"
+linktitle: "9: Medidas Robustas y Visualización"
+date: "2025-10-20"
 menu:
   example:
     parent: Ejemplos
     weight: 9
 type: docs
+toc: true
 editor_options: 
   chunk_output_type: console
-output: 
-  html_document: 
-    toc: yes
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es aplicar las herramientas de análisis exploratorio de datos (EDA) para describir la distribución de variables cuantitativas. Al finalizar, serás capaz de:
+
+*   Crear e interpretar **histogramas** con `ggplot2` para analizar la **forma** de una distribución.
+*   Calcular e interpretar medidas de **centro y dispersión robustas** (Mediana, Cuartiles, IQR) en R.
+*   Construir e interpretar **boxplots** (`geom_boxplot`) como herramienta para visualizar el resumen de cinco números y comparar grupos.
+
+## 1. Contexto y Preparación de Datos
+
+### 1.1 La Encuesta Suplementaria de Ingresos (ESI)
+
+En este práctico, trabajaremos con la **Encuesta Suplementaria de Ingresos (ESI)** del INE, correspondiente al año 2024. Esta encuesta es un módulo de la ENE y se especializa en caracterizar en detalle los ingresos laborales de las personas ocupadas en Chile.
+
+Nos centraremos en la variable `ing_t_p` (ingreso del trabajo principal), que es un ejemplo perfecto de una variable cuantitativa con una distribución asimétrica.
+
+### 1.2 Carga de Paquetes y Datos
+
+Como siempre, comenzamos cargando nuestros paquetes y la base de datos. Para la ESI, trabajaremos con la población de referencia del estudio: personas ocupadas que mantuvieron su ocupación (`ocup_ref == 1`).
+
+```{r setup, message=FALSE, warning=FALSE, eval=FALSE}
+# Cargar paquetes
+library(tidyverse)
+
+# Cargar la base de datos ESI 2024 desde un archivo .Rdata
+# (Este archivo se debe descargar y guardar en la carpeta 'datos' del proyecto)
+load("datos/esi_2024.rdata")
+esi <- base # El objeto dentro del .Rdata se llama 'base'
+
+# Creamos nuestra base de trabajo filtrada
+esi_trabajo <- esi %>%
+  filter(ocup_ref == 1)
 ```
 
-En esta ocasión, realizaremos un análisis factorial confirmatorio con indicadores categóricos. 
 
-Iniciamos cargando los paquetes necesarios para el análisis. Los paquetes son: haven para importar datos, lavaan para estimar el análisis factorial confirmatorio (AFC), semPlot para crear gráficos de SEM y semTable para producir tablas de SEM.
-```{r, warning=FALSE}
-# Carga paquetes
-library(haven) # importar SPSS, Stata, etc.
-library(summarytools)
-library(dplyr)
-library(lavaan) # estimar SEM
-library(semPlot) # graficar SEM
-library(semTable) # tablas SEM
-```
-
-En este ejercicio analizaremos una escala de autoritarismo proveniente del estudio "International Civic and Citizenship Education Study 2016".
-
-A continuación, importamos los datos que vamos a analizar. Los datos están almacenados en un archivo .sav de SPSS llamado "ISLCHLC3.sav". Lo importamos utilizando la función read_spss() del paquete haven.
 ```{r}
-# Importar datos
-#datos <- read_spss("ISLCHLC3.sav")
-datos <- read_sav(url("https://github.com/Clases-GabrielSotomayor/pruebapagina/raw/master/content/example/input/data/ISLCHLC3.sav"))
+library(tidyverse)
+library(haven)
+tmp <- tempfile(fileext = ".rdata")
+download.file("https://www.ine.gob.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/rdata/2024/esi_2024.rdata?sfvrsn=582b8630_4&download=true", tmp, mode = "wb")
+load(tmp); esi <- base; unlink(tmp); rm(base, tmp)
+esi_trabajo <- esi %>%
+  filter(ocup_ref == 1)
+
 ```
 
-Seleccionamos y visualizamos las variables a utilizar como parte del modelo. 
 
-```{r}
-datos <- datos |> 
-  select(LS3G01A , LS3G01B, LS3G01C, LS3G01D ,
-           LS3G01E , LS3G01F , LS3G02A , LS3G02B , LS3G02C)
+## 2. Visualizando la Forma: Histogramas
 
-print(dfSummary(datos, headings = FALSE, method = "render"))
+El primer paso para analizar una variable cuantitativa es visualizar su distribución. La herramienta principal para esto es el histograma.
+
+### 2.1 Histograma del Ingreso del Trabajo Principal
+
+Vamos a crear un histograma para la variable `ing_t_p`.
+
+```{r histograma-ingreso, message=FALSE, warning=FALSE}
+ggplot(data = esi_trabajo, aes(x = ing_t_p, weight = fact_cal_esi)) +
+  geom_histogram(fill = "#3A1C71", color = "white") +
+  labs(
+    title = "Distribución del Ingreso del Trabajo Principal",
+    x = "Ingreso Mensual ($ CLP)",
+    y = "Población Estimada",
+    caption = "Fuente: ESI 2024"
+  ) +
+  theme_minimal()
 ```
 
-Definimos el modelo de medición para nuestro Análisis Factorial Confirmatorio (AFC). Estamos definiendo un factor latente ("autoritarismo") y nueve ítems observables. El operador =~ se utiliza para indicar las relaciones entre el factor y los ítems
-```{r}
-# Definir modelo de medicion
-mod_conf <- 'autoritarismo =~ LS3G01A + LS3G01B + LS3G01C + LS3G01D + 
-LS3G01E + LS3G01F + LS3G02A + LS3G02B + LS3G02C'
-```
-Para ajustar el modelo utilizamos la función cfa() del paquete lavaan. Sin embargo, a diferencia de un análisis factorial confirmatorio con indicadores continuos, debemos especificar que los ítems son categóricos mediante el argumento ordered = T y el estimador utilizado es "DWLS" (Diagonally Weighted Least Squares), que es adecuado para variables categóricas.
-```{r}
-# Ajustar modelo CFA
-mod_conf_afc <- cfa(mod_conf, data = datos, estimator="DWLS", ordered = T)
-```
-Luego, visualizamos un resumen de los resultados del modelo con la función summary(). Activamos las opciones para mostrar las cargas factoriales estandarizadas (standardized = TRUE) e índices de ajuste extendidos (fit.measures = TRUE).
-```{r}
-# Resultados
-## Salida general
-summary(mod_conf_afc,
-        standardized = TRUE, # mostrar cargas estandarizadas
-        fit.measures = TRUE) # mostrar índices de ajuste extendidos
-```
-Además, podemos ver solo los índices de ajuste específicos que nos interesan utilizando la función fitmeasures().
-```{r}
-# Ver solo indices de ajuste
-fitmeasures(mod_conf_afc,
-            fit.measures = c("chisq", "df", "pvalue",
-                             "cfi", "rmsea"))
-```
-Los índices de ajuste incluyen la chi-cuadrada (chisq), los grados de libertad (df), el p-valor (pvalue), el índice de ajuste comparativo (cfi), y el error cuadrático medio de aproximación (rmsea). Estos índices nos ayudan a evaluar qué tan bien se ajusta el modelo a nuestros datos.
+**Interpretación:** El histograma es casi ilegible. La gran mayoría de los casos se agrupa a la izquierda, y unos pocos casos con ingresos extremadamente altos crean una "cola" larguísima. Esto nos confirma visualmente una **fuerte asimetría a la derecha**. Para visualizarlo mejor, podemos acotar el eje x.
 
-A continuación, creamos un gráfico del modelo usando la función semPaths(). La opción what = "std" se utiliza para mostrar las cargas factoriales estandarizadas en el gráfico.
-```{r}
-# Diagrama modelo
-semPaths(mod_conf_afc, # modelo ajustado
-         what = "std",  # mostrar cargas estandarizadas
-         label.cex = 1, edge.label.cex = 1, # tamaño flechas y caracteres
-         residuals = FALSE, # no mostrar residuos
-         edge.color = "black") # color flechas
+```{r histograma-ingreso-acotado, message=FALSE, warning=FALSE}
+# Volvemos a graficar, pero filtrando para ingresos menores a 5 millones para ver mejor la forma
+esi_trabajo %>%
+  filter(ing_t_p < 5000000) %>%
+  ggplot(aes(x = ing_t_p, weight = fact_cal_esi)) +
+  geom_histogram(binwidth = 100000, fill = "#D76D77", color = "white") +
+  labs(
+    title = "Distribución del Ingreso del Trabajo Principal (acotado a < $5M)",
+    x = "Ingreso Mensual ($ CLP)",
+    y = "Población Estimada"
+  ) +
+  theme_minimal()
 ```
-Para interpretar el gráfico, las flechas representan las relaciones entre el factor latente y los ítems. Los números en las flechas son las cargas factoriales estandarizadas, que indican la fuerza de la relación entre cada ítem y el factor.
 
-A continuación, calculamos las comunalidades, que son las proporciones de varianza de cada ítem que se explican por el factor. Usamos la función inspect() con what = "rsquare" para hacer esto.
-```{r}
-# Comunalidades
-inspect(mod_conf_afc, what = "rsquare")
+### 2.2 La importancia del `binwidth`
+
+La apariencia de un histograma depende mucho del ancho de los intervalos (`binwidth`). Un `binwidth` muy grande puede ocultar la forma, y uno muy pequeño puede generar demasiado "ruido". Es una buena práctica experimentar con diferentes valores.
+
+**Actividad:** Vuelve a ejecutar el histograma anterior, pero cambia `binwidth` a `50000` y luego a `500000`. ¿Cómo cambia la forma del gráfico? ¿Qué `binwidth` te parece más informativo?
+
+## 3. Cálculo de Medidas Robustas
+
+Dada la fuerte asimetría del ingreso, las medidas robustas son las más adecuadas para describir su centro y dispersión.
+
+### 3.1 El Resumen de Cinco Números
+
+La función `summary()` nos da un primer vistazo rápido, pero **no está ponderada**. Para obtener los valores correctos para la población, necesitamos funciones que admitan ponderadores. Usaremos las del paquete `DescTools`.
+
+```{r, message=FALSE, warning=FALSE}
+# Instala el paquete si no lo tienes: install.packages("DescTools")
+library(DescTools)
+
+# Calculamos los cuantiles ponderados
+cuantiles_ponderados <- Quantile(
+  esi_trabajo$ing_t_p,
+  weights = esi_trabajo$fact_cal_esi,
+  probs = c(0, 0.25, 0.5, 0.75, 1), # 0=Mín, 0.25=Q1, 0.5=Mediana, 0.75=Q3, 1=Máx
+  na.rm = TRUE
+)
+
+# Creamos una tabla para presentar los resultados
+tabla_resumen <- tibble(
+  Medida = c("Mínimo", "Q1 (Percentil 25)", "Mediana (Percentil 50)", "Q3 (Percentil 75)", "Máximo"),
+  Valor = cuantiles_ponderados
+)
+
+knitr::kable(
+  tabla_resumen,
+  caption = "Resumen de Cinco Números Ponderado para el Ingreso",
+  format.args = list(big.mark = ".")
+)
 ```
-Por último, revisamos los índices de modificación, que sugieren cambios potenciales al modelo que podrían mejorar el ajuste. Mostramos los índices en orden decreciente para identificar los cambios más impactantes primero.
-```{r}
-# Indices de modificacion
-## Mostrar 'mi' en orden decreciente
-modificationindices(mod_conf_afc, sort. = T)
+
+**Interpretación:** La **mediana** del ingreso del trabajo principal es de **$500.000**. Esto significa que el 50% de los ocupados en Chile gana eso o menos. El **Rango Intercuartil (IQR)** es la diferencia entre Q3 y Q1 ($700.000 - $400.000 = $300.000), indicando que el 50% central de los trabajadores se mueve en ese rango de ingresos.
+
+## 4. Visualizando con Boxplots
+
+El boxplot es la visualización perfecta del resumen de cinco números.
+
+### 4.1 Boxplot de la Distribución del Ingreso
+
+```{r boxplot-ingreso, message=FALSE, warning=FALSE}
+esi_trabajo %>%
+  ggplot(aes(x = "", y = ing_t_p)) + # Eje X vacío para un solo boxplot
+  geom_boxplot(fill = "#3A1C71", outlier.alpha = 0.1) +
+  labs(
+    title = "Boxplot del Ingreso del Trabajo Principal",
+    y = "Ingreso Mensual ($ CLP)",
+    x = ""
+  ) +
+  theme_minimal()
 ```
-Estos índices pueden ayudarte a mejorar tu modelo. Sin embargo, cualquier cambio que hagas en el modelo basándote en estos índices debe tener sentido teórico. No es recomendable hacer cambios al modelo solo porque los índices de modificación sugieran que mejorarán el ajuste.
+
+**Interpretación:** El gráfico es casi inútil. La caja está completamente aplastada en la parte inferior, y una nube masiva de outliers domina la visualización. Esto es una señal visual muy potente de la **extrema asimetría** de la variable. Una solución común es usar una **escala logarítmica** en el eje Y para "comprimir" los valores altos.
+
+```{r boxplot-ingreso-log, message=FALSE, warning=FALSE}
+esi_trabajo %>%
+  ggplot(aes(x = "", y = ing_t_p)) +
+  geom_boxplot(fill = "#3A1C71", outlier.alpha = 0.1) +
+  # Usamos una escala logarítmica en base 10
+  scale_y_log10(labels = scales::dollar_format(prefix = "$", big.mark = ".")) +
+  labs(
+    title = "Boxplot del Ingreso del Trabajo Principal (Eje Y Logarítmico)",
+    y = "Ingreso Mensual ($ CLP, escala log)",
+    x = ""
+  ) +
+  theme_minimal()
+```
+Ahora la caja es visible y podemos apreciar mejor la distribución.
+
+### 4.2 Boxplots Comparativos
+
+El verdadero poder de los boxplots reside en comparar la distribución de una variable cuantitativa entre diferentes grupos de una variable categórica.
+
+**Pregunta:** ¿Cómo se distribuye el ingreso según el sexo de la persona?
+
+```{r boxplot-comparativo, message=FALSE, warning=FALSE}
+esi_trabajo %>%
+  mutate(sexo_factor = as_factor(sexo)) %>%
+  ggplot(aes(x = sexo_factor, y = ing_t_p, fill = sexo_factor)) +
+  geom_boxplot(outlier.shape = NA) + # Ocultamos outliers para ver mejor las cajas
+  scale_y_continuous(limits = c(0, 2000000), labels = scales::dollar) + # Acotamos el eje Y
+  labs(
+    title = "Distribución del Ingreso del Trabajo Principal por Sexo",
+    x = "Sexo",
+    y = "Ingreso Mensual ($ CLP)",
+    fill = "Sexo"
+  ) +
+  theme_minimal()
+```
+**Interpretación:** Este gráfico nos permite comparar rápidamente. Vemos que la **mediana** de ingresos para los hombres es visiblemente más alta que para las mujeres. Además, la "caja" (el IQR) de los hombres es más larga y está posicionada más arriba, lo que indica no solo un centro más alto, sino también una mayor dispersión en la mitad superior de la distribución.
+
+## 5. Actividad de Desafío
+
+Usando la base de datos `esi_trabajo` y las herramientas que aprendimos hoy:
+
+1.  Crea un **histograma** para la variable `horas_trab_dp` (horas de trabajo en la ocupación principal). Describe su **forma** (¿es simétrica? ¿unimodal?).
+2.  Calcula el **resumen de cinco números ponderado** para la misma variable `horas_trab_dp`. No olvides usar el `fact_cal_esi`.
+3.  Crea **boxplots comparativos** que muestren la distribución de `horas_trab_dp` para hombres y mujeres. ¿Qué diferencias observas en el centro y la dispersión entre ambos grupos?
+
+```{r, eval=FALSE, echo=TRUE}
+# Escribe tu código aquí
+
+```
