@@ -220,6 +220,37 @@ A partir de los cuartiles, construimos la principal medida de dispersión robust
 -   **Rango Intercuartil (IQR):** Es la distancia entre el tercer y el primer cuartil (`IQR = Q3 - Q1`).
 -   **Interpretación:** El IQR representa el **rango en el que se encuentra el 50% central de los datos**. Al igual que la mediana, es una medida de dispersión **robusta** porque ignora los valores en las colas de la distribución.
 
+
+## Percentiles: Más Allá de los Cuartiles {.smaller background-color="white"}
+
+Los cuartiles son solo un tipo de **percentil** (o **cuantil**), un concepto más general y flexible para describir la posición de un valor dentro de una distribución ordenada.
+
+-   **Definición General:** El **percentil *p*** es el valor por debajo del cual se encuentra el *p*% de las observaciones.
+    -   La mediana es el percentil 50.
+    -   El primer cuartil (Q1) es el percentil 25.
+    -   El tercer cuartil (Q3) es el percentil 75.
+
+## Ejemplo: Los Quintiles de Ingreso {.smaller background-color="white"}
+
+::: {style="font-size: 0.9em; line-height: 1.2;"}
+En sociología y políticas públicas, es muy común dividir a la población en **cinco grupos** de igual tamaño (20% cada uno). A estos grupos se les llama **quintiles**. Para definirlos, calculamos los percentiles 20, 40, 60 y 80.
+
+**Ejemplo con la ESI 2024:**
+
+| Percentil | Ingreso Límite | 
+| :--- | :--- |
+| **P20** | \$400.000 |
+| **P40** | \$548.629 | 
+| **P60** | \$750.000 | 
+| **P80** | \$1.200.000 | 
+
+-   Una persona en el **primer quintil** gana hasta \$400.000.
+-   Una persona en el **quinto quintil** (el 20% más rico) gana más de \$1.200.000.
+
+Podemos usar cualquier percentil para analizar la desigualdad. Por ejemplo, el **percentil 99** nos diría cuál es el ingreso del 1% más rico de la población.
+:::
+
+
 ## El Resumen de Cinco Números y el Boxplot {.smaller background-color="white"}
 
 El **resumen de cinco números** es el conjunto estándar de estadísticas robustas para describir una variable cuantitativa.
