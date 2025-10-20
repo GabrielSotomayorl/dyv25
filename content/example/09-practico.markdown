@@ -45,7 +45,7 @@ Antes de empezar, asegúrate de tener una buena organización.
 Cargamos `tidyverse`, que incluye `ggplot2` para los gráficos, y `haven` para leer los datos.
 
 
-```r
+``` r
 # Cargar los paquetes que usaremos hoy
 library(tidyverse)
 library(haven)
@@ -60,7 +60,7 @@ library(kableExtra)
 Vamos a cargar la base de datos de la ESI. El método recomendado es descargar el archivo y cargarlo desde tu proyecto.
 
 
-```r
+``` r
 # Paso 1: Descarga la base de datos desde el sitio del INE y guárdala 
 # en tu carpeta 'datos'. El archivo viene en formato .Rdata.
 # Enlace: https://www.ine.gob.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/rdata/2024/esi_2024.rdata
@@ -88,7 +88,7 @@ load(tmp); esi <- base; unlink(tmp); rm(base, tmp)
 Para nuestro análisis, nos enfocaremos en la población de referencia del estudio: personas ocupadas que tienen la misma ocupación que el mes pasado (`ocup_ref == 1`). Esto es importante para que los ingresos que declaran coincidan con la información de su ocupación.
 
 
-```r
+``` r
 # Creamos nuestra base de trabajo filtrada
 esi_trabajo <- esi %>%
   filter(ocup_ref == 1)
@@ -101,7 +101,7 @@ esi_trabajo <- esi %>%
 La función `hist()` de R base es excelente para una exploración inicial y rápida, pero ten en cuenta que **no utiliza el ponderador**.
 
 
-```r
+``` r
 hist(esi_trabajo$ing_t_p,
      main = "Histograma de Ingreso del Trabajo Principal (R Base)",
      xlab = "Ingreso Mensual ($ CLP)",
@@ -119,7 +119,7 @@ hist(esi_trabajo$ing_t_p,
 `ggplot2` nos da un control más detallado y nos permite incorporar los factores de expansión en la estética (`aes`) del gráfico para obtener una estimación de la distribución en la población.
 
 
-```r
+``` r
 # Filtramos para ingresos menores a 5 millones para visualizar mejor la forma
 esi_trabajo %>%
   filter(ing_t_p < 5000000) %>%
@@ -143,7 +143,7 @@ esi_trabajo %>%
 Antes de realizar cálculos poblacionales, es útil explorar la **muestra**. Las funciones `median()` y `quantile()` son perfectas para esto.
 
 
-```r
+``` r
 # Mediana de la muestra (sin ponderar)
 mediana_muestra <- median(esi_trabajo$ing_t_p, na.rm = TRUE)
 mediana_muestra
@@ -155,7 +155,7 @@ mediana_muestra
 **Interpretación:** El 50% de las personas **en nuestra muestra** gana **$560.000** o menos.
 
 
-```r
+``` r
 # Cuantiles de la muestra (sin ponderar)
 # La función quantile() nos permite pedir cualquier percentil usando el argumento 'probs'
 quantile(esi_trabajo$ing_t_p, probs = c(0, 0.25, 0.5, 0.75, 1), na.rm = TRUE)
@@ -172,7 +172,7 @@ quantile(esi_trabajo$ing_t_p, probs = c(0, 0.25, 0.5, 0.75, 1), na.rm = TRUE)
 Podemos calcular múltiples estadísticos a la vez usando `summarise()` de `dplyr`, lo que es mucho más eficiente.
 
 
-```r
+``` r
 esi_trabajo %>%
   summarise(
     mediana = median(ing_t_p, na.rm = TRUE),
@@ -189,12 +189,12 @@ esi_trabajo %>%
 ## 1  560000 400000 888580. 488580.
 ```
 
-### 3.3 El Paso Crucial: Incorporando Factores de Expansión
+### 3.3 Incorporando Factores de Expansión
 
 Los cálculos anteriores describen la muestra. Para describir a la **población**, debemos usar ponderadores. El paquete `DescTools` tiene funciones que lo permiten, y podemos integrarlas dentro de nuestro flujo de `dplyr`.
 
 
-```r
+``` r
 # Calculamos la mediana y cuantiles ponderados usando summarise()
 esi_trabajo %>%
   summarise(
@@ -215,7 +215,7 @@ esi_trabajo %>%
 Para presentar estos resultados de manera más formal y clara en nuestro informe, podemos usar la función `kable()` del paquete `knitr`, junto con `kable_styling()` del paquete `kableExtra`.
 
 
-```r
+``` r
 # Primero, guardamos el resultado de nuestro cálculo en un objeto
 tabla_resumen_pob <- esi_trabajo %>%
   summarise(
@@ -234,8 +234,8 @@ knitr::kable(
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
-<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption><span id="tab:unnamed-chunk-3"></span>Table 1: Estadísticos Robustos Ponderados para el Ingreso del Trabajo Principal ($ CLP)</caption>
+<table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:unnamed-chunk-3"></span>Table 1: (\#tab:unnamed-chunk-3)Estadísticos Robustos Ponderados para el Ingreso del Trabajo Principal ($ CLP)</caption>
  <thead>
   <tr>
    <th style="text-align:right;"> Primer Cuartil (Q1) </th>
@@ -256,12 +256,11 @@ knitr::kable(
 
 ### 4.1 Boxplot del Ingreso: El Problema de la Asimetría
 
-**Nota importante:** A diferencia de `geom_histogram`, `geom_boxplot` en `ggplot2` **no tiene un argumento `weight`**. Por lo tanto, un boxplot siempre visualizará la distribución de la **muestra sin ponderar**. Sigue siendo una herramienta visual extremadamente útil para entender la forma, el centro aproximado y los outliers, pero los valores numéricos precisos (mediana, cuartiles) deben calcularse siempre con las funciones ponderadas.
 
 
-```r
+``` r
 esi_trabajo %>%
-  ggplot(aes(x = "", y = ing_t_p)) + # Eje X vacío para un solo boxplot
+  ggplot(aes(x = "", y = ing_t_p, weight = fact_cal_esi )) + # Eje X vacío para un solo boxplot
   geom_boxplot(fill = "#3A1C71", outlier.alpha = 0.1) +
   labs(
     title = "Boxplot del Ingreso del Trabajo Principal (Muestra sin ponderar)",
@@ -280,10 +279,10 @@ esi_trabajo %>%
 Para solucionarlo, usamos una **escala logarítmica** en el eje Y para "comprimir" los valores altos y poder ver la caja.
 
 
-```r
+``` r
 # Creamos el boxplot con escala logarítmica y lo guardamos en un objeto
 boxplot_log <- esi_trabajo %>%
-  ggplot(aes(x = "", y = ing_t_p)) +
+  ggplot(aes(x = "", y = ing_t_p, weight = fact_cal_esi)) +
   geom_boxplot(fill = "#3A1C71", outlier.alpha = 0.1) +
   scale_y_log10(labels = scales::dollar_format(prefix = "$", big.mark = ".")) +
   labs(
@@ -306,7 +305,7 @@ boxplot_log
 Una vez que tienes un gráfico de `ggplot2` que te gusta, puedes guardarlo como un archivo de imagen de alta calidad con `ggsave()`.
 
 
-```r
+``` r
 # La función ggsave() guarda el último gráfico que mostraste por defecto.
 # Es buena práctica guardarlo en una carpeta separada, por ejemplo, 'output' o 'graficos'.
 
@@ -331,7 +330,7 @@ Usando la base de datos `esi_trabajo` y las herramientas que aprendimos hoy, rea
 5.  Guarda tu histograma en un archivo llamado `"histograma_horas.png"` dentro de tu carpeta `graficos`.
 
 
-```r
+``` r
 # 1. Limpiar casos perdidos
 esi_trabajo <- esi_trabajo %>% 
   mutate(efectivas = ifelse(efectivas %in% c(888, 999), NA, efectivas))

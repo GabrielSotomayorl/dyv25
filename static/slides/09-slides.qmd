@@ -39,7 +39,7 @@ Hoy, pasamos a las **variables cuantitativas** (de intervalo o razón), como la 
 
 Con estas variables, un simple conteo no es suficiente. Necesitamos herramientas para describir su **distribución**: cómo se reparten los valores a lo largo de un rango numérico.
 
-## El Mantra del Análisis Exploratorio de Datos (EDA) {.smaller background-color="white"}
+## Análisis Exploratorio de Datos {.smaller background-color="white"}
 
 Al enfrentarnos a una variable cuantitativa, nuestro objetivo es describir tres características fundamentales de su distribución:
 
@@ -324,26 +324,19 @@ set.seed(123)
 df_boxplot <- data.frame(y = c(rnorm(100, 50, 10), 10, 90, 95))
 
 ggplot(df_boxplot, aes(x = "", y = y)) +
-  geom_boxplot(fill = "#D76D77", width = 0.2, alpha = 0.8) + # Hice la caja un poco más delgada
-  stat_summary(fun = "mean", geom = "point", shape = 23, size = 4, fill = "white") +
-  
-  # Anotaciones ajustadas para la orientación vertical
-  annotate("text", x = 1.25, y = 60, label = "Tercer Cuartil (Q3)", hjust = 0, size = 4.5) +
-  annotate("text", x = 1.25, y = 50, label = "Mediana (Q2)", hjust = 0, size = 4.5) +
-  annotate("text", x = 1.25, y = 40, label = "Primer Cuartil (Q1)", hjust = 0, size = 4.5) +
-  
-  annotate("text", x = 0.85, y = 75, label = "Bigote\nSuperior", hjust = 1, size = 4.5) +
-  annotate("text", x = 0.85, y = 92, label = "Outliers", hjust = 1, size = 4.5) +
-  
-  annotate("text", x = 1.25, y = 55, label = "Caja = IQR", hjust = 0, size = 4.5) +
-  
-  # Segmentos (flechas) para señalar las partes
-  geom_segment(aes(x = 1.2, xend = 1.15, y = 58.5, yend = 58.5), arrow = arrow(length = unit(0.2, "cm"))) + # Caja
-  geom_segment(aes(x = 1.2, xend = 1.05, y = 50, yend = 50), arrow = arrow(length = unit(0.2, "cm"))) +   # Mediana
-  geom_segment(aes(x = 0.9, xend = 0.95, y = 75, yend = 68), arrow = arrow(length = unit(0.2, "cm"))) +  # Bigote
-  geom_segment(aes(x = 0.9, xend = 0.98, y = 92, yend = 91), arrow = arrow(length = unit(0.2, "cm"))) +  # Outlier
-  
-  theme_void() +
+  geom_boxplot(fill = "#D76D77", width = 0.22, alpha = 0.85, linewidth = 0.8, outlier.size = 2.8) +
+  stat_summary(fun = "mean", geom = "point", shape = 23, size = 4.5, fill = "white") +
+  annotate("text", x = 1.25, y = 60, label = "Tercer Cuartil (Q3)", hjust = 0, size = 5.2) +
+  annotate("text", x = 1.25, y = 50, label = "Mediana (Q2)", hjust = 0, size = 5.2) +
+  annotate("text", x = 1.25, y = 40, label = "Primer Cuartil (Q1)", hjust = 0, size = 5.2) +
+  annotate("text", x = 0.85, y = 75, label = "Bigote\nSuperior", hjust = 1, size = 5.2) +
+  annotate("text", x = 0.85, y = 92, label = "Outliers", hjust = 1, size = 5.2) +
+  annotate("text", x = 1.25, y = 55, label = "Caja = IQR", hjust = 0, size = 5.2) +
+  geom_segment(aes(x = 1.2, xend = 1.15, y = 58.5, yend = 58.5), arrow = arrow(length = unit(0.22, "cm"))) +
+  geom_segment(aes(x = 1.2, xend = 1.05, y = 50, yend = 50),   arrow = arrow(length = unit(0.22, "cm"))) +
+  geom_segment(aes(x = 0.9, xend = 0.95, y = 75, yend = 68),   arrow = arrow(length = unit(0.22, "cm"))) +
+  geom_segment(aes(x = 0.9, xend = 0.98, y = 92, yend = 91),   arrow = arrow(length = unit(0.22, "cm"))) +
+  theme_void(base_size = 15) +                                  # << sube el base_size del plot
   theme(plot.title = element_text(hjust = 0.5, face = "bold"))
 
 ```

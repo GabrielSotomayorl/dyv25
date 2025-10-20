@@ -158,7 +158,7 @@ esi_trabajo %>%
   )
 ```
 
-### 3.3 El Paso Crucial: Incorporando Factores de Expansión
+### 3.3 Incorporando Factores de Expansión
 
 Los cálculos anteriores describen la muestra. Para describir a la **población**, debemos usar ponderadores. El paquete `DescTools` tiene funciones que lo permiten, y podemos integrarlas dentro de nuestro flujo de `dplyr`.
 
@@ -200,11 +200,10 @@ knitr::kable(
 
 ### 4.1 Boxplot del Ingreso: El Problema de la Asimetría
 
-**Nota importante:** A diferencia de `geom_histogram`, `geom_boxplot` en `ggplot2` **no tiene un argumento `weight`**. Por lo tanto, un boxplot siempre visualizará la distribución de la **muestra sin ponderar**. Sigue siendo una herramienta visual extremadamente útil para entender la forma, el centro aproximado y los outliers, pero los valores numéricos precisos (mediana, cuartiles) deben calcularse siempre con las funciones ponderadas.
 
 ```{r boxplot-ingreso, message=FALSE, warning=FALSE}
 esi_trabajo %>%
-  ggplot(aes(x = "", y = ing_t_p)) + # Eje X vacío para un solo boxplot
+  ggplot(aes(x = "", y = ing_t_p, weight = fact_cal_esi )) + # Eje X vacío para un solo boxplot
   geom_boxplot(fill = "#3A1C71", outlier.alpha = 0.1) +
   labs(
     title = "Boxplot del Ingreso del Trabajo Principal (Muestra sin ponderar)",
@@ -223,7 +222,7 @@ Para solucionarlo, usamos una **escala logarítmica** en el eje Y para "comprimi
 ```{r boxplot-ingreso-log, message=FALSE, warning=FALSE}
 # Creamos el boxplot con escala logarítmica y lo guardamos en un objeto
 boxplot_log <- esi_trabajo %>%
-  ggplot(aes(x = "", y = ing_t_p)) +
+  ggplot(aes(x = "", y = ing_t_p, weight = fact_cal_esi)) +
   geom_boxplot(fill = "#3A1C71", outlier.alpha = 0.1) +
   scale_y_log10(labels = scales::dollar_format(prefix = "$", big.mark = ".")) +
   labs(
