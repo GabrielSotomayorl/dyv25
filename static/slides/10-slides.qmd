@@ -1,305 +1,260 @@
 ---
-title: "Clase 10 <br> Diagnosticos y supuestos de modelos de regresión"
-subtitle: "Análisis Avanzado de Datos"
+title: "La Media, la Desviación Estándar y la Estandarización"
+subtitle: "Unidad 4: Estadística Descriptiva Univariada"
 author: "Gabriel Sotomayor"
-format: 
+date: "2025-10-27"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
+include-in-header:
+  - text: |
+      <style>
+      #title-slide .title {
+        font-size: 2em;
+      }
+      </style>
 ---
 
-# Diagnosticos de modelos de regresión
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-## Introducción a los Diagnósticos de Regresión {.smaller background-color="white"}
+-   **Calcular e interpretar** la **Media** como medida de centro y entender su sensibilidad a valores atípicos.
+-   **Utilizar** la relación entre **Media y Mediana** como una herramienta de diagnóstico para la **asimetría**.
+-   **Desglosar y comprender** la **Varianza** y la **Desviación Estándar** como medidas de dispersión basadas en la media.
+-   **Comprender** el propósito y la aplicación de la estandarización a través de las **Puntuaciones Z**.
 
-En esta clase se aborda el tema del diagnóstico de regresión, introduciendo conceptos como **leverage**, **distancia**, e **influencia** para identificar casos irregulares en un análisis de regresión.
+---
+title_slide_background: "#008080"
+---
 
-Los objetivos son:
+# 1. La Media y su Sensibilidad
 
--   Detectar errores de digitación (o similares).
--   Identificar casos irregulares que puedan distorsionar el análisis.
--   Comprobar si se cumplen los supuestos de la regresión lineal.
+## ¿Por qué Necesitamos la Media? {.smaller background-color="white"}
 
-**¿Por qué es importante?** Los diagnósticos nos permiten entender mejor la relación entre nuestras variables, asegurándonos de que no hay observaciones que estén afectando desproporcionadamente nuestros resultados. Además, nos ayuda a cumplir con los supuestos fundamentales de la regresión lineal, lo que asegura la validez de las inferencias.
+En la clase anterior, vimos que la **mediana** es una excelente medida de centro, especialmente para distribuciones asimétricas, porque es **robusta**.
 
-## ¿Por Qué Son Importantes los Diagnósticos? {.smaller background-color="white"}
+**Entonces, ¿por qué necesitamos otra medida de centro?**
 
--   **Errores de Datos**: Errores comunes como ingresar incorrectamente la edad, omitir información, o respuestas inusuales pueden afectar significativamente el análisis y llevarnos a conclusiones erróneas.
--   **Identificación de Casos Atípicos**: Un caso inusual podría modificar de manera significativa los resultados de un estudio, llevando a coeficientes sesgados o modelos que no representan correctamente la relación entre las variables.
--   **Garantizar la Validez del Modelo**: Los diagnósticos estadísticos permiten detectar estas irregularidades antes de interpretar los resultados, asegurando que nuestras conclusiones sean válidas y robustas.
+La **media (x̄)**, o promedio aritmético, aunque es sensible a valores extremos, posee propiedades matemáticas que la convierten en la piedra angular de la estadística más avanzada (correlación, regresión, análisis de varianza).
 
-## Conceptos Clave {.smaller background-color="white"}
+La media representa el **"centro de gravedad"** de los datos: el punto de equilibrio de la distribución donde la suma de todas las desviaciones es cero.
 
--   **Leverage**: Identifica cuán alejada está una observación de las demás en los predictores (X). Observaciones con un valor de leverage alto tienen el potencial de influir desproporcionadamente en la regresión, particularmente cuando no siguen el patrón general de los datos.
--   **Distancia**: Cuantifica la distancia vertical entre el valor observado (Y) y el ajustado ($\hat{Y}$). Los residuos representan la diferencia entre lo observado y lo predicho; un residuo grande puede indicar un outlier.
--   **Influencia**: Representa el efecto que tiene un caso en el ajuste general de la regresión. Las observaciones influyentes pueden cambiar significativamente los coeficientes del modelo.
+$$
+\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n}
+$$
 
-Es importante entender la interacción entre estos conceptos, ya que un punto con alto leverage podría no ser influyente si su residuo es bajo, pero un caso con alto leverage y gran residuo será altamente influyente.
+## La Sensibilidad de la Media a Outliers {.smaller background-color="white"}
 
-## Tipos de Casos Extremos {.smaller background-color="white"}
+La principal característica de la media es que **utiliza el valor de cada observación** en su cálculo. Esto la hace muy informativa, pero también **no robusta**.
 
--   **Puntos de Leverage (Leverage Points)**: Casos que son extremos en sus valores de los predictores. Estos puntos se encuentran alejados del centro de la distribución de X y tienen un alto potencial de influir en el modelo.
--   **Outliers**: Casos con valores de respuesta (Y) muy alejados de los valores predichos. Los outliers pueden indicar que ciertos supuestos no se cumplen o que hay algo especial en esos datos que los hace diferentes del resto.
--   **Casos Influyentes**: Observaciones que tienen un gran impacto en los coeficientes del modelo y, por tanto, en los resultados generales. Estos se identifican mejor con métricas como la distancia de Cook.
+Usemos un ejemplo de ingresos (en miles de $) para demostrarlo:
 
-## Métodos para Detectar Casos Irregulares {.smaller background-color="white"}
+:::::: columns
+::: {.column width="50%"}
+**Grupo Original**
 
-### Leverage
+`400, 450, 500, 550, 600`
 
-Los valores de leverage altos indican un patrón de valores de predictores que difiere considerablemente de los demás casos.
+-   **Mediana = 500**
+-   **Media = (400+450+500+550+600) / 5 = 500**
 
--   **Medida**: El **Leverage** se calcula usando la matriz de diseño y se relaciona con la distancia de Mahalanobis ($MD_i$). Valores altos de leverage indican que una observación está lejos del centroide de los datos en el espacio de los predictores.
--   **Uso**: Identificar observaciones extremas en los valores de los predictores, que podrían tener una gran capacidad de influenciar el ajuste del modelo.
+Aquí, la distribución es simétrica, y Media ≈ Mediana.
+:::
+::: {.column width="50%"}
+**Grupo con Outlier**
 
-## Métodos para Detectar Casos Irregulares {.smaller background-color="white"}
+`400, 450, 500, 550, 15000`
 
-### Distancia: Residuos
+-   **Mediana = 500** (no cambia)
+-   **Media = (400+450+500+550+15000) / 5 = 3380**
 
--   Los **residuos** ($e_i = Y_i - \hat{Y}_i$) miden la discrepancia entre el valor observado y el valor ajustado.
--   Las observaciones con **residuos grandes** podrían ser outliers o sugerir un mal ajuste del modelo, indicando la necesidad de revisar los supuestos o los datos.
--   **Residuos Estandarizado**: Residuos divididos por su desviación estándar, lo cual permite comparar entre observaciones y detectar outliers de manera más precisa.
+El outlier "arrastra" la media hacia su valor.
+:::
+::::::
 
-## Métodos para Detectar Casos Irregulares {.smaller background-color="white"}
+## Usando la Media y la Mediana para Diagnosticar Asimetría {.smaller background-color="white"}
 
-### Influencia: Cook's Distance
+Esta diferencia en sensibilidad nos proporciona una poderosa **herramienta de diagnóstico** para complementar nuestros histogramas y boxplots.
 
--   La **distancia de Cook** ($Cook_i$) mide cuánto cambiarian los valores predichos por la regresión si se elimina un caso específico. Combina la información de leverage y de los residuos.
--   **Influencia significativa**: Un caso tiene alta influencia si tiene **alta leverage y alta distancia**. Se recomienda comparar el valor de Cook con un valor crítico, generalmente **4/n**.
-
-## Un ejemplo clásico: El Cuarteto de Anscombe {.smaller background-color="white"}
-
-```{r}
-# Cargar paquetes necesarios
-library(ggplot2)
-library(gridExtra)
-
-# Datos del Cuarteto de Anscombe
-anscombe <- data.frame(
-  x1 = c(10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5),
-  y1 = c(8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68),
-  x2 = c(10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5),
-  y2 = c(9.14, 8.14, 8.74, 8.77, 9.26, 8.1, 6.13, 3.1, 9.13, 7.26, 4.74),
-  x3 = c(10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5),
-  y3 = c(7.46, 6.77, 12.74, 7.11, 7.81, 8.84, 6.08, 5.39, 8.15, 6.42, 5.73),
-  x4 = c(8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 19),
-  y4 = c(6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 5.56, 7.91, 6.89, 12.5)
-)
-
-# Personalización general para un tema más limpio y estilizado
-custom_theme <- theme_minimal(base_size = 14) +
-  theme(
-    plot.title = element_text(face = "bold", size = 16, color = "#4A4A4A"),
-    axis.title = element_text(face = "bold", size = 14, color = "#4A4A4A"),
-    axis.text = element_text(color = "#4A4A4A"),
-    panel.grid.major = element_line(color = "grey85"),
-    panel.grid.minor = element_blank()
-  )
-
-# Función para crear cada gráfico con la ecuación de regresión
-plot_anscombe <- function(x, y, title) {
-  modelo <- lm(y ~ x)
-  coef <- coef(modelo)
-  eq <- paste0("Y = ", round(coef[1], 2), " + ", round(coef[2], 2), " * X")
-  
-  ggplot(data.frame(x, y), aes(x = x, y = y)) +
-    geom_point(color = "#2C7FB8", size = 4, alpha = 0.8) +
-    geom_smooth(method = "lm", se = FALSE, color = "#EF6548", linetype = "dashed", size = 1) +
-    labs(title = title, x = "X", y = "Y") +
-    annotate("text", x = min(x), y = max(y) - 0.5, label = eq, hjust = 0, size = 5, color = "#4A4A4A") +
-    custom_theme
-}
-
-# Crear los gráficos individuales
-plot1 <- plot_anscombe(anscombe$x1, anscombe$y1, "Dataset 1")
-plot2 <- plot_anscombe(anscombe$x2, anscombe$y2, "Dataset 2")
-plot3 <- plot_anscombe(anscombe$x3, anscombe$y3, "Dataset 3")
-plot4 <- plot_anscombe(anscombe$x4, anscombe$y4, "Dataset 4")
-
-# Organizar los gráficos en una cuadrícula
-grid.arrange(plot1, plot2, plot3, plot4, ncol = 2)
-```
-
-## Tratamiento de Irregularidades {.smaller background-color="white"}
-
--   **Corrección**: Modificar errores de digitación o valores extremos que se puedan justificar, como valores atípicos debidos a errores de entrada de datos.
--   **Transformación**: Si hay problemas de homocedasticidad o falta de normalidad, transformar la variable dependiente puede ser útil.
--   **Eliminación de casos**: Solo se debe eliminar una observación si se puede justificar adecuadamente, como en el caso de errores de medición claramente identificados.
-
-# Supuestos
-
-## Homocedasticidad de los errores {.smaller background-color="white"}
-
--   **Homocedasticidad** significa que los **residuales** tienen **varianza constante** para todos los valores de $X$. Si no se cumple, la regresión pierde eficiencia y las inferencias pueden ser incorrectas.
--   **Detección**: Utilizar gráficos de **residuos vs valores predichos** para detectar patrones que indiquen varianza no constante (ej. un patrón en forma de embudo).
--   **Prueba de Breusch-Pagan**: Esta prueba estadística evalúa si la varianza de los residuos depende de los valores de los predictores. Un p-valor bajo indica violación de homocedasticidad.
--   El escenario contrario es heterocedasticidad de los errores.
-
-**Solución: Modelos con errores estándares robustos**
-
-## Homocedasticidad de los errores {.smaller background-color="white"}
-
-![](img/04/residuos.jpg) {.smaller background-color="white"}
-
-## Normalidad en la distribución de los residuos {.smaller background-color="white"}
-
-Los residuos en torno a los valores estimados de Y se distribuyen normalmente para que las infernecias sean válidas.\
-- Si los residuos se distribuyen normalmente, quiere decir que la mayor parte de los residuos se encuentran en torno a 0 (es decir, son valores que se alejan poco del valor observado).\
-- A su vez, son cada vez menos los residuos a medida que estos valores son mayores en términos absolutos.
-
--   **Detección**: Verificarlo con un **Q-Q plot** y aplicar la **prueba de Shapiro-Wilk**. La falta de normalidad puede llevar a estimaciones sesgadas de los coeficientes.
-
-## Normalidad en la distribución de los residuos {.smaller background-color="white"}
-
-```{r}
-
-# Configuración de datos simulados con un tamaño de muestra más grande para mejorar la normalidad
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+library(tidyverse)
+# Simulación de datos
 set.seed(123)
-n <- 500  # Incremento en el número de observaciones para una mayor precisión
-x <- rnorm(n)
-y_normal <- 3 + 2 * x + rnorm(n, mean = 0, sd = 1)  # Modelo con errores normales ajustados
-y_non_normal <- 3 + 2 * x + rt(n, df = 3)  # Modelo con errores no normales (t-Student con df bajos)
+simetrica <- tibble(valor = rnorm(1000, 0, 1), tipo = "Simétrica\nMedia ≈ Mediana")
+as_derecha <- tibble(valor = rlnorm(1000, 0, 0.8), tipo = "Asimétrica a la Derecha\nMedia > Mediana")
+as_izquierda <- tibble(valor = -rlnorm(1000, 0, 0.8), tipo = "Asimétrica a la Izquierda\nMedia < Mediana")
 
-# Ajustar los modelos de regresión
-model_normal <- lm(y_normal ~ x)
-model_non_normal <- lm(y_non_normal ~ x)
+datos_sim <- bind_rows(simetrica, as_derecha, as_izquierda) %>%
+  mutate(tipo = factor(tipo, levels = c("Asimétrica a la Izquierda\nMedia < Mediana", "Simétrica\nMedia ≈ Mediana", "Asimétrica a la Derecha\nMedia > Mediana")))
 
-# Extraer residuos estandarizados
-residuals_normal <- rstandard(model_normal)
-residuals_non_normal <- rstandard(model_non_normal)
+# Calcular medias y medianas
+stats <- datos_sim %>%
+  group_by(tipo) %>%
+  summarise(media = mean(valor), mediana = median(valor))
 
-# Tema personalizado
-custom_theme <- theme_minimal(base_size = 14) +
-  theme(
-    plot.title = element_text(face = "bold", size = 16, color = "#4A4A4A"),
-    axis.title = element_text(face = "bold", size = 14, color = "#4A4A4A"),
-    axis.text = element_text(color = "#4A4A4A"),
-    panel.grid.major = element_line(color = "grey85"),
-    panel.grid.minor = element_blank()
-  )
-
-# Función para gráficos de histograma
-plot_histogram <- function(residuals, title) {
-  ggplot(data.frame(Residuals = residuals), aes(x = Residuals)) +
-    geom_histogram(aes(y = ..density..), bins = 20, color = "black", fill = "#ADD8E6") +
-    geom_density(color = "#1E90FF", size = 1) +
-    labs(title = title, x = "Residuos estandarizados", y = "Densidad") +
-    custom_theme
-}
-
-# Función para gráficos Q-Q plot
-plot_qq <- function(residuals, title) {
-  ggplot(data.frame(sample = residuals), aes(sample = sample)) +
-    stat_qq(color = "#2C7FB8", size = 1.5) +
-    stat_qq_line(color = "#EF6548", linetype = "dashed", size = 1) +
-    labs(title = title, x = "Cuantiles teóricos", y = "Cuantiles de los residuos") +
-    custom_theme
-}
-
-# Crear los gráficos individuales
-p1 <- plot_histogram(residuals_normal, "Histograma: Errores Normales Ajustados")
-p2 <- plot_qq(residuals_normal, "Q-Q Plot: Errores Normales Ajustados")
-p3 <- plot_histogram(residuals_non_normal, "Histograma: Errores No Normales")
-p4 <- plot_qq(residuals_non_normal, "Q-Q Plot: Errores No Normales")
-
-# Organizar los gráficos en una cuadrícula 2x2
-grid.arrange(p1, p2, p3, p4, ncol = 2)
-
-
+# Gráfico
+ggplot(datos_sim, aes(x = valor)) +
+  geom_histogram(aes(y = after_stat(density)), fill = "#008080", color = "white", bins = 40, alpha = 0.7) +
+  geom_density(color = "#008080", size=1.2) +
+  geom_vline(data = stats, aes(xintercept = media, color = "Media"), linetype = "dashed", size = 1.2) +
+  geom_vline(data = stats, aes(xintercept = mediana, color = "Mediana"), linetype = "solid", size = 1.2) +
+  scale_color_manual(name = "Medidas de Centro", values = c("Media" = "red", "Mediana" = "blue")) +
+  facet_wrap(~tipo, scales = "free") +
+  labs(title = "Relación entre Media y Mediana según la Forma de la Distribución", x="", y="Densidad") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
 ```
 
-## Relación lineal {.smaller background-color="white"}
+---
+title_slide_background: "#008080"
+---
 
--   Se asume que la relación entre cada predictor y la respuesta es lineal (porque eso es lo que es posible ajustar con una regresión lineal).
--   Si la relación es aproximadamente lineal, tiene sentido usar modelos de regresión lineal.
--   **Detección**: Utilizar gráficos de **residupos vs predicciones** para verificar la relación lineal. También se puede evaluar en base a diagramas de dispersión (si el n es pequeño).
--   Una correlación alta entre las variables es indicación de que la relación es lineal.
--   Si la relación no es lineal, considerar utilizar otro tipo de regresión o transformar variables (por ejemplo, ver efectos de variables al cuadrado).
+# 2. Medidas de Dispersión Basadas en la Media
 
-## Relación lineal {.smaller background-color="white"}
+## Hacia una Medida de Dispersión {.smaller background-color="white"}
 
-```{r}
+Si la media es nuestro "centro de gravedad", necesitamos una medida que nos diga qué tan lejos o cerca están los datos de este centro. La idea es encontrar la **"distancia promedio"** de cada observación a la media.
 
-# Tema personalizado para los gráficos
-custom_theme <- theme_minimal(base_size = 10) +
-  theme(
-    plot.title = element_text(face = "bold", size = 12, color = "#4A4A4A"),
-    axis.title = element_text(face = "bold", size = 10, color = "#4A4A4A"),
-    axis.text = element_text(color = "#4A4A4A"),
-    panel.grid.major = element_line(color = "grey85"),
-    panel.grid.minor = element_blank()
-  )
+**Paso 1: Calcular las Desviaciones**
 
-# Configuración de datos simulados
-set.seed(1233)
-n <- 100
-x <- rnorm(n, 0, 1)
+Para cada observación, calculamos su desviación (distancia) a la media: `(xᵢ - x̄)`.
 
-# Escenario 1: Relación Lineal
-y_linear <- 3 + 2 * x + rnorm(n, mean = 0, sd = 0.5)  # Relación lineal con menor error
-model_linear <- lm(y_linear ~ x)
-data_linear <- data.frame(x, y_linear, Fitted = model_linear$fitted.values, Residuals = rstandard(model_linear))
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+# Simular datos
+set.seed(10)
+datos_desv <- tibble(
+  id = 1:7,
+  valor = c(1, 2, 3, 5, 7, 8, 9)
+)
+media_val <- mean(datos_desv$valor)
 
-# Escenario 2: Relación Cuadrática
-y_quadratic <- 3 + 2 * x + 1 * x^2 + rnorm(n, mean = 0, sd = 0.5)  # Relación cuadrática con menor error
-model_quadratic <- lm(y_quadratic ~ x)
-data_quadratic <- data.frame(x, y_quadratic, Fitted = model_quadratic$fitted.values, Residuals = rstandard(model_quadratic))
-
-# Gráfico 1: Dispersión y línea de regresión para relación lineal
-plot1 <- ggplot(data_linear, aes(x = x, y = y_linear)) +
-  geom_point(color = "#2C7FB8", size = 3, alpha = 0.8) +
-  geom_smooth(method = "lm", se = FALSE, color = "#EF6548", linetype = "dashed", size = 1) +
-  labs(title = "Relación Lineal: Dispersión y Línea de Regresión", x = "X", y = "Y (Lineal)") +
-  custom_theme
-
-# Gráfico 2: Residuos vs valores predichos para relación lineal
-plot2 <- ggplot(data_linear, aes(x = Fitted, y = Residuals)) +
-  geom_point(color = "#2C7FB8", size = 3, alpha = 0.8) +
-  geom_hline(yintercept = 0, color = "grey", linetype = "dashed") +
-  labs(title = "Relación Lineal: Residuos vs Predicciones", x = "Valores Predichos", y = "Residuos Estandarizados") +
-  custom_theme
-
-# Gráfico 3: Dispersión y línea de regresión para relación cuadrática
-plot3 <- ggplot(data_quadratic, aes(x = x, y = y_quadratic)) +
-  geom_point(color = "#2C7FB8", size = 3, alpha = 0.8) +
-  geom_smooth(method = "lm", se = FALSE, color = "#EF6548", linetype = "dashed", size = 1) +
-  labs(title = "Relación Cuadrática: Dispersión y Línea de Regresión", x = "X", y = "Y (Cuadrática)") +
-  custom_theme
-
-# Gráfico 4: Residuos vs valores predichos para relación cuadrática
-plot4 <- ggplot(data_quadratic, aes(x = Fitted, y = Residuals)) +
-  geom_point(color = "#2C7FB8", size = 3, alpha = 0.8) +
-  geom_hline(yintercept = 0, color = "grey", linetype = "dashed") +
-  labs(title = "Relación Cuadrática: Residuos vs Predicciones", x = "Valores Predichos", y = "Residuos Estandarizados") +
-  custom_theme
-
-# Organizar los gráficos en una cuadrícula 2x2
-grid.arrange(plot1, plot2, plot3, plot4, ncol = 2)
-
+ggplot(datos_desv, aes(x = valor, y = 0)) +
+  geom_segment(aes(xend = media_val, yend = 0), color = "grey", arrow = arrow(length = unit(0.2, "cm"))) +
+  geom_point(size = 4, color = "#008080") +
+  geom_vline(xintercept = media_val, color = "red", linetype = "dashed", size = 1) +
+  annotate("text", x = media_val, y = 0.05, label = "Media (x̄)", color = "red", size=5) +
+  annotate("text", x = 2, y = -0.015, label = "(xᵢ - x̄)", size=5) +
+  labs(title="Cada observación tiene una desviación (distancia) a la media", x="Valor de la variable", y="") +
+  theme_minimal(base_size=14) +
+  theme(axis.text.y=element_blank(), panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank())
 ```
 
-## Ausencia de multicolinealidad entre las variables dependientes {.smaller background-color="white"}
+**Problema:** Si sumamos todas las desviaciones, el resultado siempre será **cero**, porque la media es el punto de equilibrio. ¡No nos sirve para promediar!
 
-Cuando dos o más variables independientes están altamente correlacionadas:
+## La Varianza (s²): "Promediando" las Distancias al Cuadrado {.smaller background-color="white"}
 
--   En estas situaciones, resulta difícil estimar cuál de las dos variables es la que explica la variable dependiente, generando errores estándar altos y baja precisión de los coeficientes calculados.\
--   Para identificar esta situación, hay que revisar la matriz de correlación entre las variables y detectar correlaciones de `0,8` o más. Si este es el caso, es recomendable eliminar una de las dos variables del modelo.
+Para resolver el problema de los signos, elevamos cada desviación al cuadrado. Esto tiene dos ventajas:
+1.  Todos los valores se vuelven positivos.
+2.  Las desviaciones más grandes (outliers) son "penalizadas" con más fuerza, aportando más a la dispersión total.
 
-------------------------------------------------------------------------
+La **Varianza (s²)** es simplemente el "promedio" de estas desviaciones al cuadrado.
 
-## Ausencia de multicolinealidad entre las variables dependientes {.smaller background-color="white"}
+$$
+s^2 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}
+$$
 
--   También existen estadísticos que miden la presencia de multicolinealidad al correr el análisis de regresión. En particular:\
--   **Factor de inflación de la varianza, VIF**: indicador de cuánto aumenta el error estándar debido a problemas de multicolinealidad.\
--   Sacamos la raíz cuadrada e interpretamos el valor resultante como en cuantas veces mayor es el error estándar debido a problemas de multicolinealidad. Por ejemplo, un VIF de 4 significa que el error estándar es 2 veces mayor de lo que sería si las variables no estuvieran correlacionadas.\
--   Un VIF mayor a 2.5 es considerado como indicando problemas de multicolinealidad.
+-   **Interpretación:** Es la "media de las desviaciones al cuadrado".
+-   **Desventaja:** Sus unidades también están al cuadrado (ej. `pesos²`, `años²`), lo que la hace difícil de interpretar directamente.
 
-## Conclusiones {.smaller background-color="white"}
+## La Desviación Estándar (s): La "Distancia Típica" {.smaller background-color="white"}
 
--   Los diagnósticos de regresión son esenciales para evaluar la calidad del modelo y la validez de las inferencias.
--   Estadísticos como **leverage, distancia, e influencia** ayudan a identificar casos problemáticos.
--   La exploración de los datos y los residuos del modelo a partir de estadísiticos y gráficos es fundamental.
--   Las pruebas estadísticas adicionales, como la de **Breusch-Pagan** y **Shapiro-Wilk**, son útiles para confirmar los supuestos específicos y mejorar la confianza en nuestras conclusiones.
--   Siempre es importante **documentar cualquier modificación** realizada para evitar problemas éticos o malinterpretaciones de los resultados.
+Para volver a las unidades originales de la variable, simplemente sacamos la raíz cuadrada de la varianza.
+
+$$
+s = \sqrt{s^2} = \sqrt{\frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}}
+$$
+
+La **Desviación Estándar (s)** es la medida de dispersión más importante y utilizada.
+
+-   **Interpretación CLAVE:** Es la **"distancia típica" o "desviación promedio"** de una observación respecto a la media.
+-   **Ejemplo con Horas Trabajadas (ESI):**
+    -   Media de horas efectivas: **40.1 horas**.
+    -   Desviación estándar: **11.9 horas**.
+    -   *Interpretación:* En promedio, las personas ocupadas en Chile trabajan 40.1 horas a la semana, con una desviación típica de 11.9 horas. Esto nos da una idea del rango "normal" de horas trabajadas.
+
+Como la media, la desviación estándar es una medida **no robusta** y es muy sensible a los outliers.
+
+---
+title_slide_background: "#008080"
+---
+
+# 3. Estandarización y Puntuaciones Z
+
+## El Problema Sociológico: Comparar "Peras con Manzanas" {.smaller background-color="white"}
+
+Imaginemos a dos personas de nuestra encuesta ESI. Queremos saber quién tiene una posición "relativamente" más extrema en su respectiva distribución.
+
+-   **Persona A:** Trabaja **65 horas** a la semana.
+    -   *(Población: Media = 40.1 horas, SD = 11.9 horas)*
+-   **Persona B:** Tiene un ingreso de **$2.000.000** mensuales.
+    -   *(Población: Media = $814.654, SD = $976.223)*
+
+No podemos comparar horas con pesos directamente. Necesitamos una escala universal.
+
+## La Puntuación Z: Una Escala Universal {.smaller background-color="white"}
+
+La **puntuación Z** (o valor estandarizado) recalcula el valor de una observación para expresar su posición relativa a la media y a la dispersión de su grupo.
+
+-   **Fórmula:**
+    $$
+    Z = \frac{\text{(Valor observado)} - \text{Media}}{\text{Desviación Estándar}} = \frac{x - \bar{x}}{s}
+    $$
+
+-   **Interpretación Definitiva:** Una puntuación Z nos dice **cuántas desviaciones estándar por encima (+) o por debajo (-) de la media** se encuentra una observación.
+    -   `Z = 0`: La observación es exactamente igual a la media.
+    -   `Z = +1`: La observación está una desviación estándar por encima de la media.
+    -   `Z = -2`: La observación está dos desviaciones estándar por debajo de la media.
+
+## Resolviendo el Problema: ¿Persona A o Persona B? {.smaller background-color="white"}
+
+Ahora podemos calcular la puntuación Z para cada uno y comparar sus posiciones relativas.
+
+:::::: columns
+::: {.column width="50%"}
+**Persona A (Horas Trabajadas)**
+
+-   Valor (x) = 65
+-   Media (x̄) = 40.1
+-   SD (s) = 11.9
+
+$$
+Z_{\text{A}} = \frac{65 - 40.1}{11.9} = \frac{24.9}{11.9} = +2.09
+$$
+
+**Interpretación:** La persona A trabaja una cantidad de horas que está **2.09 desviaciones estándar por encima** del promedio de la población.
+:::
+::: {.column width="50%"}
+**Persona B (Ingreso)**
+
+-   Valor (x) = 2.000.000
+-   Media (x̄) = 814.654
+-   SD (s) = 976.223
+
+$$
+Z_{\text{B}} = \frac{2.000.000 - 814.654}{976.223} = \frac{1.185.346}{976.223} = +1.21
+$$
+
+**Interpretación:** La persona B tiene un ingreso que está **1.21 desviaciones estándar por encima** del promedio de la población.
+:::
+::::::
+
+**Conclusión:** Aunque un ingreso de \$2 millones es alto, trabajar 65 horas semanales es **relativamente más atípico o extremo** dentro de su propia distribución. La puntuación Z nos permite hacer esta comparación de manera objetiva.
+
+## Cierre y Próximos Pasos {.smaller background-color="white"}
+
+**Resumen de la sesión de hoy:**
+
+-   La **media** es el "centro de gravedad" de los datos, pero es sensible a outliers.
+-   La comparación **Media vs. Mediana** nos ayuda a diagnosticar la **asimetría**.
+-   La **desviación estándar** es la "distancia típica" a la media y está en las unidades originales de la variable.
+-   Las **Puntuaciones Z** nos permiten comparar valores de diferentes distribuciones al ponerlos en una escala universal.
+
+**En el práctico de hoy:**
+
+-   Aplicarán estas técnicas en R para calcular e interpretar `mean()`, `sd()` y puntuaciones Z con la Encuesta ESI.
+
+**Adelanto de la próxima clase:**
+
+-   Sintetizaremos todo lo aprendido en la Unidad 4, introduciendo la **"Gramática de Gráficos"** con `ggplot2` para construir visualizaciones de alta calidad de manera sistemática.
