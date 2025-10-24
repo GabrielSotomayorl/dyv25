@@ -80,11 +80,14 @@ Esta diferencia en sensibilidad nos proporciona una poderosa **herramienta de di
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 library(tidyverse)
+load("data/esi_2024.rdata")
+esi <- base
+
 # Simulación de datos
 set.seed(123)
 simetrica <- tibble(valor = rnorm(1000, 0, 1), tipo = "Simétrica\nMedia ≈ Mediana")
-as_derecha <- tibble(valor = rlnorm(1000, 0, 0.8), tipo = "Asimétrica a la Derecha\nMedia > Mediana")
-as_izquierda <- tibble(valor = -rlnorm(1000, 0, 0.8), tipo = "Asimétrica a la Izquierda\nMedia < Mediana")
+as_derecha <- tibble(valor = rlnorm(1000, 0, 0.5), tipo = "Asimétrica a la Derecha\nMedia > Mediana")
+as_izquierda <- tibble(valor = -rlnorm(1000, 0, 0.5), tipo = "Asimétrica a la Izquierda\nMedia < Mediana")
 
 datos_sim <- bind_rows(simetrica, as_derecha, as_izquierda) %>%
   mutate(tipo = factor(tipo, levels = c("Asimétrica a la Izquierda\nMedia < Mediana", "Simétrica\nMedia ≈ Mediana", "Asimétrica a la Derecha\nMedia > Mediana")))
@@ -146,6 +149,7 @@ ggplot(datos_desv, aes(x = valor, y = 0)) +
 ## La Varianza (s²): "Promediando" las Distancias al Cuadrado {.smaller background-color="white"}
 
 Para resolver el problema de los signos, elevamos cada desviación al cuadrado. Esto tiene dos ventajas:
+
 1.  Todos los valores se vuelven positivos.
 2.  Las desviaciones más grandes (outliers) son "penalizadas" con más fuerza, aportando más a la dispersión total.
 
@@ -158,7 +162,7 @@ $$
 -   **Interpretación:** Es la "media de las desviaciones al cuadrado".
 -   **Desventaja:** Sus unidades también están al cuadrado (ej. `pesos²`, `años²`), lo que la hace difícil de interpretar directamente.
 
-## La Desviación Estándar (s): La "Distancia Típica" {.smaller background-color="white"}
+## La Desviación Estándar (s) {.smaller background-color="white"}
 
 Para volver a las unidades originales de la variable, simplemente sacamos la raíz cuadrada de la varianza.
 
@@ -170,9 +174,9 @@ La **Desviación Estándar (s)** es la medida de dispersión más importante y u
 
 -   **Interpretación CLAVE:** Es la **"distancia típica" o "desviación promedio"** de una observación respecto a la media.
 -   **Ejemplo con Horas Trabajadas (ESI):**
-    -   Media de horas efectivas: **40.1 horas**.
-    -   Desviación estándar: **11.9 horas**.
-    -   *Interpretación:* En promedio, las personas ocupadas en Chile trabajan 40.1 horas a la semana, con una desviación típica de 11.9 horas. Esto nos da una idea del rango "normal" de horas trabajadas.
+    -   Media de horas efectivas: **39.25 horas**.
+    -   Desviación estándar: **14.02 horas**.
+    -   *Interpretación:* En promedio, las personas ocupadas en Chile trabajan 39.25 horas a la semana, con una desviación típica de 14.02 horas. Esto nos da una idea del rango "normal" de horas trabajadas.
 
 Como la media, la desviación estándar es una medida **no robusta** y es muy sensible a los outliers.
 
