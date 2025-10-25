@@ -42,7 +42,7 @@ La **media (x̄)**, o promedio aritmético, aunque es sensible a valores extremo
 La media representa el **"centro de gravedad"** de los datos: el punto de equilibrio de la distribución donde la suma de todas las desviaciones es cero.
 
 $$
-\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n}
+\bar{x} = \frac{\sum\_{i=1}^{n} x_i}{n}
 $$
 
 ## La Sensibilidad de la Media a Outliers {.smaller background-color="white"}
@@ -51,8 +51,10 @@ La principal característica de la media es que **utiliza el valor de cada obser
 
 Usemos un ejemplo de ingresos (en miles de $) para demostrarlo:
 
-:::::: columns
-::: {.column width="50%"}
+:::::: columns 
+
+::: {.column width="50%"} 
+
 **Grupo Original**
 
 `400, 450, 500, 550, 600`
@@ -60,9 +62,12 @@ Usemos un ejemplo de ingresos (en miles de $) para demostrarlo:
 -   **Mediana = 500**
 -   **Media = (400+450+500+550+600) / 5 = 500**
 
-Aquí, la distribución es simétrica, y Media ≈ Mediana.
-:::
-::: {.column width="50%"}
+Aquí, la distribución es simétrica, y Media ≈ Mediana. 
+
+::: 
+
+::: {.column width="50%"} 
+
 **Grupo con Outlier**
 
 `400, 450, 500, 550, 15000`
@@ -70,8 +75,9 @@ Aquí, la distribución es simétrica, y Media ≈ Mediana.
 -   **Mediana = 500** (no cambia)
 -   **Media = (400+450+500+550+15000) / 5 = 3380**
 
-El outlier "arrastra" la media hacia su valor.
-:::
+El outlier "arrastra" la media hacia su valor. 
+
+::: 
 ::::::
 
 ## Usando la Media y la Mediana para Diagnosticar Asimetría {.smaller background-color="white"}
@@ -80,9 +86,7 @@ Esta diferencia en sensibilidad nos proporciona una poderosa **herramienta de di
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 library(tidyverse)
-load("data/esi_2024.rdata")
-esi <- base
-
+library(Hmisc)
 # Simulación de datos
 set.seed(123)
 simetrica <- tibble(valor = rnorm(1000, 0, 1), tipo = "Simétrica\nMedia ≈ Mediana")
@@ -109,6 +113,81 @@ ggplot(datos_sim, aes(x = valor)) +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 ```
+
+## Usando la Media y la Mediana para Diagnosticar Asimetría {.smaller background-color="white"}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+# Carga de paquetes y datos
+library(haven)
+library(DescTools)
+
+
+load("data/esi_2024.rdata")
+esi <- base
+
+# Carga y limpieza de datos
+# (Este chunk asume que el objeto 'esi' ya fue cargado previamente en el documento)
+esi_trabajo <- esi %>%
+  filter(ocup_ref == 1) %>%
+  mutate(efectivas = ifelse(efectivas %in% c(888, 999), NA, efectivas))
+
+# Cálculo de la media y mediana ponderadas
+stats_horas <- esi_trabajo %>%
+  summarise(
+    media = weighted.mean(efectivas, w = fact_cal_esi, na.rm = TRUE),
+    mediana = Median(efectivas, weights = fact_cal_esi, na.rm = TRUE)
+  )
+
+# Gráfico
+ggplot(esi_trabajo, aes(x = efectivas, weight = fact_cal_esi)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 2, fill = "#008080", color = "white", alpha = 0.7) +
+  geom_density(color = "#008080", size = 1.2, na.rm = TRUE) +
+  geom_vline(data = stats_horas, aes(xintercept = media, color = "Media"), linetype = "dashed", size = 1.2) +
+  geom_vline(data = stats_horas, aes(xintercept = mediana, color = "Mediana"), linetype = "solid", size = 1.2) +
+  scale_color_manual(name = "Medidas de Centro", values = c("Media" = "red", "Mediana" = "blue")) +
+  labs(
+    title = "Distribución de Horas de Trabajo Semanales Efectivas",
+    subtitle = paste0("La Media (", round(stats_horas$media, 1), ") es marcadamente menor que la Mediana (", round(stats_horas$mediana, 1), "), indicando una clara asimetría a la izquierda"),
+    x = "Horas Efectivas Semanales",
+    y = "Densidad"
+  ) +
+  coord_cartesian(xlim = c(0, 100)) + # Acotamos el eje para mejor visualización
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom")
+```
+
+---
+
+## Usando la Media y la Mediana para Diagnosticar Asimetría (II) {.smaller background-color="white"}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+# (Este chunk asume que el objeto 'esi_trabajo' ya existe)
+
+# Cálculo de la media y mediana ponderadas para la edad
+stats_edad <- esi_trabajo %>%
+  summarise(
+    media = weighted.mean(edad, w = fact_cal_esi, na.rm = TRUE),
+    mediana = Median(edad, weights = fact_cal_esi, na.rm = TRUE)
+  )
+
+# Gráfico
+ggplot(esi_trabajo, aes(x = edad, weight = fact_cal_esi)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 1, fill = "#42affa", color = "white", alpha = 0.8) +
+  geom_density(color = "#42affa", size = 1.2, na.rm = TRUE, adjust=1.5) +
+  geom_vline(data = stats_edad, aes(xintercept = media, color = "Media"), linetype = "dashed", size = 1.2) +
+  geom_vline(data = stats_edad, aes(xintercept = mediana, color = "Mediana"), linetype = "solid", size = 1.2) +
+  scale_color_manual(name = "Medidas de Centro", values = c("Media" = "red", "Mediana" = "darkblue")) +
+  labs(
+    title = "Distribución de la Edad en la Población Ocupada",
+    subtitle = paste0("La Media (", round(stats_edad$media, 1), ") es ligeramente mayor que la Mediana (", round(stats_edad$mediana, 1), "), sugiriendo una leve asimetría a la derecha"),
+    x = "Edad (en años)",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom")
+```
+
+La línea de la media es ligeramente superior a la de la mediana. Esto confirma visual y numéricamente que la distribución de la edad de los ocupados tiene una **leve asimetría a la derecha**, debido a la presencia de una "cola" de personas de mayor edad.
 
 ---
 title_slide_background: "#008080"
@@ -156,7 +235,7 @@ Para resolver el problema de los signos, elevamos cada desviación al cuadrado. 
 La **Varianza (s²)** es simplemente el "promedio" de estas desviaciones al cuadrado.
 
 $$
-s^2 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}
+s^2 = \frac{\sum\_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}
 $$
 
 -   **Interpretación:** Es la "media de las desviaciones al cuadrado".
@@ -167,18 +246,141 @@ $$
 Para volver a las unidades originales de la variable, simplemente sacamos la raíz cuadrada de la varianza.
 
 $$
-s = \sqrt{s^2} = \sqrt{\frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}}
+s = \sqrt{s^2} = \sqrt{\frac{\sum\_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}}
 $$
 
 La **Desviación Estándar (s)** es la medida de dispersión más importante y utilizada.
 
 -   **Interpretación CLAVE:** Es la **"distancia típica" o "desviación promedio"** de una observación respecto a la media.
 -   **Ejemplo con Horas Trabajadas (ESI):**
-    -   Media de horas efectivas: **39.25 horas**.
-    -   Desviación estándar: **14.02 horas**.
-    -   *Interpretación:* En promedio, las personas ocupadas en Chile trabajan 39.25 horas a la semana, con una desviación típica de 14.02 horas. Esto nos da una idea del rango "normal" de horas trabajadas.
+    -   Media de horas efectivas: **`r round(weighted.mean(esi_trabajo$efectivas, w = esi_trabajo$fact_cal_esi, na.rm = TRUE), 2)` horas**.
+    -   Varianza: **`r round(wtd.var(esi_trabajo$efectivas, weights = esi_trabajo$fact_cal_esi, na.rm = TRUE), 2)` horas²**.
+    -   Desviación estándar: **`r round(sqrt(wtd.var(esi_trabajo$efectivas, weights = esi_trabajo$fact_cal_esi, na.rm = TRUE)), 2)` horas**.
+    -   *Interpretación:* Se estima que las personas ocupadas en Chile trabajan en promedio `r round(weighted.mean(esi_trabajo$efectivas, w = esi_trabajo$fact_cal_esi, na.rm = TRUE), 1)` horas a la semana, con una desviación típica de `r round(sqrt(wtd.var(esi_trabajo$efectivas, weights = esi_trabajo$fact_cal_esi, na.rm = TRUE)), 1)` horas.
 
-Como la media, la desviación estándar es una medida **no robusta** y es muy sensible a los outliers.
+Como la media, la desviación estándar es una medida **no robusta** y es sensible a los outliers.
+
+## Más Allá del Centro y la Dispersión: La Forma de la Distribución {.smaller background-color="white"}
+
+Ya tenemos herramientas para medir el **centro** (media, mediana) y la **dispersión** (desviación estándar, IQR) de nuestros datos.
+
+El último paso para una descripción completa es cuantificar la **forma** de la distribución. Mientras que un histograma nos da una idea visual, los estadísticos de forma nos dan un número preciso para describir dos características clave:
+
+1.  **Asimetría (Skewness):** ¿La distribución es simétrica o está "cargada" hacia un lado?
+2.  **Curtosis (Kurtosis):** ¿Qué tan "pesadas" son las colas de la distribución? ¿Es más propensa a generar valores extremos (outliers) que una distribución normal?
+
+------------------------------------------------------------------------
+
+## Asimetría (Skewness): Midiendo la Simetría {.smaller background-color="white"}
+
+La **asimetría** mide el grado en que los datos se distribuyen de forma no simétrica con respecto a su media. Confirma numéricamente lo que diagnosticamos al comparar la media y la mediana.
+
+-   **Interpretación del valor:**
+    -   **Asimetría ≈ 0:** Distribución **simétrica**.
+    -   **Asimetría \> 0 (Positiva):** La cola derecha es más larga. La mayoría de los datos están a la izquierda.
+    -   **Asimetría \< 0 (Negativa):** La cola izquierda es más larga. La mayoría de los datos están a la derecha.
+
+## Asimetría (Skewness): Midiendo la Simetría {.smaller background-color="white"}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+# Simulación de datos
+set.seed(123)
+simetrica <- tibble(valor = rnorm(1000, 0, 1), tipo = paste0("Simétrica\n(Asimetría ≈ 0)"))
+as_derecha <- tibble(valor = rlnorm(1000, 0, 0.8), tipo = paste0("Asimétrica a la Derecha\n(Asimetría > 0)"))
+as_izquierda <- tibble(valor = -rlnorm(1000, 0, 0.8), tipo = paste0("Asimétrica a la Izquierda\n(Asimetría < 0)"))
+
+datos_sim <- bind_rows(simetrica, as_derecha, as_izquierda) %>%
+  mutate(tipo = factor(tipo, levels = c(
+    "Asimétrica a la Izquierda\n(Asimetría < 0)", 
+    "Simétrica\n(Asimetría ≈ 0)", 
+    "Asimétrica a la Derecha\n(Asimetría > 0)"
+  )))
+
+# Gráfico
+ggplot(datos_sim, aes(x = valor)) +
+  geom_density(fill = "#008080", color = "#008080", alpha = 0.7, size = 1.2) +
+  facet_wrap(~tipo, scales = "free") +
+  labs(title = "Visualización de la Asimetría", x = "", y = "Densidad") +
+  theme_minimal(base_size = 14) +
+  theme(strip.text = element_text(face = "bold"))
+```
+
+
+## Curtosis (Kurtosis): Midiendo las "Colas" y los Outliers {.smaller background-color="white"}
+
+La **curtosis** es una medida de qué tan "pesadas" son las colas de una distribución en comparación con una distribución normal. **No mide si la distribución es "puntiaguda" o "plana"**, sino su propensión a producir valores extremos.
+
+-   **Interpretación del valor (en exceso, respecto a la normal):**
+    -   **Curtosis ≈ 0 (Mesocúrtica):** Colas similares a una distribución normal.
+    -   **Curtosis \> 0 (Leptocúrtica):** Colas "pesadas". Hay más probabilidad de encontrar valores muy extremos (outliers).
+    -   **Curtosis \< 0 (Platicúrtica):** Colas "ligeras". Menos probabilidad de outliers que en una distribución normal.
+
+## Curtosis (Kurtosis): Midiendo las "Colas" y los Outliers {.smaller background-color="white"}
+
+![](https://analystprep.com/cfa-level-1-exam/wp-content/uploads/2019/08/page-64.png){width=60%}
+
+
+## Estadísticos de Forma en la Práctica {.smaller background-color="white"}
+
+::::::::: {style="font-size: 0.9em; line-height: 1.2;"}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Este chunk asume que el objeto 'esi_trabajo' ya fue limpiado
+# Carga de paquetes y datos
+library(tidyverse)
+library(haven)
+library(DescTools)
+# Carga y limpieza de datos
+# (Este chunk asume que el objeto 'esi' ya fue cargado previamente en el documento)
+esi_trabajo <- esi %>%
+  filter(ocup_ref == 1) %>%
+  mutate(efectivas = ifelse(efectivas %in% c(888, 999), NA, efectivas))
+
+# Tabla de resumen
+resumen_final <- esi_trabajo %>%
+  summarise(
+    Variable = c("Edad", "Horas Trabajadas", "Ingreso"),
+    Media = c(
+      weighted.mean(edad, w = fact_cal_esi, na.rm = TRUE),
+      weighted.mean(efectivas, w = fact_cal_esi, na.rm = TRUE),
+      weighted.mean(ing_t_p, w = fact_cal_esi, na.rm = TRUE)
+    ),
+    Mediana = c(
+      Median(edad, weights = fact_cal_esi, na.rm = TRUE),
+      Median(efectivas, weights = fact_cal_esi, na.rm = TRUE),
+      Median(ing_t_p, weights = fact_cal_esi, na.rm = TRUE)
+    ),
+    `Desv. Estándar` = c(
+      sqrt(wtd.var(edad, weights = fact_cal_esi, na.rm = TRUE)),
+      sqrt(wtd.var(efectivas, weights = fact_cal_esi, na.rm = TRUE)),
+      sqrt(wtd.var(ing_t_p, weights = fact_cal_esi, na.rm = TRUE))
+    ),
+    Asimetría = c(
+      Skew(edad, weights = fact_cal_esi, na.rm = TRUE),
+      Skew(efectivas, weights = fact_cal_esi, na.rm = TRUE),
+      Skew(ing_t_p, weights = fact_cal_esi, na.rm = TRUE)
+    ),
+    Curtosis = c(
+      Kurt(edad, weights = fact_cal_esi, na.rm = TRUE),
+      Kurt(efectivas, weights = fact_cal_esi, na.rm = TRUE),
+      Kurt(ing_t_p, weights = fact_cal_esi, na.rm = TRUE)
+    )
+  )
+
+knitr::kable(
+  resumen_final,
+  digits = 2,
+  caption = "Resumen de Estadísticos Descriptivos Ponderados (ESI 2024)",
+  format.args = list(big.mark = ".")
+) %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+-   **Edad:** La Media (`r round(resumen_final$Media[1], 2)`) y Mediana (`r round(resumen_final$Mediana[1], 0)`) son cercanas, y la Asimetría (`r round(resumen_final$Asimetría[1], 2)`) es positiva pero baja. La Curtosis (`r round(resumen_final$Curtosis[1], 2)`) es negativa. Esto confirma una distribución **casi simétrica y platicúrtica** (colas ligeras).  
+-   **Horas Trabajadas:** La Media (`r round(resumen_final$Media[2], 2)`) es menor que la Mediana (`r round(resumen_final$Mediana[2], 0)`) y la Asimetría (`r round(resumen_final$Asimetría[2], 2)`) es negativa. La Curtosis (`r round(resumen_final$Curtosis[2], 2)`) es positiva. Esto confirma una **asimetría a la izquierda** y una forma **leptocúrtica** (más propensa a outliers que una normal).  
+-   **Ingreso:** La Media (`r format(round(resumen_final$Media[3], 0), big.mark = ".")`) es mucho mayor que la Mediana (`r format(round(resumen_final$Mediana[3], 0), big.mark = ".")`). La **Asimetría es altísima (`r round(resumen_final$Asimetría[3], 2)`)**, confirmando una fuerte cola a la derecha. La **Curtosis es extremadamente alta (`r round(resumen_final$Curtosis[3], 2)`)**, lo que indica que la distribución es muy propensa a generar valores atípicos (ingresos muy, muy altos).
+
+:::::::::
 
 ---
 title_slide_background: "#008080"
@@ -186,16 +388,22 @@ title_slide_background: "#008080"
 
 # 3. Estandarización y Puntuaciones Z
 
-## El Problema Sociológico: Comparar "Peras con Manzanas" {.smaller background-color="white"}
+---
+title_slide_background: "#008080"
+---
 
-Imaginemos a dos personas de nuestra encuesta ESI. Queremos saber quién tiene una posición "relativamente" más extrema en su respectiva distribución.
+# 3. Estandarización y Puntuaciones Z
 
--   **Persona A:** Trabaja **65 horas** a la semana.
-    -   *(Población: Media = 40.1 horas, SD = 11.9 horas)*
--   **Persona B:** Tiene un ingreso de **$2.000.000** mensuales.
-    -   *(Población: Media = $814.654, SD = $976.223)*
+## Comparando entre Diferentes Variables {.smaller background-color="white"}
 
-No podemos comparar horas con pesos directamente. Necesitamos una escala universal.
+Imaginemos que queremos saber a quién le fue relativamente mejor en sus estudios. Tenemos dos estudiantes y sus notas en diferentes pruebas:
+
+-   **Estudiante A:** Sacó un **5.5** en una prueba de Estadística.
+-   *(Población de la prueba de Estadística: Promedio = 4.0, Desviación Estándar = 0.5)*
+-   **Estudiante B:** Sacó un **6.2** en una prueba de Metodología.
+-   *(Población de la prueba de Metodología: Promedio = 5.8, Desviación Estándar = 0.2)*
+
+A primera vista, el 6.2 parece mejor que el 5.5. Pero, ¿considerando la dificultad y las notas de los demás, quién tuvo un rendimiento *relativamente* más destacado? No podemos comparar estas notas directamente porque provienen de pruebas con diferentes promedios y dispersiones. Necesitamos una escala común.
 
 ## La Puntuación Z: Una Escala Universal {.smaller background-color="white"}
 
@@ -207,44 +415,60 @@ La **puntuación Z** (o valor estandarizado) recalcula el valor de una observaci
     $$
 
 -   **Interpretación Definitiva:** Una puntuación Z nos dice **cuántas desviaciones estándar por encima (+) o por debajo (-) de la media** se encuentra una observación.
-    -   `Z = 0`: La observación es exactamente igual a la media.
-    -   `Z = +1`: La observación está una desviación estándar por encima de la media.
-    -   `Z = -2`: La observación está dos desviaciones estándar por debajo de la media.
 
-## Resolviendo el Problema: ¿Persona A o Persona B? {.smaller background-color="white"}
+-   `Z = 0`: La observación es exactamente igual a la media.
 
-Ahora podemos calcular la puntuación Z para cada uno y comparar sus posiciones relativas.
+-   `Z = +1`: La observación está una desviación estándar por encima de la media.
 
-:::::: columns
-::: {.column width="50%"}
-**Persona A (Horas Trabajadas)**
+-   `Z = -2`: La observación está dos desviaciones estándar por debajo de la media.
 
--   Valor (x) = 65
--   Media (x̄) = 40.1
--   SD (s) = 11.9
+## La Puntuación Z: Una Escala Universal {background-color="white"}
 
-$$
-Z_{\text{A}} = \frac{65 - 40.1}{11.9} = \frac{24.9}{11.9} = +2.09
-$$
+Estandarizar variables es fundamental porque permite llevar **distintas variables a una escala común** (con media 0 y desviación estándar 1). **Esto es crucial en muchas técnicas estadísticas** (como la regresión o el análisis factorial) donde las variables deben tener el mismo peso o ser directamente comparables, independientemente de sus unidades o rangos originales.
 
-**Interpretación:** La persona A trabaja una cantidad de horas que está **2.09 desviaciones estándar por encima** del promedio de la población.
-:::
-::: {.column width="50%"}
-**Persona B (Ingreso)**
+## Resolviendo el Problema: ¿A quién le fue mejor, Estudiante A o B? {.smaller background-color="white"}
 
--   Valor (x) = 2.000.000
--   Media (x̄) = 814.654
--   SD (s) = 976.223
+::::::::: {style="font-size: 0.8em; line-height: 1.2;"}
+
+:::::: columns 
+
+::: {.column width="50%"} 
+
+**Estudiante A (Prueba de Estadística)**
+
+-   Nota (x) = 5.5
+-   Media (x̄) = 4.0
+-   SD (s) = 0.5
 
 $$
-Z_{\text{B}} = \frac{2.000.000 - 814.654}{976.223} = \frac{1.185.346}{976.223} = +1.21
+Z\_{\text{A}} = \frac{5.5 - 4.0}{0.5} = \frac{1.5}{0.5} = +3.0
 $$
 
-**Interpretación:** La persona B tiene un ingreso que está **1.21 desviaciones estándar por encima** del promedio de la población.
-:::
+**Interpretación:** La nota del Estudiante A está **3.0 desviaciones estándar por encima** del promedio de su prueba. ¡Un rendimiento excepcional! 
+
+::: 
+
+::: {.column width="50%"} 
+
+**Estudiante B (Prueba de Metodología)**
+
+-   Nota (x) = 6.2
+-   Media (x̄) = 5.8
+-   SD (s) = 0.2
+
+$$
+Z\_{\text{B}} = \frac{6.2 - 5.8}{0.2} = \frac{0.4}{0.2} = +2.0
+$$
+
+**Interpretación:** La nota del Estudiante B está **2.0 desviaciones estándar por encima** del promedio de su prueba. También un muy buen rendimiento. 
+
+::: 
+
 ::::::
 
-**Conclusión:** Aunque un ingreso de \$2 millones es alto, trabajar 65 horas semanales es **relativamente más atípico o extremo** dentro de su propia distribución. La puntuación Z nos permite hacer esta comparación de manera objetiva.
+**Conclusión:** Aunque el Estudiante B obtuvo una nota más alta en valor absoluto (6.2 vs 5.5), en términos **relativos** (es decir, en comparación con el desempeño del resto de sus compañeros en cada prueba), al **Estudiante A le fue mejor**. Su nota de 5.5 es mucho más atípica y superior respecto al promedio de su grupo que la nota de 6.2 del Estudiante B respecto al suyo.
+
+:::::::::
 
 ## Cierre y Próximos Pasos {.smaller background-color="white"}
 

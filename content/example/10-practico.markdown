@@ -41,19 +41,20 @@ Continuaremos trabajando con la **ESI 2024**. En este práctico, analizaremos do
 **Paso 2: Cargar paquetes**
 Cargamos los paquetes que usaremos hoy.
 
-```{r setup, message=FALSE, warning=FALSE}
+
+``` r
 # Cargar los paquetes que usaremos hoy
 library(tidyverse)
 library(haven)
 library(DescTools) 
 library(Hmisc)
-
 ```
 
 **Paso 3: Cargar la base de datos**
 El método recomendado es descargar el archivo y cargarlo desde tu proyecto. Puedes encontrar la base de datos en el [siguiente enlace](https://www.ine.gob.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/rdata/2024/esi_2024.rdata) 
 
-```{r load-manual, eval=FALSE, echo=TRUE}
+
+``` r
 # Paso 1: Descarga la base de datos desde el sitio del INE y guárdala 
 # en tu carpeta 'datos'. El archivo viene en formato .Rdata.
 # Enlace: https://www.ine.gob.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/rdata/2024/esi_2024.rdata
@@ -66,7 +67,8 @@ esi <- base # El objeto se llama 'base', lo renombramos a 'esi'
 ***
 Para asegurar que este documento se pueda ejecutar de forma autocontenida, el siguiente código realiza la descarga y carga de forma automática. No necesitas ejecutarlo si ya cargaste la base manualmente.
 
-```{r load-auto, message=FALSE, warning=FALSE, cache=TRUE}
+
+``` r
 # Código automático para cargar los datos desde la web
 tmp <- tempfile(fileext = ".rdata")
 download.file("https://www.ine.gob.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/rdata/2024/esi_2024.rdata?sfvrsn=582b8630_4&download=true", tmp, mode = "wb")
@@ -77,7 +79,8 @@ load(tmp); esi <- base; unlink(tmp); rm(base, tmp)
 **Paso 4: Preparar la base de trabajo**
 Filtramos por la población de referencia (`ocup_ref == 1`) y limpiamos la variable de horas trabajadas, ya que los códigos `888` y `999` representan valores perdidos.
 
-```{r filter-data}
+
+``` r
 # Creamos nuestra base de trabajo filtrada y limpiamos la variable 'efectivas'
 esi_trabajo <- esi %>%
   filter(ocup_ref == 1) %>%
@@ -90,7 +93,8 @@ esi_trabajo <- esi %>%
 
 Para entender qué hace la media, podemos replicar su fórmula en R (`suma / n`). Lo haremos para la variable `edad` de la **muestra**.
 
-```{r mean-manual}
+
+``` r
 # 1. Sumamos todos los valores
 suma_edades <- sum(esi_trabajo$edad, na.rm = TRUE)
 # 2. Contamos el número de casos validos
@@ -98,16 +102,27 @@ n_casos <- nrow(esi_trabajo %>% filter(!is.na(edad)))
 # 3. Dividimos
 media_manual <- suma_edades / n_casos
 media_manual
+```
 
+```
+## [1] 45.18962
+```
+
+``` r
 # Ahora, con la función de R (da el mismo resultado)
 mean(esi_trabajo$edad, na.rm = TRUE)
+```
+
+```
+## [1] 45.18962
 ```
 
 ### 2.2 Media vs. Mediana: Diagnóstico de Asimetría en la Muestra
 
 Comparemos la media y la mediana para `ing_t_p` y `efectivas` para ver qué nos dicen sobre la forma de la distribución en nuestra **muestra**.
 
-```{r mean-vs-median}
+
+``` r
 esi_trabajo %>%
   summarise(
     media_horas = mean(efectivas, na.rm = TRUE),
@@ -116,12 +131,20 @@ esi_trabajo %>%
     mediana_ingreso = median(ing_t_p, na.rm = TRUE)
   )
 ```
+
+```
+## # A tibble: 1 × 4
+##   media_horas mediana_horas media_ingreso mediana_ingreso
+##         <dbl>         <dbl>         <dbl>           <dbl>
+## 1        37.0            44       758430.          560000
+```
 **Interpretación:**
--   **Horas trabajadas:** La media (`r round(mean(esi_trabajo$efectivas, na.rm = T),1)`) es menor que la mediana (`r round(median(esi_trabajo$efectivas, na.rm = T),1)`), sugiriendo una **asimetría a la izquierda**.
--   **Ingreso:** La media (`r format(round(mean(esi_trabajo$ing_t_p, na.rm = T)), big.mark = ",")`) es mucho mayor que la mediana (`r format(round(median(esi_trabajo$ing_t_p, na.rm = T)), big.mark = ",")`), una señal clara de **asimetría a la derecha**.
+-   **Horas trabajadas:** La media (37) es menor que la mediana (44), sugiriendo una **asimetría a la izquierda**.
+-   **Ingreso:** La media (758,430) es mucho mayor que la mediana (560,000), una señal clara de **asimetría a la derecha**.
 
 
-```{r warning=FALSE, message=FALSE}
+
+``` r
 # Plot para 'efectivas' (horas trabajadas)
 mean_efectivas <- mean(esi_trabajo$efectivas, na.rm = TRUE)
 median_efectivas <- median(esi_trabajo$efectivas, na.rm = TRUE)
@@ -143,7 +166,10 @@ y = "Frecuencia"
 theme_minimal()
 ```
 
-```{r warning=FALSE}
+<img src="/example/10-practico_files/figure-html/unnamed-chunk-1-1.png" width="672" />
+
+
+``` r
 # Plot para 'ing_t_p' (ingreso del trabajo principal)
 mean_ing_t_p <- mean(esi_trabajo$ing_t_p, na.rm = TRUE)
 median_ing_t_p <- median(esi_trabajo$ing_t_p, na.rm = TRUE)
@@ -167,12 +193,15 @@ theme_minimal() +
 coord_cartesian(xlim = c(0, quantile(esi_trabajo$ing_t_p, 0.99, na.rm = TRUE) * 1.05)) # Ajusta el límite para visibilidad
 ```
 
+<img src="/example/10-practico_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+
 
 ## 3. Comprendiendo la Varianza y la Desviación Estándar
 
 Vamos a calcular la desviación estándar "paso a paso" para entender su lógica, usando la variable `efectivas` (horas trabajadas) de la muestra.
 
-```{r sd-manual}
+
+``` r
 # Paso 1: Calcular la media de la muestra
 media_horas <- mean(esi_trabajo$efectivas, na.rm = TRUE)
 
@@ -188,14 +217,37 @@ suma_cuadrados <- sum(esi_trabajo$desv_cuadrado_horas, na.rm = TRUE)
 n <- sum(!is.na(esi_trabajo$efectivas)) # n de casos válidos
 varianza_manual <- suma_cuadrados / (n - 1)
 varianza_manual
+```
 
+```
+## [1] 269.5194
+```
+
+``` r
 # Paso 5: Calcular la Desviación Estándar (raíz cuadrada de la varianza)
 sd_manual <- sqrt(varianza_manual)
 sd_manual
+```
 
+```
+## [1] 16.41705
+```
+
+``` r
 # Comparemos con las funciones directas de R:
 var(esi_trabajo$efectivas, na.rm = TRUE)
+```
+
+```
+## [1] 269.5194
+```
+
+``` r
 sd(esi_trabajo$efectivas, na.rm = TRUE)
+```
+
+```
+## [1] 16.41705
 ```
 Los resultados son idénticos. Ahora sabemos exactamente qué hacen las funciones `var()` y `sd()` por dentro.
 
@@ -203,7 +255,8 @@ Los resultados son idénticos. Ahora sabemos exactamente qué hacen las funcione
 
 Para hacer afirmaciones sobre la población de Chile, debemos usar los ponderadores (`fact_cal_esi`).
 
-```{r weighted-stats}
+
+``` r
 # Usamos summarise() para calcular todas nuestras estimaciones poblacionales de una vez
 resumen_poblacional <- esi_trabajo %>%
   summarise(
@@ -215,15 +268,23 @@ resumen_poblacional <- esi_trabajo %>%
 
 resumen_poblacional
 ```
+
+```
+## # A tibble: 1 × 4
+##   media_ing_pob sd_ing_pob media_horas_pob sd_horas_pob
+##           <dbl>      <dbl>           <dbl>        <dbl>
+## 1       897019.   1043897.            37.8         15.8
+```
 **Interpretación:**
--   Se estima que el ingreso promedio del trabajo principal en Chile es de **`r format(round(resumen_poblacional$media_ing_pob), big.mark = ",")`**, con una desviación estándar de **`r format(round(resumen_poblacional$sd_ing_pob), big.mark = ",")`**.
--   Se estima que las horas efectivas trabajadas promedian **`r round(resumen_poblacional$media_horas_pob, 1)` horas** semanales, con una desviación estándar de **`r round(resumen_poblacional$sd_horas_pob, 1)` horas**.
+-   Se estima que el ingreso promedio del trabajo principal en Chile es de **897,019**, con una desviación estándar de **1,043,897**.
+-   Se estima que las horas efectivas trabajadas promedian **37.8 horas** semanales, con una desviación estándar de **15.8 horas**.
 
 ## 5. Cuantificando la Forma: Asimetría y Curtosis
 
 Podemos confirmar numéricamente la forma de nuestras distribuciones poblacionales.
 
-```{r shape-stats}
+
+``` r
 esi_trabajo %>%
   summarise(
     asimetria_ing = Skew(ing_t_p, weights = fact_cal_esi, na.rm = TRUE),
@@ -232,9 +293,16 @@ esi_trabajo %>%
     curtosis_horas = Kurt(efectivas, weights = fact_cal_esi, na.rm = TRUE)
   )
 ```
+
+```
+## # A tibble: 1 × 4
+##   asimetria_ing curtosis_ing asimetria_horas curtosis_horas
+##           <dbl>        <dbl>           <dbl>          <dbl>
+## 1          15.0         703.          -0.473           1.72
+```
 **Interpretación:**
--   **Ingreso:** La asimetría es extremadamente alta y positiva (`r round(Skew(esi_trabajo$ing_t_p, weights = esi_trabajo$fact_cal_esi, na.rm = TRUE), 2)`), y la curtosis también (`r round(Kurt(esi_trabajo$ing_t_p, weights = esi_trabajo$fact_cal_esi, na.rm = TRUE), 2)`), indicando una distribución muy propensa a outliers.
--   **Horas:** La asimetría es negativa (`r round(Skew(esi_trabajo$efectivas, weights = esi_trabajo$fact_cal_esi, na.rm = TRUE), 2)`), confirmando la asimetría a la izquierda.
+-   **Ingreso:** La asimetría es extremadamente alta y positiva (14.98), y la curtosis también (702.66), indicando una distribución muy propensa a outliers.
+-   **Horas:** La asimetría es negativa (-0.47), confirmando la asimetría a la izquierda.
 
 ## 6. Puntuaciones Z: Estandarizando Nuestros Datos
 
@@ -242,7 +310,8 @@ esi_trabajo %>%
 
 Vamos a crear una nueva columna con la puntuación Z para la variable `edad`.
 
-```{r z-scores}
+
+``` r
 # Primero, calculamos y guardamos la media y SD poblacionales de la edad
 media_edad_pob <- weighted.mean(esi_trabajo$edad, w = esi_trabajo$fact_cal_esi, na.rm = TRUE)
 sd_edad_pob <- sqrt(wtd.var(esi_trabajo$edad, weights = esi_trabajo$fact_cal_esi, na.rm = TRUE))
@@ -263,20 +332,40 @@ esi_con_z %>%
   select(edad, z_edad_ponderado, z_edad_simple) %>%
   head()
 ```
+
+```
+## # A tibble: 6 × 3
+##    edad z_edad_ponderado z_edad_simple
+##   <dbl>            <dbl>         <dbl>
+## 1    54            0.827        0.626 
+## 2    22           -1.58        -1.65  
+## 3    63            1.50         1.27  
+## 4    45            0.148       -0.0135
+## 5    29           -1.06        -1.15  
+## 6    49            0.450        0.271
+```
 Como vemos, los valores son muy similares, pero el cálculo manual con los estadísticos ponderados (`z_edad_ponderado`) es el **correcto** para interpretar la posición relativa a la población.
 
 ### 6.2 Interpretando las Puntuaciones Z
 
 Las puntuaciones Z nos permiten encontrar los casos más "atípicos" o "extremos".
 
-```{r z-scores-interpret}
+
+``` r
 # ¿Quién es la persona ocupada más joven en términos relativos?
 esi_con_z %>%
   arrange(z_edad_ponderado) %>% # Ordenamos de menor a mayor Z
   select(edad, z_edad_ponderado) %>%
   head(1)
 ```
-**Interpretación:** La persona ocupada más joven en la muestra tiene 15 años. Su puntuación Z de **`r round(min(esi_con_z$z_edad_ponderado, na.rm = TRUE), 2)`** significa que su edad está casi **`r round(abs(min(esi_con_z$z_edad_ponderado, na.rm = TRUE)), 1)` desviaciones estándar por debajo** de la edad promedio de la población ocupada.
+
+```
+## # A tibble: 1 × 2
+##    edad z_edad_ponderado
+##   <dbl>            <dbl>
+## 1    15            -2.11
+```
+**Interpretación:** La persona ocupada más joven en la muestra tiene 15 años. Su puntuación Z de **-2.11** significa que su edad está casi **2.1 desviaciones estándar por debajo** de la edad promedio de la población ocupada.
 
 ## 7. Actividad de Desafío
 
@@ -287,7 +376,8 @@ Ahora te toca a ti. Usando la base `esi_trabajo`:
 3.  **Cálculo de Puntuación Z:** Calcula la puntuación Z para la variable `ing_t_p` usando los estadísticos ponderados.
 4.  **Análisis de Caso:** Encuentra a una persona en la muestra cuyo ingreso sea lo más cercano posible al promedio (es decir, cuya puntuación Z sea la más cercana a 0 en valor absoluto). ¿Cuál es su ingreso y su puntuación Z? *Pista: usa `mutate()` para crear una Z absoluta (`abs(z_ingreso)`) y luego `arrange()` sobre esa nueva variable.*
 
-```{r, eval=FALSE, echo=TRUE}
+
+``` r
 # 1. Código para calcular los 5 estadísticos
 
 
@@ -298,5 +388,4 @@ Ahora te toca a ti. Usando la base `esi_trabajo`:
 
 
 # 4. Código para encontrar a la persona "promedio"
-
 ```

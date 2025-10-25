@@ -234,7 +234,7 @@ knitr::kable(
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
-<table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption><span id="tab:unnamed-chunk-3"></span>Table 1: (\#tab:unnamed-chunk-3)Estadísticos Robustos Ponderados para el Ingreso del Trabajo Principal ($ CLP)</caption>
  <thead>
   <tr>

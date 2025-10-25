@@ -1,9 +1,9 @@
 ---
-title: "Diagnosticos y supuestos de modelos de regresión"
-linktitle: "10: Diagnosticos y supuestos de modelos de regresión"
-date: "2024-10-28"
-start_date: "2024-10-28"
-end_date: "2024-10-28"
+title: "La Media, la Desviación Estándar y la Estandarización"
+linktitle: "10: La Media, la Desviación Estándar y la Estandarización"
+date: "2025-10-27"
+start_date: "2025-10-27"
+end_date: "2025-10-27"
 menu:
   content:
     parent: Contenido
@@ -20,9 +20,7 @@ source(here::here("R", "slide-tabs.R"))
 
 slide_details <- tibble::tribble(
   ~title, ~slide, ~active,
-  "Diagnosticos y supuestos de modelos de regresión", "0", TRUE,
-   "", "14", FALSE,
-   "", "29", FALSE
+  "", "0", TRUE
 )
 ```
 
@@ -37,5 +35,12 @@ slide_tabs(slide_details, "/slides/10-slides.html")
 {{% div fyi %}}
 **¿Cómo ocupar**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras estas viendo las slides, podrás ver los comandos específicos para navegar en ellas.
 {{% /div %}}
+
+# Bibliografía
+- [Ritchey F. (2008). 117-135](../bib/ritchey cap 4 y 5.pdf/) 
+- [Moore, D. S. (2005). Capítulo 1. Pags. 32 a la 54.](../bib/Moore - Estadística aplicada básica 32-54.pdf/) 
+
+
+
 
 
