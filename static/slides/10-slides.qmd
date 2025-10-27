@@ -20,14 +20,12 @@ include-in-header:
 
 ## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
--   **Calcular e interpretar** la **Media** como medida de centro y entender su sensibilidad a valores atípicos.
--   **Utilizar** la relación entre **Media y Mediana** como una herramienta de diagnóstico para la **asimetría**.
--   **Desglosar y comprender** la **Varianza** y la **Desviación Estándar** como medidas de dispersión basadas en la media.
--   **Comprender** el propósito y la aplicación de la estandarización a través de las **Puntuaciones Z**.
+* **Calcular e interpretar** la **Media** como medida de centro, reconociendo su sensibilidad a valores atípicos.
+* **Comparar la Media y la Mediana** para diagnosticar **asimetrías** en la distribución.
+* **Comprender y aplicar** la **Varianza** y la **Desviación Estándar** como medidas de dispersión basadas en la media.
+* **Interpretar** los **estadísticos de forma** (asimetría y curtosis) para caracterizar la forma de una distribución.
+* **Aplicar la estandarización** mediante **Puntuaciones Z**, comprendiendo su utilidad para comparar valores entre diferentes escalas o variables.
 
----
-title_slide_background: "#008080"
----
 
 # 1. La Media y su Sensibilidad
 
@@ -42,7 +40,7 @@ La **media (x̄)**, o promedio aritmético, aunque es sensible a valores extremo
 La media representa el **"centro de gravedad"** de los datos: el punto de equilibrio de la distribución donde la suma de todas las desviaciones es cero.
 
 $$
-\bar{x} = \frac{\sum\_{i=1}^{n} x_i}{n}
+\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n}
 $$
 
 ## La Sensibilidad de la Media a Outliers {.smaller background-color="white"}
@@ -189,9 +187,6 @@ ggplot(esi_trabajo, aes(x = edad, weight = fact_cal_esi)) +
 
 La línea de la media es ligeramente superior a la de la mediana. Esto confirma visual y numéricamente que la distribución de la edad de los ocupados tiene una **leve asimetría a la derecha**, debido a la presencia de una "cola" de personas de mayor edad.
 
----
-title_slide_background: "#008080"
----
 
 # 2. Medidas de Dispersión Basadas en la Media
 
@@ -235,7 +230,7 @@ Para resolver el problema de los signos, elevamos cada desviación al cuadrado. 
 La **Varianza (s²)** es simplemente el "promedio" de estas desviaciones al cuadrado.
 
 $$
-s^2 = \frac{\sum\_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}
+s^2 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}
 $$
 
 -   **Interpretación:** Es la "media de las desviaciones al cuadrado".
@@ -246,7 +241,7 @@ $$
 Para volver a las unidades originales de la variable, simplemente sacamos la raíz cuadrada de la varianza.
 
 $$
-s = \sqrt{s^2} = \sqrt{\frac{\sum\_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}}
+s = \sqrt{s^2} = \sqrt{\frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}}
 $$
 
 La **Desviación Estándar (s)** es la medida de dispersión más importante y utilizada.
@@ -388,12 +383,6 @@ title_slide_background: "#008080"
 
 # 3. Estandarización y Puntuaciones Z
 
----
-title_slide_background: "#008080"
----
-
-# 3. Estandarización y Puntuaciones Z
-
 ## Comparando entre Diferentes Variables {.smaller background-color="white"}
 
 Imaginemos que queremos saber a quién le fue relativamente mejor en sus estudios. Tenemos dos estudiantes y sus notas en diferentes pruebas:
@@ -441,7 +430,7 @@ Estandarizar variables es fundamental porque permite llevar **distintas variable
 -   SD (s) = 0.5
 
 $$
-Z\_{\text{A}} = \frac{5.5 - 4.0}{0.5} = \frac{1.5}{0.5} = +3.0
+Z_{\text{A}} = \frac{5.5 - 4.0}{0.5} = \frac{1.5}{0.5} = +3.0
 $$
 
 **Interpretación:** La nota del Estudiante A está **3.0 desviaciones estándar por encima** del promedio de su prueba. ¡Un rendimiento excepcional! 
@@ -457,7 +446,7 @@ $$
 -   SD (s) = 0.2
 
 $$
-Z\_{\text{B}} = \frac{6.2 - 5.8}{0.2} = \frac{0.4}{0.2} = +2.0
+Z_{\text{B}} = \frac{6.2 - 5.8}{0.2} = \frac{0.4}{0.2} = +2.0
 $$
 
 **Interpretación:** La nota del Estudiante B está **2.0 desviaciones estándar por encima** del promedio de su prueba. También un muy buen rendimiento. 
@@ -472,6 +461,7 @@ $$
 
 ## Cierre y Próximos Pasos {.smaller background-color="white"}
 
+::: {style="font-size: 0.8em; line-height: 1.2;"}
 **Resumen de la sesión de hoy:**
 
 -   La **media** es el "centro de gravedad" de los datos, pero es sensible a outliers.
@@ -486,3 +476,4 @@ $$
 **Adelanto de la próxima clase:**
 
 -   Sintetizaremos todo lo aprendido en la Unidad 4, introduciendo la **"Gramática de Gráficos"** con `ggplot2` para construir visualizaciones de alta calidad de manera sistemática.
+:::

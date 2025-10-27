@@ -6,8 +6,8 @@
 <script src="10-slides_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="10-slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="10-slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="10-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="10-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
 
   <meta name="author" content="Gabriel Sotomayor">
   <meta name="dcterms.date" content="2025-10-27">
@@ -30,7 +30,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="10-slides_files/libs/revealjs/dist/theme/quarto-e1cbb759e4a46ec0f203c77955f7056a.css">
+  <link rel="stylesheet" href="10-slides_files/libs/revealjs/dist/theme/quarto-aff1f7264a615286def6c13f54e8bcad.css">
   <link href="10-slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="10-slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="10-slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -153,10 +153,11 @@ Gabriel Sotomayor
 <section id="objetivos-de-la-sesión-de-hoy" class="slide level2 smaller" data-background-color="white">
 <h2>Objetivos de la Sesión de Hoy</h2>
 <ul>
-<li><strong>Calcular e interpretar</strong> la <strong>Media</strong> como medida de centro y entender su sensibilidad a valores atípicos.</li>
-<li><strong>Utilizar</strong> la relación entre <strong>Media y Mediana</strong> como una herramienta de diagnóstico para la <strong>asimetría</strong>.</li>
-<li><strong>Desglosar y comprender</strong> la <strong>Varianza</strong> y la <strong>Desviación Estándar</strong> como medidas de dispersión basadas en la media.</li>
-<li><strong>Comprender</strong> el propósito y la aplicación de la estandarización a través de las <strong>Puntuaciones Z</strong>.</li>
+<li><strong>Calcular e interpretar</strong> la <strong>Media</strong> como medida de centro, reconociendo su sensibilidad a valores atípicos.</li>
+<li><strong>Comparar la Media y la Mediana</strong> para diagnosticar <strong>asimetrías</strong> en la distribución.</li>
+<li><strong>Comprender y aplicar</strong> la <strong>Varianza</strong> y la <strong>Desviación Estándar</strong> como medidas de dispersión basadas en la media.</li>
+<li><strong>Interpretar</strong> los <strong>estadísticos de forma</strong> (asimetría y curtosis) para caracterizar la forma de una distribución.</li>
+<li><strong>Aplicar la estandarización</strong> mediante <strong>Puntuaciones Z</strong>, comprendiendo su utilidad para comparar valores entre diferentes escalas o variables.</li>
 </ul>
 </section>
 <section>
@@ -171,7 +172,7 @@ Gabriel Sotomayor
 <p>La <strong>media (x̄)</strong>, o promedio aritmético, aunque es sensible a valores extremos, posee propiedades matemáticas que la convierten en la piedra angular de la estadística más avanzada (correlación, regresión, análisis de varianza).</p>
 <p>La media representa el <strong>“centro de gravedad”</strong> de los datos: el punto de equilibrio de la distribución donde la suma de todas las desviaciones es cero.</p>
 <p><span class="math display">\[
-\bar{x} = \frac{\sum\_{i=1}^{n} x_i}{n}
+\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n}
 \]</span></p>
 </section>
 <section id="la-sensibilidad-de-la-media-a-outliers" class="slide level2 smaller" data-background-color="white">
@@ -233,7 +234,7 @@ Gabriel Sotomayor
 </ol>
 <p>La <strong>Varianza (s²)</strong> es simplemente el “promedio” de estas desviaciones al cuadrado.</p>
 <p><span class="math display">\[
-s^2 = \frac{\sum\_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}
+s^2 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}
 \]</span></p>
 <ul>
 <li><strong>Interpretación:</strong> Es la “media de las desviaciones al cuadrado”.</li>
@@ -244,7 +245,7 @@ s^2 = \frac{\sum\_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}
 <h2>La Desviación Estándar (s)</h2>
 <p>Para volver a las unidades originales de la variable, simplemente sacamos la raíz cuadrada de la varianza.</p>
 <p><span class="math display">\[
-s = \sqrt{s^2} = \sqrt{\frac{\sum\_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}}
+s = \sqrt{s^2} = \sqrt{\frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}}
 \]</span></p>
 <p>La <strong>Desviación Estándar (s)</strong> es la medida de dispersión más importante y utilizada.</p>
 <ul>
@@ -305,7 +306,7 @@ s = \sqrt{s^2} = \sqrt{\frac{\sum\_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}}
 <div style="font-size: 0.9em; line-height: 1.2;">
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-striped caption-top" data-quarto-postprocess="true" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-striped caption-top" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>Resumen de Estadísticos Descriptivos Ponderados (ESI 2024)</caption>
 <thead>
 <tr class="header">
@@ -355,13 +356,8 @@ s = \sqrt{s^2} = \sqrt{\frac{\sum\_{i=1}^{n} (x_i - \bar{x})^2}{n - 1}}
 </ul>
 </div>
 </section></section>
-<section id="estandarización-y-puntuaciones-z" class="title-slide slide level1 center">
-<h1>3. Estandarización y Puntuaciones Z</h1>
-
-</section>
-
 <section>
-<section id="estandarización-y-puntuaciones-z-1" class="title-slide slide level1 center">
+<section id="estandarización-y-puntuaciones-z" class="title-slide slide level1 center">
 <h1>3. Estandarización y Puntuaciones Z</h1>
 
 </section>
@@ -405,7 +401,7 @@ Z = \frac{\text{(Valor observado)} - \text{Media}}{\text{Desviación Estándar}}
 <li>SD (s) = 0.5</li>
 </ul>
 <p><span class="math display">\[
-Z\_{\text{A}} = \frac{5.5 - 4.0}{0.5} = \frac{1.5}{0.5} = +3.0
+Z_{\text{A}} = \frac{5.5 - 4.0}{0.5} = \frac{1.5}{0.5} = +3.0
 \]</span></p>
 <p><strong>Interpretación:</strong> La nota del Estudiante A está <strong>3.0 desviaciones estándar por encima</strong> del promedio de su prueba. ¡Un rendimiento excepcional!</p>
 </div><div class="column" style="width:50%;">
@@ -416,7 +412,7 @@ Z\_{\text{A}} = \frac{5.5 - 4.0}{0.5} = \frac{1.5}{0.5} = +3.0
 <li>SD (s) = 0.2</li>
 </ul>
 <p><span class="math display">\[
-Z\_{\text{B}} = \frac{6.2 - 5.8}{0.2} = \frac{0.4}{0.2} = +2.0
+Z_{\text{B}} = \frac{6.2 - 5.8}{0.2} = \frac{0.4}{0.2} = +2.0
 \]</span></p>
 <p><strong>Interpretación:</strong> La nota del Estudiante B está <strong>2.0 desviaciones estándar por encima</strong> del promedio de su prueba. También un muy buen rendimiento.</p>
 </div></div>
@@ -425,6 +421,7 @@ Z\_{\text{B}} = \frac{6.2 - 5.8}{0.2} = \frac{0.4}{0.2} = +2.0
 </section>
 <section id="cierre-y-próximos-pasos" class="slide level2 smaller" data-background-color="white">
 <h2>Cierre y Próximos Pasos</h2>
+<div style="font-size: 0.8em; line-height: 1.2;">
 <p><strong>Resumen de la sesión de hoy:</strong></p>
 <ul>
 <li>La <strong>media</strong> es el “centro de gravedad” de los datos, pero es sensible a outliers.</li>
@@ -440,6 +437,7 @@ Z\_{\text{B}} = \frac{6.2 - 5.8}{0.2} = \frac{0.4}{0.2} = +2.0
 <ul>
 <li>Sintetizaremos todo lo aprendido en la Unidad 4, introduciendo la <strong>“Gramática de Gráficos”</strong> con <code>ggplot2</code> para construir visualizaciones de alta calidad de manera sistemática.</li>
 </ul>
+</div>
 
 </section></section>
     </div>
@@ -632,7 +630,7 @@ Z\_{\text{B}} = \frac{6.2 - 5.8}{0.2} = \frac{0.4}{0.2} = +2.0
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -782,13 +780,14 @@ Z\_{\text{B}} = \frac{6.2 - 5.8}{0.2} = \frac{0.4}{0.2} = +2.0
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

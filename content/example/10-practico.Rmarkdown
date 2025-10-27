@@ -94,7 +94,7 @@ Para entender qué hace la media, podemos replicar su fórmula en R (`suma / n`)
 # 1. Sumamos todos los valores
 suma_edades <- sum(esi_trabajo$edad, na.rm = TRUE)
 # 2. Contamos el número de casos validos
-n_casos <- nrow(esi_trabajo %>% filter(!is.na(edad)))
+n_casos <- sum(!is.na(esi_trabajo$edad))
 # 3. Dividimos
 media_manual <- suma_edades / n_casos
 media_manual
