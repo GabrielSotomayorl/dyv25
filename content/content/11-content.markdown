@@ -15,34 +15,43 @@ csl: "../../static/bib/chicago-fullnote-bibliography-no-bib.csl"
 slides: "11-slides"
 ---
 
-```{r slides-videos, echo=FALSE, include=FALSE}
-source(here::here("R", "slide-tabs.R"))
-
-slide_details <- tibble::tribble(
-  ~title, ~slide, ~active,
-  "", "0", TRUE,
-)
-```
-
 # Slides
 
-`r blogdown::shortcode("slide-buttons")`
+{{% slide-buttons %}}
 
-```{r show-slide-tabs, echo=FALSE, results="asis"}
-slide_tabs(slide_details, "/slides/11-slides.html")
-```
+<ul class="nav nav-tabs" id="slide-tabs" role="tablist">
+
+<li class="nav-item">
+
+<a class="nav-link active" id="-tab" data-toggle="tab" href="#" role="tab" aria-controls="" aria-selected="true"></a>
+</li>
+
+</ul>
+
+<div id="slide-tabs" class="tab-content">
+
+<div class="tab-pane fade show active" role="tabpanel" aria-labelledby="-tab">
+
+<div class="embed-responsive embed-responsive-16by9">
+
+<iframe class="embed-responsive-item" src="/slides/11-slides.html#0">
+
+</iframe>
+
+</div>
+
+</div>
+
+</div>
 
 {{% div fyi %}}
 **¿Cómo ocupar**: Si presionas <kbd>?</kbd> (o <kbd>shift</kbd> + <kbd>/</kbd>) mientras estas viendo las slides, podrás ver los comandos específicos para navegar en ellas.
 {{% /div %}}
-
 
 # Bibliografía
 
 - [Wickham, H., & Grolemund, G. (2017). R para ciencia de datos. Capitulo de Vizualización](https://es.r4ds.hadley.nz/03-visualize.html)
 
 # Bibliografía complementaria
+
 - Savage, M. (2021). The return of inequality: Social change and the weight of the past. Harvard University Press.
-
-
-

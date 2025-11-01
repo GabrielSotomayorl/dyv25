@@ -26,12 +26,17 @@ El objetivo de este práctico es dominar la "Gramática de Gráficos" para const
 
 ### 1.1 El "Porqué" de la Visualización
 
-Como vimos en la clase, la visualización de datos no es un simple adorno. Es una forma de **argumento sociológico** y una herramienta de **diagnóstico fundamental**. Autores como Piketty y Bourdieu usan gráficos no para decorar, sino como el núcleo de sus teorías. Estadísticamente, graficar nuestros datos es la única forma de descubrir la verdadera forma de una distribución, que a menudo se oculta detrás de estadísticos descriptivos idénticos.
+Como vimos en la clase, la visualización de datos no es un simple adorno. Es una forma de **argumento sociológico** y una herramienta de **diagnóstico fundamental**. Autores como Piketty y Bourdieu usan gráficos no para decorar, sino como el núcleo de sus teorías. Estadísticamente, graficar nuestros datos es la única forma de descubrir la verdadera forma de una distribución, que puede ocultarse detrás de estadísticos descriptivos idénticos.
 
-### 1.2 Carga de Paquetes y Datos (CASEN 2022)
+### **1.2 Preparación del Entorno y Datos (CASEN 2022)**
 
-Usaremos la Encuesta CASEN 2022. Como siempre, comenzamos con un setup reproducible.
+Como en prácticos anteriores, nuestro primer paso es asegurar un entorno de trabajo reproducible.
 
+1.  **Asegúrate de estar en tu Proyecto de RStudio** y de tener una carpeta `datos`.
+2.  **Descarga la Base de Datos CASEN 2022 (formato SPSS)** desde [este enlace](https://observatorio.ministeriodesarrollosocial.gob.cl/encuesta-casen-2022) y guarda el archivo `.sav` en tu carpeta `datos`.
+
+#### Carga de Paquetes
+Cargamos los paquetes que necesitaremos para la sesión de hoy.
 
 ``` r
 # Cargar los paquetes que usaremos hoy
@@ -39,20 +44,19 @@ library(tidyverse)
 library(haven)
 ```
 
+#### Carga de Datos
+A continuación, hay dos formas de cargar los datos. **Debes usar el Método 1 (Carga Manual)**.
+
+**Método 1: Carga Manual (Para tu trabajo)**
+Este bloque de código carga la base de datos que guardaste en tu carpeta `datos`.
 
 ``` r
-# Carga manual desde tu proyecto
-# Paso 1: Descarga la base de datos y guárdala en tu carpeta 'datos'.
-# Enlace: https://observatorio.ministeriodesarrollosocial.gob.cl/encuesta-casen-2022
-# Paso 2: Carga los datos usando la ruta relativa.
-temp <- tempfile() 
-download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2022/Base%20de%20datos%20Casen%202022%20SPSS.sav.zip", temp)
-casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav"))
-unlink(temp); remove(temp)
+# Usamos read_sav() con la ruta relativa a nuestro proyecto
+casen <- haven::read_sav("datos/Base de datos Casen 2022 SPSS.sav")
 ```
 
----
-Para reproducibilidad, el siguiente código carga los datos automáticamente.
+**Método 2: Carga Automática (Para reproducibilidad del documento)**
+El siguiente bloque es para que este práctico se pueda generar automáticamente. **No necesitas ejecutarlo** si ya cargaste los datos con el método anterior.
 
 
 ``` r
@@ -62,7 +66,6 @@ download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/do
 casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav"))
 unlink(temp); remove(temp)
 ```
----
 
 ## 2. Diagnóstico Visual: ¡Grafica Siempre tus Datos!
 
@@ -93,9 +96,9 @@ trio_enganoso %>%
 ## # A tibble: 3 × 3
 ##   grupo                        Media `Desv. Estándar`
 ##   <chr>                        <dbl>            <dbl>
-## 1 A: Simétrico (Unimodal)         75             10.0
-## 2 B: Bimodal (Dos grupos)         75             10  
-## 3 C: Asimétrico (con Outliers)    75             10
+## 1 A: Simétrico (Unimodal)         75               10
+## 2 B: Bimodal (Dos grupos)         75               10
+## 3 C: Asimétrico (con Outliers)    75               10
 ```
 
 ``` r
@@ -107,7 +110,7 @@ ggplot(trio_enganoso, aes(x = valor)) +
   theme_minimal()
 ```
 
-<img src="11-practico_files/figure-html/trio-enganoso-1.png" width="672" />
+<img src="/example/11-practico_files/figure-html/trio-enganoso-1.png" width="672" />
 **Interpretación:** La tabla muestra que los tres grupos son numéricamente casi idénticos. Sin embargo, los histogramas revelan realidades completamente distintas. El Grupo A es simétrico, el Grupo B claramente contiene dos subpoblaciones, y el Grupo C está fuertemente sesgado a la derecha. **Esta es la razón por la que siempre debemos empezar visualizando nuestros datos.**
 
 ## 3. La Gramática de Gráficos en la Práctica
@@ -121,7 +124,7 @@ p <- ggplot(data = casen, mapping = aes(x = edad))
 p
 ```
 
-<img src="11-practico_files/figure-html/ggplot-paso-a-paso-1.png" width="672" />
+<img src="/example/11-practico_files/figure-html/ggplot-paso-a-paso-1.png" width="672" />
 
 ``` r
 # Capa 2: La Geometría. Añadimos la capa que dibuja el histograma.
@@ -146,52 +149,140 @@ p_final <- ggplot(data = casen, mapping = aes(x = edad, weight = expr)) +
 p_final
 ```
 
-<img src="11-practico_files/figure-html/ggplot-paso-a-paso-2.png" width="672" />
+<img src="/example/11-practico_files/figure-html/ggplot-paso-a-paso-2.png" width="672" />
 
-## 4. Gráficos para Variables Categóricas: `geom_bar`
+## 4. Gráficos para variables categóricas: `geom_bar`
 
-Usaremos la variable `pobreza` para ilustrar cómo crear un gráfico de barras efectivo.
+En esta sección graficamos **frecuencias absolutas** y **frecuencias relativas (porcentajes del total)** para la variable `pobreza`, aplicando los ponderadores.
+
+### 4.1 Preparación de la variable
+
+Creamos una versión factorial legible de `pobreza` para etiquetas claras en el eje X.
 
 
 ``` r
-# Creamos una variable de pobreza factorial para que las etiquetas sean claras
 casen <- casen %>%
   mutate(pobreza_factor = as_factor(pobreza))
-
-# Gráfico de barras ordenado y con buenas prácticas
-ggplot(casen, aes(x = fct_rev(fct_infreq(pobreza_factor)), weight = expr)) +
-  geom_bar(fill = "#008080") +
-  labs(
-    title = "Distribución de la Población por Nivel de Pobreza",
-    subtitle = "Casen 2022, estimaciones ponderadas",
-    x = "Situación de Pobreza",
-    y = "Población Estimada"
-  ) +
-  theme_minimal()
 ```
 
-<img src="11-practico_files/figure-html/geom-bar-pobreza-1.png" width="672" />
+### 4.2 Frecuencias absolutas (ponderadas)
 
-Para mostrar **porcentajes** en lugar de frecuencias absolutas, modificamos la estética `y`.
+Usamos `weight = expr` para que las alturas representen población expandida.
 
 
 ``` r
-ggplot(casen, aes(x = fct_rev(fct_infreq(pobreza_factor)), weight = expr)) +
-  # Usamos la sintaxis after_stat(prop) para calcular proporciones
-  geom_bar(aes(y = after_stat(prop)), fill = "#42affa") +
-  # Formateamos el eje Y como porcentaje
-  scale_y_continuous(labels = scales::percent) +
+casen %>% 
+  filter(!is.na(pobreza_factor)) %>%
+  ggplot(aes(x = pobreza_factor, weight = expr)) +
+  geom_bar(fill = "#008080") +
   labs(
-    title = "Distribución Porcentual de la Población por Nivel de Pobreza",
-    x = "Situación de Pobreza",
-    y = "Porcentaje del Total"
+    title = "Distribución de la población por nivel de pobreza",
+    subtitle = "CASEN 2022, estimaciones ponderadas",
+    x = "Situación de pobreza",
+    y = "Población estimada"
   ) +
   theme_minimal()
 ```
 
-<img src="11-practico_files/figure-html/geom-bar-percent-1.png" width="672" />
+<img src="/example/11-practico_files/figure-html/unnamed-chunk-2-1.png" width="672" />
 
-## 5. El Poder del Faceting: `facet_wrap()`
+### 4.3 Frecuencias relativas (porcentajes del total, ponderadas)
+
+Para porcentajes del total del gráfico, definimos `y = after_stat(count / sum(count))` y formateamos el eje Y como porcentaje.
+
+
+``` r
+casen %>% 
+  filter(!is.na(pobreza_factor)) %>%
+  ggplot(aes(x = pobreza_factor, weight = expr)) +
+  geom_bar(aes(y = after_stat(count / sum(count))), fill = "#42affa") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Distribución porcentual de la población por nivel de pobreza",
+    subtitle = "CASEN 2022, estimaciones ponderadas",
+    x = "Situación de pobreza",
+    y = "Porcentaje del total"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/11-practico_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+
+
+Perfecto. Agrego la **sección 4.4** con estructura docente y lista para usar.
+
+---
+
+### 4.4 Etiquetas sobre las barras
+
+Usamos `geom_text()` para añadir etiquetas. La idea clave es **usar la misma estadística** que define la altura de la barra también para la posición (`y`) y para el texto (`label`).
+
+#### 4.4.1 Frecuencias absolutas (ponderadas) con etiquetas
+
+
+``` r
+casen %>% 
+  filter(!is.na(pobreza_factor)) %>%
+  ggplot(aes(x = pobreza_factor, weight = expr)) +
+  geom_bar(fill = "#008080") +
+  geom_text(
+    aes(
+      y = after_stat(count),
+      label = after_stat(sprintf("%.0f", count))
+    ),
+    stat = "count",
+    vjust = -0.5,
+    size = 3.8
+  ) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.08))  # pequeño margen superior para que entren las etiquetas
+  ) +
+  labs(
+    title = "Distribución de la población por nivel de pobreza",
+    subtitle = "CASEN 2022, estimaciones ponderadas",
+    x = "Situación de pobreza",
+    y = "Población estimada"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/11-practico_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+
+#### 4.4.2 Porcentajes del total (ponderados) con etiquetas
+
+
+``` r
+casen %>% 
+  filter(!is.na(pobreza_factor)) %>%
+  ggplot(aes(x = pobreza_factor, weight = expr)) +
+  geom_bar(aes(y = after_stat(count / sum(count))), fill = "#42affa") +
+  geom_text(
+    aes(
+      y     = after_stat(count / sum(count)),
+      label = after_stat(scales::percent(count / sum(count), accuracy = 0.1))
+    ),
+    stat = "count",
+    vjust = -0.5,
+    size  = 3.8
+  ) +
+  scale_y_continuous(
+    labels = scales::percent,
+    expand = expansion(mult = c(0, 0.08))
+  ) +
+  labs(
+    title = "Distribución porcentual de la población por nivel de pobreza",
+    subtitle = "CASEN 2022, estimaciones ponderadas",
+    x = "Situación de pobreza",
+    y = "Porcentaje del total"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/11-practico_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+
+
+
+## 5. La utilidad del Faceting: `facet_wrap()`
 
 El faceting nos permite crear una grilla de gráficos para comparar subgrupos. Vamos a visualizar la relación entre edad y pobreza, separando por zona urbana y rural.
 
@@ -210,7 +301,7 @@ casen_pob_zona <- casen %>%
 
 # 2. Creamos el gráfico facetado
 ggplot(casen_pob_zona, aes(x = edad, y = porc_pobreza)) +
-  geom_line(color = "#D76D77", size = 1) +
+  geom_line(color = "#D76D77", linewidth = 1) +
   labs(
     title = "Porcentaje de Pobreza por Edad, según Zona Geográfica",
     x = "Edad",
@@ -221,15 +312,7 @@ ggplot(casen_pob_zona, aes(x = edad, y = porc_pobreza)) +
   facet_wrap(~ zona_factor) # La variable que define los paneles
 ```
 
-```
-## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-## ℹ Please use `linewidth` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.
-```
-
-<img src="11-practico_files/figure-html/facet-example-1.png" width="672" />
+<img src="/example/11-practico_files/figure-html/facet-example-1.png" width="672" />
 **Interpretación:** El faceting revela un patrón claro: la tasa de pobreza es sistemáticamente más alta en la zona Rural que en la Urbana a lo largo de casi todo el ciclo de vida.
 
 ## 6. Actividad de Desafío
@@ -241,17 +324,7 @@ Tu misión es crear **una sola figura (usando faceting)** que compare la distrib
 2.  Usa `ggplot()` y `facet_wrap(~ pobreza_factor)`.
 3.  Dentro de cada faceta, elige la geometría que mejor muestre la distribución del ingreso (`geom_histogram` o `geom_density`).
 4.  Asegúrate de que tu gráfico sea ponderado (usa `weight = expr`).
-5.  Añade una línea vertical (`geom_vline`) en cada faceta que marque la **mediana** del ingreso para ese grupo de pobreza. *Pista: Necesitarás calcular las medianas por grupo en un data.frame separado y pasárselo a `geom_vline` en el argumento `data`.*
-6.  Aplica buenas prácticas: añade un título informativo, etiqueta los ejes y cita la fuente.
-7.  Escribe un breve párrafo de **interpretación**: ¿Cómo cambia la distribución del ingreso (su centro, forma y dispersión) a medida que pasamos de "Pobreza Extrema" a "No Pobres"?
+5.  Aplica buenas prácticas: añade un título informativo, etiqueta los ejes y cita la fuente.
+6.  Escribe un breve párrafo de **interpretación**: ¿Cómo cambia la distribución del ingreso (su centro, forma y dispersión) a medida que pasamos de "Pobreza Extrema" a "No Pobres"?
 
 
-``` r
-# 1. Código para filtrar y calcular medianas por grupo
-
-
-# 2. Código para el gráfico facetado
-
-
-# 3. Párrafo de interpretación (como comentario)
-```

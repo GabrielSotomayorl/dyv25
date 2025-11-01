@@ -45,15 +45,23 @@ Tienen el poder de:
 
 Como argumenta Mike Savage, estas "visualizaciones icónicas" no solo muestran datos, sino que proponen una nueva forma de ver el mundo social.
 
-## Icono 1: La Curva en U de Piketty (La Desigualdad en el Tiempo) {.smaller background-color="white"}
+
+## La Curva en U de Piketty (La Desigualdad en el Tiempo) {.smaller background-color="white"}
+
+![](img/11/01.jpg){fig-align="center"}
+
+## La Curva en U de Piketty (La Desigualdad en el Tiempo) {.smaller background-color="white"}
 
 -   **El Gráfico:** Una simple línea del tiempo (*sparkline*) que muestra la participación del 1% más rico en el ingreso nacional de EE.UU. a lo largo del siglo XX.
 
 -   **El Argumento Visual:** La forma de **"U"** es una poderosa narrativa. Desafía la idea modernista de un progreso lineal y constante hacia una mayor igualdad. El gráfico *argumenta* que, tras un período de relativa equidad a mediados de siglo, estamos **"regresando"** a los niveles de desigualdad de la "Gilded Age". Hace visible **"el peso de la historia"** en el presente.
 
-`[Placeholder para insertar el gráfico de la curva en U de Piketty]`
 
-## Icono 2: El Espacio Social de Bourdieu (La Desigualdad en el Espacio) {.smaller background-color="white"}
+## El Espacio Social de Bourdieu (La Desigualdad en el Espacio) {.smaller background-color="white"}
+
+![](img/11/02.jpg){fig-align="center"}
+
+## El Espacio Social de Bourdieu (La Desigualdad en el Espacio) {.smaller background-color="white"}
 
 -   **El Gráfico:** No es una línea de tiempo, sino un **mapa**. Posiciona a grupos e individuos en un espacio bidimensional.
     -   **Eje Vertical:** Volumen total de capital (económico + cultural).
@@ -61,19 +69,38 @@ Como argumenta Mike Savage, estas "visualizaciones icónicas" no solo muestran d
 
 -   **El Argumento Visual:** Bourdieu *argumenta* que la desigualdad no es una simple jerarquía de ingresos. Es **multidimensional y relacional**. El gráfico muestra cómo los gustos y estilos de vida (música, arte, comida) no son meras preferencias personales, sino que **estructuran el espacio social** y reproducen las distinciones de clase.
 
-`[Placeholder para insertar el gráfico del Espacio Social de Bourdieu]`
 
-## Síntesis: Ver para Argumentar {.smaller background-color="white"}
 
-Piketty usa el **tiempo** para argumentar que el pasado está regresando. Bourdieu usa el **espacio** para argumentar que la desigualdad es más que solo dinero.
+## Ver para argumentar {.smaller background-color="white"}
+
+Savage señala que Piketty usa el **tiempo** para argumentar que el pasado está regresando. Bourdieu usa el **espacio** para argumentar que la desigualdad es más que solo económica.
 
 En ambos casos, el gráfico no es una simple ilustración del texto. Es el **núcleo de su argumento teórico**.
 
 La visualización, por tanto, es una forma de hacer sociología.
 
----
-title_slide_background: "#008080"
----
+
+## Veamos algunos otros ejemplos {.smaller background-color="white"}
+
+![](img/11/03.png){fig-align="center"}
+
+
+## Veamos algunos otros ejemplos {.smaller background-color="white"}
+
+![](img/11/04.png){fig-align="center"}
+
+
+
+## Veamos algunos otros ejemplos {.smaller background-color="white"}
+
+![](img/11/05.jpg){fig-align="center"}
+
+
+## Veamos algunos otros ejemplos {.smaller background-color="white"}
+
+![](img/11/06.jpg){fig-align="center"}
+
+
 
 # 2. La Visualización como Diagnóstico Estadístico
 
@@ -99,6 +126,15 @@ La visualización revela la verdadera estructura que los números ocultaban.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 library(tidyverse)
+
+temp <- tempfile() 
+download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2022/Base%20de%20datos%20Casen%202022%20SPSS.sav.zip", temp)
+casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav"))
+unlink(temp); remove(temp)
+
+casen <- casen %>%
+  mutate(pobreza_factor = as_factor(pobreza))
+
 set.seed(123)
 grupo_a <- tibble(valor = rnorm(500, 75, 10), grupo = "A: Simétrico (Unimodal)")
 grupo_b <- tibble(valor = c(rnorm(250, 65, 5), rnorm(250, 85, 5)), grupo = "B: Bimodal (Dos grupos)")
@@ -123,52 +159,124 @@ ggplot(trio_enganoso, aes(x = valor)) +
 title_slide_background: "#008080"
 ---
 
-# 3. Principios y Gramática de la Visualización en R
+# 3. Mejores Prácticas en Visualización
 
-## Mejores Prácticas para Gráficos Efectivos {.smaller background-color="white"}
+## Principios para Gráficos Claros y Honestos {.smaller background-color="white"}
 
-1.  **Maximizar la Razón "Tinta-Dato":** Muestra los datos, no la decoración. Evita ruido visual como fondos recargados o efectos 3D.
+Un buen gráfico no solo muestra datos, sino que cuenta una historia de forma clara, precisa y honesta.
 
-2.  **Usar Títulos Informativos:** Un buen título resume el hallazgo principal.
-    -   *Mal título:* "Gráfico de Ingreso por Sexo".
-    -   *Buen título:* "La mediana del ingreso masculino supera en un 20% a la femenina".
+1.  **Maximizar la Razón "Tinta-Dato" (Edward Tufte):**
+    -   Cada elemento visual debe comunicar información. Evita "ruido" como fondos recargados, sombras, efectos 3D o colores que no aportan significado.
 
-3.  **Etiquetar Todo Claramente:** Ejes (con unidades), leyendas y siempre citar la fuente.
+2.  **Usar Títulos Informativos, no Descriptivos:**
+    -   Un buen título resume el principal hallazgo o la historia del gráfico.
+    -   *Mal título:* "Gráfico de barras de ingreso por región".
+    -   *Buen título:* "El ingreso mediano en la RM es un 30% mayor que el promedio nacional".
 
-4.  **La Regla del Eje Cero:** Los gráficos de **barras** deben empezar en cero para no distorsionar las proporciones.
+3.  **Etiquetar Todo Claramente:**
+    -   Ejes (con sus unidades: $, años, %), leyendas, y siempre citar la fuente.
 
-5.  **Elegir el Gráfico Adecuado:** `geom_bar` para categóricas, `geom_histogram` o `geom_boxplot` para cuantitativas. **Evita los gráficos de torta.**
+## La Regla de Oro del Eje Cero {.smaller background-color="white"}
 
-## La Gramática de Gráficos con `ggplot2` {.smaller background-color="white"}
+**Los gráficos de barras (y de áreas) SIEMPRE deben empezar en cero.**
 
-`ggplot2` es un sistema que nos permite construir cualquier gráfico combinando "bloques de construcción" en capas.
+Nuestros ojos interpretan la longitud o altura de la barra como proporcional a la cantidad que representa. Truncar el eje Y exagera las diferencias y es visualmente deshonesto.
 
-**Los 3 Componentes Esenciales:**
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+set.seed(123)
+data_barras <- tibble(
+  grupo = c("A", "B", "C"),
+  valor = c(85, 90, 100)
+)
+p1 <- ggplot(data_barras, aes(x = grupo, y = valor)) + geom_col(fill = "#008080") + labs(title = "Honesto: Eje Y empieza en 0") + theme_minimal(base_size=14)
+p2 <- ggplot(data_barras, aes(x = grupo, y = valor)) + geom_col(fill = "#D76D77") + coord_cartesian(ylim = c(80, 105)) + labs(title = "Engañoso: Eje Y truncado") + theme_minimal(base_size=14)
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+En el gráfico de la derecha, la barra C parece 3 o 4 veces más grande que la A, cuando la diferencia real es solo de un ~18%.
 
-1.  **Datos (`data`):** El `data.frame` con nuestra información.
-2.  **Mapeos Estéticos (`aes`):** La conexión entre las **variables** de los datos y las **propiedades visuales** (estéticas) del gráfico (ej. `x`, `y`, `color`, `fill`, `size`).
-3.  **Geometrías (`geom`):** La forma que usamos para representar los datos (puntos, barras, cajas).
+## Elige el Gráfico Adecuado {.smaller background-color="white"}
 
-**La Plantilla Universal:**
+No todos los gráficos sirven para todo. La elección de la geometría depende del tipo de variable(s) que quieres mostrar.
+
+-   **Una variable categórica:** **Gráfico de Barras**. Compara las frecuencias o porcentajes entre categorías.
+-   **Una variable cuantitativa:** **Histograma** (para ver la forma), **Gráfico de Densidad** (versión suavizada) o **Boxplot** (para el resumen de 5 números).
+-   **No uses gráficos de torta (Pie Charts).**
+    -   **Razón:** El cerebro humano es muy malo para comparar ángulos y áreas, pero es excelente para comparar longitudes. La altura de las barras en un gráfico de barras es mucho más fácil de interpretar con precisión.
+
+
+# 4. La Gramática de Gráficos con `ggplot2`
+
+## Un Sistema para Construir Gráficos en Capas {.smaller background-color="white"}
+
+`ggplot2` es un paquete de R que implementa la **"Gramática de Gráficos"**, una idea poderosa: en lugar de tener comandos rígidos para cada tipo de gráfico, tenemos un sistema de "bloques de construcción" que podemos combinar para crear cualquier visualización que imaginemos.
+
+**Un gráfico en `ggplot2` es una superposición de capas.**
+
+## Los 3 Componentes Esenciales {.smaller background-color="white"}
+
+Toda visualización en `ggplot2` se construye a partir de tres componentes fundamentales:
+
+1.  **Datos (`data`):** El `data.frame` que contiene la información que queremos visualizar.
+
+2.  **Mapeos Estéticos (`aes`):** La conexión entre las **variables** de nuestros datos y las **propiedades visuales** (estéticas) del gráfico.
+    -   `aes(x = edad, y = ytotcorh, color = sexo)`
+    -   Esto le dice a `ggplot2`: "Usa la columna `edad` para el eje X, `ytotcorh` para el eje Y, y asigna un color diferente para cada valor de la variable `sexo`".
+
+3.  **Geometrías (`geom`):** El objeto geométrico que usamos para representar los datos. Es la "forma" que toma nuestra visualización.
+    -   `geom_point()`: para puntos.
+    -   `geom_bar()`: para barras.
+    -   `geom_histogram()`: para un histograma.
+
+## La Plantilla Universal de `ggplot2` {.smaller background-color="white"}
+
+La sintaxis siempre sigue esta plantilla:
 
 `ggplot(data = <DATOS>, mapping = aes(<MAPEOS>)) + <GEOM_FUNCION>()`
 
-## El Concepto Clave: Mapear vs. Fijar {.smaller background-color="white"}
+-   **`ggplot(...)`**: Inicia el gráfico. Define la fuente de datos y los mapeos globales. **Crea un lienzo en blanco** con los ejes definidos, listo para recibir una geometría.
+-   **`+`**: El operador para **añadir una nueva capa**.
+-   **`geom_...()`**: Añade la capa de geometría que **dibuja los datos** en el lienzo.
+
+## Construyendo por Capas: Ejemplo {.smaller background-color="white"}
+
+**Paso 1: `ggplot()` crea el lienzo.** Le decimos qué datos usar y qué variables mapear a los ejes. El resultado es un plano cartesiano vacío.
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
+
+# Capa 1: Datos y Estéticas
+ggplot(data = casen, mapping = aes(x = edad))
+```
+
+## Construyendo por Capas: Ejemplo {.smaller background-color="white"}
+
+**Paso 2: `+ geom_histogram()` añade la capa que dibuja.** Le decimos que represente los datos mapeados como un histograma.
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6}
+# Capa 2: Geometría
+ggplot(data = casen, mapping = aes(x = edad)) +
+   geom_histogram(fill = "#40E0D0", color = "white", bins = 30)
+```
+
+## Mapear vs. Fijar {.smaller background-color="white"}
+
+Este es el punto que causa más confusión al principio, pero es fundamental.
 
 :::::: columns
 ::: {.column width="50%"}
 **Mapear (DENTRO de `aes()`):**
--   El atributo visual **depende de una variable** de los datos.
+
+-   El atributo visual **depende de una variable**.
 -   Se usa para que el gráfico **represente información**.
 -   **Ejemplo:**
     ```r
     ... aes(color = sexo) ...
-    ```    Aquí, el **color de cada punto dependerá** de si el valor en la columna `sexo` es "Hombre" o "Mujer".
+    ```    Aquí, el **color** del punto dependerá de si el valor en la columna `sexo` es "Hombre" o "Mujer".
 :::
 ::: {.column width="50%"}
 **Fijar (FUERA de `aes()`):**
--   Asigna un **valor constante** a un atributo visual.
--   Se usa para **mejorar la estética** del gráfico.
+
+-   Asigna un **valor constante** al atributo.
+-   Se usa para **mejorar la estética**.
 -   **Ejemplo:**
     ```r
     ... geom_point(color = "blue")
@@ -177,13 +285,45 @@ title_slide_background: "#008080"
 :::
 ::::::
 
+## Mapear vs. Fijar: Ejemplo Visual {.smaller background-color="white"}
+
+Usemos el dataset `mtcars` para ver la diferencia de forma clara. Crearemos un gráfico de dispersión del peso (`wt`) vs. el rendimiento (`mpg`) de los autos.
+
+:::::: columns
+::: {.column width="50%"}
+**Mapeando `color` a la variable `cyl` (cilindros)**
+
+Aquí, el color **representa información**: nos dice cuántos cilindros tiene cada auto.
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(mtcars, aes(x = wt, y = mpg, color = as.factor(cyl))) +
+  geom_point(size = 4, alpha = 0.8) +
+  labs(color = "Cilindros") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position="bottom")
+```
+:::
+::: {.column width="50%"}
+**Fijando `color` a "blue"**
+
+Aquí, el color es una **decisión estética**: todos los puntos son azules, sin importar sus datos.
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(size = 4, alpha = 0.8, color = "blue") +
+  theme_minimal(base_size = 14)
+```
+:::
+::::::
+
+
+
+
 ## Ampliando la Gramática: Faceting (Small Multiples) {.smaller background-color="white"}
 
 **El Problema:** ¿Qué pasa si queremos comparar la distribución del ingreso a través de las 16 regiones de Chile? Mapear 16 colores a una estética se vuelve un caos visual.
 
 **La Solución: El Faceting (`facet_wrap()` o `facet_grid()`)**
 
-Consiste en crear una **grilla de gráficos más pequeños** ("small multiples"), donde cada panel muestra un subconjunto de los datos. Es una de las herramientas más poderosas de `ggplot2` para el análisis exploratorio.
+Consiste en crear una **grilla de gráficos más pequeños**, donde cada panel muestra un subconjunto de los datos. Es una de las herramientas más poderosas de `ggplot2` para el análisis exploratorio.
 
 ```r
 ggplot(datos, aes(x = ingreso)) +
@@ -191,19 +331,40 @@ ggplot(datos, aes(x = ingreso)) +
   facet_wrap(~ region) # Crea un histograma separado para cada región
 ```
 
+## Faceting en Acción {.smaller background-color="white"}
+
+Ahora, usemos `facet_wrap()` para comparar la distribución del rendimiento (`mpg`) para cada tipo de cilindro (`cyl`). En lugar de usar colores en un solo gráfico, creamos un panel para cada categoría.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=5}
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(fill = "#008080", color = "white", bins = 5) +
+  # La fórmula ~ cyl le dice a ggplot que cree un panel para cada valor de 'cyl'
+  facet_wrap(~ cyl, labeller = labeller(cyl = c("4" = "4 Cilindros", "6" = "6 Cilindros", "8" = "8 Cilindros"))) +
+  labs(
+    title = "Distribución del Rendimiento (mpg) por Número de Cilindros",
+    x = "Millas por Galón (mpg)",
+    y = "Frecuencia"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(strip.text = element_text(face = "bold"))
+```
+
+
 ## Cierre y Próximos Pasos {.smaller background-color="white"}
 
+::: {style="font-size: 0.8em; line-height: 1.2;"}
 **Resumen de la sesión de hoy:**
 
 -   La visualización es una forma de **argumento sociológico** y una herramienta de **diagnóstico estadístico** indispensable.
 -   Crear gráficos efectivos y honestos requiere seguir **buenas prácticas**.
--   `ggplot2` usa una **"Gramática de Gráficos"** para construir visualizaciones complejas añadiendo capas (`data`, `aes`, `geom`).
+-   `ggplot2` usa una **"Gramática de Gráficos"** que nos permite construir visualizaciones complejas añadiendo capas (`data`, `aes`, `geom`).
 -   El **faceting** es una técnica clave para comparar distribuciones a través de múltiples categorías.
 
 **En el práctico de hoy:**
 
--   Aplicarán estos principios para diagnosticar datos, construir sus primeros gráficos con `ggplot2` desde cero y usar `facet_wrap` para análisis comparativos.
+-   Aplicarán estos principios para diagnosticar datos, construir sus primeros gráficos con `ggplot2` desde cero y usar `facet_wrap` para análisis comparativos con la CASEN 2022.
 
 **Adelanto de la Unidad 5:**
 
--   En la próxima unidad, nos adentraremos de lleno en el **análisis bivariado**: cómo describir la relación entre *dos* variables. Los gráficos que hemos aprendido a construir hoy serán nuestra principal herramienta.
+-   En la próxima unidad, dejaremos el análisis univariado y nos adentraremos de lleno en el **análisis bivariado**: cómo describir la relación entre *dos* variables.
+::: 
