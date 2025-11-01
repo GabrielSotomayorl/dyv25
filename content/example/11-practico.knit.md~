@@ -1,0 +1,257 @@
+---
+title: "La Visualización como Argumento Sociológico con ggplot2"
+linktitle: "11: Gramática de Gráficos con ggplot2"
+date: "2025-11-03"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 11
+type: docs
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es dominar la "Gramática de Gráficos" para construir visualizaciones de datos informativas y de alta calidad en R. Al finalizar, serás capaz de:
+
+*   Argumentar **por qué** la visualización de datos es un paso indispensable en el análisis.
+*   Construir gráficos en `ggplot2` **capa por capa**, entendiendo la función de `data`, `aes()` y `geom`.
+*   Crear los principales **gráficos univariados y bivariados** (`geom_histogram`, `geom_bar`, `geom_point`, `geom_boxplot`).
+*   Aplicar **mejores prácticas** para crear gráficos claros, honestos y estéticamente pulcros.
+*   Utilizar **faceting (`facet_wrap`)** para comparar distribuciones a través de múltiples categorías.
+
+## 1. Contexto y Preparación de Datos
+
+### 1.1 El "Porqué" de la Visualización
+
+Como vimos en la clase, la visualización de datos no es un simple adorno. Es una forma de **argumento sociológico** y una herramienta de **diagnóstico fundamental**. Autores como Piketty y Bourdieu usan gráficos no para decorar, sino como el núcleo de sus teorías. Estadísticamente, graficar nuestros datos es la única forma de descubrir la verdadera forma de una distribución, que a menudo se oculta detrás de estadísticos descriptivos idénticos.
+
+### 1.2 Carga de Paquetes y Datos (CASEN 2022)
+
+Usaremos la Encuesta CASEN 2022. Como siempre, comenzamos con un setup reproducible.
+
+
+``` r
+# Cargar los paquetes que usaremos hoy
+library(tidyverse)
+library(haven)
+```
+
+
+``` r
+# Carga manual desde tu proyecto
+# Paso 1: Descarga la base de datos y guárdala en tu carpeta 'datos'.
+# Enlace: https://observatorio.ministeriodesarrollosocial.gob.cl/encuesta-casen-2022
+# Paso 2: Carga los datos usando la ruta relativa.
+temp <- tempfile() 
+download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2022/Base%20de%20datos%20Casen%202022%20SPSS.sav.zip", temp)
+casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav"))
+unlink(temp); remove(temp)
+```
+
+---
+Para reproducibilidad, el siguiente código carga los datos automáticamente.
+
+
+``` r
+# Código automático para cargar los datos desde la web
+temp <- tempfile() 
+download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2022/Base%20de%20datos%20Casen%202022%20SPSS.sav.zip", temp)
+casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav"))
+unlink(temp); remove(temp)
+```
+---
+
+## 2. Diagnóstico Visual: ¡Grafica Siempre tus Datos!
+
+Vamos a demostrar con un ejemplo por qué los estadísticos resumen no son suficientes. Crearemos tres conjuntos de datos simulados que tienen la misma media y desviación estándar, pero formas muy diferentes.
+
+
+``` r
+# 1. Creamos los datos simulados
+set.seed(123)
+grupo_a <- tibble(valor = rnorm(500, 75, 10), grupo = "A: Simétrico (Unimodal)")
+grupo_b <- tibble(valor = c(rnorm(250, 65, 5), rnorm(250, 85, 5)), grupo = "B: Bimodal (Dos grupos)")
+grupo_c <- tibble(valor = rexp(500, 1/10) * 5 + 25, grupo = "C: Asimétrico (con Outliers)")
+
+# Forzamos que los estadísticos sean casi idénticos por motivos pedagógicos
+trio_enganoso <- bind_rows(grupo_a, grupo_b, grupo_c) %>%
+  group_by(grupo) %>%
+  mutate(valor = as.numeric(scale(valor)) * 10 + 75)
+
+# 2. Calculamos los estadísticos descriptivos
+trio_enganoso %>%
+  summarise(
+    Media = mean(valor),
+    `Desv. Estándar` = sd(valor)
+  )
+```
+
+```
+## # A tibble: 3 × 3
+##   grupo                        Media `Desv. Estándar`
+##   <chr>                        <dbl>            <dbl>
+## 1 A: Simétrico (Unimodal)         75             10.0
+## 2 B: Bimodal (Dos grupos)         75             10  
+## 3 C: Asimétrico (con Outliers)    75             10
+```
+
+``` r
+# 3. Visualizamos los datos
+ggplot(trio_enganoso, aes(x = valor)) +
+  geom_histogram(fill = "#008080", color = "white", bins = 20) +
+  facet_wrap(~grupo) +
+  labs(title = "El Trío Engañoso: Mismos Estadísticos, Diferentes Historias") +
+  theme_minimal()
+```
+
+<img src="11-practico_files/figure-html/trio-enganoso-1.png" width="672" />
+**Interpretación:** La tabla muestra que los tres grupos son numéricamente casi idénticos. Sin embargo, los histogramas revelan realidades completamente distintas. El Grupo A es simétrico, el Grupo B claramente contiene dos subpoblaciones, y el Grupo C está fuertemente sesgado a la derecha. **Esta es la razón por la que siempre debemos empezar visualizando nuestros datos.**
+
+## 3. La Gramática de Gráficos en la Práctica
+
+Construiremos un histograma de `edad` capa por capa para entender la lógica de `ggplot2`.
+
+
+``` r
+# Capa 1: Los Datos y las Estéticas (aes). Crea un lienzo en blanco con el eje X definido.
+p <- ggplot(data = casen, mapping = aes(x = edad))
+p
+```
+
+<img src="11-practico_files/figure-html/ggplot-paso-a-paso-1.png" width="672" />
+
+``` r
+# Capa 2: La Geometría. Añadimos la capa que dibuja el histograma.
+# p <- p + geom_histogram() # No ejecutamos para evitar sobreescribir p_final
+# p
+
+# Capa 3: Personalización estética. Ajustamos colores y número de bins.
+# p <- p + geom_histogram(fill = "#40E0D0", color = "white", bins = 30)
+# (Para ver el cambio, tendríamos que volver a dibujar p. Lo haremos todo junto)
+
+# Capa 4: Etiquetas y Título. Añadimos contexto con labs() y ponderador.
+p_final <- ggplot(data = casen, mapping = aes(x = edad, weight = expr)) +
+  geom_histogram(fill = "#40E0D0", color = "white", bins = 30) +
+  labs(
+    title = "Distribución de Edades en la Encuesta Casen 2022",
+    x = "Edad (en años)",
+    y = "Población Estimada",
+    caption = "Fuente: Encuesta Casen 2022"
+  ) +
+  theme_minimal()
+
+p_final
+```
+
+<img src="11-practico_files/figure-html/ggplot-paso-a-paso-2.png" width="672" />
+
+## 4. Gráficos para Variables Categóricas: `geom_bar`
+
+Usaremos la variable `pobreza` para ilustrar cómo crear un gráfico de barras efectivo.
+
+
+``` r
+# Creamos una variable de pobreza factorial para que las etiquetas sean claras
+casen <- casen %>%
+  mutate(pobreza_factor = as_factor(pobreza))
+
+# Gráfico de barras ordenado y con buenas prácticas
+ggplot(casen, aes(x = fct_rev(fct_infreq(pobreza_factor)), weight = expr)) +
+  geom_bar(fill = "#008080") +
+  labs(
+    title = "Distribución de la Población por Nivel de Pobreza",
+    subtitle = "Casen 2022, estimaciones ponderadas",
+    x = "Situación de Pobreza",
+    y = "Población Estimada"
+  ) +
+  theme_minimal()
+```
+
+<img src="11-practico_files/figure-html/geom-bar-pobreza-1.png" width="672" />
+
+Para mostrar **porcentajes** en lugar de frecuencias absolutas, modificamos la estética `y`.
+
+
+``` r
+ggplot(casen, aes(x = fct_rev(fct_infreq(pobreza_factor)), weight = expr)) +
+  # Usamos la sintaxis after_stat(prop) para calcular proporciones
+  geom_bar(aes(y = after_stat(prop)), fill = "#42affa") +
+  # Formateamos el eje Y como porcentaje
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Distribución Porcentual de la Población por Nivel de Pobreza",
+    x = "Situación de Pobreza",
+    y = "Porcentaje del Total"
+  ) +
+  theme_minimal()
+```
+
+<img src="11-practico_files/figure-html/geom-bar-percent-1.png" width="672" />
+
+## 5. El Poder del Faceting: `facet_wrap()`
+
+El faceting nos permite crear una grilla de gráficos para comparar subgrupos. Vamos a visualizar la relación entre edad y pobreza, separando por zona urbana y rural.
+
+
+``` r
+# 1. Preparamos los datos: calculamos el porcentaje de pobreza para cada edad y zona
+casen_pob_zona <- casen %>%
+  mutate(
+    es_pobre = ifelse(pobreza %in% c(1, 2), 1, 0),
+    zona_factor = as_factor(area)
+    ) %>%
+  filter(edad < 90) %>%
+  group_by(edad, zona_factor) %>%
+  # Usamos weighted.mean para un cálculo ponderado correcto de la proporción
+  summarize(porc_pobreza = weighted.mean(es_pobre, w = expr, na.rm = TRUE) * 100, .groups = 'drop')
+
+# 2. Creamos el gráfico facetado
+ggplot(casen_pob_zona, aes(x = edad, y = porc_pobreza)) +
+  geom_line(color = "#D76D77", size = 1) +
+  labs(
+    title = "Porcentaje de Pobreza por Edad, según Zona Geográfica",
+    x = "Edad",
+    y = "% de Personas en Situación de Pobreza",
+    caption = "Fuente: Casen 2022"
+  ) +
+  theme_bw() +
+  facet_wrap(~ zona_factor) # La variable que define los paneles
+```
+
+```
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+<img src="11-practico_files/figure-html/facet-example-1.png" width="672" />
+**Interpretación:** El faceting revela un patrón claro: la tasa de pobreza es sistemáticamente más alta en la zona Rural que en la Urbana a lo largo de casi todo el ciclo de vida.
+
+## 6. Actividad de Desafío
+
+Tu misión es crear **una sola figura (usando faceting)** que compare la distribución del **ingreso del trabajo (`ytrabajocor`)** a través de las distintas **categorías de pobreza (`pobreza_factor`)**.
+
+**Instrucciones:**
+1.  Filtra los datos para quedarte con `ytrabajocor > 0` y `ytrabajocor < 5000000` para una mejor visualización.
+2.  Usa `ggplot()` y `facet_wrap(~ pobreza_factor)`.
+3.  Dentro de cada faceta, elige la geometría que mejor muestre la distribución del ingreso (`geom_histogram` o `geom_density`).
+4.  Asegúrate de que tu gráfico sea ponderado (usa `weight = expr`).
+5.  Añade una línea vertical (`geom_vline`) en cada faceta que marque la **mediana** del ingreso para ese grupo de pobreza. *Pista: Necesitarás calcular las medianas por grupo en un data.frame separado y pasárselo a `geom_vline` en el argumento `data`.*
+6.  Aplica buenas prácticas: añade un título informativo, etiqueta los ejes y cita la fuente.
+7.  Escribe un breve párrafo de **interpretación**: ¿Cómo cambia la distribución del ingreso (su centro, forma y dispersión) a medida que pasamos de "Pobreza Extrema" a "No Pobres"?
+
+
+``` r
+# 1. Código para filtrar y calcular medianas por grupo
+
+
+# 2. Código para el gráfico facetado
+
+
+# 3. Párrafo de interpretación (como comentario)
+```

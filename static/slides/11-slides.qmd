@@ -1,198 +1,209 @@
 ---
-title: "Clase 11 <br> Análisis de conglomerados I"
-subtitle: "Análisis Avanzado de Datos"
+title: "La Visualización como Argumento Sociológico y la Gramática de Gráficos"
+subtitle: "Unidad 4: Estadística Descriptiva Univariada"
 author: "Gabriel Sotomayor"
-format: 
+date: "2025-11-03"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
+include-in-header:
+  - text: |
+      <style>
+      #title-slide .title {
+        font-size: 1.8em;
+      }
+      </style>
 ---
 
-# Técnicas de interdependencia
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-## Tipos de técncias multivariadas {.smaller background-color="white"}
+-   **Comprender** la visualización no solo como una ilustración, sino como una **forma de argumento sociológico**.
+-   **Analizar** cómo "visualizaciones icónicas" han redefinido debates sobre la desigualdad.
+-   **Demostrar** por qué los estadísticos resumen por sí solos pueden ser engañosos.
+-   **Aprender** y aplicar un conjunto de **mejores prácticas** para la creación de gráficos claros y honestos.
+-   **Introducir** la **"Gramática de Gráficos"** y sus componentes (`data`, `aes`, `geom`).
+-   **Ampliar** el repertorio en `ggplot2` con una herramienta clave para la comparación: **el *faceting***.
 
-En el análisis multivariable, las técnicas se pueden clasificar en **técnicas de dependencia** y **técnicas de interdependencia**. La selección de la técnica adecuada depende de la naturaleza de la pregunta de investigación y la relación entre las variables.
+---
+title_slide_background: "#008080"
+---
 
-## Técnicas de Dependencia {.smaller background-color="white"}
+# 1. La Visualización como Argumento Sociológico
 
-Las **técnicas de dependencia** se utilizan cuando existe una clara distinción entre variables dependientes (o respuesta) y variables independientes (o predictoras). Es decir, hay una relación de dependencia que se quiere modelar y analizar. El objetivo principal de estas técnicas es estimar el efecto de las variables independientes sobre las dependientes.
+## Más Allá de la Ilustración {.smaller background-color="white"}
 
--   Ejemplos de técnicas de dependencia incluyen:
-    -   **Regresión lineal**
-    -   **Análisis de varianza (ANOVA)**
+La visualización de datos no es un paso meramente técnico o decorativo al final de un análisis. En sociología, las visualizaciones más influyentes son, en sí mismas, **argumentos teóricos condensados**.
 
-En estos casos, se trata de predecir o explicar la variabilidad de una o más variables dependientes con base en el conocimiento de otras variables. Por ejemplo, la regresión lineal trata de modelar cómo la variable dependiente cambia en función de las variables independientes.
+Tienen el poder de:
 
-## Técnicas de interdependencia {.smaller background-color="white"}
+-   Contar una **historia** compleja de forma simple y memorable.
+-   **Desafiar narrativas** dominantes sobre el progreso y la sociedad.
+-   **Redefinir el debate** público y académico.
 
-Las **técnicas de interdependencia** se aplican cuando no existe una distinción clara entre variables dependientes e independientes, o no es necesario establecer una relación de dependencia. En lugar de eso, todas las variables se tratan de igual forma, y el objetivo es descubrir patrones o estructuras ocultas en los datos.
+Como argumenta Mike Savage, estas "visualizaciones icónicas" no solo muestran datos, sino que proponen una nueva forma de ver el mundo social.
 
--   Ejemplos de técnicas de interdependencia incluyen:
-    -   **Análisis de conglomerados (Cluster Analysis)**
-    -   **Análisis factorial**
-    -   **Análisis de componentes principales**
+## Icono 1: La Curva en U de Piketty (La Desigualdad en el Tiempo) {.smaller background-color="white"}
 
-En el análisis de conglomerados, por ejemplo, se busca agrupar los datos en conglomerados que compartan características similares sin diferenciar entre variables predictoras y dependientes. Todas las variables se tratan de igual manera, y se intenta identificar agrupaciones empíricas dentro de los datos.
+-   **El Gráfico:** Una simple línea del tiempo (*sparkline*) que muestra la participación del 1% más rico en el ingreso nacional de EE.UU. a lo largo del siglo XX.
 
-## Ejemplo: Análisis de correspondencias múltiples {.smaller background-color="white"}
+-   **El Argumento Visual:** La forma de **"U"** es una poderosa narrativa. Desafía la idea modernista de un progreso lineal y constante hacia una mayor igualdad. El gráfico *argumenta* que, tras un período de relativa equidad a mediados de siglo, estamos **"regresando"** a los niveles de desigualdad de la "Gilded Age". Hace visible **"el peso de la historia"** en el presente.
 
-![](img/11/Espace_social_de_Bourdieu-es.svg){fig-align="center"}
+`[Placeholder para insertar el gráfico de la curva en U de Piketty]`
 
-# Análisis de Conglomerados
+## Icono 2: El Espacio Social de Bourdieu (La Desigualdad en el Espacio) {.smaller background-color="white"}
 
-## Introducción al Análisis de Conglomerados {.smaller background-color="white"}
+-   **El Gráfico:** No es una línea de tiempo, sino un **mapa**. Posiciona a grupos e individuos en un espacio bidimensional.
+    -   **Eje Vertical:** Volumen total de capital (económico + cultural).
+    -   **Eje Horizontal:** Composición del capital (más cultural a la izquierda, más económico a la derecha).
 
-El análisis de conglomerados (o "cluster analysis") es una técnica que se ubica dentro de las técnicas multivariables de clasificación. Su objetivo es agrupar datos en grupos llamados conglomerados, donde los integrantes de un conglomerado son lo más similares posibles entre sí y diferentes de los otros grupos.
+-   **El Argumento Visual:** Bourdieu *argumenta* que la desigualdad no es una simple jerarquía de ingresos. Es **multidimensional y relacional**. El gráfico muestra cómo los gustos y estilos de vida (música, arte, comida) no son meras preferencias personales, sino que **estructuran el espacio social** y reproducen las distinciones de clase.
 
-El análisis de conglomerados se utiliza ampliamente en diferentes disciplinas debido a su capacidad para identificar estructuras ocultas dentro de los datos. Esta técnica se enfoca principalmente en la exploración de datos, sin tener hipótesis a priori sobre la estructura de los mismos.
+`[Placeholder para insertar el gráfico del Espacio Social de Bourdieu]`
 
-## Objetivos del Análisis de Conglomerados {.smaller background-color="white"}
+## Síntesis: Ver para Argumentar {.smaller background-color="white"}
 
-1.  **Desarrollar tipologías o clasificaciones de datos.**
-    -   Permite identificar patrones dentro de los datos y agruparlos según características compartidas.
-2.  **Buscar esquemas conceptuales útiles para agrupar entidades.**
-    -   Estos esquemas pueden utilizarse para comprender mejor el comportamiento de los datos y realizar predicciones.
-3.  **Generalizar hipótesis a través de la exploración de datos.**
-    -   Explorar datos sin hipótesis previas y generar nuevas hipótesis basadas en los conglomerados formados.
-4.  **Validar tipos definidos a través de otros procedimientos.**
-    -   Se pueden utilizar técnicas complementarias para validar la calidad de los conglomerados, como el análisis discriminante o pruebas estadísticas.
+Piketty usa el **tiempo** para argumentar que el pasado está regresando. Bourdieu usa el **espacio** para argumentar que la desigualdad es más que solo dinero.
 
-## Críticas y Límites del Análisis de Conglomerados I {.smaller background-color="white"}
+En ambos casos, el gráfico no es una simple ilustración del texto. Es el **núcleo de su argumento teórico**.
 
-1.  **Subjetividad en la Aplicación**:
-    -   El análisis de conglomerados depende en gran medida del investigador, quien toma decisiones importantes como la selección de las variables, la medida de distancia/similitud a utilizar y el número final de conglomerados a aceptar. Esta dependencia hace que el análisis de conglomerados sea considerado por algunos como una técnica **muy subjetiva**.
-2.  **Falta de Contrastes Estadísticos**:
-    -   A diferencia de otras técnicas, como el análisis discriminante, el análisis de conglomerados no proporciona un contraste estadístico que permita corroborar o refutar las hipótesis de investigación. Esto implica que el análisis de conglomerados **no avanza hacia la inferencia estadística**, sino que se queda en un plano meramente descriptivo. Para proceder a la inferencia, es necesario recurrir a técnicas adicionales, como el análisis discriminante o el análisis factorial confirmatorio, que permitan validar los hallazgos del análisis de conglomerados.
+La visualización, por tanto, es una forma de hacer sociología.
 
-## Críticas y Límites del Análisis de Conglomerados II {.smaller background-color="white"}
+---
+title_slide_background: "#008080"
+---
 
-3.  **Carácter Descriptivo y No Inferencial**:
-    -   El análisis de conglomerados se caracteriza como una técnica analítica **descriptiva, ateórica y no inferencial** (Hair et al., 1999). Carece de bases estadísticas que permitan la inferencia de estimaciones muestrales a parámetros poblacionales, lo que lo limita a un plano meramente exploratorio.
-4.  **Soluciones No Únicas**:
-    -   Las soluciones obtenidas en el análisis de conglomerados no son únicas. La pertenencia de una observación a un conglomerado depende de múltiples elementos del procedimiento, lo que implica que se pueden obtener **soluciones diferentes** al variar uno o más de estos elementos. Además, el análisis de conglomerados siempre concluye con la formación de conglomerados, incluso si los datos no presentan una estructura auténtica.
+# 2. La Visualización como Diagnóstico Estadístico
 
-# Etapas del Análisis de conglomerados
+## El Engaño de los Estadísticos Descriptivos {.smaller background-color="white"}
 
-## Pasos Principales en el Análisis de Conglomerados {.smaller background-color="white"}
+Además de ser argumentos, los gráficos son herramientas de **diagnóstico** cruciales. Los estadísticos resumen por sí solos pueden ser idénticos para distribuciones radicalmente diferentes.
 
-En la ejecución de un análisis de conglomerados se siguen una serie de fases que pueden resumirse en los siguientes pasos:
+**Ejemplo: "El Trío Engañoso"**
 
-1.  **Selección de Variables**:
-    -   Selección de las variables que favorezcan la agrupación de los datos. Esta es una decisión clave y previa a cualquier análisis de conglomerados, ya que las variables elegidas determinan las características de clasificación que identifican a cada conglomerado.
-2.  **Selección del Procedimiento de Conglomeración**:
-    -   Decidir qué tipo de procedimiento de conglomeración se seguirá, ya sea jerárquico y/o no jerárquico, junto con el algoritmo específico de clasificación para la creación de los conglomerados.
+Imaginemos tres grupos de datos con los siguientes estadísticos:
 
-## Pasos Principales en el Análisis de Conglomerados {.smaller background-color="white"}
+| Grupo | Media | Desv. Estándar |
+| :--- | :--- | :--- |
+| A (Notas de Examen) | 75.0 | 10.0 |
+| B (Estaturas en cm) | 75.0 | 10.0 |
+| C (Ingresos x10,000) | 75.0 | 10.0 |
 
-3.  **Elección de Medidas de Distancia y Proximidad**:
-    -   Elegir las medidas de distancia y proximidad para proceder a la formación de los conglomerados. Esta elección depende en gran medida de la naturaleza de las variables incluidas en el análisis. Para variables métricas, hay más opciones disponibles, mientras que para variables no métricas (nominales u ordinales), se utilizan medidas de co-ocurrencia.
-4.  **Decisión sobre el Número de Conglomerados**:
-    -   Determinar el número de conglomerados que se constituirán, basado en criterios estadísticos, visualizaciones (como dendogramas) o criterios teóricos.
+Si solo miramos los números, podríamos pensar que las tres distribuciones son similares. Pero...
 
-## Pasos Principales en el Análisis de Conglomerados {.smaller background-color="white"}
+## ¡GRAFICA SIEMPRE TUS DATOS! {.smaller background-color="white"}
 
-5.  **Presentación e Interpretación de Resultados**:
-    -   Presentar e interpretar los resultados obtenidos, tanto en su forma numérica (tablas de aglomeración) como gráfica (dendogramas y gráficos de témpanos).
-6.  **Validación de Resultados**:
-    -   Validar los resultados del análisis. Si los resultados no alcanzan la calificación de válidos, se deben introducir modificaciones para mejorar la solución, lo cual implica repetir el proceso desde el principio, revisando las decisiones previas.
+La visualización revela la verdadera estructura que los números ocultaban.
 
-Estas fases se pueden agrupar en cuatro bloques principales: selección de variables, procedimiento de conglomeración, interpretación de resultados, y validación de los hallazgos, que se repiten iterativamente hasta alcanzar una solución adecuada.
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+library(tidyverse)
+set.seed(123)
+grupo_a <- tibble(valor = rnorm(500, 75, 10), grupo = "A: Simétrico (Unimodal)")
+grupo_b <- tibble(valor = c(rnorm(250, 65, 5), rnorm(250, 85, 5)), grupo = "B: Bimodal (Dos grupos)")
+grupo_c <- tibble(valor = rexp(500, 1/10) * 5 + 30, grupo = "C: Asimétrico (con Outliers)")
+trio_enganoso <- bind_rows(grupo_a, grupo_b, grupo_c)
 
-------------------------------------------------------------------------
+# Para forzar medias y sd similares (haciendo trampa por pedagogía)
+trio_enganoso <- trio_enganoso %>% group_by(grupo) %>%
+  mutate(valor = scale(valor) * 10 + 75)
 
-![](img/11/esquema.png){fig-align="center"}
+ggplot(trio_enganoso, aes(x = valor)) +
+  geom_histogram(fill = "#008080", color = "white", bins = 20) +
+  facet_wrap(~grupo, scales = "free_x") +
+  labs(title = "El Trío Engañoso: Mismos Estadísticos, Diferentes Formas", x="", y="Frecuencia") +
+  theme_minimal(base_size = 14) +
+  theme(strip.text = element_text(face = "bold"))
+```
 
-## Elección de Variables {.smaller background-color="white"}
+**Lección:** La visualización es el único modo de detectar la **forma**, la **modalidad** y la presencia de **outliers**. Es un paso no negociable del análisis de datos.
 
-La elección de las variables es crucial ya que determina la calidad de la agrupación. Las decisiones deben basarse en la naturaleza de los datos y el objetivo de la investigación:
+---
+title_slide_background: "#008080"
+---
 
--   **Relevancia**: Se deben elegir variables que sean relevantes para los objetivos del estudio.
--   **Colinealidad**: Evitar incluir variables muy correlacionadas, ya que pueden influir demasiado en la formación de los conglomerados.
--   **Escalado**: Variables con rangos muy diferentes deberían ser estandarizadas para evitar sesgos, ya que el análisis de conglomerados es muy sensible a las escalas de las variables.
-    -   **Estandarización**: Convertir las variables a puntuaciones Z para que tengan media cero y desviación estándar uno.
+# 3. Principios y Gramática de la Visualización en R
 
-# Métodos Jerárquicos vs No Jerárquicos
+## Mejores Prácticas para Gráficos Efectivos {.smaller background-color="white"}
 
-## Métodos Jerárquicos {.smaller background-color="white"}
+1.  **Maximizar la Razón "Tinta-Dato":** Muestra los datos, no la decoración. Evita ruido visual como fondos recargados o efectos 3D.
 
-Los **métodos jerárquicos** son aquellos en los que los conglomerados se forman de manera jerárquica. Esto significa que el proceso de agrupamiento se realiza en una serie de pasos sucesivos, donde cada observación se va uniendo progresivamente a conglomerados más grandes, o conglomerados se van dividiendo en grupos más pequeños. Los métodos jerárquicos pueden ser **aglomerativos** o **divisivos**.
+2.  **Usar Títulos Informativos:** Un buen título resume el hallazgo principal.
+    -   *Mal título:* "Gráfico de Ingreso por Sexo".
+    -   *Buen título:* "La mediana del ingreso masculino supera en un 20% a la femenina".
 
-## Métodos Jerárquicos {.smaller background-color="white"}
+3.  **Etiquetar Todo Claramente:** Ejes (con unidades), leyendas y siempre citar la fuente.
 
--   **Aglomerativos**: Forman conglomerados empezando desde objetos individuales y uniéndolos en conglomerados mayores hasta que todos los objetos se encuentran en un solo conglomerado. Se utiliza un criterio de distancia para decidir qué objetos agrupar.
-    -   Algoritmos comunes: Método de Ward, Método del centroide, Distancias mínimas/máximas.
-    -   **Ventaja**: Permite observar la estructura completa de los conglomerados.
-    -   **Desventaja**: Puede ser computacionalmente costoso en grandes volúmenes de datos.
--   **Divisivos**: Comienzan con un solo conglomerado que incluye todos los objetos, y sucesivamente dividen los conglomerados hasta que cada objeto pertenece a su propio conglomerado.
+4.  **La Regla del Eje Cero:** Los gráficos de **barras** deben empezar en cero para no distorsionar las proporciones.
 
-## Métodos No Jerárquicos {.smaller background-color="white"}
+5.  **Elegir el Gráfico Adecuado:** `geom_bar` para categóricas, `geom_histogram` o `geom_boxplot` para cuantitativas. **Evita los gráficos de torta.**
 
-Los **métodos no jerárquicos** no siguen un proceso jerárquico de agrupamiento, sino que intentan dividir el conjunto de datos en un número predefinido de conglomerados. Estos métodos asignan iterativamente los datos a conglomerados con base en una medida de similitud, buscando optimizar la homogeneidad dentro de los conglomerados y la heterogeneidad entre ellos.
+## La Gramática de Gráficos con `ggplot2` {.smaller background-color="white"}
 
--   **K-Means**: Agrupa datos en un número predefinido de grupos. El algoritmo selecciona aleatoriamente los centroides iniciales y, luego, cada dato se asigna al centroide más cercano. Los centroides se recalculan iterativamente hasta que no se producen más cambios significativos.
-    -   Se eligen los centroides aleatoriamente y los datos se reasignan iterativamente hasta minimizar la variación intragrupal.
-    -   **Ventaja**: Es eficiente en grandes conjuntos de datos.
-    -   **Desventaja**: Es sensible a los valores iniciales y puede converger a soluciones subóptimas si no se eligen buenos centroides.
+`ggplot2` es un sistema que nos permite construir cualquier gráfico combinando "bloques de construcción" en capas.
 
-## Métodos Jerárquicos vs No Jerárquicos {.smaller background-color="white"}
+**Los 3 Componentes Esenciales:**
 
-| **MÉTODOS JERÁRQUICOS**                                                                                                                             | **MÉTODOS NO JERÁRQUICOS**                                                                                                                                |
-|-----------------------------------|-------------------------------------|
-| Dificultad para determinar el mejor algoritmo de clasificación a priori.                                                                            | Dificultad para conocer el número "real" de conglomerados a priori. Esto puede influir en la calidad del análisis.                                        |
-| Operar con muestras grandes (\>200) es complicado debido al tamaño de la matriz de similitud. La lectura de dendogramas y gráficos se hace difícil. | Formar todas las particiones posibles para encontrar la óptima supone realizar cálculos iterativos muy complejos, lo cual es difícil en muestras grandes. |
+1.  **Datos (`data`):** El `data.frame` con nuestra información.
+2.  **Mapeos Estéticos (`aes`):** La conexión entre las **variables** de los datos y las **propiedades visuales** (estéticas) del gráfico (ej. `x`, `y`, `color`, `fill`, `size`).
+3.  **Geometrías (`geom`):** La forma que usamos para representar los datos (puntos, barras, cajas).
 
-## Métodos Jerárquicos vs No Jerárquicos {.smaller background-color="white"}
+**La Plantilla Universal:**
 
-| **MÉTODOS JERÁRQUICOS**                                                                                        | **MÉTODOS NO JERÁRQUICOS**                                                                                                                       |
-|-----------------------------------|-------------------------------------|
-| Una mala partición inicial no puede modificarse en etapas posteriores, afectando la calidad del resultado.     | Una decisión inicial incorrecta sobre el número de conglomerados puede llevar a clasificaciones erróneas que perjudiquen los resultados finales. |
-| Mayor predisposición a detectar "atípicos" (outliers), lo cual puede distorsionar los conglomerados generados. | La complejidad de los cálculos hace que el proceso sea muy dependiente de la capacidad del ordenador, afectando la eficiencia del análisis.      |
+`ggplot(data = <DATOS>, mapping = aes(<MAPEOS>)) + <GEOM_FUNCION>()`
 
-## Distancia en el Análisis de Conglomerados {.smaller background-color="white"}
+## El Concepto Clave: Mapear vs. Fijar {.smaller background-color="white"}
 
--   **Distancia y Similaridad**: En el análisis de conglomerados, la noción de distancia es clave para determinar cuán similares o diferentes son los objetos que se desean agrupar. Se utilizan matrices de proximidad que pueden expresar tanto distancias como similaridades entre los elementos.
-    -   **Matriz de Distancia**: Mide cuán alejados están dos objetos entre sí. Valores bajos indican mayor similitud, mientras que valores altos indican que los objetos son más distintos.
-    -   **Matriz de Similaridad**: Expresa la semejanza entre objetos. Valores altos representan mayor similitud.
+:::::: columns
+::: {.column width="50%"}
+**Mapear (DENTRO de `aes()`):**
+-   El atributo visual **depende de una variable** de los datos.
+-   Se usa para que el gráfico **represente información**.
+-   **Ejemplo:**
+    ```r
+    ... aes(color = sexo) ...
+    ```    Aquí, el **color de cada punto dependerá** de si el valor en la columna `sexo` es "Hombre" o "Mujer".
+:::
+::: {.column width="50%"}
+**Fijar (FUERA de `aes()`):**
+-   Asigna un **valor constante** a un atributo visual.
+-   Se usa para **mejorar la estética** del gráfico.
+-   **Ejemplo:**
+    ```r
+    ... geom_point(color = "blue")
+    ```
+    Aquí, **todos los puntos serán azules**, sin importar sus otras características.
+:::
+::::::
 
-## Distancia en el Análisis de Conglomerados {.smaller background-color="white"}
+## Ampliando la Gramática: Faceting (Small Multiples) {.smaller background-color="white"}
 
--   Las decisiones sobre cuáles objetos combinar para formar un conglomerado se basan en estas matrices.
+**El Problema:** ¿Qué pasa si queremos comparar la distribución del ingreso a través de las 16 regiones de Chile? Mapear 16 colores a una estética se vuelve un caos visual.
 
--   Dependiendo del tipo de variables, se utilizan diferentes medidas para calcular las distancias o similaridades (por ejemplo, medidas euclidianas para variables continuas o coeficientes de Jaccard para datos binarios).
+**La Solución: El Faceting (`facet_wrap()` o `facet_grid()`)**
 
--   **Tipos de Medidas**:
+Consiste en crear una **grilla de gráficos más pequeños** ("small multiples"), donde cada panel muestra un subconjunto de los datos. Es una de las herramientas más poderosas de `ggplot2` para el análisis exploratorio.
 
-    -   **Medidas de Distancia**: Se enfocan en cuán diferentes son los objetos en términos de magnitudes. Ejemplo: Distancia euclidiana.
-    -   **Medidas de Similaridad**: Enfocadas en patrones comunes entre objetos. Ejemplo: Correlación de Pearson.
+```r
+ggplot(datos, aes(x = ingreso)) +
+  geom_histogram() +
+  facet_wrap(~ region) # Crea un histograma separado para cada región
+```
 
-## Distancia Euclidiana {.smaller background-color="white"}
+## Cierre y Próximos Pasos {.smaller background-color="white"}
 
--   La **distancia euclidiana** es la distancia "en línea recta" entre dos puntos en un espacio multidimensional, calculada según el Teorema de Pitágoras. Se utiliza mayormente para variables continuas.
+**Resumen de la sesión de hoy:**
 
--   **Fórmula Matemática**: La distancia euclidiana entre dos objetos (i, j) se calcula como: $$ d_{ij} = \sqrt{\sum_{k=1}^{p} (x_{ik} - x_{jk})^2} $$
+-   La visualización es una forma de **argumento sociológico** y una herramienta de **diagnóstico estadístico** indispensable.
+-   Crear gráficos efectivos y honestos requiere seguir **buenas prácticas**.
+-   `ggplot2` usa una **"Gramática de Gráficos"** para construir visualizaciones complejas añadiendo capas (`data`, `aes`, `geom`).
+-   El **faceting** es una técnica clave para comparar distribuciones a través de múltiples categorías.
 
-    -   Donde $x_{ik}$ y $x_{jk}$ son los valores de la variable $k$ para los objetos $i$ y $j$ respectivamente.
+**En el práctico de hoy:**
 
--   **Propiedades**:
+-   Aplicarán estos principios para diagnosticar datos, construir sus primeros gráficos con `ggplot2` desde cero y usar `facet_wrap` para análisis comparativos.
 
-    -   **Siempre positiva**: La distancia siempre será mayor o igual a cero.
-    -   **Valores Bajos**: Indican que los objetos son más similares entre sí.
-    -   **No tiene límite superior**: La distancia puede ser tan grande como lo permitan los datos.
+**Adelanto de la Unidad 5:**
 
-## Distancia Euclidiana {.smaller background-color="white"}
-
--   **Distancia Euclidiana al Cuadrado**: Frecuentemente usada en algoritmos de conglomerados como el método del centroide y el método de Ward. Se define como la suma de los cuadrados de las diferencias entre los valores de las variables de los objetos.
-    -   **Problema de Escalabilidad**: Si las variables están en diferentes unidades de medida, las variables con valores mayores pueden influir más en el cálculo de la distancia. La solución común es la estandarización de las variables.
-
-## Estandarización {.smaller background-color="white"}
-
--   **¿Cuándo Estandarizar?**: La estandarización de las variables es recomendable cuando las variables tienen diferentes unidades de medida o rangos significativamente distintos. Por ejemplo, si una variable está medida en ingresos anuales (en miles) y otra en edad (en años), la variable con valores más altos dominará el cálculo de la distancia.
-
--   **Efecto de la Estandarización**:
-
-    -   **Reducción de Influencia Desigual**: La estandarización reduce la influencia de variables con grandes valores numéricos, asegurando que todas las variables contribuyan de manera equitativa al cálculo de la distancia.
-    -   **Posibles Desventajas**: La estandarización puede minimizar diferencias que podrían ser relevantes en el contexto del análisis. Esto es especialmente cierto cuando la variabilidad en una variable tiene un significado sustancial importante.
+-   En la próxima unidad, nos adentraremos de lleno en el **análisis bivariado**: cómo describir la relación entre *dos* variables. Los gráficos que hemos aprendido a construir hoy serán nuestra principal herramienta.
