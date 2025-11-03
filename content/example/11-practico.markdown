@@ -26,7 +26,7 @@ El objetivo de este práctico es dominar la "Gramática de Gráficos" para const
 
 ### 1.1 El "Porqué" de la Visualización
 
-Como vimos en la clase, la visualización de datos no es un simple adorno. Es una forma de **argumento sociológico** y una herramienta de **diagnóstico fundamental**. Autores como Piketty y Bourdieu usan gráficos no para decorar, sino como el núcleo de sus teorías. Estadísticamente, graficar nuestros datos es la única forma de descubrir la verdadera forma de una distribución, que puede ocultarse detrás de estadísticos descriptivos idénticos.
+Como vimos en la clase, la visualización de datos no es un simple adorno. Es una forma de **argumento sociológico** y una herramienta de **diagnóstico fundamental**. AVimosen la clase como autores como Piketty y Bourdieu usan gráficos como el núcleo de sus teorías. Estadísticamente, graficar nuestros datos es la mejor forma de descubrir la verdadera forma de una distribución, que puede ocultarse detrás de estadísticos descriptivos similares.
 
 ### **1.2 Preparación del Entorno y Datos (CASEN 2022)**
 
@@ -52,7 +52,7 @@ Este bloque de código carga la base de datos que guardaste en tu carpeta `datos
 
 ``` r
 # Usamos read_sav() con la ruta relativa a nuestro proyecto
-casen <- haven::read_sav("datos/Base de datos Casen 2022 SPSS.sav")
+casen <- read_sav("datos/Base de datos Casen 2022 SPSS.sav")
 ```
 
 **Método 2: Carga Automática (Para reproducibilidad del documento)**
@@ -96,9 +96,9 @@ trio_enganoso %>%
 ## # A tibble: 3 × 3
 ##   grupo                        Media `Desv. Estándar`
 ##   <chr>                        <dbl>            <dbl>
-## 1 A: Simétrico (Unimodal)         75               10
-## 2 B: Bimodal (Dos grupos)         75               10
-## 3 C: Asimétrico (con Outliers)    75               10
+## 1 A: Simétrico (Unimodal)         75             10.0
+## 2 B: Bimodal (Dos grupos)         75             10  
+## 3 C: Asimétrico (con Outliers)    75             10
 ```
 
 ``` r
@@ -106,7 +106,7 @@ trio_enganoso %>%
 ggplot(trio_enganoso, aes(x = valor)) +
   geom_histogram(fill = "#008080", color = "white", bins = 20) +
   facet_wrap(~grupo) +
-  labs(title = "El Trío Engañoso: Mismos Estadísticos, Diferentes Historias") +
+  labs(title = "El Trío Engañoso: Mismos Estadísticos, Diferentes Distribuciones") +
   theme_minimal()
 ```
 
@@ -128,9 +128,17 @@ p
 
 ``` r
 # Capa 2: La Geometría. Añadimos la capa que dibuja el histograma.
-# p <- p + geom_histogram() # No ejecutamos para evitar sobreescribir p_final
-# p
+p <- p + geom_histogram() 
+p
+```
 
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+<img src="/example/11-practico_files/figure-html/ggplot-paso-a-paso-2.png" width="672" />
+
+``` r
 # Capa 3: Personalización estética. Ajustamos colores y número de bins.
 # p <- p + geom_histogram(fill = "#40E0D0", color = "white", bins = 30)
 # (Para ver el cambio, tendríamos que volver a dibujar p. Lo haremos todo junto)
@@ -149,7 +157,7 @@ p_final <- ggplot(data = casen, mapping = aes(x = edad, weight = expr)) +
 p_final
 ```
 
-<img src="/example/11-practico_files/figure-html/ggplot-paso-a-paso-2.png" width="672" />
+<img src="/example/11-practico_files/figure-html/ggplot-paso-a-paso-3.png" width="672" />
 
 ## 4. Gráficos para variables categóricas: `geom_bar`
 
