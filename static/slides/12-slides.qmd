@@ -1,373 +1,276 @@
 ---
-title: "Clase 12 <br> Análisis de conglomerados II"
-subtitle: "Análisis Avanzado de Datos"
+title: "Introducción al Análisis Bivariado y Tipos de Asociación"
+subtitle: "Unidad 5: Estadística Descriptiva Bivariada"
 author: "Gabriel Sotomayor"
-format: 
+date: "2025-11-10"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
+include-in-header:
+  - text: |
+      <style>
+      #title-slide .title {
+        font-size: 1.8em;
+      }
+      </style>
 ---
 
-# Recordatorio de la clase anterior 
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-## Tipos de técncias multivariadas {.smaller background-color="white"}
+-   **Definir** el análisis bivariado y la distinción entre **variable explicativa (X)** y **variable respuesta (Y)**.
+-   **Clasificar** los tres tipos de relaciones bivariadas según el nivel de medición de las variables.
+-   **Introducir** el concepto estadístico de **independencia** como punto de referencia para evaluar asociaciones.
+-   **Asociar** cada tipo de relación con su **herramienta de análisis numérico y visual** principal.
 
-En el análisis multivariable, las técnicas se pueden clasificar en **técnicas de dependencia** y **técnicas de interdependencia**. La selección de la técnica adecuada depende de la naturaleza de la pregunta de investigación y la relación entre las variables.
+---
+title_slide_background: "#008080"
+---
 
+# 1. De Describir a Relacionar
 
-Las **técnicas de dependencia** se utilizan cuando existe una clara distinción entre variables dependientes (o respuesta) y variables independientes (o predictoras). Es decir, hay una relación de dependencia que se quiere modelar y analizar. El objetivo principal de estas técnicas es estimar el efecto de las variables independientes sobre las dependientes.
+## El Salto al Análisis Bivariado {.smaller background-color="white"}
 
-Las **técnicas de interdependencia** se aplican cuando no existe una distinción clara entre variables dependientes e independientes, o no es necesario establecer una relación de dependencia. En lugar de eso, todas las variables se tratan de igual forma, y el objetivo es descubrir patrones o estructuras ocultas en los datos.
+Hasta ahora, en la Unidad 4, nos hemos enfocado en el **análisis univariado**: describir cada variable por separado (su forma, centro y dispersión).
 
-## Introducción al Análisis de Conglomerados {.smaller background-color="white"}
+Sin embargo, el corazón del análisis sociológico reside en entender **relaciones**.
+-   ¿El **género** afecta la **carga de trabajo doméstico**?
+-   ¿El **nivel socioeconómico** se relaciona con la **percepción sobre el uso del tiempo**?
 
-El análisis de conglomerados (o "cluster analysis") es una técnica que se ubica dentro de las técnicas multivariables de clasificación. Su objetivo es agrupar datos en grupos llamados conglomerados, donde los integrantes de un conglomerado son lo más similares posibles entre sí y diferentes de los otros grupos.
+Hoy comenzamos el **análisis bivariado**: el estudio de la relación entre **dos variables** a la vez.
 
-El análisis de conglomerados se utiliza ampliamente en diferentes disciplinas debido a su capacidad para identificar estructuras ocultas dentro de los datos. Esta técnica se enfoca principalmente en la exploración de datos, sin tener hipótesis a priori sobre la estructura de los mismos.
+## Variable Explicativa y Variable Respuesta {.smaller background-color="white"}
 
-## Objetivos del Análisis de Conglomerados {.smaller background-color="white"}
+En el análisis bivariado, asignamos roles a nuestras variables para estructurar nuestra pregunta de investigación.
 
-1.  **Desarrollar tipologías o clasificaciones de datos.**
-    -   Permite identificar patrones dentro de los datos y agruparlos según características compartidas.
-2.  **Buscar esquemas conceptuales útiles para agrupar entidades.**
-    -   Estos esquemas pueden utilizarse para comprender mejor el comportamiento de los datos y realizar predicciones.
-3.  **Generalizar hipótesis a través de la exploración de datos.**
-    -   Explorar datos sin hipótesis previas y generar nuevas hipótesis basadas en los conglomerados formados.
-4.  **Validar tipos definidos a través de otros procedimientos.**
-    -   Se pueden utilizar técnicas complementarias para validar la calidad de los conglomerados, como el análisis discriminante o pruebas estadísticas.
+-   **Variable Explicativa (o Independiente, X):**
+    -   Es la variable que creemos que **influye, explica o predice** un cambio en la otra.
 
-# Etapas del Análisis de conglomerados
+-   **Variable Respuesta (o Dependiente, Y):**
+    -   Es la variable que mide el **resultado** o el fenómeno que queremos explicar.
 
-## Pasos Principales en el Análisis de Conglomerados {.smaller background-color="white"}
+**Ejemplo:** En la pregunta "*¿Cómo afecta el **sexo** (X) a la cantidad de **horas de trabajo no remunerado** (Y)?*", el sexo es la variable explicativa y las horas de trabajo son la variable respuesta.
 
-En la ejecución de un análisis de conglomerados se siguen una serie de fases que pueden resumirse en los siguientes pasos:
+**Convención:** Al graficar, la variable explicativa (X) siempre va en el **eje horizontal** y la variable respuesta (Y) en el **eje vertical**.
 
-1.  **Selección de Variables**:
-    -   Selección de las variables que favorezcan la agrupación de los datos. Esta es una decisión clave y previa a cualquier análisis de conglomerados, ya que las variables elegidas determinan las características de clasificación que identifican a cada conglomerado.
-2.  **Selección del Procedimiento de Conglomeración**:
-    -   Decidir qué tipo de procedimiento de conglomeración se seguirá, ya sea jerárquico y/o no jerárquico, junto con el algoritmo específico de clasificación para la creación de los conglomerados.
+## El Problema Sociológico del Uso del Tiempo {.smaller background-color="white"}
 
-## Pasos Principales en el Análisis de Conglomerados {.smaller background-color="white"}
+El tiempo es un recurso universal, pero su distribución y uso no lo son. Es un recurso escaso que se reparte de manera desigual según ejes clave de la estructura social como el **sexo**, el **nivel socioeconómico** o el **territorio**.
 
-3.  **Elección de Medidas de Distancia y Proximidad**:
-    -   Elegir las medidas de distancia y proximidad para proceder a la formación de los conglomerados. Esta elección depende en gran medida de la naturaleza de las variables incluidas en el análisis. Para variables métricas, hay más opciones disponibles, mientras que para variables no métricas (nominales u ordinales), se utilizan medidas de co-ocurrencia.
-4.  **Decisión sobre el Número de Conglomerados**:
-    -   Determinar el número de conglomerados que se constituirán, basado en criterios estadísticos, visualizaciones (como dendogramas) o criterios teóricos.
+Gran parte del trabajo que sostiene a la sociedad, como las tareas domésticas y de cuidados, es **trabajo no remunerado**, históricamente invisibilizado y feminizado.
 
-## Pasos Principales en el Análisis de Conglomerados {.smaller background-color="white"}
+**La Encuesta Nacional de Uso del Tiempo (ENUT)** es la principal herramienta en Chile para medir este fenómeno. Su objetivo es cuantificar cómo las personas distribuyen su tiempo entre el trabajo remunerado, el trabajo no remunerado y las actividades personales, haciendo visible lo invisible para el diseño de políticas públicas más equitativas.
 
-5.  **Presentación e Interpretación de Resultados**:
-    -   Presentar e interpretar los resultados obtenidos, tanto en su forma numérica (tablas de aglomeración) como gráfica (dendogramas y gráficos de témpanos).
-6.  **Validación de Resultados**:
-    -   Validar los resultados del análisis. Si los resultados no alcanzan la calificación de válidos, se deben introducir modificaciones para mejorar la solución, lo cual implica repetir el proceso desde el principio, revisando las decisiones previas.
+---
+title_slide_background: "#008080"
+---
 
-Estas fases se pueden agrupar en cuatro bloques principales: selección de variables, procedimiento de conglomeración, interpretación de resultados, y validación de los hallazgos, que se repiten iterativamente hasta alcanzar una solución adecuada.
+# 2. La Caja de Herramientas del Análisis Bivariado
 
-------------------------------------------------------------------------
+## Tres Tipos de Relaciones {.smaller background-color="white"}
 
-![](img/11/esquema.png){fig-align="center"}
+La forma en que analizamos una relación bivariada depende fundamentalmente del **tipo de variables** que estemos cruzando (categóricas o cuantitativas).
 
-## Elección de Variables {.smaller background-color="white"}
+Esto nos da tres casos principales, cada uno con su propio set de herramientas:
 
-La elección de las variables es crucial ya que determina la calidad de la agrupación. Las decisiones deben basarse en la naturaleza de los datos y el objetivo de la investigación:
+1.  **Categórica (X) ➞ Cuantitativa (Y)**
+2.  **Categórica (X) ➞ Categórica (Y)**
+3.  **Cuantitativa (X) ➞ Cuantitativa (Y)**
 
--   **Relevancia**: Se deben elegir variables que sean relevantes para los objetivos del estudio.
--   **Colinealidad**: Evitar incluir variables muy correlacionadas, ya que pueden influir demasiado en la formación de los conglomerados.
--   **Escalado**: Variables con rangos muy diferentes deberían ser estandarizadas para evitar sesgos, ya que el análisis de conglomerados es muy sensible a las escalas de las variables.
-    -   **Estandarización**: Convertir las variables a puntuaciones Z para que tengan media cero y desviación estándar uno.
+## Caso 1: Categórica (X) ➞ Cuantitativa (Y) {.smaller background-color="white"}
 
-# Métodos Jerárquicos vs No Jerárquicos
+-   **Pregunta Clave:** ¿Existen diferencias en el promedio (o la distribución) de una variable cuantitativa entre distintos grupos?
+-   **Ejemplo:** *¿Dedican hombres y mujeres, en promedio, la misma cantidad de tiempo al trabajo doméstico no remunerado (`t_tnr_dt`)?*
 
-## Métodos Jerárquicos {.smaller background-color="white"}
+-   **Herramienta de Análisis Numérico:**
+    -   **Comparación de estadísticos descriptivos por grupo** (medias, medianas, etc.).
 
-Los **métodos jerárquicos** son aquellos en los que los conglomerados se forman de manera jerárquica. Esto significa que el proceso de agrupamiento se realiza en una serie de pasos sucesivos, donde cada observación se va uniendo progresivamente a conglomerados más grandes, o conglomerados se van dividiendo en grupos más pequeños. Los métodos jerárquicos pueden ser **aglomerativos** o **divisivos**.
+-   **Herramienta de Análisis Visual:**
+    -   **Boxplots comparativos** o gráficos de densidad por grupo.
 
-## Métodos Jerárquicos {.smaller background-color="white"}
+## Caso 1: Tabla de Estadísticos por Grupo {.smaller background-color="white"}
 
--   **Aglomerativos**: Forman conglomerados empezando desde objetos individuales y uniéndolos en conglomerados mayores hasta que todos los objetos se encuentran en un solo conglomerado. Se utiliza un criterio de distancia para decidir qué objetos agrupar.
-    -   Algoritmos comunes: Método de Ward, Método del centroide, Distancias mínimas/máximas.
-    -   **Ventaja**: Permite observar la estructura completa de los conglomerados.
-    -   **Desventaja**: Puede ser computacionalmente costoso en grandes volúmenes de datos.
--   **Divisivos**: Comienzan con un solo conglomerado que incluye todos los objetos, y sucesivamente dividen los conglomerados hasta que cada objeto pertenece a su propio conglomerado.
+Analizamos las horas diarias de trabajo no remunerado (`t_tnr_dt`) por `sexo`.
 
-## Métodos No Jerárquicos {.smaller background-color="white"}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+# Carga de paquetes y datos
+library(tidyverse)
+library(haven)
+library(DescTools)
+library(knitr)
+library(kableExtra)
+library(Hmisc)
+# Carga de ENUT (asumiendo que ya se cargó en un chunk anterior)
+url_enut <- "https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7"
+archivo_interno <- "250403-ii-enut-bdd-r-v2.RDS"
+enut <- rio::import(url_enut, which = archivo_interno)
 
-Los **métodos no jerárquicos** no siguen un proceso jerárquico de agrupamiento, sino que intentan dividir el conjunto de datos en un número predefinido de conglomerados. Estos métodos asignan iterativamente los datos a conglomerados con base en una medida de similitud, buscando optimizar la homogeneidad dentro de los conglomerados y la heterogeneidad entre ellos.
+# Limpieza y preparación
+enut_trabajo <- enut %>%
+  mutate(
+    t_tnr_dt = ifelse(t_tnr_dt == 96, NA, t_tnr_dt),
+    sexo_factor = as_factor(sexo)
+  )
 
--   **K-Means**: Agrupa datos en un número predefinido de grupos. El algoritmo selecciona aleatoriamente los centroides iniciales y, luego, cada dato se asigna al centroide más cercano. Los centroides se recalculan iterativamente hasta que no se producen más cambios significativos.
-    -   Se eligen los centroides aleatoriamente y los datos se reasignan iterativamente hasta minimizar la variación intragrupal.
-    -   **Ventaja**: Es eficiente en grandes conjuntos de datos.
-    -   **Desventaja**: Es sensible a los valores iniciales y puede converger a soluciones subóptimas si no se eligen buenos centroides.
-
-
-## Distancia en el Análisis de Conglomerados {.smaller background-color="white"}
-
--   Las decisiones sobre cuáles objetos combinar para formar un conglomerado se basan en estas matrices.
-
--   Dependiendo del tipo de variables, se utilizan diferentes medidas para calcular las distancias o similaridades (por ejemplo, medidas euclidianas para variables continuas o coeficientes de Jaccard para datos binarios).
-
--   **Tipos de Medidas**:
-
-    -   **Medidas de Distancia**: Se enfocan en cuán diferentes son los objetos en términos de magnitudes. Ejemplo: Distancia euclidiana.
-    -   **Medidas de Similaridad**: Enfocadas en patrones comunes entre objetos. Ejemplo: Correlación de Pearson.
-
-## Distancia Euclidiana {.smaller background-color="white"}
-
--   La **distancia euclidiana** es la distancia "en línea recta" entre dos puntos en un espacio multidimensional, calculada según el Teorema de Pitágoras. Se utiliza mayormente para variables continuas.
-
--   **Fórmula Matemática**: La distancia euclidiana entre dos objetos (i, j) se calcula como: $$ d_{ij} = \sqrt{\sum_{k=1}^{p} (x_{ik} - x_{jk})^2} $$
-
-    -   Donde $x_{ik}$ y $x_{jk}$ son los valores de la variable $k$ para los objetos $i$ y $j$ respectivamente.
-
--   **Propiedades**:
-
-    -   **Siempre positiva**: La distancia siempre será mayor o igual a cero.
-    -   **Valores Bajos**: Indican que los objetos son más similares entre sí.
-    -   **No tiene límite superior**: La distancia puede ser tan grande como lo permitan los datos.
-
-## Distancia Euclidiana {.smaller background-color="white"}
-
--   **Distancia Euclidiana al Cuadrado**: Frecuentemente usada en algoritmos de conglomerados como el método del centroide y el método de Ward. Se define como la suma de los cuadrados de las diferencias entre los valores de las variables de los objetos.
-    -   **Problema de Escalabilidad**: Si las variables están en diferentes unidades de medida, las variables con valores mayores pueden influir más en el cálculo de la distancia. La solución común es la estandarización de las variables.
-
-## Estandarización {.smaller background-color="white"}
-
--   **¿Cuándo Estandarizar?**: La estandarización de las variables es recomendable cuando las variables tienen diferentes unidades de medida o rangos significativamente distintos. Por ejemplo, si una variable está medida en ingresos anuales (en miles) y otra en edad (en años), la variable con valores más altos dominará el cálculo de la distancia.
-
--   **Efecto de la Estandarización**:
-
-    -   **Reducción de Influencia Desigual**: La estandarización reduce la influencia de variables con grandes valores numéricos, asegurando que todas las variables contribuyan de manera equitativa al cálculo de la distancia.
-    -   **Posibles Desventajas**: La estandarización puede minimizar diferencias que podrían ser relevantes en el contexto del análisis. Esto es especialmente cierto cuando la variabilidad en una variable tiene un significado sustancial importante.
-    
-## Obtrención de conglomerados  {.smaller background-color="white"}
-
-A la elección de la medida de similaridad o de distancia le sigue la obtención de la solución de conglomerados, en conformidad con las diversas decisiones adoptadas. Es decir, el método de conglomeración, el algoritmo de clasificación y la medida de similaridad o distancia. Antes de proceder a la interpretación de los resultados, se debe dirimir una cuestión crucial: la referente al número de conglomerados a retener entre las distintas alternativas posibles de clasificación de los objetos de interés.
-
-En la conglomeración no jerárquica, la decisión sobre el número de conglomerados a retener es previa a la ejecución de cualquier análisis. En la conglomeración jerárquica, sin embargo, esta decisión se toma al final del análisis, una vez que todos los conglomerados han sido formados. De ahí que se incluya esta discusión en este apartado posterior a la exposición de decisiones clave previas al análisis de conglomerados.
-
-## Elección del Número de Conglomerados {.smaller background-color="white"}
-
-La finalidad de todo análisis de conglomerados es la clasificación de una serie de objetos en conglomerados (o grupos) homogéneos. Pero, ¿cuántos conglomerados se requieren para describir de forma precisa la similitud y la diversidad en una población?
-
-No existe una respuesta única para esta cuestión, pero existen varios procedimientos alternativos que se pueden aplicar para determinar el número idóneo de conglomerados:
-
-- **Criterios Teóricos**: Seguir algún criterio teórico que fundamente la elección de un número de conglomerados específico. Es recomendable probar diferentes soluciones de clasificación y luego elegir aquella que tenga mayor significado teórico y estadístico.
-- **Coeficientes de Conglomeración**: En la conglomeración jerárquica, se pueden observar los coeficientes de conglomeración, también llamados "coeficientes de fusión" o "coeficientes de aglomeración". Estos coeficientes indican el valor numérico (medida de distancia o similitud) que propicia la unión de objetos para formar conglomerados. La solución idónea corresponde al número de conglomerados previo al "salto" apreciable en el valor del coeficiente de conglomeración.
-- **Dendograma**: Además, la información proporcionada por el dendograma es uno de los gráficos más característicos en la conglomeración y puede ser útil para la determinación del número de conglomerados 
-
-Cuando se observan varias variaciones o "saltos" en los coeficientes, puede resultar difícil decidir cuál es relevante. Esta subjetividad es una crítica frecuente a los métodos de conglomeración jerárquica.
-
-# Presentación de resultados de conglomerados
-
-## Análisis de conglomerados Jerárquico {.smaller background-color="white"}
-
-### Historial de Conglomeración 
-
-```{r}
-if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
-pacman::p_load(dplyr, cluster, factoextra, WDI, knitr, kableExtra)
-
-# Descargar datos relevantes del Banco Mundial para el año 2020
-indicadores <- WDI(country = "all", 
-                   indicator = c("NY.GDP.PCAP.CD",  # PIB per cápita (ingreso)
-                                 "SE.XPD.TOTL.GD.ZS",  # Gasto en educación (% del PIB)
-                                 "SP.DYN.LE00.IN",  # Esperanza de vida al nacer (salud)
-                                 "SE.SEC.ENRR"  # Tasa de matrícula en la educación secundaria (educación)
-                        ), 
-                   start = 2020, end = 2020, extra = TRUE)
-
-# Limpiar los datos: eliminar regiones y observaciones con valores faltantes
-indicadores_clean <- indicadores %>%
-  filter(!region %in% c("Aggregates", NA)) %>%
-  filter(region %in% c("Latin America & Caribbean")) %>% 
-  select(country, NY.GDP.PCAP.CD, SE.XPD.TOTL.GD.ZS, SP.DYN.LE00.IN, SE.SEC.ENRR) %>%
-  na.omit()
-
-# Renombrar columnas para facilitar el trabajo
-colnames(indicadores_clean) <- c("country", "gdp_per_capita", "education_exp", "life_expectancy", "secondary_enrollment")
-
-indicadores_scaled <- indicadores_clean %>%
-  select(gdp_per_capita, education_exp, life_expectancy, secondary_enrollment) %>%
-  scale()
-set.seed(123)  # Para reproducibilidad
-distancia <- dist(indicadores_scaled, method = "euclidean")
-
-hc <- hclust(distancia, method = "complete")
-```
-
-
-- El historial de conglomeración es una tabla que resume el proceso de constitución de los conglomerados.
-- Incluye las siguientes columnas:
-  - **Etapa**: número de la etapa del análisis.
-  - **Objetos combinados**: los dos objetos o conglomerados que se combinan en cada etapa.
-  - **Coeficiente**: valor de la medida de distancia o similitud utilizada.
-  
-- **Interpretación del Historial**:
-  - Ayuda a determinar el número óptimo de conglomerados observando los saltos grandes en los coeficientes.
-  - Útil para identificar conglomerados atípicos que se unen en etapas tardías.
-  
-## Análisis de conglomerados Jerárquico {.smaller background-color="white"}
-
-### Historial de Conglomeración 
-```{r}
-hist<-data.frame(1: length(hc$merge[,1]),hc$merge[,1],hc$merge[,2], hc$height)
-colnames(hist) <- c("Paso", "Cluster1", "Cluster2", "Altura")
-head(hist,20)
-```
-
-
-## Análisis de conglomerados Jerárquico {.smaller background-color="white"}
-### Conglomerado de Pertenencia 
-
-- Tabla que muestra la asignación de objetos a conglomerados.
-- Puede obtenerse para una única solución o un rango de soluciones definido previamente.
-- **Utilidad**: Permite conocer a qué conglomerado pertenece cada objeto, facilitando la interpretación del análisis.
-
-## Análisis de conglomerados Jerárquico {.smaller background-color="white"}
-### Conglomerado de Pertenencia 
-
-```{r}
-grupos <- cutree(hc, k = 3)
-
-# Agregar los conglomerados al dataframe original
-indicadores_clean$conglomerado <- grupos
-head(indicadores_clean[,c(-2,-3,-4,-5)], 20)
-```
-
-
-## Dendograma {.smaller background-color="white"}
-
-- Muestra el proceso de aglomeración en un formato jerárquico.
-- Ayuda a identificar el número de conglomerados adecuados.
-- **Interpretación**:
-  - Las ramas más largas indican conglomerados que se formaron más tarde en el proceso, lo que puede ser un indicador de conglomerados menos homogéneos.
-
-## Dendograma {.smaller background-color="white"}
-
-```{r}
-plot(hc, labels = indicadores_clean$country, main = "Dendrograma de Clustering Jerárquico", xlab = "País", sub = "", cex = 0.6)
-rect.hclust(hc, k = 3, border = "blue")
-```
-
-
-# Análisis de Conglomerados No Jerárquico
-
-## Tablas de Resultados No Jerárquico {.smaller background-color="white"}
-
-### Centros de los Conglomerados
-
-- Los **centroides** de cada conglomerado se calculan iterativamente.
-- Se presenta información de los centros **iniciales** y **finales**.
-- La medida de distancia utilizada para reasignar los objetos es la **distancia euclídea**.
-- **Iteraciones**:
-  - Los centroides iniciales y finales normalmente no coinciden, reflejando la evolución de la composición de los conglomerados durante el proceso.
-  - Cada iteración busca minimizar la distancia total dentro de los conglomerados.
-
-
-## Tablas de Resultados No Jerárquico {.smaller background-color="white"}
-
-### Centros de los Conglomerados
-  
-```{r, results='asis'}
-if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
-pacman::p_load(dplyr,factoextra , corrplot, knitr, kableExtra)
-
-temp <- tempfile()
-download.file("https://github.com/GabrielSotomayorl/aadi2024/raw/refs/heads/main/content/example/input/data/ELSOC_Long_2016_2022_v1.00.RData", temp)
-load(temp)
-unlink(temp) 
-
-elsoc<- elsoc_long_2016_2022.2 %>% 
-  filter(ola == 6)  %>%
-  mutate(across(c(c37_01:c37_09), ~ ifelse(. < 0, NA, .))) %>% 
-  filter(!(is.na(c37_01)|is.na(c37_02)|is.na(c37_03)|is.na(c37_04)|is.na(c37_05)|is.na(c37_06)|is.na(c37_07)|is.na(c37_08)))
-elsoc_vars <- elsoc %>%
-  select(c37_01:c37_08)  
-
-set.seed(123)  # Para reproducibilidad
-
-# Aplicar k-medias con 3 conglomerados
-kmeans_result <- kmeans(elsoc_vars, centers = 4, nstart = 25)
-
-# Agregar los conglomerados al dataframe original
-elsoc$conglomerado <- kmeans_result$cluster
-
-
-caracterizacion <- elsoc %>%
-  group_by(conglomerado) %>%
+# Tabla de resumen
+tabla_caso1 <- enut_trabajo %>%
+  filter(!is.na(sexo_factor), !is.na(t_tnr_dt)) %>%
+  group_by(sexo_factor) %>%
   summarise(
-    across(c(c37_01:c37_08), mean, na.rm = TRUE),
-    cantidad_individuos = n()
+    Media = weighted.mean(t_tnr_dt, w = fe_cut, na.rm = TRUE),
+    Mediana = Median(t_tnr_dt, weights = fe_cut, na.rm = TRUE),
+    `Desv. Estándar` = sqrt(wtd.var(t_tnr_dt, weights = fe_cut, na.rm = TRUE))
   )
 
-# Crear un tibble para presentar los resultados con nombres más claros
-caracterizacion_tidy <- caracterizacion %>%
-  rename(
-    "Conglomerado" = conglomerado,
-    "Adopción Homoparental" = c37_01,
-    "Aborto" = c37_02,
-    "Rol del Estado en Educación" = c37_03,
-    "Capitalización Individual Pensiones" = c37_04,
-    "Restricciones Migratorias" = c37_05,
-    "Educación Sexual (Padres)" = c37_06,
-    "Restricción a Empresas Contaminantes" = c37_07,
-    "Gasto Social Focalizado" = c37_08,
-    "Cantidad de Individuos" = cantidad_individuos
+kable(tabla_caso1, digits = 2, caption = "Horas diarias de trabajo no remunerado por sexo (ENUT 2023)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+**Interpretación:** La tabla muestra una brecha considerable. En promedio, las mujeres dedican más del doble de horas diarias al trabajo no remunerado que los hombres (Media de `r round(tabla_caso1$Media[2], 1)` vs. `r round(tabla_caso1$Media[1], 1)`).
+
+## Caso 1: Gráfico de Boxplots Comparativos {.smaller background-color="white"}
+
+La visualización confirma la brecha observada en la tabla.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=5}
+ggplot(enut_trabajo, aes(x = sexo_factor, y = t_tnr_dt, fill = sexo_factor)) +
+  geom_boxplot(outlier.alpha = 0.1) +
+  labs(
+    title = "Distribución de Horas de Trabajo No Remunerado por Sexo",
+    x = "Sexo", 
+    y = "Horas diarias"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(legend.position = "none")
+```
+**Interpretación:** El boxplot muestra que no solo la mediana de las mujeres es más alta, sino que toda la distribución está desplazada hacia arriba. El 75% de las mujeres (límite superior de la caja) dedica más tiempo que casi el 75% de los hombres.
+
+## Caso 2: Categórica (X) ➞ Categórica (Y) {.smaller background-color="white"}
+
+-   **Pregunta Clave:** ¿La probabilidad de pertenecer a una categoría de Y depende de la categoría de X a la que se pertenece?
+-   **Ejemplo:** *¿La percepción de tener suficiente tiempo para el descanso (`bs2`) se relaciona con el sexo de la persona?*
+
+-   **Herramienta de Análisis Numérico:**
+    -   **Tablas de contingencia** (tablas cruzadas) con **porcentajes condicionales**.
+
+-   **Herramienta de Análisis Visual:**
+    -   **Gráficos de barras apiladas al 100%** (`position="fill"`).
+
+## Caso 2: Tabla de Contingencia {.smaller background-color="white"}
+
+Analizamos la relación entre `sexo` (X) y `bs2` (percepción de tiempo para el descanso, Y).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# (Asumiendo que 'enut_trabajo' está disponible)
+enut_trabajo %>%
+  mutate(bs2_factor = as_factor(bs2)) %>%
+  filter(!is.na(sexo_factor), !is.na(bs2_factor), !bs2_factor %in% c("No Aplica", "Valor Perdido")) %>%
+  count(sexo_factor, bs2_factor, wt = fe_cut) %>%
+  group_by(sexo_factor) %>%
+  mutate(Porcentaje = n / sum(n) * 100) %>%
+  select(-n) %>%
+  pivot_wider(names_from = sexo_factor, values_from = Porcentaje) %>%
+  kable(digits = 1, caption = "% de respuesta sobre tiempo para el descanso, por sexo") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+**Interpretación:** La tabla muestra que un porcentaje mayor de hombres (`r round(24.5, 1)`%) que de mujeres (`r round(19.2, 1)`%) siente que "Siempre" tiene tiempo suficiente para el descanso.
+
+## Caso 2: Gráfico de Barras Apiladas al 100% {.smaller background-color="white"}
+
+Este gráfico visualiza los porcentajes de la tabla anterior.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=5}
+enut_trabajo %>%
+  mutate(bs2_factor = as_factor(bs2)) %>%
+  filter(!is.na(sexo_factor), !is.na(bs2_factor), !bs2_factor %in% c("No Aplica", "Valor Perdido")) %>%
+  ggplot(aes(x = sexo_factor, fill = fct_rev(bs2_factor), weight = fe_cut)) +
+  geom_bar(position = "fill", width = 0.6) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_viridis_d(option = "viridis", direction = -1) +
+  labs(
+    title = "Percepción de Tiempo para el Descanso por Sexo",
+    x = "Sexo", y = "Porcentaje de Respuestas", fill = "Frecuencia de Tiempo para Descansar"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom")
+```
+
+## Caso 3: Cuantitativa (X) ➞ Cuantitativa (Y) {.smaller background-color="white"}
+
+-   **Pregunta Clave:** A medida que X aumenta, ¿Y tiende a aumentar, disminuir o no cambia?
+-   **Ejemplo:** *A mayor `edad` (X), ¿cómo cambia el tiempo dedicado al trabajo doméstico no remunerado (`t_tnr_dt`, Y)?*
+
+-   **Herramienta de Análisis Numérico:**
+    -   **Coeficiente de correlación**.
+
+-   **Herramienta de Análisis Visual:**
+    -   **Gráfico de dispersión (Scatterplot)**.
+
+
+## Caso 3: Tabla de Correlación {.smaller background-color="white"}
+
+Calculamos la correlación entre `edad` y `t_tnr_dt` para cuantificar la relación lineal.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Carga de paquetes necesarios para la presentación
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+# (Este chunk asume que el objeto 'enut_trabajo' ya fue creado y limpiado)
+
+# Calculamos la correlación no ponderada usando summarise()
+# 'use = "pairwise.complete.obs"' le dice a R que ignore los casos con NAs en alguna de las dos variables
+cor_resultado <- enut_trabajo %>%
+  summarise(
+    Correlacion = cor(edad, t_tnr_dt, use = "pairwise.complete.obs")
   )
 
-# Mostrar la caracterización con una tabla kable bonita
-caracterizacion_tidy %>%
-  kbl(caption = "Caracterización de los Conglomerados Ideológicos") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F)
-
+kable(cor_resultado, digits = 3, caption = "Correlación (no ponderada) entre Edad y Horas de Trabajo No Remunerado") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
+**Interpretación:** La correlación es `r round(cor_resultado$Correlacion, 2)`, un valor extremadamente cercano a cero. Esto confirma numéricamente que **no existe una relación *lineal*** entre la edad y el tiempo dedicado al trabajo no remunerado. Pero, como vimos en el gráfico, ¿significa esto que no hay ninguna relación en absoluto?
 
 
-## Tablas de Resultados No Jerárquico {.smaller background-color="white"}
+## Caso 3: Gráfico de Dispersión {.smaller background-color="white"}
 
-### Tabla ANOVA 
+El gráfico de dispersión nos cuenta una historia más compleja.
 
-- Evalúa la contribución de cada variable a la diferenciación entre los conglomerados.
-- La tabla ANOVA incluye:
-  - **Medias Cuadráticas entre conglomerados** y **dentro de conglomerado**.
-  - **Estadístico F**: indica qué variables diferencian mejor entre los conglomerados.
-- **Interpretación**:
-  - Un **valor F** alto sugiere que la variable tiene un papel importante en la diferenciación de los conglomerados.
-  - **Significancia estadística**: Se utiliza para identificar qué variables deben ser consideradas al interpretar las características distintivas de los conglomerados.
-  
-## Tablas de Resultados No Jerárquico {.smaller background-color="white"}
-
-### Tabla ANOVA 
-
-```{r, echo=TRUE}
-# ANOVA para la variable Aborto
-anova_aborto <- aov(c37_02 ~ conglomerado, data = elsoc)
-summary(anova_aborto)
-
-# ANOVA para la variable Rol del Estado en Educación
-anova_educacion <- aov(c37_03 ~ conglomerado, data = elsoc)
-summary(anova_educacion)
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=5}
+ggplot(enut_trabajo, aes(x = edad, y = t_tnr_dt)) +
+  geom_point(alpha = 0.05, color="#008080", position = "jitter") +
+  geom_smooth(color="red", se = FALSE, method = "loess") +
+  labs(
+    title = "Horas de Trabajo Doméstico No Remunerado según Edad",
+    x = "Edad", 
+    y = "Horas diarias de trabajo no remunerado"
+  ) +
+  theme_minimal(base_size = 14)
 ```
+**Interpretación:** ¡La relación no es lineal, sino **curvilínea**! El tiempo de trabajo no remunerado aumenta hasta la mediana edad (aprox. 40-50 años) y luego comienza a disminuir. Esto demuestra por qué **siempre debemos visualizar los datos**: la correlación por sí sola nos habría hecho concluir erróneamente que no había una relación importante.
 
+## El Punto de Referencia: Independencia Estadística {.smaller background-color="white"}
 
-## Gráficos No Jerárquicos {.smaller background-color="white"}
+Antes de poder decir que dos variables están "relacionadas", necesitamos un punto de referencia.
 
-### Ubicación de Conglomerados y Centros 
+-   **Definición de Independencia:** Dos variables son **estadísticamente independientes** si conocer el valor de una **no nos da ninguna información** sobre el valor probable de la otra.
 
-- Representación de la ubicación de cada conglomerado y sus centros.
-- Muestra claramente la distribución espacial de los conglomerados.
-- **Utilidad**:
-  - Facilita la identificación de conglomerados bien separados, indicando una buena partición de los datos.
-  - Permite identificar conglomerados solapados que podrían requerir un ajuste del número de conglomerados.
+-   **El Objetivo del Análisis Bivariado:** Nuestro trabajo como analistas es buscar **evidencia en contra de la independencia**. Buscamos patrones sistemáticos que demuestren que las variables *sí* están relacionadas.
+    -   En nuestros tres ejemplos, encontramos evidencia clara de que las variables **no son independientes**.
 
-## Gráficos No Jerárquicos {.smaller background-color="white"}
+## Cierre y Próximos Pasos {.smaller background-color="white"}
 
-### Ubicación de Conglomerados y Centros 
+**Resumen de la sesión de hoy:**
 
-```{r}
-fviz_cluster(kmeans_result, data = elsoc_vars, geom = "point", main = "Visualización de Conglomerados - K-Means")
-```
+-   El análisis bivariado estudia la relación entre una variable **explicativa (X)** y una **respuesta (Y)**.
+-   Existen **tres casos principales** de análisis bivariado, cada uno con sus propias herramientas visuales y numéricas.
+-   El concepto de **independencia** es nuestro punto de partida: buscamos evidencia de que las variables están, de hecho, asociadas.
 
+**En el práctico de hoy:**
+
+-   Aplicarán estas herramientas en R para explorar los tres tipos de relaciones utilizando la **Encuesta CASEN 2022**.
+
+**Adelanto de la próxima clase:**
+
+-   Nos sumergiremos en el **Caso 2 (Categórica ➞ Categórica)**. Aprenderemos a construir e interpretar **tablas de contingencia** y a introducir una **tercera variable de control**.
