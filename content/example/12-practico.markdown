@@ -11,6 +11,8 @@ toc: true
 editor_options: 
   chunk_output_type: console
 ---
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 ## 0. Objetivos del Práctico
 
@@ -36,7 +38,8 @@ En este práctico, nos enfocaremos en las variables de "Día Tipo", que represen
 
 ### 1.3 Preparación del Entorno
 
-```{r setup, message=FALSE, warning=FALSE}
+
+``` r
 # Cargar paquetes
 library(tidyverse)
 library(haven)
@@ -44,7 +47,8 @@ library(DescTools) # Para estadísticos ponderados
 library(rio)       # Para importar datos fácilmente
 ```
 
-```{r load-manual, eval=FALSE, echo=TRUE}
+
+``` r
 # Carga Manual (Método recomendado)
 # 1. Crea una carpeta 'datos' en tu Proyecto de RStudio.
 # 2. Descarga el archivo .zip desde: https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7
@@ -56,7 +60,8 @@ enut <- rio::import("datos/250403-ii-enut-bdd-r-v2.zip", which = "250403-ii-enut
 
 El siguiente bloque carga los datos automáticamente para la reproducibilidad del documento.
 
-```{r load-auto, message=FALSE, warning=FALSE, cache=TRUE}
+
+``` r
 # Carga automática de datos
 enut <- rio::import("https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7", which = "250403-ii-enut-bdd-r-v2.RDS")
 ```
@@ -65,7 +70,8 @@ enut <- rio::import("https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-t
 ### 1.4 Limpieza Inicial de Datos
 
 Preparamos nuestra base de trabajo.
-```{r clean-data}
+
+``` r
 # Filtramos, limpiamos NAs y creamos variables factoriales
 enut_trabajo <- enut %>%
   filter(tiempo == 1) %>% # Nos quedamos solo con quienes contestaron el diario de tiempo
@@ -89,7 +95,8 @@ enut_trabajo <- enut %>%
 
 ### 2.2 Análisis Numérico
 **Pregunta:** ¿Cómo difieren las horas de trabajo no remunerado (doméstico y de cuidados) entre hombres y mujeres?
-```{r cat-quant-num}
+
+``` r
 tabla_caso1 <- enut_trabajo %>%
   group_by(sexo_factor) %>%
   summarise(
@@ -102,11 +109,19 @@ tabla_caso1 <- enut_trabajo %>%
 knitr::kable(tabla_caso1, digits = 2)
 ```
 
+
+
+|sexo_factor | Media_TNR| Mediana_TNR| Media_TCNR| Mediana_TCNR|
+|:-----------|---------:|-----------:|----------:|------------:|
+|Hombre      |      2.86|        2.10|       1.49|         0.93|
+|Mujer       |      4.96|        4.11|       2.28|         1.49|
+
 **Interpretación:** La tabla muestra una fuerte brecha de género. En promedio, las mujeres dedican más del doble de horas al trabajo doméstico (4.96 vs. 2.86) y casi el doble al trabajo de cuidados (1.93 vs. 1.05) que los hombres.
 
 ### 2.3 Análisis Visual
 
-```{r cat-quant-vis}
+
+``` r
 # Boxplots comparativos para el trabajo doméstico no remunerado
 ggplot(enut_trabajo, aes(x = sexo_factor, y = t_tnr_dt, fill = sexo_factor)) +
   geom_boxplot(outlier.alpha = 0.1) +
@@ -118,17 +133,24 @@ ggplot(enut_trabajo, aes(x = sexo_factor, y = t_tnr_dt, fill = sexo_factor)) +
   theme(legend.position = "none")
 ```
 
+```
+## Warning: Removed 918 rows containing non-finite outside the scale range
+## (`stat_boxplot()`).
+```
+
+<img src="/example/12-practico_files/figure-html/cat-quant-vis-1.png" width="672" />
+
 **Interpretación:** La mediana de las mujeres es superior al tercer cuartil de los hombres. Esto significa que **más del 50% de las mujeres dedica más tiempo a tareas domésticas que el 75% de los hombres**.
 
 ### 2.4 Actividad 1
 **Pregunta:** Analiza la relación entre el **Nivel Socioeconómico (`NSE`)** y el **tiempo dedicado al trabajo remunerado (`t_to_dt`)**. ¿Existen diferencias en el promedio de horas de trabajo remunerado entre los distintos NSE? Realiza un análisis numérico (tabla con medias y medianas ponderadas) y uno visual (boxplots comparativos).
 
-```{r, eval=FALSE, echo=TRUE}
+
+``` r
 # Escribe aquí tu código para el análisis numérico (tabla)
 
 
 # Escribe aquí tu código para el análisis visual (boxplot)
-
 ```
 
 ## 3. Categórica (X) ➞ Categórica (Y): Satisfacción y Género
@@ -139,7 +161,8 @@ ggplot(enut_trabajo, aes(x = sexo_factor, y = t_tnr_dt, fill = sexo_factor)) +
 
 Para responder, construiremos una tabla de contingencia que muestre cómo se distribuye la satisfacción *dentro de* cada sexo, calculando los porcentajes de columna.
 
-```{r cat-cat-num, message=FALSE, warning=FALSE}
+
+``` r
 # install.packages("kableExtra") # Si no lo tienes
 library(kableExtra)
 
@@ -171,6 +194,44 @@ knitr::kable(
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:cat-cat-num"></span>Table 1: (\#tab:cat-cat-num)Satisfacción con el reparto de tareas por sexo (%)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> bs2_factor </th>
+   <th style="text-align:right;"> Hombre </th>
+   <th style="text-align:right;"> Mujer </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Totalmente insatisfecho(a) </td>
+   <td style="text-align:right;"> 1.0 </td>
+   <td style="text-align:right;"> 3.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Insatisfecho(a) </td>
+   <td style="text-align:right;"> 5.2 </td>
+   <td style="text-align:right;"> 11.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Ni insatisfecho(a) ni satisfecho(a) </td>
+   <td style="text-align:right;"> 14.2 </td>
+   <td style="text-align:right;"> 17.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Satisfecho(a) </td>
+   <td style="text-align:right;"> 51.2 </td>
+   <td style="text-align:right;"> 46.7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Totalmente satisfecho(a) </td>
+   <td style="text-align:right;"> 28.3 </td>
+   <td style="text-align:right;"> 21.2 </td>
+  </tr>
+</tbody>
+</table>
+
 
 **Interpretación:** La tabla revela una clara diferencia de género en la satisfacción. Mientras que un **28.3%** de los hombres se declara "Totalmente satisfecho(a)", solo un **21.2%** de las mujeres lo hace. Por el contrario, la insatisfacción (sumando "Insatisfecho(a)" y "Totalmente insatisfecho(a)") es mucho mayor en mujeres (**14.8%**) que en hombres (**6.2%**).
 
@@ -178,7 +239,8 @@ knitr::kable(
 
 El gráfico de barras apiladas al 100% visualiza directamente los porcentajes que calculamos.
 
-```{r cat-cat-vis}
+
+``` r
 enut_limpio_cat %>%
   ggplot(aes(x = sexo_factor, fill = fct_rev(bs2_factor), weight = fe_cut)) +
   geom_bar(position = "fill", width = 0.6) +
@@ -194,20 +256,23 @@ enut_limpio_cat %>%
   theme(legend.position = "bottom")
 ```
 
+<img src="/example/12-practico_files/figure-html/cat-cat-vis-1.png" width="672" />
+
 
 ### 3.3 Actividad 2
 **Pregunta:** ¿Existe una relación entre la **Condición de Actividad (`cae`)** y la **Participación en Trabajo de Cuidados no Remunerado (`p_tcnr_dt`)**? Crea una tabla de contingencia ponderada con porcentajes de fila e interprétala.
 
-```{r, eval=FALSE, echo=TRUE}
-# Escribe aquí tu código para la tabla de contingencia
 
+``` r
+# Escribe aquí tu código para la tabla de contingencia
 ```
 
 ## 4. Cuantitativa (X) ➞ Cuantitativa (Y): Edad y Trabajo Doméstico
 
 ### 4.1 Análisis Visual
 **Pregunta:** ¿Cómo se relaciona la `edad` con el tiempo dedicado al trabajo doméstico (`t_tdnr_dt`)?
-```{r quant-quant-vis}
+
+``` r
 ggplot(enut_trabajo, aes(x = edad, y = t_tdnr_dt)) +
   geom_point(alpha = 0.05, color = "#008080", position = "jitter") +
   geom_smooth(color = "red", se = FALSE, method = "loess") +
@@ -218,22 +283,43 @@ ggplot(enut_trabajo, aes(x = edad, y = t_tdnr_dt)) +
   theme_minimal()
 ```
 
+```
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+```
+## Warning: Removed 1090 rows containing non-finite outside the scale range
+## (`stat_smooth()`).
+```
+
+```
+## Warning: Removed 1090 rows containing missing values or values outside the scale range
+## (`geom_point()`).
+```
+
+<img src="/example/12-practico_files/figure-html/quant-quant-vis-1.png" width="672" />
+
 **Interpretación:** La relación es **curvilínea**. El tiempo aumenta hasta la adultez media y luego disminuye.
 
 ### 4.2 Análisis Numérico
 Calculamos la correlación para cuantificar la parte *lineal* de la relación.
-```{r quant-quant-num}
+
+``` r
 cor(enut_trabajo$edad, enut_trabajo$t_tdnr_dt, use = "pairwise.complete.obs")
 ```
 
-**Interpretación:** La correlación es `r round(cor(enut_trabajo$edad, enut_trabajo$t_tdnr_dt, use = "pairwise.complete.obs"), 2)`, un valor muy bajo que confirma que la relación **no es lineal**, como ya habíamos visto en el gráfico.
+```
+## [1] 0.204062
+```
+
+**Interpretación:** La correlación es 0.2, un valor muy bajo que confirma que la relación **no es lineal**, como ya habíamos visto en el gráfico.
 
 ### 4.3 Actividad 3
 **Pregunta:** Explora la relación entre las **horas de trabajo remunerado (`t_to_dt`)** y las **horas de trabajo doméstico (`t_tdnr_dt`)**. ¿Esperarías una relación positiva, negativa o nula? Crea un gráfico de dispersión y calcula la correlación para comprobar tu hipótesis.
 
-```{r, eval=FALSE, echo=TRUE}
-# Escribe aquí tu código para el gráfico de dispersión y la correlación
 
+``` r
+# Escribe aquí tu código para el gráfico de dispersión y la correlación
 ```
 
 ## 5. Actividad de Desafío Final (Integradora)
@@ -245,7 +331,7 @@ cor(enut_trabajo$edad, enut_trabajo$t_tdnr_dt, use = "pairwise.complete.obs")
 3.  **Calcula la correlación** entre estas dos variables para este subgrupo.
 4.  Escribe un párrafo de **interpretación final**: ¿Qué te dicen el gráfico y la correlación sobre la hipótesis de la 'doble jornada' para las mujeres ocupadas en Chile?
 
-```{r, eval=FALSE, echo=TRUE}
-# Escribe aquí tu código para el desafío final
 
+``` r
+# Escribe aquí tu código para el desafío final
 ```

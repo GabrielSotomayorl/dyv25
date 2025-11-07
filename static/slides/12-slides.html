@@ -6,8 +6,8 @@
 <script src="12-slides_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="12-slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="12-slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="12-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.25">
+<link href="12-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Gabriel Sotomayor">
   <meta name="dcterms.date" content="2025-11-10">
@@ -30,7 +30,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="12-slides_files/libs/revealjs/dist/theme/quarto-aff1f7264a615286def6c13f54e8bcad.css">
+  <link rel="stylesheet" href="12-slides_files/libs/revealjs/dist/theme/quarto-e1cbb759e4a46ec0f203c77955f7056a.css">
   <link href="12-slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="12-slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="12-slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -123,7 +123,9 @@
     }
   </style>
   <script src="12-slides_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
   <link href="12-slides_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
   <style>
   #title-slide .title {
     font-size: 1.8em;
@@ -165,7 +167,12 @@ Gabriel Sotomayor
 <section id="el-salto-al-análisis-bivariado" class="slide level2 smaller" data-background-color="white">
 <h2>El Salto al Análisis Bivariado</h2>
 <p>Hasta ahora, en la Unidad 4, nos hemos enfocado en el <strong>análisis univariado</strong>: describir cada variable por separado (su forma, centro y dispersión).</p>
-<p>Sin embargo, el corazón del análisis sociológico reside en entender <strong>relaciones</strong>. - ¿El <strong>género</strong> afecta la <strong>carga de trabajo doméstico</strong>? - ¿El <strong>nivel socioeconómico</strong> se relaciona con la <strong>percepción sobre el uso del tiempo</strong>?</p>
+<p>Sin embargo, el corazón del análisis sociológico reside en entender <strong>relaciones</strong>.</p>
+<ul>
+<li>¿Cómo se relaciona la <strong>educación</strong> con el <strong>ingreso</strong>?</li>
+<li>¿El <strong>género</strong> afecta la <strong>carga de trabajo doméstico</strong>?</li>
+<li>¿La <strong>zona de residencia</strong> se asocia con la <strong>percepción de seguridad</strong>?</li>
+</ul>
 <p>Hoy comenzamos el <strong>análisis bivariado</strong>: el estudio de la relación entre <strong>dos variables</strong> a la vez.</p>
 </section>
 <section id="variable-explicativa-y-variable-respuesta" class="slide level2 smaller" data-background-color="white">
@@ -175,10 +182,12 @@ Gabriel Sotomayor
 <li><strong>Variable Explicativa (o Independiente, X):</strong>
 <ul>
 <li>Es la variable que creemos que <strong>influye, explica o predice</strong> un cambio en la otra.</li>
+<li>En un modelo causal, es la “causa”.</li>
 </ul></li>
 <li><strong>Variable Respuesta (o Dependiente, Y):</strong>
 <ul>
 <li>Es la variable que mide el <strong>resultado</strong> o el fenómeno que queremos explicar.</li>
+<li>En un modelo causal, es el “efecto”.</li>
 </ul></li>
 </ul>
 <p><strong>Ejemplo:</strong> En la pregunta “<em>¿Cómo afecta el <strong>sexo</strong> (X) a la cantidad de <strong>horas de trabajo no remunerado</strong> (Y)?</em>”, el sexo es la variable explicativa y las horas de trabajo son la variable respuesta.</p>
@@ -208,13 +217,17 @@ Gabriel Sotomayor
 <section id="caso-1-categórica-x-cuantitativa-y" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 1: Categórica (X) ➞ Cuantitativa (Y)</h2>
 <ul>
-<li><p><strong>Pregunta Clave:</strong> ¿Existen diferencias en el promedio (o la distribución) de una variable cuantitativa entre distintos grupos?</p></li>
-<li><p><strong>Ejemplo:</strong> <em>¿Dedican hombres y mujeres, en promedio, la misma cantidad de tiempo al trabajo doméstico no remunerado (<code>t_tnr_dt</code>)?</em></p></li>
-<li><p><strong>Herramienta de Análisis Numérico:</strong></p>
+<li><strong>Pregunta Clave:</strong> ¿Existen diferencias en el promedio (o la distribución) de una variable cuantitativa entre distintos grupos?
 <ul>
-<li><strong>Comparación de estadísticos descriptivos por grupo</strong> (medias, medianas, etc.).</li>
+<li><strong>Ejemplo:</strong> <em>¿Dedican hombres y mujeres, en promedio, la misma cantidad de tiempo al trabajo doméstico no remunerado (<code>t_tnr_dt</code>)?</em></li>
+<li><em>¿El ingreso promedio (<code>Y</code>) difiere entre hombres y mujeres (<code>X</code>)?</em></li>
+<li><em>¿Los años de escolaridad (<code>Y</code>) varían según la región de residencia (<code>X</code>)?</em></li>
 </ul></li>
-<li><p><strong>Herramienta de Análisis Visual:</strong></p>
+<li><strong>Herramienta de Análisis Numérico:</strong>
+<ul>
+<li><strong>Comparación de estadísticos descriptivos por grupo</strong> (medias, medianas, desviaciones estándar, etc.)</li>
+</ul></li>
+<li><strong>Herramienta de Análisis Visual:</strong>
 <ul>
 <li><strong>Boxplots comparativos</strong> o gráficos de densidad por grupo.</li>
 </ul></li>
@@ -225,7 +238,7 @@ Gabriel Sotomayor
 <p>Analizamos las horas diarias de trabajo no remunerado (<code>t_tnr_dt</code>) por <code>sexo</code>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<table class="table table-striped caption-top" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-striped caption-top" data-quarto-postprocess="true" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>Horas diarias de trabajo no remunerado por sexo (ENUT 2023)</caption>
 <thead>
 <tr class="header">
@@ -252,19 +265,27 @@ Gabriel Sotomayor
 </table>
 </div>
 </div>
-<p><strong>Interpretación:</strong> La tabla muestra una brecha considerable. En promedio, las mujeres dedican más del doble de horas diarias al trabajo no remunerado que los hombres (Media de 5 vs.&nbsp;2.9).</p>
+<p><strong>Interpretación:</strong> La tabla revela una marcada brecha de género. En promedio, las mujeres dedican <strong>4.96 horas</strong> diarias al trabajo no remunerado, casi 2.1 horas más que los hombres (2.86 horas). La mediana confirma esta tendencia: el 50% de las mujeres dedica 4.11 horas o más, mientras que el 50% de los hombres dedica 2.10 horas o más. Además, la mayor desviación estándar en las mujeres (3.90) sugiere que existe más variabilidad en sus cargas de trabajo no remunerado que entre los hombres.</p>
 </section>
 <section id="caso-1-gráfico-de-boxplots-comparativos" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 1: Gráfico de Boxplots Comparativos</h2>
 <p>La visualización confirma la brecha observada en la tabla.</p>
 
-<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p><strong>Interpretación:</strong> El boxplot muestra que no solo la mediana de las mujeres es más alta, sino que toda la distribución está desplazada hacia arriba. El 75% de las mujeres (límite superior de la caja) dedica más tiempo que casi el 75% de los hombres.</p>
+<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p><strong>Interpretación:</strong> La visualización confirma la magnitud de la brecha. El boxplot de las mujeres está completamente por encima del de los hombres, indicando una diferencia estructural. La mediana de las mujeres (la línea central de su caja) es superior al tercer cuartil de los hombres (el borde superior de su caja). Esto implica que <strong>más del 50% de las mujeres dedica más tiempo al trabajo no remunerado que el 75% de los hombres</strong>.</p>
 </section>
+<section id="caso-1-gráfico-de-densidad-comparativo" class="slide level2 smaller" data-background-color="white">
+<h2>Caso 1: Gráfico de Densidad Comparativo</h2>
+
+<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="caso-2-categórica-x-categórica-y" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 2: Categórica (X) ➞ Categórica (Y)</h2>
 <ul>
-<li><p><strong>Pregunta Clave:</strong> ¿La probabilidad de pertenecer a una categoría de Y depende de la categoría de X a la que se pertenece?</p></li>
-<li><p><strong>Ejemplo:</strong> <em>¿La percepción de tener suficiente tiempo para el descanso (<code>bs2</code>) se relaciona con el sexo de la persona?</em></p></li>
+<li><p><strong>Pregunta Clave:</strong> ¿La probabilidad de pertenecer a una categoría de Y depende de la categoría de X a la que se pertenece?</p>
+<ul>
+<li><strong>Ejemplo:</strong> <em>¿La <strong>satisfacción con el reparto de tareas domésticas</strong> (<code>bs2</code>) se relaciona con el sexo de la persona?</em></li>
+<li><em>¿La situación de pobreza (<code>Y</code>) se asocia con el nivel educacional (<code>X</code>)?</em></li>
+<li><em>¿La afiliación política (<code>Y</code>) varía según el grupo religioso (<code>X</code>)?</em></li>
+</ul></li>
 <li><p><strong>Herramienta de Análisis Numérico:</strong></p>
 <ul>
 <li><strong>Tablas de contingencia</strong> (tablas cruzadas) con <strong>porcentajes condicionales</strong>.</li>
@@ -277,11 +298,11 @@ Gabriel Sotomayor
 </section>
 <section id="caso-2-tabla-de-contingencia" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 2: Tabla de Contingencia</h2>
-<p>Analizamos la relación entre <code>sexo</code> (X) y <code>bs2</code> (percepción de tiempo para el descanso, Y).</p>
+<p>Analizamos la relación entre <code>sexo</code> (X) y <code>atisfacción con el reparto de tareas domésticas</code> (Y).</p>
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-striped caption-top" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>% de respuesta sobre tiempo para el descanso, por sexo</caption>
+<table class="table table-striped caption-top" data-quarto-postprocess="true" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>% de respuesta sobre satisfacción con el reparto de tareas, por sexo</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">bs2_factor</th>
@@ -319,23 +340,27 @@ Gabriel Sotomayor
 </table>
 </div>
 </div>
-<p><strong>Interpretación:</strong> La tabla muestra que un porcentaje mayor de hombres (24.5%) que de mujeres (19.2%) siente que “Siempre” tiene tiempo suficiente para el descanso.</p>
+<p><strong>Interpretación:</strong> La tabla muestra que un porcentaje mayor de hombres (<strong>28.3%</strong>) que de mujeres (<strong>21.2%</strong>) siente que está “Totalmente satisfecho(a)” con el reparto de tareas. Inversamente, las mujeres reportan más insatisfacción (14.8% sumando “Insatisfecha” y “Totalmente Insatisfecha”, vs.&nbsp;6.2% en hombres).</p>
 </section>
 <section id="caso-2-gráfico-de-barras-apiladas-al-100" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 2: Gráfico de Barras Apiladas al 100%</h2>
 <p>Este gráfico visualiza los porcentajes de la tabla anterior.</p>
 
-<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-4-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-5-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="caso-3-cuantitativa-x-cuantitativa-y" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 3: Cuantitativa (X) ➞ Cuantitativa (Y)</h2>
 <ul>
-<li><p><strong>Pregunta Clave:</strong> A medida que X aumenta, ¿Y tiende a aumentar, disminuir o no cambia?</p></li>
-<li><p><strong>Ejemplo:</strong> <em>A mayor <code>edad</code> (X), ¿cómo cambia el tiempo dedicado al trabajo doméstico no remunerado (<code>t_tnr_dt</code>, Y)?</em></p></li>
-<li><p><strong>Herramienta de Análisis Numérico:</strong></p>
+<li><strong>Pregunta Clave:</strong> A medida que X aumenta, ¿Y tiende a aumentar, disminuir o no cambia?
+<ul>
+<li><strong>Ejemplo:</strong> <em>A mayor <code>edad</code> (X), ¿cómo cambia el tiempo dedicado al trabajo doméstico no remunerado (<code>t_tnr_dt</code>, Y)?</em></li>
+<li><em>A mayor <strong>edad</strong> (<code>X</code>), ¿mayor o menor <strong>ingreso</strong> (<code>Y</code>)?</em></li>
+<li><em>A más <strong>años de escolaridad</strong> (<code>X</code>), ¿mayor <strong>prestigio ocupacional</strong> (<code>Y</code>)?</em></li>
+</ul></li>
+<li><strong>Herramienta de Análisis Numérico:</strong>
 <ul>
 <li><strong>Coeficiente de correlación</strong>.</li>
 </ul></li>
-<li><p><strong>Herramienta de Análisis Visual:</strong></p>
+<li><strong>Herramienta de Análisis Visual:</strong>
 <ul>
 <li><strong>Gráfico de dispersión (Scatterplot)</strong>.</li>
 </ul></li>
@@ -343,11 +368,11 @@ Gabriel Sotomayor
 </section>
 <section id="caso-3-tabla-de-correlación" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 3: Tabla de Correlación</h2>
-<p>Calculamos la correlación entre <code>edad</code> y <code>t_tnr_dt</code> para cuantificar la relación lineal.</p>
+<p>Calculamos la correlación entre <code>edad</code> y <code>trabajo doméstico no remunerado</code> para cuantificar la relación lineal. En una correlación 1 nos indíca asociación lineal perfecta y 0 auscencia de asociación lineal.</p>
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-striped caption-top" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>Correlación (no ponderada) entre Edad y Horas de Trabajo No Remunerado</caption>
+<table class="table table-striped caption-top" data-quarto-postprocess="true" style="margin-left: auto; margin-right: auto;">
+<caption>Correlación</caption>
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">Correlacion</th>
@@ -361,13 +386,13 @@ Gabriel Sotomayor
 </table>
 </div>
 </div>
-<p><strong>Interpretación:</strong> La correlación es 0.1, un valor extremadamente cercano a cero. Esto confirma numéricamente que <strong>no existe una relación <em>lineal</em></strong> entre la edad y el tiempo dedicado al trabajo no remunerado. Pero, como vimos en el gráfico, ¿significa esto que no hay ninguna relación en absoluto?</p>
+<p><strong>Interpretación:</strong> El coeficiente de correlación de Pearson es de 0.104. Al ser un valor positivo pero muy cercano a cero, indica que existe una <strong>asociación lineal prácticamente nula y muy débil</strong> entre la edad y las horas de trabajo no remunerado. Si solo miráramos este número, concluiríamos que la edad no es un factor relevante para predecir la carga de trabajo doméstico.</p>
 </section>
 <section id="caso-3-gráfico-de-dispersión" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 3: Gráfico de Dispersión</h2>
 <p>El gráfico de dispersión nos cuenta una historia más compleja.</p>
 
-<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-6-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p><strong>Interpretación:</strong> ¡La relación no es lineal, sino <strong>curvilínea</strong>! El tiempo de trabajo no remunerado aumenta hasta la mediana edad (aprox. 40-50 años) y luego comienza a disminuir. Esto demuestra por qué <strong>siempre debemos visualizar los datos</strong>: la correlación por sí sola nos habría hecho concluir erróneamente que no había una relación importante.</p>
+<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-7-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p><strong>Interpretación:</strong> la relación entre edad y trabajo no remunerado no es lineal, sino <strong>curvilínea</strong>, con forma de U invertida. La carga de trabajo no remunerado tiende a aumentar desde la juventud, alcanza su punto máximo en la adultez media (aproximadamente entre los 40 y 50 años, coincidiendo con la crianza y consolidación del hogar) y luego disminuye gradualmente en la vejez.</p>
 </section>
 <section id="el-punto-de-referencia-independencia-estadística" class="slide level2 smaller" data-background-color="white">
 <h2>El Punto de Referencia: Independencia Estadística</h2>
@@ -390,7 +415,7 @@ Gabriel Sotomayor
 </ul>
 <p><strong>En el práctico de hoy:</strong></p>
 <ul>
-<li>Aplicarán estas herramientas en R para explorar los tres tipos de relaciones utilizando la <strong>Encuesta CASEN 2022</strong>.</li>
+<li>Aplicarán estas herramientas en R para explorar los tres tipos de relaciones utilizando la <strong>ENUT 2023</strong>.</li>
 </ul>
 <p><strong>Adelanto de la próxima clase:</strong></p>
 <ul>
@@ -588,7 +613,7 @@ Gabriel Sotomayor
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -615,42 +640,80 @@ Gabriel Sotomayor
       });
     </script>
     
+
     <script>
+
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
       // slide changes (different for each slide format).
+
       (function () {
+
         // dispatch for htmlwidgets
+
         function fireSlideEnter() {
+
           const event = window.document.createEvent("Event");
+
           event.initEvent("slideenter", true, true);
+
           window.document.dispatchEvent(event);
+
         }
+
+    
 
         function fireSlideChanged(previousSlide, currentSlide) {
+
           fireSlideEnter();
 
+    
+
           // dispatch for shiny
+
           if (window.jQuery) {
+
             if (previousSlide) {
+
               window.jQuery(previousSlide).trigger("hidden");
+
             }
+
             if (currentSlide) {
+
               window.jQuery(currentSlide).trigger("shown");
+
             }
+
           }
+
         }
+
+    
 
         // hookup for slidy
+
         if (window.w3c_slidy) {
+
           window.w3c_slidy.add_observer(function (slide_num) {
+
             // slide_num starts at position 1
+
             fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
           });
+
         }
 
+    
+
       })();
+
     </script>
+
+    
 
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -700,14 +763,13 @@ Gabriel Sotomayor
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-          const outerScaffold = trigger.parentElement.cloneNode(true);
-          const codeEl = outerScaffold.querySelector('code');
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
             }
-          }
-          return codeEl.innerText;
+            return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

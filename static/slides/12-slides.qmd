@@ -36,8 +36,10 @@ title_slide_background: "#008080"
 Hasta ahora, en la Unidad 4, nos hemos enfocado en el **análisis univariado**: describir cada variable por separado (su forma, centro y dispersión).
 
 Sin embargo, el corazón del análisis sociológico reside en entender **relaciones**.
+
+-   ¿Cómo se relaciona la **educación** con el **ingreso**?
 -   ¿El **género** afecta la **carga de trabajo doméstico**?
--   ¿El **nivel socioeconómico** se relaciona con la **percepción sobre el uso del tiempo**?
+-   ¿La **zona de residencia** se asocia con la **percepción de seguridad**?
 
 Hoy comenzamos el **análisis bivariado**: el estudio de la relación entre **dos variables** a la vez.
 
@@ -47,9 +49,11 @@ En el análisis bivariado, asignamos roles a nuestras variables para estructurar
 
 -   **Variable Explicativa (o Independiente, X):**
     -   Es la variable que creemos que **influye, explica o predice** un cambio en la otra.
+    -   En un modelo causal, es la "causa".
 
 -   **Variable Respuesta (o Dependiente, Y):**
     -   Es la variable que mide el **resultado** o el fenómeno que queremos explicar.
+    -   En un modelo causal, es el "efecto".
 
 **Ejemplo:** En la pregunta "*¿Cómo afecta el **sexo** (X) a la cantidad de **horas de trabajo no remunerado** (Y)?*", el sexo es la variable explicativa y las horas de trabajo son la variable respuesta.
 
@@ -82,10 +86,12 @@ Esto nos da tres casos principales, cada uno con su propio set de herramientas:
 ## Caso 1: Categórica (X) ➞ Cuantitativa (Y) {.smaller background-color="white"}
 
 -   **Pregunta Clave:** ¿Existen diferencias en el promedio (o la distribución) de una variable cuantitativa entre distintos grupos?
--   **Ejemplo:** *¿Dedican hombres y mujeres, en promedio, la misma cantidad de tiempo al trabajo doméstico no remunerado (`t_tnr_dt`)?*
+    -   **Ejemplo:** *¿Dedican hombres y mujeres, en promedio, la misma cantidad de tiempo al trabajo doméstico no remunerado (`t_tnr_dt`)?*
+    -   *¿El ingreso promedio (`Y`) difiere entre hombres y mujeres (`X`)?*
+    -   *¿Los años de escolaridad (`Y`) varían según la región de residencia (`X`)?*
 
 -   **Herramienta de Análisis Numérico:**
-    -   **Comparación de estadísticos descriptivos por grupo** (medias, medianas, etc.).
+    -   **Comparación de estadísticos descriptivos por grupo** (medias, medianas, desviaciones estándar, etc.)
 
 -   **Herramienta de Análisis Visual:**
     -   **Boxplots comparativos** o gráficos de densidad por grupo.
@@ -127,7 +133,8 @@ tabla_caso1 <- enut_trabajo %>%
 kable(tabla_caso1, digits = 2, caption = "Horas diarias de trabajo no remunerado por sexo (ENUT 2023)") %>%
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
-**Interpretación:** La tabla muestra una brecha considerable. En promedio, las mujeres dedican más del doble de horas diarias al trabajo no remunerado que los hombres (Media de `r round(tabla_caso1$Media[2], 1)` vs. `r round(tabla_caso1$Media[1], 1)`).
+
+**Interpretación:** La tabla revela una marcada brecha de género. En promedio, las mujeres dedican **4.96 horas** diarias al trabajo no remunerado, casi 2.1 horas más que los hombres (2.86 horas). La mediana confirma esta tendencia: el 50% de las mujeres dedica 4.11 horas o más, mientras que el 50% de los hombres dedica 2.10 horas o más. Además, la mayor desviación estándar en las mujeres (3.90) sugiere que existe más variabilidad en sus cargas de trabajo no remunerado que entre los hombres.
 
 ## Caso 1: Gráfico de Boxplots Comparativos {.smaller background-color="white"}
 
@@ -144,37 +151,75 @@ ggplot(enut_trabajo, aes(x = sexo_factor, y = t_tnr_dt, fill = sexo_factor)) +
   theme_minimal(base_size = 14) + 
   theme(legend.position = "none")
 ```
-**Interpretación:** El boxplot muestra que no solo la mediana de las mujeres es más alta, sino que toda la distribución está desplazada hacia arriba. El 75% de las mujeres (límite superior de la caja) dedica más tiempo que casi el 75% de los hombres.
+
+**Interpretación:** La visualización confirma la magnitud de la brecha. El boxplot de las mujeres está completamente por encima del de los hombres, indicando una diferencia estructural. La mediana de las mujeres (la línea central de su caja) es superior al tercer cuartil de los hombres (el borde superior de su caja). Esto implica que **más del 50% de las mujeres dedica más tiempo al trabajo no remunerado que el 75% de los hombres**.
+
+## Caso 1: Gráfico de Densidad Comparativo {.smaller background-color="white"}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=5}
+
+ggplot(enut_trabajo, aes(x = t_tnr_dt, fill = sexo_factor, color = sexo_factor)) +
+  # Usamos geom_density() y definimos la transparencia (alpha) fuera de aes()
+  geom_density(alpha = 0.6) +
+  
+  # Aplicamos la paleta de colores Viridis (versión discreta, '_d')
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  
+  labs(
+    title = "Distribución de Horas de Trabajo No Remunerado por Sexo",
+    x = "Horas diarias", # El eje X es ahora la variable continua
+    y = "Densidad",      # El eje Y es la densidad de probabilidad
+    fill = "Sexo",       # Etiqueta para la leyenda (relleno)
+    color = "Sexo"       # Etiqueta para la leyenda (borde)
+  ) +
+  theme_minimal(base_size = 14) +
+  
+  # Nos aseguramos de que la leyenda sea visible (el original la ocultaba)
+  theme(legend.position = "bottom") 
+```
+
 
 ## Caso 2: Categórica (X) ➞ Categórica (Y) {.smaller background-color="white"}
 
--   **Pregunta Clave:** ¿La probabilidad de pertenecer a una categoría de Y depende de la categoría de X a la que se pertenece?
--   **Ejemplo:** *¿La percepción de tener suficiente tiempo para el descanso (`bs2`) se relaciona con el sexo de la persona?*
+  - **Pregunta Clave:** ¿La probabilidad de pertenecer a una categoría de Y depende de la categoría de X a la que se pertenece?
 
--   **Herramienta de Análisis Numérico:**
-    -   **Tablas de contingencia** (tablas cruzadas) con **porcentajes condicionales**.
+      - **Ejemplo:** *¿La **satisfacción con el reparto de tareas domésticas** (`bs2`) se relaciona con el sexo de la persona?*
+      - *¿La situación de pobreza (`Y`) se asocia con el nivel educacional (`X`)?*
+      - *¿La afiliación política (`Y`) varía según el grupo religioso (`X`)?*
 
--   **Herramienta de Análisis Visual:**
-    -   **Gráficos de barras apiladas al 100%** (`position="fill"`).
+  - **Herramienta de Análisis Numérico:**
+
+      - **Tablas de contingencia** (tablas cruzadas) con **porcentajes condicionales**.
+
+  - **Herramienta de Análisis Visual:**
+
+      - **Gráficos de barras apiladas al 100%** (`position="fill"`).
+
+-----
 
 ## Caso 2: Tabla de Contingencia {.smaller background-color="white"}
 
-Analizamos la relación entre `sexo` (X) y `bs2` (percepción de tiempo para el descanso, Y).
+Analizamos la relación entre `sexo` (X) y `atisfacción con el reparto de tareas domésticas` (Y).
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # (Asumiendo que 'enut_trabajo' está disponible)
 enut_trabajo %>%
-  mutate(bs2_factor = as_factor(bs2)) %>%
-  filter(!is.na(sexo_factor), !is.na(bs2_factor), !bs2_factor %in% c("No Aplica", "Valor Perdido")) %>%
-  count(sexo_factor, bs2_factor, wt = fe_cut) %>%
-  group_by(sexo_factor) %>%
-  mutate(Porcentaje = n / sum(n) * 100) %>%
-  select(-n) %>%
-  pivot_wider(names_from = sexo_factor, values_from = Porcentaje) %>%
-  kable(digits = 1, caption = "% de respuesta sobre tiempo para el descanso, por sexo") %>%
-  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+ mutate(bs2_factor = as_factor(bs2)) %>%
+ filter(!is.na(sexo_factor), !is.na(bs2_factor), !bs2_factor %in% c("No Aplica", "Valor Perdido")) %>%
+ count(sexo_factor, bs2_factor, wt = fe_cut) %>%
+ group_by(sexo_factor) %>%
+ mutate(Porcentaje = n / sum(n) * 100) %>%
+ select(-n) %>%
+ pivot_wider(names_from = sexo_factor, values_from = Porcentaje) %>%
+  # --- CORRECCIÓN: Se actualiza el caption de la tabla ---
+ kable(digits = 1, caption = "% de respuesta sobre satisfacción con el reparto de tareas, por sexo") %>%
+ kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
-**Interpretación:** La tabla muestra que un porcentaje mayor de hombres (`r round(24.5, 1)`%) que de mujeres (`r round(19.2, 1)`%) siente que "Siempre" tiene tiempo suficiente para el descanso.
+
+**Interpretación:** La tabla muestra que un porcentaje mayor de hombres (**28.3%**) que de mujeres (**21.2%**) siente que está "Totalmente satisfecho(a)" con el reparto de tareas. Inversamente, las mujeres reportan más insatisfacción (14.8% sumando "Insatisfecha" y "Totalmente Insatisfecha", vs. 6.2% en hombres).
+
+-----
 
 ## Caso 2: Gráfico de Barras Apiladas al 100% {.smaller background-color="white"}
 
@@ -182,24 +227,27 @@ Este gráfico visualiza los porcentajes de la tabla anterior.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=5}
 enut_trabajo %>%
-  mutate(bs2_factor = as_factor(bs2)) %>%
-  filter(!is.na(sexo_factor), !is.na(bs2_factor), !bs2_factor %in% c("No Aplica", "Valor Perdido")) %>%
-  ggplot(aes(x = sexo_factor, fill = fct_rev(bs2_factor), weight = fe_cut)) +
-  geom_bar(position = "fill", width = 0.6) +
-  scale_y_continuous(labels = scales::percent) +
-  scale_fill_viridis_d(option = "viridis", direction = -1) +
-  labs(
-    title = "Percepción de Tiempo para el Descanso por Sexo",
-    x = "Sexo", y = "Porcentaje de Respuestas", fill = "Frecuencia de Tiempo para Descansar"
-  ) +
-  theme_minimal(base_size = 14) +
-  theme(legend.position = "bottom")
+ mutate(bs2_factor = as_factor(bs2)) %>%
+ filter(!is.na(sexo_factor), !is.na(bs2_factor), !bs2_factor %in% c("No Aplica", "Valor Perdido")) %>%
+ ggplot(aes(x = sexo_factor, fill = fct_rev(bs2_factor), weight = fe_cut)) +
+ geom_bar(position = "fill", width = 0.6) +
+ scale_y_continuous(labels = scales::percent) +
+ scale_fill_viridis_d(option = "viridis", direction = -1) +
+  # --- CORRECCIÓN: Se actualizan los labels del gráfico ---
+ labs(
+  title = "Satisfacción con el Reparto de Tareas Domésticas por Sexo",
+   x = "Sexo", y = "Porcentaje de Respuestas", fill = "Nivel de Satisfacción"
+ ) +
+ theme_minimal(base_size = 14) +
+ theme(legend.position = "bottom")
 ```
 
 ## Caso 3: Cuantitativa (X) ➞ Cuantitativa (Y) {.smaller background-color="white"}
 
 -   **Pregunta Clave:** A medida que X aumenta, ¿Y tiende a aumentar, disminuir o no cambia?
--   **Ejemplo:** *A mayor `edad` (X), ¿cómo cambia el tiempo dedicado al trabajo doméstico no remunerado (`t_tnr_dt`, Y)?*
+    -   **Ejemplo:** *A mayor `edad` (X), ¿cómo cambia el tiempo dedicado al trabajo doméstico no remunerado (`t_tnr_dt`, Y)?*
+    -   *A mayor **edad** (`X`), ¿mayor o menor **ingreso** (`Y`)?*
+    -   *A más **años de escolaridad** (`X`), ¿mayor **prestigio ocupacional** (`Y`)?*
 
 -   **Herramienta de Análisis Numérico:**
     -   **Coeficiente de correlación**.
@@ -210,7 +258,7 @@ enut_trabajo %>%
 
 ## Caso 3: Tabla de Correlación {.smaller background-color="white"}
 
-Calculamos la correlación entre `edad` y `t_tnr_dt` para cuantificar la relación lineal.
+Calculamos la correlación entre `edad` y `trabajo doméstico no remunerado` para cuantificar la relación lineal. En una correlación 1 nos indíca asociación lineal perfecta y 0 auscencia de asociación lineal. 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Carga de paquetes necesarios para la presentación
@@ -227,10 +275,11 @@ cor_resultado <- enut_trabajo %>%
     Correlacion = cor(edad, t_tnr_dt, use = "pairwise.complete.obs")
   )
 
-kable(cor_resultado, digits = 3, caption = "Correlación (no ponderada) entre Edad y Horas de Trabajo No Remunerado") %>%
-  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+kable(cor_resultado, digits = 3, caption = "Correlación") %>%
+  kable_styling(bootstrap_options = "striped", full_width = T)
 ```
-**Interpretación:** La correlación es `r round(cor_resultado$Correlacion, 2)`, un valor extremadamente cercano a cero. Esto confirma numéricamente que **no existe una relación *lineal*** entre la edad y el tiempo dedicado al trabajo no remunerado. Pero, como vimos en el gráfico, ¿significa esto que no hay ninguna relación en absoluto?
+
+**Interpretación:** El coeficiente de correlación de Pearson es de 0.104. Al ser un valor positivo pero muy cercano a cero, indica que existe una **asociación lineal prácticamente nula y muy débil** entre la edad y las horas de trabajo no remunerado. Si solo miráramos este número, concluiríamos que la edad no es un factor relevante para predecir la carga de trabajo doméstico.
 
 
 ## Caso 3: Gráfico de Dispersión {.smaller background-color="white"}
@@ -246,9 +295,10 @@ ggplot(enut_trabajo, aes(x = edad, y = t_tnr_dt)) +
     x = "Edad", 
     y = "Horas diarias de trabajo no remunerado"
   ) +
-  theme_minimal(base_size = 14)
+  theme_minimal(base_size = 14) +
+  ylim(0, 24)
 ```
-**Interpretación:** ¡La relación no es lineal, sino **curvilínea**! El tiempo de trabajo no remunerado aumenta hasta la mediana edad (aprox. 40-50 años) y luego comienza a disminuir. Esto demuestra por qué **siempre debemos visualizar los datos**: la correlación por sí sola nos habría hecho concluir erróneamente que no había una relación importante.
+**Interpretación:** la relación entre edad y trabajo no remunerado no es lineal, sino **curvilínea**, con forma de U invertida. La carga de trabajo no remunerado tiende a aumentar desde la juventud, alcanza su punto máximo en la adultez media (aproximadamente entre los 40 y 50 años, coincidiendo con la crianza y consolidación del hogar) y luego disminuye gradualmente en la vejez.
 
 ## El Punto de Referencia: Independencia Estadística {.smaller background-color="white"}
 
@@ -269,7 +319,7 @@ Antes de poder decir que dos variables están "relacionadas", necesitamos un pun
 
 **En el práctico de hoy:**
 
--   Aplicarán estas herramientas en R para explorar los tres tipos de relaciones utilizando la **Encuesta CASEN 2022**.
+-   Aplicarán estas herramientas en R para explorar los tres tipos de relaciones utilizando la **ENUT 2023**.
 
 **Adelanto de la próxima clase:**
 
