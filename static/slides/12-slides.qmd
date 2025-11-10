@@ -45,6 +45,8 @@ Hoy comenzamos el **análisis bivariado**: el estudio de la relación entre **do
 
 ## Variable Explicativa y Variable Respuesta {.smaller background-color="white"}
 
+
+::: {style="font-size: 0.8em; line-height: 1.2;"}
 En el análisis bivariado, asignamos roles a nuestras variables para estructurar nuestra pregunta de investigación.
 
 -   **Variable Explicativa (o Independiente, X):**
@@ -58,6 +60,7 @@ En el análisis bivariado, asignamos roles a nuestras variables para estructurar
 **Ejemplo:** En la pregunta "*¿Cómo afecta el **sexo** (X) a la cantidad de **horas de trabajo no remunerado** (Y)?*", el sexo es la variable explicativa y las horas de trabajo son la variable respuesta.
 
 **Convención:** Al graficar, la variable explicativa (X) siempre va en el **eje horizontal** y la variable respuesta (Y) en el **eje vertical**.
+:::
 
 ## El Problema Sociológico del Uso del Tiempo {.smaller background-color="white"}
 
@@ -134,7 +137,7 @@ kable(tabla_caso1, digits = 2, caption = "Horas diarias de trabajo no remunerado
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
-**Interpretación:** La tabla revela una marcada brecha de género. En promedio, las mujeres dedican **4.96 horas** diarias al trabajo no remunerado, casi 2.1 horas más que los hombres (2.86 horas). La mediana confirma esta tendencia: el 50% de las mujeres dedica 4.11 horas o más, mientras que el 50% de los hombres dedica 2.10 horas o más. Además, la mayor desviación estándar en las mujeres (3.90) sugiere que existe más variabilidad en sus cargas de trabajo no remunerado que entre los hombres.
+La tabla revela una marcada brecha de género. En promedio, las mujeres dedican **4.96 horas** diarias al trabajo no remunerado, casi 2.1 horas más que los hombres (2.86 horas). La mediana confirma esta tendencia: el 50% de las mujeres dedica 4.11 horas o más, mientras que el 50% de los hombres dedica 2.10 horas o más. Además, la mayor desviación estándar en las mujeres (3.90) sugiere que existe más variabilidad en sus cargas de trabajo no remunerado que entre los hombres.
 
 ## Caso 1: Gráfico de Boxplots Comparativos {.smaller background-color="white"}
 
@@ -152,7 +155,7 @@ ggplot(enut_trabajo, aes(x = sexo_factor, y = t_tnr_dt, fill = sexo_factor)) +
   theme(legend.position = "none")
 ```
 
-**Interpretación:** La visualización confirma la magnitud de la brecha. El boxplot de las mujeres está completamente por encima del de los hombres, indicando una diferencia estructural. La mediana de las mujeres (la línea central de su caja) es superior al tercer cuartil de los hombres (el borde superior de su caja). Esto implica que **más del 50% de las mujeres dedica más tiempo al trabajo no remunerado que el 75% de los hombres**.
+La visualización confirma la magnitud de la brecha. El boxplot de las mujeres está completamente por encima del de los hombres, indicando una diferencia estructural. La mediana de las mujeres (la línea central de su caja) es superior al tercer cuartil de los hombres (el borde superior de su caja). Esto implica que **más del 50% de las mujeres dedica más tiempo al trabajo no remunerado que el 75% de los hombres**.
 
 ## Caso 1: Gráfico de Densidad Comparativo {.smaller background-color="white"}
 
@@ -194,7 +197,7 @@ ggplot(enut_trabajo, aes(x = t_tnr_dt, fill = sexo_factor, color = sexo_factor))
 
   - **Herramienta de Análisis Visual:**
 
-      - **Gráficos de barras apiladas al 100%** (`position="fill"`).
+      - **Gráficos de barras apiladas**.
 
 -----
 
@@ -217,7 +220,7 @@ enut_trabajo %>%
  kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
-**Interpretación:** La tabla muestra que un porcentaje mayor de hombres (**28.3%**) que de mujeres (**21.2%**) siente que está "Totalmente satisfecho(a)" con el reparto de tareas. Inversamente, las mujeres reportan más insatisfacción (14.8% sumando "Insatisfecha" y "Totalmente Insatisfecha", vs. 6.2% en hombres).
+La tabla muestra que un porcentaje mayor de hombres (**28.3%**) que de mujeres (**21.2%**) siente que está "Totalmente satisfecho(a)" con el reparto de tareas. Inversamente, las mujeres reportan más insatisfacción (14.8% sumando "Insatisfecha" y "Totalmente Insatisfecha", vs. 6.2% en hombres).
 
 -----
 
@@ -258,7 +261,7 @@ enut_trabajo %>%
 
 ## Caso 3: Tabla de Correlación {.smaller background-color="white"}
 
-Calculamos la correlación entre `edad` y `trabajo doméstico no remunerado` para cuantificar la relación lineal. En una correlación 1 nos indíca asociación lineal perfecta y 0 auscencia de asociación lineal. 
+Calculamos la correlación entre `edad` y `trabajo no remunerado total` para cuantificar la relación lineal. En una correlación 1 nos indíca asociación lineal perfecta y 0 auscencia de asociación lineal. 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Carga de paquetes necesarios para la presentación
@@ -279,7 +282,7 @@ kable(cor_resultado, digits = 3, caption = "Correlación") %>%
   kable_styling(bootstrap_options = "striped", full_width = T)
 ```
 
-**Interpretación:** El coeficiente de correlación de Pearson es de 0.104. Al ser un valor positivo pero muy cercano a cero, indica que existe una **asociación lineal prácticamente nula y muy débil** entre la edad y las horas de trabajo no remunerado. Si solo miráramos este número, concluiríamos que la edad no es un factor relevante para predecir la carga de trabajo doméstico.
+El coeficiente de correlación de Pearson es de 0.104. Al ser un valor positivo pero muy cercano a cero, indica que existe una **asociación lineal muy débil** entre la edad y las horas de trabajo no remunerado. Si solo miráramos este número, concluiríamos que la edad no es un factor relevante para predecir la carga de trabajo doméstico.
 
 
 ## Caso 3: Gráfico de Dispersión {.smaller background-color="white"}
@@ -290,6 +293,7 @@ El gráfico de dispersión nos cuenta una historia más compleja.
 ggplot(enut_trabajo, aes(x = edad, y = t_tnr_dt)) +
   geom_point(alpha = 0.05, color="#008080", position = "jitter") +
   geom_smooth(color="red", se = FALSE, method = "loess") +
+  geom_smooth(color = "blue", se = FALSE, method = "lm") +
   labs(
     title = "Horas de Trabajo Doméstico No Remunerado según Edad",
     x = "Edad", 
@@ -298,7 +302,8 @@ ggplot(enut_trabajo, aes(x = edad, y = t_tnr_dt)) +
   theme_minimal(base_size = 14) +
   ylim(0, 24)
 ```
-**Interpretación:** la relación entre edad y trabajo no remunerado no es lineal, sino **curvilínea**, con forma de U invertida. La carga de trabajo no remunerado tiende a aumentar desde la juventud, alcanza su punto máximo en la adultez media (aproximadamente entre los 40 y 50 años, coincidiendo con la crianza y consolidación del hogar) y luego disminuye gradualmente en la vejez.
+
+La relación entre edad y trabajo no remunerado no es lineal, sino **curvilínea**, con forma de U invertida. La carga de trabajo no remunerado tiende a aumentar desde la juventud, alcanza su punto máximo en la adultez media (aproximadamente entre los 40 y 50 años, coincidiendo con la crianza y consolidación del hogar) y luego disminuye gradualmente en la vejez.
 
 ## El Punto de Referencia: Independencia Estadística {.smaller background-color="white"}
 

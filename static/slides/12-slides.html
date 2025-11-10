@@ -6,8 +6,8 @@
 <script src="12-slides_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="12-slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="12-slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="12-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="12-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
 
   <meta name="author" content="Gabriel Sotomayor">
   <meta name="dcterms.date" content="2025-11-10">
@@ -30,7 +30,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="12-slides_files/libs/revealjs/dist/theme/quarto-e1cbb759e4a46ec0f203c77955f7056a.css">
+  <link rel="stylesheet" href="12-slides_files/libs/revealjs/dist/theme/quarto-aff1f7264a615286def6c13f54e8bcad.css">
   <link href="12-slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="12-slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="12-slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -177,6 +177,7 @@ Gabriel Sotomayor
 </section>
 <section id="variable-explicativa-y-variable-respuesta" class="slide level2 smaller" data-background-color="white">
 <h2>Variable Explicativa y Variable Respuesta</h2>
+<div style="font-size: 0.8em; line-height: 1.2;">
 <p>En el análisis bivariado, asignamos roles a nuestras variables para estructurar nuestra pregunta de investigación.</p>
 <ul>
 <li><strong>Variable Explicativa (o Independiente, X):</strong>
@@ -192,6 +193,7 @@ Gabriel Sotomayor
 </ul>
 <p><strong>Ejemplo:</strong> En la pregunta “<em>¿Cómo afecta el <strong>sexo</strong> (X) a la cantidad de <strong>horas de trabajo no remunerado</strong> (Y)?</em>”, el sexo es la variable explicativa y las horas de trabajo son la variable respuesta.</p>
 <p><strong>Convención:</strong> Al graficar, la variable explicativa (X) siempre va en el <strong>eje horizontal</strong> y la variable respuesta (Y) en el <strong>eje vertical</strong>.</p>
+</div>
 </section>
 <section id="el-problema-sociológico-del-uso-del-tiempo" class="slide level2 smaller" data-background-color="white">
 <h2>El Problema Sociológico del Uso del Tiempo</h2>
@@ -238,7 +240,7 @@ Gabriel Sotomayor
 <p>Analizamos las horas diarias de trabajo no remunerado (<code>t_tnr_dt</code>) por <code>sexo</code>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<table class="table table-striped caption-top" data-quarto-postprocess="true" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-striped caption-top" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>Horas diarias de trabajo no remunerado por sexo (ENUT 2023)</caption>
 <thead>
 <tr class="header">
@@ -265,13 +267,13 @@ Gabriel Sotomayor
 </table>
 </div>
 </div>
-<p><strong>Interpretación:</strong> La tabla revela una marcada brecha de género. En promedio, las mujeres dedican <strong>4.96 horas</strong> diarias al trabajo no remunerado, casi 2.1 horas más que los hombres (2.86 horas). La mediana confirma esta tendencia: el 50% de las mujeres dedica 4.11 horas o más, mientras que el 50% de los hombres dedica 2.10 horas o más. Además, la mayor desviación estándar en las mujeres (3.90) sugiere que existe más variabilidad en sus cargas de trabajo no remunerado que entre los hombres.</p>
+<p>La tabla revela una marcada brecha de género. En promedio, las mujeres dedican <strong>4.96 horas</strong> diarias al trabajo no remunerado, casi 2.1 horas más que los hombres (2.86 horas). La mediana confirma esta tendencia: el 50% de las mujeres dedica 4.11 horas o más, mientras que el 50% de los hombres dedica 2.10 horas o más. Además, la mayor desviación estándar en las mujeres (3.90) sugiere que existe más variabilidad en sus cargas de trabajo no remunerado que entre los hombres.</p>
 </section>
 <section id="caso-1-gráfico-de-boxplots-comparativos" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 1: Gráfico de Boxplots Comparativos</h2>
 <p>La visualización confirma la brecha observada en la tabla.</p>
 
-<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p><strong>Interpretación:</strong> La visualización confirma la magnitud de la brecha. El boxplot de las mujeres está completamente por encima del de los hombres, indicando una diferencia estructural. La mediana de las mujeres (la línea central de su caja) es superior al tercer cuartil de los hombres (el borde superior de su caja). Esto implica que <strong>más del 50% de las mujeres dedica más tiempo al trabajo no remunerado que el 75% de los hombres</strong>.</p>
+<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p>La visualización confirma la magnitud de la brecha. El boxplot de las mujeres está completamente por encima del de los hombres, indicando una diferencia estructural. La mediana de las mujeres (la línea central de su caja) es superior al tercer cuartil de los hombres (el borde superior de su caja). Esto implica que <strong>más del 50% de las mujeres dedica más tiempo al trabajo no remunerado que el 75% de los hombres</strong>.</p>
 </section>
 <section id="caso-1-gráfico-de-densidad-comparativo" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 1: Gráfico de Densidad Comparativo</h2>
@@ -292,7 +294,7 @@ Gabriel Sotomayor
 </ul></li>
 <li><p><strong>Herramienta de Análisis Visual:</strong></p>
 <ul>
-<li><strong>Gráficos de barras apiladas al 100%</strong> (<code>position="fill"</code>).</li>
+<li><strong>Gráficos de barras apiladas</strong>.</li>
 </ul></li>
 </ul>
 </section>
@@ -301,7 +303,7 @@ Gabriel Sotomayor
 <p>Analizamos la relación entre <code>sexo</code> (X) y <code>atisfacción con el reparto de tareas domésticas</code> (Y).</p>
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-striped caption-top" data-quarto-postprocess="true" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-striped caption-top" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>% de respuesta sobre satisfacción con el reparto de tareas, por sexo</caption>
 <thead>
 <tr class="header">
@@ -340,7 +342,7 @@ Gabriel Sotomayor
 </table>
 </div>
 </div>
-<p><strong>Interpretación:</strong> La tabla muestra que un porcentaje mayor de hombres (<strong>28.3%</strong>) que de mujeres (<strong>21.2%</strong>) siente que está “Totalmente satisfecho(a)” con el reparto de tareas. Inversamente, las mujeres reportan más insatisfacción (14.8% sumando “Insatisfecha” y “Totalmente Insatisfecha”, vs.&nbsp;6.2% en hombres).</p>
+<p>La tabla muestra que un porcentaje mayor de hombres (<strong>28.3%</strong>) que de mujeres (<strong>21.2%</strong>) siente que está “Totalmente satisfecho(a)” con el reparto de tareas. Inversamente, las mujeres reportan más insatisfacción (14.8% sumando “Insatisfecha” y “Totalmente Insatisfecha”, vs.&nbsp;6.2% en hombres).</p>
 </section>
 <section id="caso-2-gráfico-de-barras-apiladas-al-100" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 2: Gráfico de Barras Apiladas al 100%</h2>
@@ -368,10 +370,10 @@ Gabriel Sotomayor
 </section>
 <section id="caso-3-tabla-de-correlación" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 3: Tabla de Correlación</h2>
-<p>Calculamos la correlación entre <code>edad</code> y <code>trabajo doméstico no remunerado</code> para cuantificar la relación lineal. En una correlación 1 nos indíca asociación lineal perfecta y 0 auscencia de asociación lineal.</p>
+<p>Calculamos la correlación entre <code>edad</code> y <code>trabajo no remunerado total</code> para cuantificar la relación lineal. En una correlación 1 nos indíca asociación lineal perfecta y 0 auscencia de asociación lineal.</p>
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-striped caption-top" data-quarto-postprocess="true" style="margin-left: auto; margin-right: auto;">
+<table class="table table-striped caption-top" style="margin-left: auto; margin-right: auto;">
 <caption>Correlación</caption>
 <thead>
 <tr class="header">
@@ -386,13 +388,13 @@ Gabriel Sotomayor
 </table>
 </div>
 </div>
-<p><strong>Interpretación:</strong> El coeficiente de correlación de Pearson es de 0.104. Al ser un valor positivo pero muy cercano a cero, indica que existe una <strong>asociación lineal prácticamente nula y muy débil</strong> entre la edad y las horas de trabajo no remunerado. Si solo miráramos este número, concluiríamos que la edad no es un factor relevante para predecir la carga de trabajo doméstico.</p>
+<p>El coeficiente de correlación de Pearson es de 0.104. Al ser un valor positivo pero muy cercano a cero, indica que existe una <strong>asociación lineal muy débil</strong> entre la edad y las horas de trabajo no remunerado. Si solo miráramos este número, concluiríamos que la edad no es un factor relevante para predecir la carga de trabajo doméstico.</p>
 </section>
 <section id="caso-3-gráfico-de-dispersión" class="slide level2 smaller" data-background-color="white">
 <h2>Caso 3: Gráfico de Dispersión</h2>
 <p>El gráfico de dispersión nos cuenta una historia más compleja.</p>
 
-<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-7-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p><strong>Interpretación:</strong> la relación entre edad y trabajo no remunerado no es lineal, sino <strong>curvilínea</strong>, con forma de U invertida. La carga de trabajo no remunerado tiende a aumentar desde la juventud, alcanza su punto máximo en la adultez media (aproximadamente entre los 40 y 50 años, coincidiendo con la crianza y consolidación del hogar) y luego disminuye gradualmente en la vejez.</p>
+<img data-src="12-slides_files/figure-revealjs/unnamed-chunk-7-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p>La relación entre edad y trabajo no remunerado no es lineal, sino <strong>curvilínea</strong>, con forma de U invertida. La carga de trabajo no remunerado tiende a aumentar desde la juventud, alcanza su punto máximo en la adultez media (aproximadamente entre los 40 y 50 años, coincidiendo con la crianza y consolidación del hogar) y luego disminuye gradualmente en la vejez.</p>
 </section>
 <section id="el-punto-de-referencia-independencia-estadística" class="slide level2 smaller" data-background-color="white">
 <h2>El Punto de Referencia: Independencia Estadística</h2>
@@ -613,7 +615,7 @@ Gabriel Sotomayor
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -763,13 +765,14 @@ Gabriel Sotomayor
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

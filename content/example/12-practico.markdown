@@ -45,6 +45,8 @@ library(tidyverse)
 library(haven)
 library(DescTools) # Para estadísticos ponderados
 library(rio)       # Para importar datos fácilmente
+library(knitr)
+library(kableExtra)
 ```
 
 
@@ -74,14 +76,14 @@ Preparamos nuestra base de trabajo.
 ``` r
 # Filtramos, limpiamos NAs y creamos variables factoriales
 enut_trabajo <- enut %>%
-  filter(tiempo == 1) %>% # Nos quedamos solo con quienes contestaron el diario de tiempo
+  filter(tiempo == 1) %>% # Nos quedamos solo con quienes contestaron el cuestionario de uso tiempo
   mutate(
     # Reemplazamos el código de 'no aplica' (96) por NA
     t_tnr_dt = na_if(t_tnr_dt, 96),
     t_tcnr_dt = na_if(t_tcnr_dt, 96),
     t_to_dt = na_if(t_to_dt, 96),
     t_tdnr_dt = na_if(t_tdnr_dt, 96),
-    # Creamos variables factoriales para análisis
+    # Creamos variables factor para análisis
     sexo_factor = as_factor(sexo),
     nivel_educ_factor = as_factor(nivel_educ),
     bs2_factor = as_factor(bs2)
@@ -100,8 +102,8 @@ enut_trabajo <- enut %>%
 tabla_caso1 <- enut_trabajo %>%
   group_by(sexo_factor) %>%
   summarise(
-    Media_TNR = weighted.mean(t_tnr_dt, w = fe_cut, na.rm = TRUE),
-    Mediana_TNR = Median(t_tnr_dt, weights = fe_cut, na.rm = TRUE),
+    Media_TDNR = weighted.mean(t_tdnr_dt, w = fe_cut, na.rm = TRUE),
+    Mediana_TDNR = Median(t_tdnr_dt, weights = fe_cut, na.rm = TRUE),
     Media_TCNR = weighted.mean(t_tcnr_dt, w = fe_cut, na.rm = TRUE),
     Mediana_TCNR = Median(t_tcnr_dt, weights = fe_cut, na.rm = TRUE)
   )
@@ -111,12 +113,12 @@ knitr::kable(tabla_caso1, digits = 2)
 
 
 
-|sexo_factor | Media_TNR| Mediana_TNR| Media_TCNR| Mediana_TCNR|
-|:-----------|---------:|-----------:|----------:|------------:|
-|Hombre      |      2.86|        2.10|       1.49|         0.93|
-|Mujer       |      4.96|        4.11|       2.28|         1.49|
+|sexo_factor | Media_TDNR| Mediana_TDNR| Media_TCNR| Mediana_TCNR|
+|:-----------|----------:|------------:|----------:|------------:|
+|Hombre      |       2.15|          1.6|       1.49|         0.93|
+|Mujer       |       3.52|          3.1|       2.28|         1.49|
 
-**Interpretación:** La tabla muestra una fuerte brecha de género. En promedio, las mujeres dedican más del doble de horas al trabajo doméstico (4.96 vs. 2.86) y casi el doble al trabajo de cuidados (1.93 vs. 1.05) que los hombres.
+**Interpretación:** La tabla muestra una fuerte brecha de género. En promedio, las mujeres dedican casi el doble de horas al trabajo doméstico (3.52 vs. 2.15) y al trabajo de cuidados (1.93 vs. 1.05) que los hombres.
 
 ### 2.3 Análisis Visual
 
@@ -126,7 +128,7 @@ knitr::kable(tabla_caso1, digits = 2)
 ggplot(enut_trabajo, aes(x = sexo_factor, y = t_tnr_dt, fill = sexo_factor)) +
   geom_boxplot(outlier.alpha = 0.1) +
   labs(
-    title = "Distribución de Horas de Trabajo Doméstico No Remunerado por Sexo",
+    title = "Distribución de Horas de Trabajo No Remunerado por Sexo",
     x = "Sexo", y = "Horas diarias"
   ) +
   theme_minimal() + 
@@ -163,9 +165,6 @@ Para responder, construiremos una tabla de contingencia que muestre cómo se dis
 
 
 ``` r
-# install.packages("kableExtra") # Si no lo tienes
-library(kableExtra)
-
 # 1. Creamos y limpiamos las variables factoriales que usaremos
 enut_limpio_cat <- enut_trabajo %>%
   mutate(
@@ -194,7 +193,7 @@ knitr::kable(
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
-<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption><span id="tab:cat-cat-num"></span>Table 1: (\#tab:cat-cat-num)Satisfacción con el reparto de tareas por sexo (%)</caption>
  <thead>
   <tr>
@@ -276,6 +275,7 @@ enut_limpio_cat %>%
 ggplot(enut_trabajo, aes(x = edad, y = t_tdnr_dt)) +
   geom_point(alpha = 0.05, color = "#008080", position = "jitter") +
   geom_smooth(color = "red", se = FALSE, method = "loess") +
+    geom_smooth(color = "blue", se = FALSE, method = "lm") +
   labs(
     title = "Horas de Trabajo Doméstico No Remunerado según Edad",
     x = "Edad", y = "Horas diarias de trabajo no remunerado"
@@ -285,21 +285,12 @@ ggplot(enut_trabajo, aes(x = edad, y = t_tdnr_dt)) +
 
 ```
 ## `geom_smooth()` using formula = 'y ~ x'
-```
-
-```
-## Warning: Removed 1090 rows containing non-finite outside the scale range
-## (`stat_smooth()`).
-```
-
-```
-## Warning: Removed 1090 rows containing missing values or values outside the scale range
-## (`geom_point()`).
+## `geom_smooth()` using formula = 'y ~ x'
 ```
 
 <img src="/example/12-practico_files/figure-html/quant-quant-vis-1.png" width="672" />
 
-**Interpretación:** La relación es **curvilínea**. El tiempo aumenta hasta la adultez media y luego disminuye.
+**Interpretación:** La relación es **curvilínea**. El tiempo aumenta hasta la adultez media y luego disminuye. La correlación representa la relación lineal (linea azul).
 
 ### 4.2 Análisis Numérico
 Calculamos la correlación para cuantificar la parte *lineal* de la relación.
@@ -312,7 +303,7 @@ cor(enut_trabajo$edad, enut_trabajo$t_tdnr_dt, use = "pairwise.complete.obs")
 ## [1] 0.204062
 ```
 
-**Interpretación:** La correlación es 0.2, un valor muy bajo que confirma que la relación **no es lineal**, como ya habíamos visto en el gráfico.
+**Interpretación:** La correlación es 0.2, un valor bajo que confirma que la relación **no es lineal**, como ya habíamos visto en el gráfico.
 
 ### 4.3 Actividad 3
 **Pregunta:** Explora la relación entre las **horas de trabajo remunerado (`t_to_dt`)** y las **horas de trabajo doméstico (`t_tdnr_dt`)**. ¿Esperarías una relación positiva, negativa o nula? Crea un gráfico de dispersión y calcula la correlación para comprobar tu hipótesis.
