@@ -261,7 +261,8 @@ enut_trabajo %>%
 
 ## Caso 3: Tabla de Correlación {.smaller background-color="white"}
 
-Calculamos la correlación entre `edad` y `trabajo no remunerado total` para cuantificar la relación lineal. En una correlación 1 nos indíca asociación lineal perfecta y 0 auscencia de asociación lineal. 
+Calculamos la correlación de Pearson entre `edad` y `trabajo no remunerado total` para cuantificar su relación lineal. El coeficiente varía entre −1 y 1: **1** indica asociación lineal positiva perfecta, **−1** indica asociación lineal negativa perfecta y **0** indica ausencia de asociación lineal (aunque puede existir una relación no lineal).
+
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Carga de paquetes necesarios para la presentación
