@@ -38,7 +38,8 @@ Descarga la base de datos de la ENUT 2023 desde el siguiente enlace y guarda el 
 -   **Enlace de descarga:** [Base de datos ENUT 2023 (formato R)](https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7)
 
 **Paso 3: Carga de Paquetes y Datos**
-```{r setup, message=FALSE, warning=FALSE}
+
+``` r
 # Cargar paquetes
 library(tidyverse)
 library(haven)
@@ -46,14 +47,16 @@ library(rio) # Para importar datos fácilmente
 library(janitor) # Para crear tablas de contingencia
 ```
 
-```{r load-manual, eval=FALSE, echo=TRUE}
+
+``` r
 # Carga Manual (Método recomendado)
 enut <- rio::import("datos/250403-ii-enut-bdd-r-v2.zip", which = "250403-ii-enut-bdd-r-v2.RDS")
 ```
 
 
 El siguiente bloque carga los datos automáticamente para la reproducibilidad del documento. **No necesitas ejecutarlo** si ya cargaste la base manualmente.
-```{r load-auto, message=FALSE, warning=FALSE, cache=TRUE}
+
+``` r
 # Carga automática de datos
 enut <- rio::import("https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7", which = "250403-ii-enut-bdd-r-v2.RDS")
 ```
@@ -61,9 +64,10 @@ enut <- rio::import("https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-t
 
 ### 1.3 Limpieza y Preparación de Variables
 
-Para facilitar nuestro análisis, crearemos un único `dataframe` llamado `enut_practico` que contenga todas las variables que usaremos, ya limpias y transformadas a formato factor.
+Para facilitar nuestro análisis, crearemos un único `dataframe` llamado `enut_practico` que contenga todas las variables que usaremos, ya limpias y transformadas a formato factorial.
 
-```{r clean-data}
+
+``` r
 enut_practico <- enut %>%
   # Nos quedamos solo con quienes contestaron el diario de tiempo
   filter(tiempo == 1) %>%
@@ -110,7 +114,8 @@ Añade los porcentajes de columna, siguiendo el procedimiento visto en clase (ca
 **Paso 3: `adorn_pct_formatting()` y `adorn_ns()` - Formato de Publicación**
 Formatea los porcentajes y añade los conteos (N) originales entre paréntesis.
 
-```{r janitor-example}
+
+``` r
 # Flujo completo para crear una tabla de publicación
 enut_practico %>%
   tabyl(cae_factor, sexo_factor, wt = fe_cut) %>%
@@ -119,12 +124,25 @@ enut_practico %>%
   adorn_ns()
 ```
 
+```
+##                              cae_factor        Hombre         Mujer
+##                      Menores de 15 años  0.0%     (0)  0.0%     (0)
+##                         Persona ocupada 66.9% (7,551) 50.2% (8,068)
+##                      Persona desocupada  4.3%   (480)  3.4%   (554)
+##  Personas fuera de la fuerza de trabajo 28.9% (3,258) 46.4% (7,461)
+##  Valor Perdido
+##          - (0)
+##          - (0)
+##          - (0)
+##          - (0)
+```
+
 ### 2.2 Actividad Intercalada 1
 **Pregunta:** Usando el flujo completo de `janitor`, crea e interpreta una tabla ponderada que muestre la relación entre el **nivel educacional (`nivel_educ_factor`)** (X) y la **condición de actividad (`cae_factor`)** (Y). ¿Qué nivel educativo presenta el mayor porcentaje de 'Personas Ocupadas'?
 
-```{r, eval=FALSE, echo=TRUE}
-# Escribe aquí tu código para la Actividad 1
 
+``` r
+# Escribe aquí tu código para la Actividad 1
 ```
 
 ## 3. Visualizando Relaciones Categóricas
@@ -135,7 +153,8 @@ Hay dos formas principales de crear un gráfico de barras bivariado: graficar de
 
 Usaremos `geom_bar(position = "fill")` para que `ggplot2` calcule automáticamente los porcentajes y cree un gráfico 100% apilado.
 
-```{r vis-direct}
+
+``` r
 enut_practico %>%
   filter(!bs2_factor %in% c("No Aplica", "Valor Perdido")) %>%
   ggplot(aes(x = sexo_factor, fill = fct_rev(bs2_factor), weight = fe_cut)) +
@@ -148,10 +167,13 @@ enut_practico %>%
   theme_minimal()
 ```
 
+<img src="/example/13-practico_files/figure-html/vis-direct-1.png" width="672" />
+
 ### 3.2 Flujo 2: Pre-tabular con `dplyr` y Graficar (`geom_col`)
 Este método nos da más control y es útil para gráficos más complejos.
 
-```{r vis-tabular}
+
+``` r
 # Paso 1: Crear una tabla de resumen con los porcentajes
 tabla_para_grafico <- enut_practico %>%
   filter(!bs2_factor %in% c("No Aplica", "Valor Perdido")) %>%
@@ -169,14 +191,16 @@ ggplot(tabla_para_grafico, aes(x = sexo_factor, y = porcentaje, fill = fct_rev(b
   ) +
   theme_minimal()
 ```
+
+<img src="/example/13-practico_files/figure-html/vis-tabular-1.png" width="672" />
 **Conclusión:** Ambos flujos producen el mismo gráfico. El primero es más rápido, el segundo es más flexible.
 
 ### 3.3 Actividad Intercalada 2
 **Pregunta:** Crea un gráfico de barras apiladas al 100% que visualice la relación de la **Actividad 1** (nivel educacional vs. condición de actividad). Elige cualquiera de los dos flujos de trabajo. ¿Qué patrón visual confirma lo que viste en la tabla?
 
-```{r, eval=FALSE, echo=TRUE}
-# Escribe aquí tu código para la Actividad 2
 
+``` r
+# Escribe aquí tu código para la Actividad 2
 ```
 
 ## 4. Análisis de Control por Tercera Variable en R
@@ -184,7 +208,8 @@ ggplot(tabla_para_grafico, aes(x = sexo_factor, y = porcentaje, fill = fct_rev(b
 ### 4.1 Control en Tablas con `tabyl()` de tres vías
 Para controlar por una tercera variable, simplemente la añadimos como un tercer argumento a `tabyl()`. Esto creará una *lista* de tablas, una para cada categoría de la variable de control.
 
-```{r control-tabyl}
+
+``` r
 # Analizamos la relación entre participación en cuidados (p_tcnr_dt) y condición de actividad (cae),
 # controlando por sexo.
 tablas_parciales <- enut_practico %>%
@@ -195,15 +220,40 @@ tablas_parciales <- enut_practico %>%
 
 # Vemos la tabla para Hombres
 tablas_parciales$Hombre
+```
 
+```
+##  p_tcnr_dt_factor Menores de 15 años Persona ocupada Persona desocupada
+##                No              - (0)   66.4% (5,011)        70.4% (338)
+##                Sí              - (0)   33.6% (2,540)        29.6% (142)
+##     Valor Perdido              - (0)    0.0%     (0)         0.0%   (0)
+##  Personas fuera de la fuerza de trabajo
+##                           80.7% (2,628)
+##                           19.3%   (630)
+##                            0.0%     (0)
+```
+
+``` r
 # Vemos la tabla para Mujeres
 tablas_parciales$Mujer
+```
+
+```
+##  p_tcnr_dt_factor Menores de 15 años Persona ocupada Persona desocupada
+##                No              - (0)   53.2% (4,290)        51.6% (286)
+##                Sí              - (0)   46.8% (3,778)        48.4% (268)
+##     Valor Perdido              - (0)    0.0%     (0)         0.0%   (0)
+##  Personas fuera de la fuerza de trabajo
+##                           64.8% (4,832)
+##                           35.2% (2,629)
+##                            0.0%     (0)
 ```
 
 ### 4.2 Control en Gráficos con `facet_wrap()`
 `facet_wrap()` es la contraparte visual de la tabla de tres vías, creando un panel para cada categoría de la variable de control.
 
-```{r control-facet}
+
+``` r
 enut_practico %>%
   ggplot(aes(x = cae_factor, fill = p_tcnr_dt_factor, weight = fe_cut)) +
   geom_bar(position = "fill") +
@@ -216,6 +266,8 @@ enut_practico %>%
   facet_wrap(~ sexo_factor) # La variable de control define los paneles
 ```
 
+<img src="/example/13-practico_files/figure-html/control-facet-1.png" width="672" />
+
 ## 5. Actividad de Desafío Final (Integradora)
 
 **Pregunta de Investigación:** Se argumenta que la percepción de "falta de tiempo para el descanso" (`bs2`) está influenciada por la "doble jornada". Queremos investigar si la relación entre el **sexo** (X) y la **satisfacción con el tiempo de descanso** (Y) es en realidad un efecto de la **condición de actividad (`cae_factor`)** (Z).
@@ -224,7 +276,8 @@ enut_practico %>%
 2.  **Análisis Estratificado:** Ahora, controla por `cae_factor`. Crea las tablas parciales (una para 'Persona ocupada', otra para 'Personas fuera de la fuerza de trabajo', etc.).
 3.  **Conclusión:** Compara los porcentajes en las tablas parciales. ¿La brecha de género en la satisfacción con el descanso se mantiene, desaparece o cambia dentro de cada grupo de actividad? Escribe un párrafo de conclusión: ¿La relación original era espuria, o se trata de una interacción/especificación?
 
-```{r, eval=FALSE, echo=TRUE}
+
+``` r
 # 1. Código para el análisis bivariado
 
 
@@ -232,5 +285,4 @@ enut_practico %>%
 
 
 # 3. Párrafo de conclusión (como comentario)
-
 ```

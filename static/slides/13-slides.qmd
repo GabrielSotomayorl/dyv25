@@ -1,167 +1,264 @@
 ---
-title: "Clase 13 <br> Análisis Factorial Exploratorio I"
-subtitle: "Análisis Avanzado de Datos"
+title: "Tablas de Contingencia y el Control por Tercera Variable"
+subtitle: "Unidad 5: Estadística Descriptiva Bivariada"
 author: "Gabriel Sotomayor"
-format: 
+date: "2025-11-17"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
+include-in-header:
+  - text: |
+      <style>
+      #title-slide .title {
+        font-size: 1.8em;
+      }
+      </style>
 ---
 
-## Contenidos de la sesión {.smaller background-color="white"}
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
-- **Análisis Factorial Exploratorio (y Análisis de Componentes Principales)**
-- **Etapas del análisis factorial**
-- **Preparación de los datos y evaluación de supuestos**
-- **Extracción de factores iniciales**
-- **Obtención e interpretación de la matriz factorial**
-- **Evaluación del modelo factorial**
-- **Cálculo de las puntuaciones factoriales**
+-   **Construir, interpretar y dar formato** a **tablas de contingencia** (tablas cruzadas).
+-   **Dominar** el cálculo y la interpretación de **porcentajes condicionales** (de fila, de columna y totales).
+-   **Introducir** el concepto sociológico clásico del **"modelo de elaboración"**: analizar la relación bivariada bajo el control de una tercera variable (Z).
+-   **Comprender y diagnosticar** una **asociación espuria**.
 
 ---
-
-## Variables latentes en Ciencias Sociales {.smaller background-color="white"}
-
-En ciencias sociales muchos de los conceptos que usamos no pueden medirse directamente: **autoritarismo**, **conciencia de clase**, **capital cultural**, etc. Estos conceptos corresponden a **variables latentes**, las cuales no pueden ser observadas o medidas directamente, pero pueden inferirse a través de otras variables relacionadas, asumiendo que están influyendo en los datos observados.
-
-- Una **variable latente** es una construcción teórica o abstracta.
-- Su medición requiere de un **modelo de medición** que evalúe la relación entre variables observadas.
-- **Técnicas utilizadas**: **Análisis Factorial Exploratorio (AFE)** y **Análisis Factorial Confirmatorio**.
-
+title_slide_background: "#008080"
 ---
 
-## Análisis Factorial Exploratorio {.smaller background-color="white"}
+# 1. La Tabla de Contingencia
 
-Conjunto de técnicas de análisis. **Se busca la síntesis de la información proporcionada por “p” variables observadas (o indicadores), con la menor pérdida posible de información, en un número inferior de “k” variables no observadas** (**factores comunes**). Esta serie menor de **variables latentes** ha de caracterizarse por aglutinar **variables empíricas** que estén bastante correlacionadas entre sí y escasamente correlacionadas con aquellas variables empíricas que conforman otra estructura latente (o dimensión del concepto que se analice).
+## De Comparar Grupos a Cruzar Categorías {.smaller background-color="white"}
 
-## Análisis Factorial Exploratorio {.smaller background-color="white"}
+En la clase anterior, vimos cómo analizar la relación entre una variable categórica y una cuantitativa.
 
-Tiene dos **objetivos principales**:  
+Hoy, nos enfocamos en el caso **Categórica (X) ➞ Categórica (Y)**, uno de los análisis más clásicos e importantes en sociología.
 
-1. Analizar la **correlación** existente en una serie de variables, con el propósito de descubrir si comparten alguna **estructura latente** (no directamente observable).  
- 
-2. La obtención de **puntuaciones factoriales**, variables típicas o, en su caso, **variables sucedáneas**, para cada factor. Estas actuarán en representación de los factores o componentes en análisis posteriores.
+-   **Pregunta clave:** ¿La probabilidad de pertenecer a una categoría de la variable Y depende de la categoría de la variable X a la que se pertenece?
+-   **Herramienta Central:** La **tabla de contingencia** (también llamada tabla cruzada o de doble entrada).
 
-## Análisis Factorial Exploratorio {.smaller background-color="white"}
+## Anatomía de una Tabla de Contingencia {.smaller background-color="white"}
 
-Cada variable observada **X¡** se expresa mediante una combinación lineal de un número pequeño de **factores comunes latentes** y un **factor único**, también latente. Estos últimos representan la parte de la **varianza** de la variable observada que “no” es explicada por los **factores comunes**. La elección de la letra “e” para denotar al **factor único** procede de su consideración como **“término de error”**.
+Una tabla de contingencia cruza las categorías de una variable explicativa (X) con las de una variable respuesta (Y), y muestra la **frecuencia** de casos en cada celda.
 
-![](https://raw.githubusercontent.com/Clases-GabrielSotomayor/pruebapagina/master/static/slides/img/05/ecua.png)
----
+**Ejemplo con ENUT 2023:**
+-   **Pregunta:** ¿Se asocia el `sexo` (X) con la `participación en trabajo doméstico no remunerado` (`p_tdnr_dt`, Y)?
 
-## AFE y ACP {.smaller background-color="white"}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+# Carga de paquetes y datos
+library(tidyverse)
+library(haven)
+library(janitor)
+library(knitr)
+library(kableExtra)
 
-Además del análisis factorial, otra técnica que se usa frecuentemente para la reducción de dimensiones de conjuntos de variables es el **Análisis de Componentes Principales (ACP)**.
+# Carga de ENUT y preparación
+url_enut <- "https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7"
+archivo_interno <- "250403-ii-enut-bdd-r-v2.RDS"
+enut <- rio::import(url_enut, which = archivo_interno)
 
-- El **ACP** trabaja con la **varianza total** de las variables.
-- El **AFE** utiliza solo la **varianza común** o **comunalidad**.
+enut_trabajo <- enut %>%
+  filter(tiempo == 1) %>%
+  mutate(
+    sexo_factor = as_factor(sexo),
+    p_tdnr_dt_factor = as_factor(p_tdnr_dt)
+  )
 
-## Etapas del Análisis Factorial Exploratorio {.smaller background-color="white"}
+# Tabla de frecuencias absolutas
+enut_trabajo %>%
+  filter(!is.na(p_tdnr_dt_factor)) %>%
+  tabyl(p_tdnr_dt_factor, sexo_factor, show_missing_levels = FALSE) %>%
+  adorn_totals(c("row", "col")) %>%
+  kable(caption = "Frecuencias Absolutas: Participación en Trabajo Doméstico por Sexo") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
 
-![](https://raw.githubusercontent.com/Clases-GabrielSotomayor/pruebapagina/master/static/slides/img/05/esquema.png){fig-align="center"}
-
-
-## Preparación de los datos y evaluación de supuestos {.smaller background-color="white"}
-
-- **Nivel de medición**.
-- **Tamaño muestral**.
-- **Normalidad multivariante**.
-- **Colinealidad y multicolinealidad**.
-- **Tratamiento de casos perdidos y casos atípicos**.
-
----
-
-## Nivel de medición {.smaller background-color="white"}
-
-El **AFE** requiere que las variables sean **continuas** o al menos **ordinales**. Esto puede resolverse con el tipo de **matriz de correlaciones** utilizada.
-
-![](https://raw.githubusercontent.com/Clases-GabrielSotomayor/pruebapagina/master/static/slides/img/05/Medida.png){fig-align="center" width="70%"}
-
----
-
-## Tamaño muestral {.smaller background-color="white"}
-
-Como piso mínimo se requieren **5 casos por cada variable** que se incluya en el análisis, sin embargo, es preferible contar con al menos **20 casos** por variable. Tamaños muestrales mayores ayudarán a obtener estimaciones muestrales estables.  
-
-Como mínimo se esperan unos **200 o 300 casos en total**.  
-
-Debe considerarse los **casos perdidos** y aquellos que puedan ser eliminados por ser **casos atípicos**. 
+**Problema:** Hay más mujeres que hombres en la muestra que contestó el diario. Comparar los conteos directos (9,742 vs. 17,646) puede ser engañoso. **Necesitamos porcentajes.**
 
 ---
-
-## Normalidad multivariante {.smaller background-color="white"}
-
-Todas las **variables observadas** y sus combinaciones lineales han de estar distribuidas normalmente. Es decir, se espera que exista **normalidad univariada** en cada variable y **normalidad multivariante**.  
-
-El uso de procedimientos de extracción habituales en **AFC**, como los llamados **“máxima verosimilitud (ML)”** o **“mínimos cuadrados”** exige el cumplimiento del supuesto de **normalidad multivariable**.
-
-Cuando no se cumple, habrá que buscar que cada variable no sea **extremadamente asimétrica** (se sugiere coeficientes de **asimetría** que se encuentren dentro de un intervalo de **±2**).
-
+title_slide_background: "#008080"
 ---
 
-## Colinealidad {.smaller background-color="white"}
+# 2. Uso de Porcentajes
 
-Para la extracción de **factores comunes** debe existir **varianza común** entre las variables, de lo contrario es poco probable encontrar **estructuras latentes** relevantes.
+## Tres Tipos de Porcentajes {.smaller background-color="white"}
 
-Como mínimo, se espera la existencia de **correlaciones** de al menos **0,3** entre las variables.
+En una tabla de contingencia, podemos calcular tres tipos de porcentajes:
 
-Según el nivel de medida pueden utilizarse **correlaciones de Pearson** (variables continuas o ordinales de suficientes categorías) o **policóricas** (variables ordinales).
+1.  **Porcentajes Totales:** `(frecuencia de la celda / N Total) * 100`.
+    -   *Responde a:* "¿Qué porcentaje del total de la muestra son, por ejemplo, hombres que no participan en trabajo doméstico?".
+    -   *Utilidad:* Bueno para describir la composición de la muestra, pero **malo para analizar relaciones**.
 
-## Correlaciones policóricas {.smaller background-color="white"}
+2.  **Porcentajes de Fila:** `(frecuencia de la celda / Total de la Fila) * 100`.
+    -   *Responde a:* "De todas las personas que participan en trabajo doméstico, ¿qué porcentaje son hombres y qué porcentaje son mujeres?".
 
-Las **correlaciones policóricas** son una medida de asociación entre **variables ordinales** que se basa en la teoría de **correlación de Pearson** y tiene en cuenta la naturaleza **discreta** de los datos.
+3.  **Porcentajes de Columna:** `(frecuencia de la celda / Total de la Columna) * 100`.
+    -   *Responde a:* "Del total de hombres, ¿qué porcentaje participa en trabajo doméstico?".
 
-Supone una **variable subyacente continua** y teóricamente **normal**.
+## Comparando grupos {.smaller background-color="white"}
 
-Se recomienda un mínimo de **50 observaciones**.  
+Para analizar una relación explicativa (X → Y), debemos seguir un procedimiento simple pero fundamental:
 
-Sólo se interpreta **sentido** y **fuerza**, no un **p** de significación.
+> **1. Calcula los porcentajes en la dirección de la variable explicativa (X).**
+>
+> **2. Compara los porcentajes en la dirección opuesta.**
 
-En el caso de variables **dicotómicas** se utilizan **correlaciones tetracóricas**.
+-   **En la práctica:** Si tu variable explicativa (X) está en las **columnas**, calcula **porcentajes de columna** (cada columna suma 100%).
+-   Luego, para ver si hay una relación, **compara los porcentajes a través de las filas**.
 
-## Multicolinealidad {.smaller background-color="white"}
+Si los porcentajes son diferentes entre las columnas, significa que la distribución de Y **depende** de la categoría de X. ¡Hay una asociación!
 
-Además de las **correlaciones bivariadas** existen pruebas estadísticas que nos permiten establecer la existencia de **multicolinealidad** en el conjunto de variables.
+## Ejemplo de comparación {.smaller background-color="white"}
 
-**Test de esfericidad de Barlett**: Esta prueba se utiliza para determinar la existencia de **multicolinealidad** en un conjunto de datos. Si el valor-p es significativo (generalmente <0,05), entonces se rechaza la **hipótesis nula** de que la matriz de correlación es igual a una **matriz de identidad**, lo que indica la presencia de **multicolinealidad**. **Su correcta interpretación requiere de la existencia de normalidad multivariante**, por lo que en caso de que esta no exista, debe priorizarse la interpretación de la **prueba KMO**.
+**Pregunta:** ¿Se asocia el `sexo` (X) con la `participación en trabajo doméstico` (Y)?
 
-## Multicolinealidad: KMO  {.smaller background-color="white"}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+enut_trabajo %>%
+  filter(!is.na(p_tdnr_dt_factor)) %>%
+  tabyl(p_tdnr_dt_factor, sexo_factor) %>%
+  adorn_percentages("col") %>% # <--- 1. CALCULAMOS PORCENTAJES DE COLUMNA
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  kable(caption = "Participación en Trabajo Doméstico por Sexo (%)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
 
-La **prueba KMO (Kaiser-Meyer-Olkin)** se utiliza para evaluar la presencia de **multicolinealidad** en un conjunto de variables. La prueba produce un valor de **MSA (Medida de adecuación de la muestra)** para el conjunto de datos y para cada variable individual en el conjunto de datos.
+**Interpretación:**
 
-Existen diferentes criterios para interpretar los valores del **índice KMO** en el **AFE**, pero algunos de los umbrales comúnmente utilizados son:
-- **Excelente adecuación**: KMO mayor que **0,9**.
-- **Buena adecuación**: KMO entre **0,8** y **0,9**.
-- **Adecuación aceptable**: KMO entre **0,7** y **0,8**.
-- **Inadecuada adecuación**: KMO menor que **0,7**.  
+1.  **Calculamos** porcentajes de columna (X = `sexo_factor` está en las columnas).
+2.  **Comparamos** los porcentajes a través de la fila "Sí participa".
+3.  **Conclusión:** Un **98.2%** de las mujeres participa en trabajo doméstico, en comparación con un **94.1%** de los hombres. Como estos porcentajes son diferentes, concluimos que **existe una asociación** entre el sexo y la participación en trabajo doméstico en la muestra.
 
-Es importante tener en cuenta que estos umbrales son solo una **guía general** y que la interpretación de los resultados del **AFE** debe basarse en varios criterios, incluyendo el **juicio del investigador**, la coherencia con la **teoría** y la interpretación de los **patrones de carga factorial**.
 
-## Tratamiento de variables  {.smaller background-color="white"}
+# 3. El Control por una Tercera Variable
 
-Antes de realizar un **AFE** debemos revisar dos decisiones respecto a los datos: la existencia de **casos atípicos** y de **casos perdidos**. 
+## ¿Es "Real" la Relación? {.smaller background-color="white"}
 
-**Casos perdidos**:
+El análisis bivariado es solo el primer paso. Una pregunta fundamental en sociología es:
 
-- Proporción de **casos perdidos** (10% aprox)
-- Distribución **aleatoria** o no de los casos perdidos
-- **Imputación de datos**: media, regresión lineal, criterio de investigación, **imputación múltiple**
+> ¿La relación que observamos entre X e Y se mantiene, o es un "espejismo" creado por una tercera variable (Z) que no hemos considerado?
 
-## Tratamiento de variables  {.smaller background-color="white"}
+Para responder a esto, usamos una técnica central en el análisis de datos: el **control estadístico**.
 
-Antes de realizar un **AFE** debemos revisar dos decisiones respecto a los datos: la existencia de **casos atípicos** y de **casos perdidos**. 
+La idea es **estratificar**: rehacemos nuestro análisis de la relación entre X e Y, pero esta vez por separado para cada categoría de la variable de control Z. Esto nos permite ver si la relación original se comporta de la misma manera en diferentes contextos.
 
-**Casos atípicos**:
+## Un Ejemplo Clásico: La Asociación Espuria {.smaller background-color="white"}
 
-Debe realizarse un **diagnóstico de casos atípicos multivariantes**, es decir, aquellos que se alejan del **centro medio** de las observaciones en un **espacio multidimensional**. Esto se mide con la **distancia de Mahalanobis** (distancias mayores a **0,001** se consideran atípicas).
+::: {style="font-size: 0.8em; line-height: 1.2;"}
+Antes de usar nuestros datos, veamos un ejemplo conceptual clásico para entender la lógica.
 
-## Tratamiento de variables: estandarización  {.smaller background-color="white"}
+-   **Relación Bivariada Original (X → Y):** En una ciudad, se observa que a mayor **número de bomberos** (X) en un incendio, mayores son los **daños económicos** (Y).
+    -   *Conclusión apresurada:* "Los bomberos causan los daños".
 
-- La **estandarización** favorece la **comparabilidad** de variables y es comúnmente utilizada en **análisis factorial**.
-- Se realiza mediante la **transformación de las variables a puntajes Z**.
-- La **varianza** de las variables depende de su unidad de medida, por lo que la **estandarización** permite comparar variables con diferentes grados de **heterogeneidad**.
-- La elección de la **matriz de entrada** para obtener un modelo factorial depende de si las variables están en su unidad original o **estandarizadas**.
+-   **Introducimos una Variable de Control (Z):** La **magnitud del incendio** (pequeño / grande).
 
+-   **Análisis Estratificado:**
+    -   **Tabla 1 (Solo para incendios pequeños):** Vemos que no hay relación entre el número de bomberos y los daños.
+    -   **Tabla 2 (Solo para incendios grandes):** Vemos que tampoco hay relación.
+
+-   **Conclusión Final:** La relación original era **espuria** (engañosa). La magnitud del incendio (Z) era la **causa común** que explicaba tanto el aumento de bomberos (X) como el aumento de los daños (Y).
+
+::: 
+
+## Aplicando el Control en la Práctica (ENUT 2023) {.smaller background-color="white"}
+
+**Paso 1: La Relación Original (X → Y)**
+
+Analicemos la relación bivariada entre `sexo` (X) y la `participación en trabajo de cuidados no remunerado` (`p_tcnr_dt`, Y).
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Preparamos los datos para este ejemplo
+enut_control <- enut_trabajo %>%
+  mutate(
+    p_tcnr_dt_factor = as_factor(p_tcnr_dt),
+    cae_factor = fct_recode(as_factor(cae), "Inactiva" = "Personas fuera de la fuerza de trabajo")
+    ) %>%
+  filter(!is.na(p_tcnr_dt_factor))
+
+# Tabla bivariada original
+enut_control %>%
+  tabyl(p_tcnr_dt_factor, sexo_factor) %>%
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  kable(caption = "Participación en Trabajo de Cuidados por Sexo (%)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+**Interpretación Inicial:** Observamos una clara brecha de género. Un **41.0%** de las mujeres participa en trabajo de cuidados, en comparación con solo el **29.1%** de los hombres. Esto representa una diferencia de casi 12 puntos porcentuales en la participación.
+
+## Aplicando el Control en la Práctica (ENUT 2023) {.smaller background-color="white"}
+
+**Paso 2: Introduciendo la Variable de Control (Z)**
+
+**Pregunta:** Pero, ¿es esta brecha de género la misma para todas las personas? ¿O podría depender de su relación con el mercado laboral? Por ejemplo, entre las personas que ya tienen un trabajo remunerado, la distribución de cuidados podría ser diferente.
+
+-   **Variable de Control (Z):** `cae` (Condición de Actividad Económica).
+-   **Estrategia:** Repetiremos la tabla anterior, pero ahora por separado para "Personas ocupadas" y "Personas inactivas".
+
+## Aplicando el Control en la Práctica (ENUT 2023) {.smaller background-color="white"}
+
+**Paso 3: Las Tablas Parciales o Estratificadas**
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Tabla para Ocupados
+enut_control %>%
+  filter(cae_factor == "Persona ocupada") %>%
+  tabyl(p_tcnr_dt_factor, sexo_factor) %>%
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  kable(caption = "Tabla Parcial 1: Solo Personas Ocupadas (%)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
+# Tabla para Inactivos
+enut_control %>%
+  filter(cae_factor == "Inactiva") %>%
+  tabyl(p_tcnr_dt_factor, sexo_factor) %>%
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  kable(caption = "Tabla Parcial 2: Solo Personas Inactivas (%)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+## Conclusión del Análisis de Control {.smaller background-color="white"}
+
+Al comparar las tablas parciales, observamos un patrón de **Especificación (o Interacción)**:
+
+1.  **Entre las personas ocupadas:** La brecha de género en la participación de cuidados **se mantiene**, y de hecho, es similar a la brecha general. Un **46.8%** de las mujeres ocupadas participa en cuidados, frente a un **33.6%** de los hombres ocupados (una diferencia de 13.2 puntos).
+
+2.  **Entre las personas inactivas:** La brecha de género también **se mantiene**, siendo incluso ligeramente mayor. La participación de las mujeres inactivas es del **35.2%**, mientras que la de los hombres inactivos es solo del **19.3%** (una diferencia de 15.9 puntos).
+
+**Conclusión Sociológica:** La relación entre sexo y trabajo de cuidados no es espuria, sino robusta y **especificada** por la condición de actividad. La brecha de género existe tanto dentro como fuera del mercado laboral, pero se manifiesta de forma diferente: aunque en términos absolutos la participación en cuidados es mayor entre las personas ocupadas, la **desigualdad relativa** (la diferencia porcentual entre hombres y mujeres) es aún más pronunciada entre quienes están fuera de la fuerza de trabajo.
+
+
+## Patrones del Análisis de Control {.smaller background-color="white"}
+
+Al introducir una variable de control (Z), la relación original entre X e Y puede:
+
+1.  **Replicarse:** La relación se mantiene igual en todas las tablas parciales. Esto refuerza nuestra confianza en la relación original.
+
+2.  **Desaparecer (Explicación / Asociación Espuria):** La relación desaparece en las tablas parciales. Esto sugiere que Z es una causa común que explica la relación original (como en el ejemplo de los bomberos).
+
+3.  **Especificarse (Interacción):** La relación es **diferente** en las distintas categorías de Z, siendo más fuerte para un grupo que para otro. **Esto es lo que acabamos de encontrar en nuestro ejemplo de la ENUT:** la relación entre sexo y trabajo de cuidados fue especificada por la condición de actividad.
+
+
+## Cierre y Próximos Pasos {.smaller background-color="white"}
+
+**Resumen de la sesión de hoy:**
+
+-   Las **tablas de contingencia** son la herramienta central para analizar la relación entre dos variables categóricas.
+-   El procedimiento estandar es **calcular porcentajes en la dirección de la variable explicativa** y comparar en la dirección opuesta.
+-   El **control por una tercera variable** es un paso crucial del análisis sociológico para probar la robustez de nuestras asociaciones y evitar conclusiones espurias.
+
+**En el práctico de hoy:**
+
+-   Utilizarán el paquete `janitor` para crear tablas de contingencia ponderadas y estratificadas, aplicando la regla de los porcentajes.
+
+**Adelanto de la próxima clase:**
+
+-   Sintetizaremos el análisis bivariado, reforzando las estrategias visuales y cuantificando la relación entre variables cuantitativas con el **coeficiente de correlación**.
