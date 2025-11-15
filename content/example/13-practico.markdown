@@ -11,15 +11,21 @@ toc: true
 editor_options: 
   chunk_output_type: console
 ---
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 ## 0. Objetivos del Práctico
 
 El objetivo de este práctico es dominar las herramientas para analizar la relación entre dos variables categóricas. Al finalizar, serás capaz de:
 
-*   **Construir e interpretar** tablas de contingencia ponderadas usando el paquete `janitor`.
+*   Utilizar `table()` y `proportions()` de R base para una exploración rápida.
+*   **Construir e interpretar** tablas de contingencia ponderadas usando un flujo de `dplyr` y `janitor`.
 *   **Aplicar** el procedimiento de análisis: calcular porcentajes en la dirección de la variable explicativa y comparar en la opuesta.
-*   **Visualizar** relaciones categóricas bivariadas con `ggplot2`.
-*   **Comparar** dos flujos de trabajo para la visualización: graficar desde datos tabulados vs. graficar directamente.
+*   **Visualizar** relaciones categóricas bivariadas con `ggplot2`, comparando flujos de trabajo.
 *   **Implementar** el análisis de control **estratificando** por una tercera variable.
 
 ## 1. Contexto y Preparación de Datos
@@ -43,8 +49,10 @@ Descarga la base de datos de la ENUT 2023 desde el siguiente enlace y guarda el 
 # Cargar paquetes
 library(tidyverse)
 library(haven)
-library(rio) # Para importar datos fácilmente
-library(janitor) # Para crear tablas de contingencia
+library(rio)       # Para importar datos fácilmente
+library(janitor)   # Para crear tablas de contingencia
+library(knitr)     # Para dar formato a las tablas
+library(kableExtra)# Para estilos adicionales a las tablas
 ```
 
 
@@ -54,7 +62,7 @@ enut <- rio::import("datos/250403-ii-enut-bdd-r-v2.zip", which = "250403-ii-enut
 ```
 
 
-El siguiente bloque carga los datos automáticamente para la reproducibilidad del documento. **No necesitas ejecutarlo** si ya cargaste la base manualmente.
+El siguiente bloque carga los datos automáticamente para la reproducibilidad del documento.
 
 ``` r
 # Carga automática de datos
@@ -63,16 +71,12 @@ enut <- rio::import("https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-t
 
 
 ### 1.3 Limpieza y Preparación de Variables
-
-Para facilitar nuestro análisis, crearemos un único `dataframe` llamado `enut_practico` que contenga todas las variables que usaremos, ya limpias y transformadas a formato factorial.
-
+Crearemos un único `dataframe` llamado `enut_practico` que contenga todas las variables que usaremos, ya limpias y transformadas a formato factorial.
 
 ``` r
 enut_practico <- enut %>%
-  # Nos quedamos solo con quienes contestaron el diario de tiempo
-  filter(tiempo == 1) %>%
+  filter(tiempo == 1) %>% # Nos quedamos solo con quienes contestaron el diario de tiempo
   mutate(
-    # Crear variables factoriales para análisis
     sexo_factor = as_factor(sexo),
     p_tdnr_dt_factor = as_factor(p_tdnr_dt),
     p_tcnr_dt_factor = as_factor(p_tcnr_dt),
@@ -84,80 +88,155 @@ enut_practico <- enut %>%
                                    "Media" = "Secundaria completa",
                                    "Técnica" = "Técnica o postsecundaria no terciaria",
                                    "Universitaria" = "Universitaria completa"),
-    # Agrupamos la edad para el desafío final
     grupo_edad = case_when(
       edad <= 29 ~ "Jóvenes (12-29)",
       edad <= 59 ~ "Adultos (30-59)",
-      edad >= 60 ~ "Adultos Mayores (60+)",
-      TRUE ~ NA_character_
+      edad >= 60 ~ "Adultos Mayores (60+)"
     )
   ) %>%
-  # Filtramos para quedarnos solo con las categorías que nos interesan en algunas variables
   filter(
-    cae_factor %in% c("Persona ocupada", "Persona desocupada", "Personas fuera de la fuerza de trabajo"),
-    !is.na(grupo_edad)
+    cae_factor %in% c("Persona ocupada", "Persona desocupada", "Personas fuera de la fuerza de trabajo")
   )
 ```
 
-## 2. Creando Tablas de Contingencia con `janitor`
+## 2. Exploración Rápida con R Base: `table()` y `proportions()`
 
-### 2.1 La Anatomía de una Tabla con `janitor`
-
-`janitor` es un paquete del ecosistema `tidyverse` especializado en crear tablas de resumen de forma rápida y publicable. Su función principal es `tabyl()`, que podemos "adornar" con capas adicionales.
-
-**Paso 1: `tabyl()` - La Tabla de Frecuencias Ponderadas**
-`tabyl()` crea la tabla base. Le indicamos la variable de fila, la de columna y la variable de ponderación (`wt`).
-
-**Paso 2: `adorn_percentages("col")` - Añadiendo Porcentajes**
-Añade los porcentajes de columna, siguiendo el procedimiento visto en clase (calcular en la dirección de la variable explicativa).
-
-**Paso 3: `adorn_pct_formatting()` y `adorn_ns()` - Formato de Publicación**
-Formatea los porcentajes y añade los conteos (N) originales entre paréntesis.
+Antes de crear tablas de publicación, es útil hacer una exploración rápida de la **muestra sin ponderar**.
 
 
 ``` r
-# Flujo completo para crear una tabla de publicación
+# 1. Crear una tabla de contingencia con frecuencias absolutas
+tabla_simple <- table(enut_practico$sexo_factor, enut_practico$cae_factor)
+tabla_simple
+```
+
+```
+##                
+##                 Menores de 15 años Persona ocupada Persona desocupada
+##   Hombre                         0            7551                480
+##   Mujer                          0            8068                554
+##   Valor Perdido                  0               0                  0
+##                
+##                 Personas fuera de la fuerza de trabajo
+##   Hombre                                          3258
+##   Mujer                                           7461
+##   Valor Perdido                                      0
+```
+
+``` r
+# 2. Calcular porcentajes de columna (margin = 2)
+proportions(tabla_simple, margin = 2) %>% round(2)
+```
+
+```
+##                
+##                 Menores de 15 años Persona ocupada Persona desocupada
+##   Hombre                                      0.48               0.46
+##   Mujer                                       0.52               0.54
+##   Valor Perdido                               0.00               0.00
+##                
+##                 Personas fuera de la fuerza de trabajo
+##   Hombre                                          0.30
+##   Mujer                                           0.70
+##   Valor Perdido                                   0.00
+```
+
+``` r
+# 3. Calcular porcentajes de fila (margin = 1)
+proportions(tabla_simple, margin = 1) %>% round(2)
+```
+
+```
+##                
+##                 Menores de 15 años Persona ocupada Persona desocupada
+##   Hombre                      0.00            0.67               0.04
+##   Mujer                       0.00            0.50               0.03
+##   Valor Perdido                                                      
+##                
+##                 Personas fuera de la fuerza de trabajo
+##   Hombre                                          0.29
+##   Mujer                                           0.46
+##   Valor Perdido
+```
+**Interpretación:** Estas funciones son excelentes para una inspección inicial. Por ejemplo, en los porcentajes de columna, vemos que el 52% de las personas ocupadas en la *muestra* son hombres. Sin embargo, para hacer afirmaciones sobre la población, necesitamos usar los ponderadores.
+
+## 3. Creando Tablas de Publicación Ponderadas
+
+Para crear tablas ponderadas, usaremos un flujo que combina `dplyr` (para el cálculo) y `janitor` (para el formato).
+
+
+``` r
+# Flujo correcto para crear una tabla ponderada de porcentajes de columna
 enut_practico %>%
-  tabyl(cae_factor, sexo_factor, wt = fe_cut) %>%
+  # Paso 1: Contar las combinaciones ponderadas con dplyr
+  count(cae_factor, sexo_factor, wt = fe_cut, name = "n_pond") %>%
+  
+  # Paso 2: Reestructurar a formato ancho
+  pivot_wider(names_from = sexo_factor, values_from = n_pond) %>%
+  
+  # Paso 3: Usar janitor para adornar la tabla con totales y porcentajes
+  adorn_totals("row") %>%
   adorn_percentages("col") %>%
   adorn_pct_formatting(digits = 1) %>%
-  adorn_ns()
+  adorn_ns("front") %>%
+  
+  # Paso 4: Presentar con kable
+  kable(caption = "Condición de Actividad por Sexo (%)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
-```
-##                              cae_factor        Hombre         Mujer
-##                      Menores de 15 años  0.0%     (0)  0.0%     (0)
-##                         Persona ocupada 66.9% (7,551) 50.2% (8,068)
-##                      Persona desocupada  4.3%   (480)  3.4%   (554)
-##  Personas fuera de la fuerza de trabajo 28.9% (3,258) 46.4% (7,461)
-##  Valor Perdido
-##          - (0)
-##          - (0)
-##          - (0)
-##          - (0)
-```
+<table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:janitor-example"></span>Table 1: (\#tab:janitor-example)Condición de Actividad por Sexo (%)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> cae_factor </th>
+   <th style="text-align:left;"> Hombre </th>
+   <th style="text-align:left;"> Mujer </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Persona ocupada </td>
+   <td style="text-align:left;"> 4,891,103.4  (69.3%) </td>
+   <td style="text-align:left;"> 3,931,116.0  (52.6%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Persona desocupada </td>
+   <td style="text-align:left;"> 338,414.7   (4.8%) </td>
+   <td style="text-align:left;"> 294,875.5   (3.9%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Personas fuera de la fuerza de trabajo </td>
+   <td style="text-align:left;"> 1,825,378.7  (25.9%) </td>
+   <td style="text-align:left;"> 3,254,677.4  (43.5%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Total </td>
+   <td style="text-align:left;"> 7,054,896.8 (100.0%) </td>
+   <td style="text-align:left;"> 7,480,668.9 (100.0%) </td>
+  </tr>
+</tbody>
+</table>
 
-### 2.2 Actividad Intercalada 1
-**Pregunta:** Usando el flujo completo de `janitor`, crea e interpreta una tabla ponderada que muestre la relación entre el **nivel educacional (`nivel_educ_factor`)** (X) y la **condición de actividad (`cae_factor`)** (Y). ¿Qué nivel educativo presenta el mayor porcentaje de 'Personas Ocupadas'?
+### 3.1 Actividad 1
+**Pregunta:** Usando el flujo completo (`count` -> `pivot_wider` -> `adorn_...` -> `kable`), crea e interpreta una tabla ponderada que muestre la relación entre el **nivel educacional (`nivel_educ_factor`)** (X, en las columnas) y la **condición de actividad (`cae_factor`)** (Y, en las filas). ¿Qué nivel educativo presenta el mayor porcentaje de 'Personas Ocupadas'?
 
 
 ``` r
 # Escribe aquí tu código para la Actividad 1
 ```
 
-## 3. Visualizando Relaciones Categóricas
+## 4. Visualizando Relaciones Categóricas
 
-Hay dos formas principales de crear un gráfico de barras bivariado: graficar desde los datos crudos (más directo) o tabular primero y luego graficar (más control).
+### 4.1 Flujo 1: Graficar Directamente (`position = "fill"`)
 
-### 3.1 Flujo 1: Graficar Directamente (`position = "fill"`)
-
-Usaremos `geom_bar(position = "fill")` para que `ggplot2` calcule automáticamente los porcentajes y cree un gráfico 100% apilado.
+Este método es el más rápido: `ggplot2` calcula las proporciones internamente.
 
 
 ``` r
 enut_practico %>%
-  filter(!bs2_factor %in% c("No Aplica", "Valor Perdido")) %>%
-  ggplot(aes(x = sexo_factor, fill = fct_rev(bs2_factor), weight = fe_cut)) +
+  filter(!bs2_factor %in% c("No Aplica", "Valor Perdido") & !is.na(bs2_factor)) %>% # Filtramos NAs
+  ggplot(aes(x = sexo_factor, fill = bs2_factor, weight = fe_cut)) +
   geom_bar(position = "fill") +
   scale_y_continuous(labels = scales::percent) +
   labs(
@@ -169,14 +248,14 @@ enut_practico %>%
 
 <img src="/example/13-practico_files/figure-html/vis-direct-1.png" width="672" />
 
-### 3.2 Flujo 2: Pre-tabular con `dplyr` y Graficar (`geom_col`)
-Este método nos da más control y es útil para gráficos más complejos.
+### 4.2 Flujo 2: Pre-tabular con `dplyr` y Graficar (`geom_col`)
+Este método da más control y es útil para gráficos complejos.
 
 
 ``` r
 # Paso 1: Crear una tabla de resumen con los porcentajes
 tabla_para_grafico <- enut_practico %>%
-  filter(!bs2_factor %in% c("No Aplica", "Valor Perdido")) %>%
+  filter(!bs2_factor %in% c("No Aplica", "Valor Perdido") & !is.na(bs2_factor)) %>%
   count(sexo_factor, bs2_factor, wt = fe_cut) %>%
   group_by(sexo_factor) %>%
   mutate(porcentaje = n / sum(n))
@@ -193,9 +272,8 @@ ggplot(tabla_para_grafico, aes(x = sexo_factor, y = porcentaje, fill = fct_rev(b
 ```
 
 <img src="/example/13-practico_files/figure-html/vis-tabular-1.png" width="672" />
-**Conclusión:** Ambos flujos producen el mismo gráfico. El primero es más rápido, el segundo es más flexible.
 
-### 3.3 Actividad Intercalada 2
+### 4.3 Actividad 2
 **Pregunta:** Crea un gráfico de barras apiladas al 100% que visualice la relación de la **Actividad 1** (nivel educacional vs. condición de actividad). Elige cualquiera de los dos flujos de trabajo. ¿Qué patrón visual confirma lo que viste en la tabla?
 
 
@@ -203,78 +281,133 @@ ggplot(tabla_para_grafico, aes(x = sexo_factor, y = porcentaje, fill = fct_rev(b
 # Escribe aquí tu código para la Actividad 2
 ```
 
-## 4. Análisis de Control por Tercera Variable en R
 
-### 4.1 Control en Tablas con `tabyl()` de tres vías
-Para controlar por una tercera variable, simplemente la añadimos como un tercer argumento a `tabyl()`. Esto creará una *lista* de tablas, una para cada categoría de la variable de control.
+## 5. Análisis de Control por Tercera Variable en R
 
+### 5.1 Control en Tablas usando `group_by()`
 
-``` r
-# Analizamos la relación entre participación en cuidados (p_tcnr_dt) y condición de actividad (cae),
-# controlando por sexo.
-tablas_parciales <- enut_practico %>%
-  tabyl(p_tcnr_dt_factor, cae_factor, sexo_factor, wt = fe_cut) %>%
-  adorn_percentages("col") %>%
-  adorn_pct_formatting(digits = 1) %>%
-  adorn_ns()
+Para controlar por una tercera variable en una tabla, simplemente la añadimos a nuestro flujo de `dplyr`. La estrategia es filtrar el `dataframe` para cada categoría de la variable de control y luego construir la tabla de contingencia para ese subgrupo.
 
-# Vemos la tabla para Hombres
-tablas_parciales$Hombre
-```
+**Pregunta de investigación:** Analicemos la relación entre la **condición de actividad** (X) y la **participación en trabajo de cuidados** (Y), pero esta vez **controlando por sexo** (Z).
 
-```
-##  p_tcnr_dt_factor Menores de 15 años Persona ocupada Persona desocupada
-##                No              - (0)   66.4% (5,011)        70.4% (338)
-##                Sí              - (0)   33.6% (2,540)        29.6% (142)
-##     Valor Perdido              - (0)    0.0%     (0)         0.0%   (0)
-##  Personas fuera de la fuerza de trabajo
-##                           80.7% (2,628)
-##                           19.3%   (630)
-##                            0.0%     (0)
-```
 
 ``` r
-# Vemos la tabla para Mujeres
-tablas_parciales$Mujer
+# Tabla Parcial 1: Solo para Hombres
+enut_practico %>%
+  filter(sexo_factor == "Hombre") %>%
+  count(cae_factor, p_tcnr_dt_factor, wt = fe_cut) %>%
+  group_by(cae_factor) %>%
+  mutate(porcentaje = n / sum(n) * 100) %>%
+  select(-n) %>%
+  pivot_wider(names_from = p_tcnr_dt_factor, values_from = porcentaje) %>%
+  kable(digits = 1, caption = "Tabla Parcial 1: Participación en Cuidados por Condición de Actividad (Hombres)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
-```
-##  p_tcnr_dt_factor Menores de 15 años Persona ocupada Persona desocupada
-##                No              - (0)   53.2% (4,290)        51.6% (286)
-##                Sí              - (0)   46.8% (3,778)        48.4% (268)
-##     Valor Perdido              - (0)    0.0%     (0)         0.0%   (0)
-##  Personas fuera de la fuerza de trabajo
-##                           64.8% (4,832)
-##                           35.2% (2,629)
-##                            0.0%     (0)
+<table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:control-tabyl"></span>Table 3: (\#tab:control-tabyl)Tabla Parcial 1: Participación en Cuidados por Condición de Actividad (Hombres)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> cae_factor </th>
+   <th style="text-align:right;"> No </th>
+   <th style="text-align:right;"> Sí </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Persona ocupada </td>
+   <td style="text-align:right;"> 63.4 </td>
+   <td style="text-align:right;"> 36.6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Persona desocupada </td>
+   <td style="text-align:right;"> 68.3 </td>
+   <td style="text-align:right;"> 31.7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Personas fuera de la fuerza de trabajo </td>
+   <td style="text-align:right;"> 77.7 </td>
+   <td style="text-align:right;"> 22.3 </td>
+  </tr>
+</tbody>
+</table>
+
+``` r
+# Tabla Parcial 2: Solo para Mujeres
+enut_practico %>%
+  filter(sexo_factor == "Mujer") %>%
+  count(cae_factor, p_tcnr_dt_factor, wt = fe_cut) %>%
+  group_by(cae_factor) %>%
+  mutate(porcentaje = n / sum(n) * 100) %>%
+  select(-n) %>%
+  pivot_wider(names_from = p_tcnr_dt_factor, values_from = porcentaje) %>%
+  kable(digits = 1, caption = "Tabla Parcial 2: Participación en Cuidados por Condición de Actividad (Mujeres)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
-### 4.2 Control en Gráficos con `facet_wrap()`
-`facet_wrap()` es la contraparte visual de la tabla de tres vías, creando un panel para cada categoría de la variable de control.
+<table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:control-tabyl"></span>Table 3: (\#tab:control-tabyl)Tabla Parcial 2: Participación en Cuidados por Condición de Actividad (Mujeres)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> cae_factor </th>
+   <th style="text-align:right;"> No </th>
+   <th style="text-align:right;"> Sí </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Persona ocupada </td>
+   <td style="text-align:right;"> 52.2 </td>
+   <td style="text-align:right;"> 47.8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Persona desocupada </td>
+   <td style="text-align:right;"> 49.4 </td>
+   <td style="text-align:right;"> 50.6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Personas fuera de la fuerza de trabajo </td>
+   <td style="text-align:right;"> 63.3 </td>
+   <td style="text-align:right;"> 36.7 </td>
+  </tr>
+</tbody>
+</table>
+
+**Interpretación:** Al estratificar, vemos que la relación cambia. Entre los hombres, las personas ocupadas son quienes más participan en cuidados (36.6%). Entre las mujeres, en cambio, la participación es mayor entre las ocupadas (47.8%), pero también alta entre las fuewra de la fuerza de trabajo (36.7%), mostrando patrones diferentes.
+
+### 5.2 Control en Gráficos con `facet_wrap()`
+
+`facet_wrap()` es la contraparte visual de la estratificación, creando un panel para cada categoría de la variable de control de forma automática y mucho más directa.
 
 
 ``` r
 enut_practico %>%
+  filter(!is.na(p_tcnr_dt_factor)) %>% # Filtramos NAs para el gráfico
   ggplot(aes(x = cae_factor, fill = p_tcnr_dt_factor, weight = fe_cut)) +
   geom_bar(position = "fill") +
   scale_y_continuous(labels = scales::percent) +
+  # Añadimos una paleta de colores más atractiva
+  scale_fill_viridis_d(option = "cividis", name = "Participa en Cuidados") +
   labs(
     title = "Participación en Cuidados por Condición de Actividad, según Sexo",
-    x = "Condición de Actividad", y = "Porcentaje", fill = "Participa en Cuidados"
+    x = "Condición de Actividad",
+    y = "Porcentaje"
   ) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  facet_wrap(~ sexo_factor) # La variable de control define los paneles
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "bottom") +
+  # La magia del control: creamos un panel para cada sexo
+  facet_wrap(~ sexo_factor)
 ```
 
 <img src="/example/13-practico_files/figure-html/control-facet-1.png" width="672" />
 
-## 5. Actividad de Desafío Final (Integradora)
+## 6. Actividad de Desafío Final (Integradora)
 
-**Pregunta de Investigación:** Se argumenta que la percepción de "falta de tiempo para el descanso" (`bs2`) está influenciada por la "doble jornada". Queremos investigar si la relación entre el **sexo** (X) y la **satisfacción con el tiempo de descanso** (Y) es en realidad un efecto de la **condición de actividad (`cae_factor`)** (Z).
+**Pregunta de Investigación:** Se argumenta que la percepción de "falta de tiempo para el descanso" (`bs2`) está influenciada por la "doble jornada". Queremos investigar si la relación entre el **sexo** (X) y la **satisfacción con el reparto de tareas** (Y) es en realidad un efecto de la **condición de actividad (`cae_factor`)** (Z).
 
-1.  **Análisis Bivariado:** Crea una tabla de contingencia ponderada con porcentajes de columna para la relación entre `sexo_factor` (X) y `bs2_factor` (Y). Interprétala brevemente.
-2.  **Análisis Estratificado:** Ahora, controla por `cae_factor`. Crea las tablas parciales (una para 'Persona ocupada', otra para 'Personas fuera de la fuerza de trabajo', etc.).
-3.  **Conclusión:** Compara los porcentajes en las tablas parciales. ¿La brecha de género en la satisfacción con el descanso se mantiene, desaparece o cambia dentro de cada grupo de actividad? Escribe un párrafo de conclusión: ¿La relación original era espuria, o se trata de una interacción/especificación?
+1.  **Análisis Bivariado:** Crea una tabla de contingencia ponderada (usando el flujo con `dplyr` y `janitor`) con porcentajes de columna para la relación entre `sexo_factor` (X) y `bs2_factor` (Y). Interprétala brevemente.
+2.  **Análisis Estratificado:** Ahora, controla por `cae_factor`. La forma más fácil de hacerlo es con `group_by()` antes de `count()` o usando `facet_wrap()` en el gráfico. Elige uno de los dos métodos.
+3.  **Conclusión:** Compara los resultados en los distintos grupos. ¿La brecha de género en la satisfacción con el descanso se mantiene, desaparece o cambia dentro de cada grupo de actividad? Escribe un párrafo de conclusión: ¿La relación original era espuria o se trata de una interacción/especificación?
 
 
 ``` r

@@ -89,21 +89,29 @@ lessons:
   - title: '• Estadísticos de centro, dispersión y posición.<br>• <strong>Entrega Tarea 2</strong>'
     session: "Sesión 8"
     date: "13 octubre"
+    content: "08-content"
+    example: "08-practico"
     bg: 1
 
   - title: '• Forma: asimetría y curtosis.<br>• Frecuencias, porcentajes y tasas.'
     session: "Sesión 9"
     date: "20 octubre"
+    content: "09-content"
+    example: "09-practico"
     bg: 1
 
   - title: '• Visualización de datos y recomendaciones.<br>• <strong>Entrega Tarea 3</strong>'
     session: "Sesión 10"
     date: "27 octubre"
+    content: "10-content"
+    example: "10-practico"
     bg: 1
     
   - title: '• Introducción a la gramática de gráficos de ggplot2.<br>• <strong>Evaluaciones: Control N°4, Inicio Trabajo Práctico 2</strong>'
     session: "Sesión 11"
     date: "3 noviembre"
+    content: "11-content"
+    example: "11-practico"
     bg: 1
     bottomborder: True
 
@@ -116,16 +124,22 @@ lessons:
   - title: '• Tipos de asociaciones, independencia, estadísticos por grupo.'
     session: "Sesión 12"
     date: "10 noviembre"
+    content: "12-content"
+    example: "12-practico"
     bg: 2
 
   - title: '• Construcción de tablas de contingencia y control.<br>• <strong>Entrega Tarea 4</strong>'
     session: "Sesión 13"
     date: "17 noviembre"
+    content: "13-content"
+    example: "13-practico"
     bg: 2
 
   - title: '• Visualizaciones bivariadas: barras, histogramas y boxplots.<br>• <strong>Evaluación: Control N°5</strong>'
     session: "Sesión 14"
     date: "24 noviembre"
+    #content: "14-content"
+    #example: "14-practico"
     bg: 2
   
   - title: '• Medidas de asociación: Pearson, spearman, gamma.<br>• Más allá de lo descriptivo: la probabilidad.<br>• Recomendaciones para la visualización de datos.<br>• <strong>SOLEMNE II – Contenido Unidades 4 y 5</strong>'
