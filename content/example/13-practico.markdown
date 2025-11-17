@@ -284,9 +284,9 @@ ggplot(tabla_para_grafico, aes(x = sexo_factor, y = porcentaje, fill = fct_rev(b
 
 ## 5. Análisis de Control por Tercera Variable en R
 
-### 5.1 Control en Tablas usando `group_by()`
+### 5.1 Control en Tablas usando `filter()`
 
-Para controlar por una tercera variable en una tabla, simplemente la añadimos a nuestro flujo de `dplyr`. La estrategia es filtrar el `dataframe` para cada categoría de la variable de control y luego construir la tabla de contingencia para ese subgrupo.
+Para controlar por una tercera variable en una tabla, simplemente la añadimos a nuestro flujo de `dplyr` un filtro. La estrategia es filtrar el `dataframe` para cada categoría de la variable de control y luego construir la tabla de contingencia para ese subgrupo.
 
 **Pregunta de investigación:** Analicemos la relación entre la **condición de actividad** (X) y la **participación en trabajo de cuidados** (Y), pero esta vez **controlando por sexo** (Z).
 
@@ -295,39 +295,46 @@ Para controlar por una tercera variable en una tabla, simplemente la añadimos a
 # Tabla Parcial 1: Solo para Hombres
 enut_practico %>%
   filter(sexo_factor == "Hombre") %>%
-  count(cae_factor, p_tcnr_dt_factor, wt = fe_cut) %>%
-  group_by(cae_factor) %>%
-  mutate(porcentaje = n / sum(n) * 100) %>%
-  select(-n) %>%
-  pivot_wider(names_from = p_tcnr_dt_factor, values_from = porcentaje) %>%
-  kable(digits = 1, caption = "Tabla Parcial 1: Participación en Cuidados por Condición de Actividad (Hombres)") %>%
+  count(p_tcnr_dt_factor, cae_factor, wt = fe_cut, name = "n_pond") %>%
+  pivot_wider(names_from = cae_factor, values_from = n_pond) %>%
+
+  adorn_totals("row") %>% 
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  
+  kable(caption = "Tabla 1: Participación en Cuidados por Condición de Actividad (Hombres)") %>%
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
 <table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption><span id="tab:control-tabyl"></span>Table 3: (\#tab:control-tabyl)Tabla Parcial 1: Participación en Cuidados por Condición de Actividad (Hombres)</caption>
+<caption><span id="tab:control-tabyl"></span>Table 3: (\#tab:control-tabyl)Tabla 1: Participación en Cuidados por Condición de Actividad (Hombres)</caption>
  <thead>
   <tr>
-   <th style="text-align:left;"> cae_factor </th>
-   <th style="text-align:right;"> No </th>
-   <th style="text-align:right;"> Sí </th>
+   <th style="text-align:left;"> p_tcnr_dt_factor </th>
+   <th style="text-align:left;"> Persona ocupada </th>
+   <th style="text-align:left;"> Persona desocupada </th>
+   <th style="text-align:left;"> Personas fuera de la fuerza de trabajo </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Persona ocupada </td>
-   <td style="text-align:right;"> 63.4 </td>
-   <td style="text-align:right;"> 36.6 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> 3,102,858  (63.4%) </td>
+   <td style="text-align:left;"> 231,206.2  (68.3%) </td>
+   <td style="text-align:left;"> 1,418,909.8  (77.7%) </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Persona desocupada </td>
-   <td style="text-align:right;"> 68.3 </td>
-   <td style="text-align:right;"> 31.7 </td>
+   <td style="text-align:left;"> Sí </td>
+   <td style="text-align:left;"> 1,788,245  (36.6%) </td>
+   <td style="text-align:left;"> 107,208.5  (31.7%) </td>
+   <td style="text-align:left;"> 406,468.9  (22.3%) </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Personas fuera de la fuerza de trabajo </td>
-   <td style="text-align:right;"> 77.7 </td>
-   <td style="text-align:right;"> 22.3 </td>
+   <td style="text-align:left;"> Total </td>
+   <td style="text-align:left;"> 4,891,103 (100.0%) </td>
+   <td style="text-align:left;"> 338,414.7 (100.0%) </td>
+   <td style="text-align:left;"> 1,825,378.7 (100.0%) </td>
   </tr>
 </tbody>
 </table>
@@ -336,39 +343,46 @@ enut_practico %>%
 # Tabla Parcial 2: Solo para Mujeres
 enut_practico %>%
   filter(sexo_factor == "Mujer") %>%
-  count(cae_factor, p_tcnr_dt_factor, wt = fe_cut) %>%
-  group_by(cae_factor) %>%
-  mutate(porcentaje = n / sum(n) * 100) %>%
-  select(-n) %>%
-  pivot_wider(names_from = p_tcnr_dt_factor, values_from = porcentaje) %>%
-  kable(digits = 1, caption = "Tabla Parcial 2: Participación en Cuidados por Condición de Actividad (Mujeres)") %>%
+  count(p_tcnr_dt_factor, cae_factor, wt = fe_cut, name = "n_pond") %>%
+  pivot_wider(names_from = cae_factor, values_from = n_pond) %>%
+
+  adorn_totals("row") %>% 
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  
+  kable(caption = "Tabla 1: Participación en Cuidados por Condición de Actividad (Hombres)") %>%
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
 <table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption><span id="tab:control-tabyl"></span>Table 3: (\#tab:control-tabyl)Tabla Parcial 2: Participación en Cuidados por Condición de Actividad (Mujeres)</caption>
+<caption><span id="tab:control-tabyl"></span>Table 3: (\#tab:control-tabyl)Tabla 1: Participación en Cuidados por Condición de Actividad (Hombres)</caption>
  <thead>
   <tr>
-   <th style="text-align:left;"> cae_factor </th>
-   <th style="text-align:right;"> No </th>
-   <th style="text-align:right;"> Sí </th>
+   <th style="text-align:left;"> p_tcnr_dt_factor </th>
+   <th style="text-align:left;"> Persona ocupada </th>
+   <th style="text-align:left;"> Persona desocupada </th>
+   <th style="text-align:left;"> Personas fuera de la fuerza de trabajo </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Persona ocupada </td>
-   <td style="text-align:right;"> 52.2 </td>
-   <td style="text-align:right;"> 47.8 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> 2,050,628  (52.2%) </td>
+   <td style="text-align:left;"> 145,738.2  (49.4%) </td>
+   <td style="text-align:left;"> 2,060,679  (63.3%) </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Persona desocupada </td>
-   <td style="text-align:right;"> 49.4 </td>
-   <td style="text-align:right;"> 50.6 </td>
+   <td style="text-align:left;"> Sí </td>
+   <td style="text-align:left;"> 1,880,488  (47.8%) </td>
+   <td style="text-align:left;"> 149,137.3  (50.6%) </td>
+   <td style="text-align:left;"> 1,193,998  (36.7%) </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Personas fuera de la fuerza de trabajo </td>
-   <td style="text-align:right;"> 63.3 </td>
-   <td style="text-align:right;"> 36.7 </td>
+   <td style="text-align:left;"> Total </td>
+   <td style="text-align:left;"> 3,931,116 (100.0%) </td>
+   <td style="text-align:left;"> 294,875.5 (100.0%) </td>
+   <td style="text-align:left;"> 3,254,677 (100.0%) </td>
   </tr>
 </tbody>
 </table>

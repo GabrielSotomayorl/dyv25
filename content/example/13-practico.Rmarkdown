@@ -190,9 +190,9 @@ ggplot(tabla_para_grafico, aes(x = sexo_factor, y = porcentaje, fill = fct_rev(b
 
 ## 5. Análisis de Control por Tercera Variable en R
 
-### 5.1 Control en Tablas usando `group_by()`
+### 5.1 Control en Tablas usando `filter()`
 
-Para controlar por una tercera variable en una tabla, simplemente la añadimos a nuestro flujo de `dplyr`. La estrategia es filtrar el `dataframe` para cada categoría de la variable de control y luego construir la tabla de contingencia para ese subgrupo.
+Para controlar por una tercera variable en una tabla, simplemente la añadimos a nuestro flujo de `dplyr` un filtro. La estrategia es filtrar el `dataframe` para cada categoría de la variable de control y luego construir la tabla de contingencia para ese subgrupo.
 
 **Pregunta de investigación:** Analicemos la relación entre la **condición de actividad** (X) y la **participación en trabajo de cuidados** (Y), pero esta vez **controlando por sexo** (Z).
 
@@ -200,23 +200,30 @@ Para controlar por una tercera variable en una tabla, simplemente la añadimos a
 # Tabla Parcial 1: Solo para Hombres
 enut_practico %>%
   filter(sexo_factor == "Hombre") %>%
-  count(cae_factor, p_tcnr_dt_factor, wt = fe_cut) %>%
-  group_by(cae_factor) %>%
-  mutate(porcentaje = n / sum(n) * 100) %>%
-  select(-n) %>%
-  pivot_wider(names_from = p_tcnr_dt_factor, values_from = porcentaje) %>%
-  kable(digits = 1, caption = "Tabla Parcial 1: Participación en Cuidados por Condición de Actividad (Hombres)") %>%
+  count(p_tcnr_dt_factor, cae_factor, wt = fe_cut, name = "n_pond") %>%
+  pivot_wider(names_from = cae_factor, values_from = n_pond) %>%
+
+  adorn_totals("row") %>% 
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  
+  kable(caption = "Tabla 1: Participación en Cuidados por Condición de Actividad (Hombres)") %>%
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
+
 
 # Tabla Parcial 2: Solo para Mujeres
 enut_practico %>%
   filter(sexo_factor == "Mujer") %>%
-  count(cae_factor, p_tcnr_dt_factor, wt = fe_cut) %>%
-  group_by(cae_factor) %>%
-  mutate(porcentaje = n / sum(n) * 100) %>%
-  select(-n) %>%
-  pivot_wider(names_from = p_tcnr_dt_factor, values_from = porcentaje) %>%
-  kable(digits = 1, caption = "Tabla Parcial 2: Participación en Cuidados por Condición de Actividad (Mujeres)") %>%
+  count(p_tcnr_dt_factor, cae_factor, wt = fe_cut, name = "n_pond") %>%
+  pivot_wider(names_from = cae_factor, values_from = n_pond) %>%
+
+  adorn_totals("row") %>% 
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  
+  kable(caption = "Tabla 1: Participación en Cuidados por Condición de Actividad (Hombres)") %>%
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
