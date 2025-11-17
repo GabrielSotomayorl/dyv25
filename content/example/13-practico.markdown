@@ -158,7 +158,7 @@ proportions(tabla_simple, margin = 1) %>% round(2)
 ##   Mujer                                           0.46
 ##   Valor Perdido
 ```
-**Interpretación:** Estas funciones son excelentes para una inspección inicial. Por ejemplo, en los porcentajes de columna, vemos que el 52% de las personas ocupadas en la *muestra* son hombres. Sin embargo, para hacer afirmaciones sobre la población, necesitamos usar los ponderadores.
+**Interpretación:** Estas funciones son excelentes para una inspección inicial. Por ejemplo, en los porcentajes de columna, vemos que el 52% de las personas ocupadas en la *muestra* son mujeres. Sin embargo, para hacer afirmaciones sobre la población, necesitamos usar los ponderadores.
 
 ## 3. Creando Tablas de Publicación Ponderadas
 
@@ -373,7 +373,7 @@ enut_practico %>%
 </tbody>
 </table>
 
-**Interpretación:** Al estratificar, vemos que la relación cambia. Entre los hombres, las personas ocupadas son quienes más participan en cuidados (36.6%). Entre las mujeres, en cambio, la participación es mayor entre las ocupadas (47.8%), pero también alta entre las fuewra de la fuerza de trabajo (36.7%), mostrando patrones diferentes.
+**Interpretación:** Al estratificar, vemos que la relación cambia. Entre los hombres, las personas ocupadas son quienes más participan en cuidados (36.6%). Entre las mujeres, en cambio, la participación es mayor entre las ocupadas (47.8%), pero también alta entre las fuera de la fuerza de trabajo (36.7%), mostrando patrones diferentes.
 
 ### 5.2 Control en Gráficos con `facet_wrap()`
 
@@ -387,7 +387,7 @@ enut_practico %>%
   geom_bar(position = "fill") +
   scale_y_continuous(labels = scales::percent) +
   # Añadimos una paleta de colores más atractiva
-  scale_fill_viridis_d(option = "cividis", name = "Participa en Cuidados") +
+  scale_fill_viridis_d(name = "Participa en Cuidados") +
   labs(
     title = "Participación en Cuidados por Condición de Actividad, según Sexo",
     x = "Condición de Actividad",

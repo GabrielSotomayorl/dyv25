@@ -22,7 +22,7 @@ include-in-header:
 
 -   **Construir, interpretar y dar formato** a **tablas de contingencia** (tablas cruzadas).
 -   **Dominar** el cálculo y la interpretación de **porcentajes condicionales** (de fila, de columna y totales).
--   **Introducir** el concepto sociológico clásico del **"modelo de elaboración"**: analizar la relación bivariada bajo el control de una tercera variable (Z).
+-   **Introducir** el concepto de control estadístico mediante una tercera variable (Z).
 -   **Comprender y diagnosticar** una **asociación espuria**.
 
 ---
@@ -76,7 +76,7 @@ enut_trabajo %>%
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
-**Problema:** Hay más mujeres que hombres en la muestra que contestó el diario. Comparar los conteos directos (9,742 vs. 17,646) puede ser engañoso. **Necesitamos porcentajes.**
+**Problema:** Hay más mujeres que hombres en la muestra que contestó el cuestionario de uso del tiempo. Comparar los conteos directos (9,742 vs. 17,646) puede ser engañoso. **Necesitamos porcentajes.**
 
 ---
 title_slide_background: "#008080"
@@ -130,7 +130,7 @@ enut_trabajo %>%
 
 1.  **Calculamos** porcentajes de columna (X = `sexo_factor` está en las columnas).
 2.  **Comparamos** los porcentajes a través de la fila "Sí participa".
-3.  **Conclusión:** Un **98.2%** de las mujeres participa en trabajo doméstico, en comparación con un **94.1%** de los hombres. Como estos porcentajes son diferentes, concluimos que **existe una asociación** entre el sexo y la participación en trabajo doméstico en la muestra.
+3.  **Conclusión:** Un **97.9%** de las mujeres participa en trabajo doméstico, en comparación con un **93.8%** de los hombres. Como estos porcentajes son diferentes, concluimos que **existe una asociación** entre el sexo y la participación en trabajo doméstico en la muestra.
 
 
 # 3. El Control por una Tercera Variable

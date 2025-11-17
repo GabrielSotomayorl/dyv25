@@ -123,7 +123,9 @@
     }
   </style>
   <script src="13-slides_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
   <link href="13-slides_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
   <style>
   #title-slide .title {
     font-size: 1.8em;
@@ -153,7 +155,7 @@ Gabriel Sotomayor
 <ul>
 <li><strong>Construir, interpretar y dar formato</strong> a <strong>tablas de contingencia</strong> (tablas cruzadas).</li>
 <li><strong>Dominar</strong> el cálculo y la interpretación de <strong>porcentajes condicionales</strong> (de fila, de columna y totales).</li>
-<li><strong>Introducir</strong> el concepto sociológico clásico del <strong>“modelo de elaboración”</strong>: analizar la relación bivariada bajo el control de una tercera variable (Z).</li>
+<li><strong>Introducir</strong> el concepto de control estadístico mediante una tercera variable (Z).</li>
 <li><strong>Comprender y diagnosticar</strong> una <strong>asociación espuria</strong>.</li>
 </ul>
 </section>
@@ -210,7 +212,7 @@ Gabriel Sotomayor
 </table>
 </div>
 </div>
-<p><strong>Problema:</strong> Hay más mujeres que hombres en la muestra que contestó el diario. Comparar los conteos directos (9,742 vs.&nbsp;17,646) puede ser engañoso. <strong>Necesitamos porcentajes.</strong></p>
+<p><strong>Problema:</strong> Hay más mujeres que hombres en la muestra que contestó el cuestionario de uso del tiempo. Comparar los conteos directos (9,742 vs.&nbsp;17,646) puede ser engañoso. <strong>Necesitamos porcentajes.</strong></p>
 </section></section>
 <section>
 <section id="uso-de-porcentajes" class="title-slide slide level1 center">
@@ -291,7 +293,7 @@ Gabriel Sotomayor
 <ol type="1">
 <li><strong>Calculamos</strong> porcentajes de columna (X = <code>sexo_factor</code> está en las columnas).</li>
 <li><strong>Comparamos</strong> los porcentajes a través de la fila “Sí participa”.</li>
-<li><strong>Conclusión:</strong> Un <strong>98.2%</strong> de las mujeres participa en trabajo doméstico, en comparación con un <strong>94.1%</strong> de los hombres. Como estos porcentajes son diferentes, concluimos que <strong>existe una asociación</strong> entre el sexo y la participación en trabajo doméstico en la muestra.</li>
+<li><strong>Conclusión:</strong> Un <strong>97.9%</strong> de las mujeres participa en trabajo doméstico, en comparación con un <strong>93.8%</strong> de los hombres. Como estos porcentajes son diferentes, concluimos que <strong>existe una asociación</strong> entre el sexo y la participación en trabajo doméstico en la muestra.</li>
 </ol>
 </section></section>
 <section>
@@ -702,42 +704,80 @@ Gabriel Sotomayor
       });
     </script>
     
+
     <script>
+
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
       // slide changes (different for each slide format).
+
       (function () {
+
         // dispatch for htmlwidgets
+
         function fireSlideEnter() {
+
           const event = window.document.createEvent("Event");
+
           event.initEvent("slideenter", true, true);
+
           window.document.dispatchEvent(event);
+
         }
+
+    
 
         function fireSlideChanged(previousSlide, currentSlide) {
+
           fireSlideEnter();
 
+    
+
           // dispatch for shiny
+
           if (window.jQuery) {
+
             if (previousSlide) {
+
               window.jQuery(previousSlide).trigger("hidden");
+
             }
+
             if (currentSlide) {
+
               window.jQuery(currentSlide).trigger("shown");
+
             }
+
           }
+
         }
+
+    
 
         // hookup for slidy
+
         if (window.w3c_slidy) {
+
           window.w3c_slidy.add_observer(function (slide_num) {
+
             // slide_num starts at position 1
+
             fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
           });
+
         }
 
+    
+
       })();
+
     </script>
+
+    
 
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
