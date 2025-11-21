@@ -1,137 +1,271 @@
 ---
-title: "Clase 14 <br> Análisis Factorial Exploratorio II"
-subtitle: "Análisis Avanzado de Datos"
+title: "Síntesis Bivariada y Medidas de Asociación"
+subtitle: "Unidad 5: Estadística Descriptiva Bivariada"
 author: "Gabriel Sotomayor"
-format: 
+date: "2025-11-24"
+format:
   revealjs:
     theme: [dark, custom.scss]
     slide-number: true
     auto-fit: true
     logo: images/logo.png
-editor: visual
+include-in-header:
+  - text: |
+      <style>
+      #title-slide .title {
+        font-size: 1.8em;
+      }
+      </style>
 ---
 
-## Contenidos de la sesión {.smaller background-color="white"}
+## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
--   **Extracción de factores comunes**
--   **Obtención e interpretación de la matriz factorial**
--   **Evaluación del modelo factorial**
--   **Cálculo de las puntuaciones factoriales**
+-   **Sintetizar** las estrategias visuales para cada tipo de análisis bivariado.
+-   **Introducir** el coeficiente de **Correlación de Pearson (r)** para cuantificar la fuerza y dirección de una relación lineal.
+-   **Desglosar** el concepto de **covarianza** como el paso previo a la correlación.
+-   **Discutir** las **limitaciones** de la correlación (outliers, no linealidad, causalidad).
+-   **Concluir** el curso conectando la estadística descriptiva con la **incertidumbre del muestreo** y el rol de la **probabilidad**.
 
-# La extracción de factores comunes
+---
+title_slide_background: "#008080"
+---
 
-## Selección de variables {.smaller background-color="white"}
+# 1. El Mapa del Análisis Bivariado: Síntesis Visual
 
-La selección de variables en un Análisis Factorial Exploratorio es un paso crucial para obtener una solución factorial interpretable y teóricamente coherente. Algunas consideraciones para seleccionar variables incluyen:
+## Eligiendo la Herramienta Correcta {.smaller background-color="white"}
 
--   **Relevancia teórica:** Las variables deben estar relacionadas con el concepto subyacente que se desea medir y tener una base teórica sólida.
--   **Distribución de las variables:** Es conveniente verificar si las variables tienen distribuciones normales o al menos simétricas, ya que las distribuciones sesgadas o asimétricas pueden afectar la solución factorial.
--   **Correlaciones entre variables:** Examinar la matriz de correlaciones para determinar si las variables comparten suficiente varianza común. 
--   **Ajuste con el modelo factorial:** Una vez extraidos los facotres comunes debe evaluarse el ajuste de cada variable y la posibilidad de modificar las variables.
+Hemos explorado tres tipos de relaciones. A modo de resumen, este es nuestro mapa conceptual para elegir la visualización y el análisis numérico correctos:
 
-## Criterios de selección del número de factores {.smaller background-color="white"}
+| Tipo de Relación | Pregunta Sociológica | Herramienta Visual (`ggplot2`) | Herramienta Numérica |
+| :--- | :--- | :--- | :--- |
+| **Cat ➞ Quant** | ¿Difieren los grupos? | `geom_boxplot`, `geom_density` | Tabla de medias/medianas por grupo |
+| **Cat ➞ Cat** | ¿Se asocian las categorías? | `geom_bar(position="fill")` | Tabla de contingencia (% cond.) |
+| **Quant ➞ Quant** | ¿Cómo covarían las variables?| `geom_point` (Scatterplot) | Correlación |
 
-Existen diferentes criterios para determinar el número óptimo de factores a extraer. Algunos de los más comunes son:\
-- **Regla del codo (scree plot)**: Se grafican los autovalores de los factores en función del número de factores. Se busca el punto en el que la curva cambia de pendiente, el "codo".\
-- **Criterio de Kaiser**: Se extraen solo los factores con autovalores mayores a 1. En el caso de AFE estamos trabajando solo con la varianza común, por lo que se consideran los que tienen un autovalor mayor a la varianza común promedio.\
-- **Criterios de ajuste (solo aplicable a ML)**: Se comparan diferentes modelos con distintos números de factores utilizando índices de ajuste como el AIC, BIC, RMSEA.
+Hoy, nos enfocaremos en profundidad en el último caso: la relación entre dos variables cuantitativas.
 
-## Criterios de selección del número de factores {.smaller background-color="white"}
+---
+title_slide_background: "#008080"
+---
 
-Existen diferentes criterios para determinar el número óptimo de factores a extraer. Algunos de los más comunes son:\
-- **Criterio de análisis paralelo**: Este enfoque compara los autovalores observados en los datos con los autovalores generados a partir de datos aleatorios con las mismas dimensiones. Los factores se retienen si los autovalores observados son mayores que los autovalores esperados por azar.\
-- **Interpretación teórica:** Retener los factores que se ajustan a las expectativas teóricas y proporcionan una solución interpretable.\
-A menudo, es útil considerar varios criterios al tomar esta decisión.
+# 2. Del Gráfico de Dispersión a la Correlación
 
-------------------------------------------------------------------------
+## El Gráfico de Dispersión (Scatterplot) {.smaller background-color="white"}
 
-![](https://raw.githubusercontent.com/Clases-GabrielSotomayor/pruebapagina/master/static/slides/img/06/Sedimentaci%C3%B3n.png)
+El **gráfico de dispersión** es nuestra herramienta visual principal para analizar la relación entre dos variables cuantitativas. Nos permite evaluar tres aspectos clave:
 
-## Métodos de extracción de factores {.smaller background-color="white"}
+1.  **Dirección:** ¿La nube de puntos va hacia arriba o hacia abajo?
+    -   **Asociación Positiva:** A medida que X aumenta, Y tiende a aumentar.
+    -   **Asociación Negativa:** A medida que X aumenta, Y tiende a disminuir.
+2.  **Forma:** ¿El patrón sigue una línea recta (**lineal**) o una curva (**curvilíneo**)?
+3.  **Fuerza:** ¿Qué tan agrupados están los puntos alrededor del patrón principal? Puntos muy dispersos indican una relación débil; puntos muy juntos indican una relación fuerte.
 
-Existen varios métodos de extracción de factores. Algunos de los más comunes son:
+## Hacia una Medida Numérica: La Covarianza {.smaller background-color="white"}
 
--   **Mínimos cuadrados residuales (LSR)**: Este método busca minimizar la suma de las diferencias al cuadrado entre las correlaciones observadas y las correlaciones estimadas por el modelo factorial, teniendo en cuenta las correlaciones residuales entre las variables. Es útil para trabajar con datos que presentan correlaciones no lineales o no normales entre las variables. **Es el que R usa por defecto en la función fa()**
+Un gráfico de dispersión es subjetivo. Para cuantificar la relación, necesitamos un número. El primer paso es la **covarianza**.
 
--   **Máxima verosimilitud (ML)**: Este método busca extraer factores que maximicen la probabilidad de obtener la matriz de correlaciones observada. Asume normalidad multivariante. Permite la infernecia estadística.
+La idea es dividir el gráfico en cuatro cuadrantes usando las medias de X e Y.
 
-## Rotación de factores {.smaller background-color="white"}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+library(tidyverse)
+set.seed(123)
+datos_cov <- tibble(x = rnorm(50), y = x + rnorm(50, 0, 0.5))
+mean_x <- mean(datos_cov$x)
+mean_y <- mean(datos_cov$y)
+ggplot(datos_cov, aes(x, y)) +
+  geom_point(size=3, color="#008080") +
+  geom_vline(xintercept = mean_x, color = "red", linetype = "dashed") +
+  geom_hline(yintercept = mean_y, color = "red", linetype = "dashed") +
+  annotate("text", x = 2, y = 2, label = "Cuadrante I (+, +)", color = "darkgreen", size=6) +
+  annotate("text", x = -1.5, y = 2, label = "Cuadrante II (-, +)", color = "darkred", size=6) +
+  annotate("text", x = -1.5, y = -2, label = "Cuadrante III (-, -)", color = "darkgreen", size=6) +
+  annotate("text", x = 2, y = -2, label = "Cuadrante IV (+, -)", color = "darkred", size=6) +
+  labs(title="Los Cuatro Cuadrantes de la Covarianza") +
+  theme_minimal(base_size=16)
+```
 
-La rotación de factores es un paso importante en la interpretación de los resultados del AFE. Los factores extraídos inicialmente a menudo no son fácilmente interpretables, ya que las cargas factoriales pueden estar distribuidas de manera uniforme entre los factores. La rotación busca simplificar la estructura factorial, haciendo que cada variable tenga cargas altas en un factor y cargas bajas en otros. Redistribuye la varianza explicada entre las estructuras latentes.
+-   **Asociación Positiva:** La mayoría de los puntos caen en los cuadrantes **I** y **III**.
+-   **Asociación Negativa:** La mayoría de los puntos caen en los cuadrantes **II** y **IV**.
 
-Existen dos tipos principales de rotación:
+## La Covarianza (sxy) {.smaller background-color="white"}
 
--   **Rotación ortogonal**: Los factores se mantienen no correlacionados entre sí (por ejemplo, varimax, quartimax).
--   **Rotación oblicua**: Se permite que los factores estén correlacionados entre sí (por ejemplo, promax, oblimin). La elección del tipo de rotación dependerá de las expectativas teóricas y de si se espera que los factores estén relacionados entre sí.
+La covarianza calcula el "promedio" del producto de las desviaciones de cada punto a sus respectivas medias.
 
-# Interpretación de la matriz factorial
+$$
+Cov(x, y) = s_{xy} = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n - 1}
+$$
 
-## Matriz factorial {.smaller background-color="white"}
+-   **Interpretación del signo:**
+    -   Si **Cov(x, y) > 0**, la relación es positiva (puntos en cuadrantes I y III).
+    -   Si **Cov(x, y) < 0**, la relación es negativa (puntos en cuadrantes II y IV).
 
-La matriz factorial es la tabla que muestra las cargas factoriales de cada variable en cada factor. Las cargas factoriales representan la relación entre las variables observadas y los factores latentes. Cuanto mayor sea la carga factorial de una variable en un factor, mayor será la contribución de esa variable al factor.
+-   **Problema:** La magnitud de la covarianza depende de las unidades de las variables (ej. `pesos * años`). **¡No es comparable!** No nos dice si la relación es "fuerte" o "débil".
 
-Para interpretar la matriz factorial, se busca un patrón claro de cargas altas y bajas en los factores. Las variables con cargas altas en un factor se consideran relacionadas entre sí y pueden representar una dimensión subyacente del concepto que se mide.
+## La Solución: Correlación de Pearson (r) {.smaller background-color="white"}
 
-------------------------------------------------------------------------
+Para resolver el problema de las unidades, **estandarizamos** la covarianza. La dividimos por el producto de las desviaciones estándar de cada variable. El resultado es el **coeficiente de correlación de Pearson (r)**.
 
-![](https://raw.githubusercontent.com/Clases-GabrielSotomayor/pruebapagina/master/static/slides/img/06/no%20rotado.jpg)
+$$
+r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
+$$
 
-## Interpretación de la matriz factorial {.smaller background-color="white"}
+-   **¡Clave!** La fórmula de `r` es el promedio del producto de las **puntuaciones Z** de X e Y.
+-   `r` es un número **sin unidades**, que siempre va de **-1 a +1**, lo que lo hace universalmente comparable.
 
-Una vez que se haya rotado la matriz factorial, los siguientes pasos pueden ayudar a interpretar los resultados:
+## Interpretando la Correlación (r) {.smaller background-color="white"}
 
--   **Identificar las variables con cargas altas en cada factor:** Establecer un umbral de carga factorial (por ejemplo, \> 0.30) y considerar las variables que superan ese umbral como importantes para cada factor. Idealmente se esperan que cada variable tenga una carga sobre 0,7 con un solo factor y ningún otro sobre 0,3.
--   **Interpretar el significado de cada factor:** Analizar el conjunto de variables con cargas altas en cada factor e intentar identificar un tema o dimensión común que las relacione.
+-   **Rango:** Siempre entre -1 y +1.
+-   **Dirección:**
+    -   r > 0 indica una **asociación positiva**.
+    -   r < 0 indica una **asociación negativa**.
+-   **Fuerza:** La magnitud (el valor absoluto).
+    -   r cercano a 0: relación **lineal débil o nula**.
+    -   r cercano a -1 o +1: relación **lineal fuerte**.
 
-## Interpretación de la matriz factorial {.smaller background-color="white"}
 
-Una vez que se haya rotado la matriz factorial, los siguientes pasos pueden ayudar a interpretar los resultados:
+## Interpretando la Correlación (r) {.smaller background-color="white"}
 
--   **Asignar nombres a los factores:** Dar a cada factor un nombre descriptivo que refleje el tema o dimensión común identificado.
--   **Evaluar la solidez y coherencia de los factores:** Comprobar si los factores son teóricamente coherentes y si se ajustan a las expectativas previas. Además, se pueden realizar análisis de fiabilidad y validez convergente y discriminante para evaluar la calidad de la solución factorial.
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 
-------------------------------------------------------------------------
 
-![](https://raw.githubusercontent.com/Clases-GabrielSotomayor/pruebapagina/master/static/slides/img/06/rotado.jpg)
+library(ggplot2)
+library(gridExtra)
 
-------------------------------------------------------------------------
+# Función corregida para generar datos correlacionados
+crear_datos <- function(n, cor) {
+  x <- rnorm(n) # Generamos x una sola vez
+  # Calculamos y basándonos en el vector x específico
+  # Fórmula: Y = rho * X + sqrt(1 - rho^2) * Z
+  y <- cor * x + sqrt(1 - cor^2) * rnorm(n)
+  
+  data.frame(x = x, y = y)
+}
 
-![](https://raw.githubusercontent.com/Clases-GabrielSotomayor/pruebapagina/master/static/slides/img/06/rotadodest.jpg)
+set.seed(42)
 
-# La evaluación del modelo factorial
+# Generación de los gráficos
+g0 <- ggplot(crear_datos(100, 0), aes(x, y)) + 
+  geom_point(alpha = 0.6) + 
+  labs(title = "r ≈ 0") +
+  theme_minimal()
 
-## Ajuste y cambios en el modelo {.smaller background-color="white"}
+g_neg05 <- ggplot(crear_datos(100, -0.5), aes(x, y)) + 
+  geom_point(alpha = 0.6) + 
+  labs(title = "r ≈ -0.5") +
+  theme_minimal()
 
-La interpretación de los resultados y la mejora del modelo pueden llevarse a cabo considerando los siguientes aspectos:
+g_pos09 <- ggplot(crear_datos(100, 0.9), aes(x, y)) + 
+  geom_point(alpha = 0.6) + 
+  labs(title = "r ≈ 0.9") +
+  theme_minimal()
 
--   **Patrones de carga:** Evaluar la existencia de una estructura simple y si la estructura de carga de los factores es interpretable, y/o se ajusta con las expectativas teóricas, en caso de que existan.\
--   **Complejidad de los ítems:** Ítems con cargas elevadas en múltiples factores pueden indicar ambigüedad. Considere redefinir o eliminar estos ítems.\
--   **Correlaciones entre factores:** Factores altamente correlacionados pueden sugerir redundancia o solapamiento. Evaluar un número diferente de factores.\
--   **Ajuste del modelo:** Utilizar los estadísticos de ajuste para evaluar la calidad del modelo y realizar cambios si es necesario.
+g_neg099 <- ggplot(crear_datos(100, -0.99), aes(x, y)) + 
+  geom_point(alpha = 0.6) + 
+  labs(title = "r ≈ -0.99") +
+  theme_minimal()
 
-## Estadísticos de ajuste y rangos esperados {.smaller background-color="white"}
+# Visualización conjunta
+grid.arrange(g0, g_pos09, g_neg05, g_neg099, ncol = 2)
 
-Los estadísticos de ajuste evalúan la bondad del ajuste entre el modelo y los datos. Algunos de los índices de ajuste más comunes son:
+```
 
--   RMSR (Root Mean Square of the Residuals): Raíz cuadrada de la media de los cuadrados de los residuos. Valores cercanos a 0 indican buen ajuste.\
--   RMSEA (Root Mean Square Error of Approximation): Medida del error de aproximación por grado de libertad. Valores \< 0.05 indican buen ajuste, mientras que valores entre 0.05 y 0.08 sugieren ajuste razonable.\
--   TLI (Tucker-Lewis Index): Índice que compara el modelo propuesto con un modelo nulo. Valores \> 0.95 indican buen ajuste.\
--   BIC (Bayesian Information Criterion): Penaliza la complejidad del modelo. Valores menores indican un mejor ajuste.
+---
+title_slide_background: "#008080"
+---
 
-Los últimos 3 solo son directamente aplicables al utilizar máxima verosimilitud (ML)
+# 3. Las Tres Advertencias sobre la Correlación
 
-# Cálculo y uso de puntuaciones factoriales
+## 1. Correlación no implica Causalidad {.smaller background-color="white"}
 
-## Cálculo de puntuaciones factoriales {.smaller background-color="white"}
+Este es el mantra más importante de la estadística. Una correlación fuerte entre dos variables **nunca** es, por sí sola, evidencia suficiente para concluir que una causa la otra.
 
-Una vez que se hayan interpretado y validado los factores, se pueden calcular las puntuaciones factoriales para cada individuo en la muestra. Es importante considerar que estos puntajes correspodnen a estimaciones, y no a una medición directa de la variable latente.
+La relación podría ser una **asociación espuria**, causada por una tercera variable latente.
 
-Por defecto R usa del método "Thurstone" o basado en regresión. Podemos extraer estas estimaciones a partir de la función "factore.scores()" en R o guardando nuestro análisis factorial como un objeto y seleccionando el elemento scores.
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+# Datos simulados para el ejemplo
+set.seed(123)
+datos_esp <- tibble(
+  temperatura = rep(10:35, each=10),
+  helados = temperatura * 5 + rnorm(260, 0, 20),
+  ahogamientos = temperatura * 0.2 + rnorm(260, 0, 3)
+)
+ggplot(datos_esp, aes(x = helados, y = ahogamientos)) +
+  geom_point(color = "#008080", alpha=0.6) +
+  geom_smooth(method="lm", color="red", se=FALSE) +
+  labs(title="Asociación Positiva: Venta de Helados vs. Ahogamientos",
+       subtitle="Pero la causa común es la temperatura") +
+  theme_minimal(base_size=16)
+```
 
-## Uso de puntuaciones factoriales {.smaller background-color="white"}
+## 2. La Correlación es Sensible a Outliers {.smaller background-color="white"}
 
-Las puntuaciones factoriales pueden utilizarse en investigaciones futuras de diversas maneras:
+Al igual que la media y la desviación estándar, la correlación es una medida **no robusta**. Un solo valor atípico puede distorsionar dramáticamente el coeficiente.
 
--   **Comparaciones entre individuos:** Las puntuaciones factoriales permiten comparar a los individuos en función de sus puntuaciones en las dimensiones subyacentes identificadas en el AFE.
--   **Clasificación de individuos:** Se pueden utilizar las puntuaciones factoriales para clasificar a los individuos en grupos en función de sus puntuaciones en cada factor y analizar las diferencias entre los grupos en otras variables de interés.
--   **Análisis de regresión:** Las puntuaciones factoriales pueden emplearse como variables independientes o dependientes en análisis de regresión para explorar las relaciones entre las dimensiones subyacentes y otras variables.
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+set.seed(1)
+datos_outlier <- tibble(x = 1:20, y = -0.5*x + rnorm(20))
+r1 <- cor(datos_outlier$x, datos_outlier$y)
+p1 <- ggplot(datos_outlier, aes(x,y)) + geom_point(size=3) + geom_smooth(method="lm", se=F) + labs(title=paste("Relación Negativa\nr =", round(r1,2))) + theme_minimal(base_size=14)
+
+datos_outlier_mod <- bind_rows(datos_outlier, tibble(x=18, y=10))
+r2 <- cor(datos_outlier_mod$x, datos_outlier_mod$y)
+p2 <- ggplot(datos_outlier_mod, aes(x,y)) + geom_point(size=3) + geom_smooth(method="lm", se=F) + labs(title=paste("Un outlier invierte la relación\nr =", round(r2,2))) + theme_minimal(base_size=14)
+
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+**Lección:** Siempre inspecciona visualmente tu gráfico de dispersión para detectar outliers antes de interpretar `r`.
+
+## 3. `r` Solo Mide Relaciones LINEALES {.smaller background-color="white"}
+
+El coeficiente de correlación de Pearson está diseñado para medir qué tan bien se ajustan los datos a una **línea recta**. Si la relación es fuerte pero **curvilínea**, `r` puede ser engañosamente bajo.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+
+library(haven)
+
+# Carga de ENUT y preparación
+url_enut <- "https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7"
+archivo_interno <- "250403-ii-enut-bdd-r-v2.RDS"
+enut <- rio::import(url_enut, which = archivo_interno)
+
+enut_trabajo <- enut %>%
+  filter(tiempo == 1) %>%
+  mutate(
+    sexo_factor = as_factor(sexo),
+    p_tdnr_dt_factor = as_factor(p_tdnr_dt),
+    t_tnr_dt = na_if(t_tnr_dt, 96),
+    t_tcnr_dt = na_if(t_tcnr_dt, 96),
+    t_to_dt = na_if(t_to_dt, 96),
+    t_tdnr_dt = na_if(t_tdnr_dt, 96)
+  )
+
+
+
+ggplot(enut_trabajo, aes(x = edad, y = t_tnr_dt)) +
+  geom_point(alpha = 0.05, color="#008080") +
+  geom_smooth(color="red", se = FALSE, method = "loess") +
+  labs(
+    title = "Relación Curvilínea: Edad y Trabajo No Remunerado",
+    subtitle = paste("Correlación lineal (r) ≈", round(cor(enut_trabajo$edad, enut_trabajo$t_tnr_dt, use="complete.obs"), 2)),
+    x = "Edad", y = "Horas diarias de trabajo no remunerado"
+  ) +
+  theme_minimal(base_size = 14)
+```
+
+**Conclusión:** Un `r` cercano a 0 **no significa "ausencia de relación"**. Significa **"ausencia de relación *lineal*"**. Por eso, el análisis visual es irremplazable.
+
+## Cierre del Curso: Más Allá de la Descripción {.smaller background-color="white"}
+
+Hemos pasado el curso aprendiendo a explorar, resumir y visualizar los patrones en **nuestros datos**.
+
+Pero casi siempre, nuestros datos provienen de una **muestra**. Esto nos deja con la pregunta más importante de la estadística:
+
+> *"En nuestra muestra de la ENUT, la brecha de género en trabajo doméstico es de 2.1 horas. ¿Es esta diferencia 'real' o podría ser una simple casualidad producto del azar del muestreo?"*
+
+Responder esta pregunta es el trabajo de la **Estadística Inferencial**.
+
+-   **El Problema:** La **incertidumbre del muestreo**.
+-   **La Herramienta:** La **Teoría de la Probabilidad**.
+-   **El Objetivo:** Hacer **inferencias** sobre la población a partir de la muestra y cuantificar nuestra confianza en esas conclusiones (p-valores, intervalos de confianza).
+
+La estadística descriptiva que han aprendido es el fundamento indispensable para poder hacer inferencia de manera correcta. ¡Felicitaciones por completar este primer gran paso

@@ -1,0 +1,3163 @@
+---
+title: Prácticos (códigos de ejemplo)
+menu:
+  example:
+    parent: Información general
+    weight: 1
+type: docs
+weight: 1
+---
+
+Recuerden visitar esta sección una vez que han finalizado ver la clase y revisar los otros recursos. Estas contienen una descripción detallada de códifo de R y otras informaciones complementarias que serán **indispensables** para su aprendizaje como estudiantes. 
+
+En algunos casos existirán videos tutoriales y talleres complementarios donde codificamos en vivo o explicamos aspectos más desarrollados. 
+
+
+---
+title: "Exploración Inicial de Datos en R: Encuesta CASEN 2022"
+linktitle: "5: La Estructura de los Datos en R"
+date: "2025-09-08"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 5
+type: docs
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## 0. Objetivos del Práctico
+
+El propósito de este práctico es aplicar los conceptos de la clase teórica en un entorno de R real. Al finalizar, serás capaz de:
+
+*   Establecer un flujo de trabajo reproducible usando un Proyecto de RStudio.
+*   Importar una base de datos en formato SPSS (`.sav`) usando el paquete `haven`.
+*   Realizar un "diagnóstico inicial" sistemático de una base de datos, interpretando los resultados de las funciones de exploración.
+*   Manejar la gran cantidad de variables de una encuesta real mediante la **subselección de datos**.
+*   Utilizar la función `haven::as_factor()` para trabajar con las etiquetas de las variables.
+*   Explorar variables individuales, tanto categóricas como numéricas.
+
+## 1. Contexto: ¿Qué es la Encuesta CASEN?
+
+La Encuesta de Caracterización Socioeconómica Nacional (CASEN) es el principal instrumento de medición socioeconómica en Chile, a cargo del Ministerio de Desarrollo Social y Familia. Su objetivo es conocer la situación de los hogares en áreas como pobreza, ingresos, educación, salud, trabajo y vivienda.
+
+Los datos de CASEN son fundamentales para el diseño y evaluación de las políticas sociales del país. En este práctico, daremos nuestros primeros pasos para analizar esta rica fuente de información.
+
+## 2. Preparación del Entorno de Trabajo
+
+### 2.1 Proyectos de RStudio y Rutas Relativas
+
+La base de un trabajo de análisis reproducible es la organización. La mejor forma de hacerlo es usando **Proyectos de RStudio (`.Rproj`)**. Un proyecto agrupa todos los archivos de una investigación (datos, scripts, informes) en una sola carpeta, y establece la raíz del directorio de trabajo en esa carpeta.
+
+Esto nos permite usar **rutas relativas** (ej. `"datos/casen.sav"`) en lugar de rutas absolutas (ej. `"C:/Users/Gabriel/Documentos/Curso/datos/casen.sav"`), lo que asegura que nuestro código funcione en cualquier computador.
+
+**Acción:** Antes de continuar, asegúrate de haber creado un Proyecto de RStudio para esta clase.
+
+### 2.2 Paquetes: Ampliando las capacidades de R
+
+R base tiene muchas funciones, pero su verdadero poder reside en los **paquetes**: colecciones de funciones, datos y documentación creadas por la comunidad de usuarios.
+
+**Funcionamiento de los paquetes:**
+
+1.  **Se instalan UNA SOLA VEZ** con `install.packages("nombre_del_paquete")`.
+2.  **Se cargan CADA VEZ que inicias una nueva sesión de R** con `library(nombre_del_paquete)`.
+
+Para este práctico, usaremos `haven` para importar datos y `tidyverse` para buenas prácticas generales.
+
+
+``` r
+# Cargar paquetes necesarios para la sesión
+# Si no los tienes, debes instalarlos primero ejecutando en la consola:
+# install.packages("haven")
+# install.packages("tidyverse")
+
+library(haven)
+library(tidyverse)
+```
+
+### 2.3 Importación de la Base de Datos CASEN 2022
+
+**Forma 1: El método recomendado**
+
+Este es el método estándar para trabajar. Implica descargar el archivo y guardarlo localmente en tu proyecto.
+
+1.  Descarga la base de datos desde el sitio del [Observatorio Social del Ministerio de Desarrollo Social y Familia](https://observatorio.ministeriodesarrollosocial.gob.cl/encuesta-casen-2022). Necesitarás la base en formato SPSS (`.sav`).
+2.  Descomprime el archivo `.zip` y guarda el archivo `.sav` en una carpeta dentro de tu Proyecto de RStudio (ej. una carpeta llamada `datos`).
+3.  Carga los datos usando la función `read_sav()` del paquete `haven` y una ruta relativa.
+
+
+``` r
+# Ejemplo de cómo cargarías el archivo si lo guardaste en una carpeta 'datos'
+casen <- haven::read_sav("datos/Base de datos Casen 2022 SPSS_18 marzo 2024.sav")
+```
+
+**Forma 2: Un método automático**
+
+Para fines de reproducibilidad total (por ejemplo, para que este sitio web funcione), a veces se utiliza un código que descarga y carga los datos automáticamente. No es necesario que lo uses para tus tareas, pero es una buena práctica conocerlo.
+
+
+```r
+# Nota: Este código es necesario para el funcionamiento del sitio del curso.
+# Para tu trabajo, recomendamos usar la Forma 1.
+temp <- tempfile() 
+download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2022/Base%20de%20datos%20Casen%202022%20SPSS.sav.zip", temp)
+casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav"))
+unlink(temp); remove(temp)
+```
+
+## 3. Primer Contacto y Subselección de Datos
+
+### 3.1 El Problema: ¡Demasiadas Variables!
+
+Veamos las dimensiones de nuestra base de datos recién cargada.
+
+
+``` r
+dim(casen)
+```
+
+```
+## [1] 202231    917
+```
+
+Como pueden ver, la CASEN 2022 tiene **202,231 casos (filas)** y **917 variables (columnas)**. Trabajar con una base de datos tan grande es ineficiente y confuso. El primer paso en cualquier análisis real es **seleccionar solo las variables que necesitamos**.
+
+### 3.2 Subselección con R Base
+
+Usaremos la sintaxis de corchetes de R base `[filas, columnas]` para crear un nuevo `data.frame` más pequeño y manejable. Dejamos el espacio de las filas en blanco para seleccionar **TODAS** las filas, y en el espacio de las columnas, le damos un vector con los nombres de las variables que queremos conservar.
+
+
+``` r
+# Creamos un vector con los nombres de las variables de interés
+variables_seleccionadas <- c("region", "sexo", "edad", "esc", "ind_hacina", "ytotcorh")
+
+# Creamos un nuevo objeto 'casen_sub' con solo esas columnas
+casen_sub <- casen[, variables_seleccionadas]
+
+# Verificamos las dimensiones de nuestra nueva base de datos
+dim(casen_sub)
+```
+
+```
+## [1] 202231      6
+```
+
+¡Mucho mejor! Ahora trabajaremos con este objeto `casen_sub` que es más liviano y enfocado.
+
+## 4. La exploración inicial de nuestros datos
+
+Ahora que tenemos un conjunto de datos manejable, apliquemos el protocolo de exploración.
+
+### 4.1 Estructura y el Problema de las Etiquetas (`<dbl+lbl>`)
+
+Usemos `str()` para ver la estructura de nuestro nuevo objeto.
+
+
+``` r
+str(casen_sub)
+```
+
+```
+## tibble [202,231 × 6] (S3: tbl_df/tbl/data.frame)
+##  $ region    : dbl+lbl [1:202231] 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,...
+##    ..@ label      : chr "Región"
+##    ..@ format.spss: chr "F2.0"
+##    ..@ labels     : Named num [1:16] 1 2 3 4 5 6 7 8 9 10 ...
+##    .. ..- attr(*, "names")= chr [1:16] "Región de Tarapacá" "Región de Antofagasta" "Región de Atacama" "Región de Coquimbo" ...
+##  $ sexo      : dbl+lbl [1:202231] 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2, ...
+##    ..@ label        : chr "Sexo"
+##    ..@ format.spss  : chr "F1.0"
+##    ..@ display_width: int 6
+##    ..@ labels       : Named num [1:2] 1 2
+##    .. ..- attr(*, "names")= chr [1:2] "1. Hombre" "2. Mujer"
+##  $ edad      : num [1:202231] 72 67 40 56 25 2 60 84 67 30 ...
+##   ..- attr(*, "label")= chr "Edad"
+##   ..- attr(*, "format.spss")= chr "F3.0"
+##   ..- attr(*, "display_width")= int 6
+##  $ esc       : num [1:202231] 1 4 15 NA 12 NA 10 4 8 12 ...
+##   ..- attr(*, "label")= chr "Años de escolaridad (edad >= 15)"
+##   ..- attr(*, "format.spss")= chr "F2.0"
+##   ..- attr(*, "display_width")= int 5
+##  $ ind_hacina: dbl+lbl [1:202231] 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+##    ..@ label        : chr "Índice de hacinamiento"
+##    ..@ format.spss  : chr "F3.0"
+##    ..@ display_width: int 12
+##    ..@ labels       : Named num [1:5] -88 1 2 3 4
+##    .. ..- attr(*, "names")= chr [1:5] "No sabe" "Sin hacinamiento (menos de 2,5 personas por dormitorio)" "Hacinamiento medio (entre 2,5 y 3,49 personas por dormitorio)" "Hacinamiento alto (entre 3,5 y 4,99 personas por dormitorio)" ...
+##  $ ytotcorh  : num [1:202231] 1010894 1010894 1010894 418192 418192 ...
+##   ..- attr(*, "label")= chr "Ingreso total corregido del hogar"
+##   ..- attr(*, "format.spss")= chr "F8.0"
+##   ..- attr(*, "display_width")= int 10
+```
+
+**Interpretación:** `haven` es inteligente. Ha importado las variables numéricas de SPSS (ej. `sexo` donde 1="Hombre", 2="Mujer") y también ha guardado las **etiquetas de texto** asociadas. Por eso vemos `dbl+lbl` o `haven_labelled`. Por defecto, R las trata como números, pero guarda las etiquetas. Para que nuestro análisis sea más claro, necesitamos "activar" esas etiquetas.
+
+### 4.2 Trabajando con Etiquetas: `haven::as_factor()`
+
+La función `as_factor()` del paquete `haven` convierte estas variables etiquetadas en **factores**, que es el tipo de dato que R usa para variables categóricas. Esta función reemplaza los números por sus correspondientes etiquetas de texto.
+
+
+``` r
+# Convirtamos la variable de hacinamiento a factor para ver sus etiquetas
+casen_sub$hacinamiento_factor <- as_factor(casen_sub$ind_hacina)
+
+# Ahora comparemos los tipos de dato
+class(casen_sub$ind_hacina)
+```
+
+```
+## [1] "haven_labelled" "vctrs_vctr"     "double"
+```
+
+``` r
+class(casen_sub$hacinamiento_factor)
+```
+
+```
+## [1] "factor"
+```
+
+### 4.3 Resumen General y Detección de Problemas
+
+`summary()` nos da un resumen estadístico de cada variable, ideal para un control de calidad.
+
+
+``` r
+summary(casen_sub)
+```
+
+```
+##      region            sexo            edad             esc       
+##  Min.   : 1.000   Min.   :1.000   Min.   :  0.00   Min.   : 0.00  
+##  1st Qu.: 5.000   1st Qu.:1.000   1st Qu.: 20.00   1st Qu.: 8.00  
+##  Median : 8.000   Median :2.000   Median : 38.00   Median :12.00  
+##  Mean   : 8.761   Mean   :1.527   Mean   : 39.32   Mean   :11.17  
+##  3rd Qu.:13.000   3rd Qu.:2.000   3rd Qu.: 58.00   3rd Qu.:14.00  
+##  Max.   :16.000   Max.   :2.000   Max.   :120.00   Max.   :29.00  
+##                                                    NA's   :36983  
+##    ind_hacina         ytotcorh       
+##  Min.   :-88.000   Min.   :       0  
+##  1st Qu.:  1.000   1st Qu.:  750000  
+##  Median :  1.000   Median : 1121667  
+##  Mean   :  1.014   Mean   : 1476989  
+##  3rd Qu.:  1.000   3rd Qu.: 1728370  
+##  Max.   :  4.000   Max.   :77300000  
+##                    NA's   :120       
+##                                                                                       hacinamiento_factor
+##  No sabe                                                                                        :   150  
+##  Sin hacinamiento (menos de 2,5 personas por dormitorio)                                        :189513  
+##  Hacinamiento medio (entre 2,5 y 3,49 personas por dormitorio)                                  :  9682  
+##  Hacinamiento alto (entre 3,5 y 4,99 personas por dormitorio)                                   :  2079  
+##  Hacinamiento crítico (5 y más personas por dormitorio u hogar sin dormitorios de uso exclusivo):   807  
+##                                                                                                          
+## 
+```
+
+**Actividad de Interpretación:** Examina el `summary`. ¿Detectas algún valor que te parezca extraño o problemático?
+*   En `ind_hacina`, vemos un `Min.` de -88. Esto es un código para "No sabe", no un valor real.
+*   En `esc`, hay 36,983 `NA's` (valores perdidos). Esto es esperable, ya que la pregunta solo aplica a personas mayores de cierta edad.
+*   En `ytotcorh`, el `Max.` es muy alto. Esto sugiere una distribución de ingresos muy asimétrica (desigual).
+
+## 5. Explorando Variables Individuales
+
+### 5.1 Variable Categórica: Hacinamiento (`ind_hacina`)
+
+Veamos la diferencia al tabular la variable numérica original versus la versión convertida a factor.
+
+
+``` r
+# Tabla con la variable numérica (menos informativa, solo vemos códigos)
+table(casen_sub$ind_hacina)
+```
+
+```
+## 
+##    -88      1      2      3      4 
+##    150 189513   9682   2079    807
+```
+
+``` r
+# Tabla con la variable convertida a factor (mucho más clara, vemos las categorías)
+table(casen_sub$hacinamiento_factor)
+```
+
+```
+## 
+##                                                                                         No sabe 
+##                                                                                             150 
+##                                         Sin hacinamiento (menos de 2,5 personas por dormitorio) 
+##                                                                                          189513 
+##                                   Hacinamiento medio (entre 2,5 y 3,49 personas por dormitorio) 
+##                                                                                            9682 
+##                                    Hacinamiento alto (entre 3,5 y 4,99 personas por dormitorio) 
+##                                                                                            2079 
+## Hacinamiento crítico (5 y más personas por dormitorio u hogar sin dormitorios de uso exclusivo) 
+##                                                                                             807
+```
+
+Para obtener los porcentajes, usamos `prop.table()`.
+
+
+``` r
+# Calculamos la proporción y multiplicamos por 100 para obtener el porcentaje
+prop.table(table(casen_sub$hacinamiento_factor)) * 100
+```
+
+```
+## 
+##                                                                                         No sabe 
+##                                                                                       0.0741726 
+##                                         Sin hacinamiento (menos de 2,5 personas por dormitorio) 
+##                                                                                      93.7111521 
+##                                   Hacinamiento medio (entre 2,5 y 3,49 personas por dormitorio) 
+##                                                                                       4.7875944 
+##                                    Hacinamiento alto (entre 3,5 y 4,99 personas por dormitorio) 
+##                                                                                       1.0280323 
+## Hacinamiento crítico (5 y más personas por dormitorio u hogar sin dormitorios de uso exclusivo) 
+##                                                                                       0.3990486
+```
+
+**Actividad de Interpretación:** Basado en la tabla de frecuencias porcentuales, ¿qué porcentaje de los hogares en la muestra vive en condiciones de hacinamiento (sumando las categorías de hacinamiento medio, alto y crítico)?
+
+### 5.2 Variable Numérica: Edad (`edad`)
+
+Para las variables numéricas, nos interesan las medidas de tendencia central y dispersión. El principal desafío son los valores perdidos (`NA`).
+
+
+``` r
+# La variable edad en CASEN no tiene valores perdidos, por lo que podemos calcularla directamente
+mean(casen_sub$edad)
+```
+
+```
+## [1] 39.32292
+```
+
+``` r
+# Sin embargo, la buena práctica es usar siempre na.rm = TRUE
+# por si trabajamos con otras variables que sí tengan NAs.
+edad_promedio <- mean(casen_sub$edad, na.rm = TRUE)
+desv_est_edad <- sd(casen_sub$edad, na.rm = TRUE)
+
+# Imprimimos los resultados 
+edad_promedio
+```
+
+```
+## [1] 39.32292
+```
+
+``` r
+desv_est_edad
+```
+
+```
+## [1] 23.03013
+```
+
+**Actividad Aplicada:** Calcula e interpreta el promedio de años de escolaridad (`esc`) y el ingreso total del hogar (`ytotcorh`). No olvides usar `na.rm = TRUE`. ¿Qué te llama la atención de estos valores?
+
+## 6. Reflexiones Finales y Próximos Pasos
+
+**Resumen del Práctico:** En esta sesión, realizamos un diagnóstico completo de una subselección de variables de la Encuesta CASEN. Aprendimos a importar datos con `haven`, a subseleccionar variables, a interpretar la estructura de los datos, a convertir variables etiquetadas en factores con `as_factor()`, y a calcular nuestras primeras estadísticas descriptivas. Este protocolo es el primer paso fundamental en cualquier análisis de datos.
+
+**Conexión con la Próxima Clase:** Hemos visto que para responder preguntas más complejas (ej. ‘¿Cuál es el ingreso promedio *por región*?’) necesitamos herramientas más potentes para manipular y agrupar los datos. Eso es exactamente lo que veremos en la próxima clase, cuando aprendamos la “gramática de la manipulación de datos” con `dplyr`.
+
+
+---
+title: "Manipulación de Datos con dplyr: Respondiendo Preguntas con datos sociales"
+linktitle: "6: Manipulación de Datos con dplyr"
+date: "2025-09-22"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 6
+type: docs
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es aprender a manipular y transformar datos en R utilizando la "gramática" del paquete `dplyr`. Al finalizar, serás capaz de:
+
+*   Seleccionar y filtrar datos usando tanto R base como `dplyr`, comprendiendo sus diferencias.
+*   Entender y aplicar el operador *pipe* (`%>%`) para crear flujos de trabajo legibles.
+*   Utilizar los cinco verbos principales de `dplyr` (`select`, `filter`, `arrange`, `mutate`, `summarise`).
+*   Responder preguntas de investigación simples mediante la combinación de `group_by()` y `summarise()`.
+
+## 1. Preparación del Entorno (Recordatorio)
+
+Un flujo de trabajo reproducible comienza con una buena organización. **No olvides realizar estos pasos cada vez que inicies un nuevo análisis.**
+
+### 1.1 Crear un Proyecto de RStudio
+
+Siempre trabaja dentro de un **Proyecto (`.Rproj`)**. Esto asegura que tus rutas a los archivos sean relativas y que tu código funcione en cualquier computador.
+
+**Acción:** Si no lo has hecho, crea un Proyecto de RStudio para esta unidad. Guarda este archivo `.qmd` y la base de datos CASEN en carpetas dentro de tu proyecto.
+
+### 1.2 Cargar Paquetes
+
+Recuerda la regla de oro: los paquetes **se instalan una vez** con `install.packages()`, pero **se cargan siempre** al inicio de cada sesión con `library()`.
+
+
+```r
+# Cargar los paquetes que usaremos hoy
+library(haven)
+library(tidyverse)
+```
+
+### 1.3 Cargar la Base de Datos
+
+Vamos a cargar la Encuesta CASEN 2022. Para ello, seguiremos el método estándar de trabajo: descargar el archivo y cargarlo en R desde nuestro proyecto.
+
+**Paso 1: Descargar los datos**
+
+Primero, debes descargar la base de datos oficial. Puedes encontrarla en el sitio del **Observatorio Social del Ministerio de Desarrollo Social y Familia**.
+
+-   **Enlace de descarga:** [Encuesta CASEN 2022 - Base de Datos SPSS](https://observatorio.ministeriodesarrollosocial.gob.cl/encuesta-casen-2022)
+-   **Acción:** Descarga el archivo `.zip` que contiene la base de datos en formato SPSS (`.sav`).
+
+**Paso 2: Organizar tus archivos**
+
+Una vez descargado, descomprime el archivo `.zip` y guarda el archivo `.sav` (que se llama "Base de datos Casen 2022 SPSS_18 marzo 2024.sav") en una carpeta llamada `datos` dentro de tu Proyecto de RStudio.
+
+**Paso 3: Cargar los datos en R**
+
+Ahora que el archivo está en su lugar, usamos la función `read_sav()` del paquete `haven` para importarlo a nuestro entorno de R. Le asignamos el nombre `casen` a nuestra base de datos.
+
+
+```r
+# Usamos una ruta relativa porque el archivo está dentro de nuestro proyecto
+casen <- haven::read_sav("datos/Base de datos Casen 2022 SPSS_18 marzo 2024.sav")
+```
+
+---
+
+*Nota sobre la reproducibilidad:* Para que este práctico y el sitio web del curso funcionen de manera autocontenida, a continuación se incluye un código que realiza la descarga y carga de forma automática. **No necesitas ejecutar este código si ya cargaste la base manualmente**, pero es una buena práctica conocerlo.
+
+
+```r
+# Código automático para cargar los datos
+temp <- tempfile() 
+download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2022/Base%20de%20datos%20Casen%202022%20SPSS.sav.zip", temp)
+casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav"))
+unlink(temp); remove(temp)
+```
+
+---
+
+Ahora que tenemos nuestra base `casen` cargada, crearemos una submuestra más pequeña para trabajar de manera más cómoda y eficiente.
+
+
+```r
+# Creamos una submuestra con las variables que usaremos hoy
+casen_sub <- casen[, c("folio", "pco1", "region", "sexo", "edad", "esc", "ytotcorh")]
+```
+
+## 2. R Base vs. `dplyr`: Un Contraste
+
+Antes de sumergirnos en `dplyr`, comparemos cómo se realizan dos tareas básicas en R base para apreciar las ventajas de la nueva gramática.
+
+### 2.1 Seleccionar Variables
+
+**Objetivo:** Crear un `data.frame` solo con `edad`, `sexo` y `esc`.
+
+**Con R Base:**
+
+```r
+casen_base_select <- casen_sub[, c("edad", "sexo", "esc")]
+head(casen_base_select)
+```
+
+```
+## # A tibble: 6 × 3
+##    edad sexo            esc
+##   <dbl> <dbl+lbl>     <dbl>
+## 1    72 2 [2. Mujer]      1
+## 2    67 1 [1. Hombre]     4
+## 3    40 2 [2. Mujer]     15
+## 4    56 1 [1. Hombre]    NA
+## 5    25 2 [2. Mujer]     12
+## 6     2 1 [1. Hombre]    NA
+```
+Usamos la notación de corchetes `[filas, columnas]`. Dejamos el espacio de las filas en blanco para indicar que queremos *todas las filas*, y le pasamos un vector de nombres de columnas `c("edad", "sexo", "esc")` para seleccionar solo esas variables.
+
+**Con `dplyr`:**
+
+```r
+casen_dplyr_select <- select(casen_sub, edad, sexo, esc)
+head(casen_dplyr_select)
+```
+
+```
+## # A tibble: 6 × 3
+##    edad sexo            esc
+##   <dbl> <dbl+lbl>     <dbl>
+## 1    72 2 [2. Mujer]      1
+## 2    67 1 [1. Hombre]     4
+## 3    40 2 [2. Mujer]     15
+## 4    56 1 [1. Hombre]    NA
+## 5    25 2 [2. Mujer]     12
+## 6     2 1 [1. Hombre]    NA
+```
+La función `select()` es más explícita. El primer argumento es la base de datos, y los siguientes son los nombres de las variables que queremos mantener, sin comillas.
+
+### 2.2 Filtrar Casos
+
+**Objetivo:** Quedarnos solo con las personas mayores de 65 años.
+
+**Con R Base:**
+
+```r
+casen_base_filter <- casen_sub[casen_sub$edad > 65, ]
+dim(casen_base_filter)
+```
+
+```
+## [1] 30809     7
+```
+Aquí, la condición lógica `casen_sub$edad > 65` se aplica en el espacio de las filas. R evalúa esta condición para cada fila y se queda solo con aquellas donde el resultado es `TRUE`.
+
+**Con `dplyr`:**
+
+```r
+casen_dplyr_filter <- filter(casen_sub, edad > 65)
+dim(casen_dplyr_filter)
+```
+
+```
+## [1] 30809     7
+```
+El verbo `filter()` hace la misma operación, pero de una forma más legible: "Filtra la base `casen_sub` donde la edad sea mayor a 65".
+
+## 3. La Gramática de `dplyr` y el Poder del *Pipe* `%>%`
+
+### 3.1 La Lógica de las Funciones de `dplyr`
+
+El paquete `dplyr` es tan poderoso porque sus funciones ("verbos") siguen una **gramática simple y consistente**:
+
+1.  **El primer argumento es siempre un `data.frame`**.
+2.  Los argumentos siguientes describen qué hacer, usando los nombres de las variables **sin comillas**.
+3.  **El resultado es siempre un nuevo `data.frame`**. `dplyr` nunca modifica tus datos originales.
+
+### 3.2 ¿Por qué funciona el *Pipe*?
+
+El operador *pipe* (`%>%`) toma lo que está a su izquierda y lo pone como **primer argumento** de la función a su derecha.
+
+Esta es la razón por la que `dplyr` y el *pipe* son la combinación perfecta: como todos los verbos de `dplyr` esperan un `data.frame` como primer argumento, podemos encadenarlos fluidamente.
+
+**Sin el *pipe* (funciones anidadas):**
+El código se lee "de adentro hacia afuera", lo que es poco intuitivo.
+
+```r
+casen_anidado <- filter(
+  select(casen_sub, region, edad, ytotcorh),
+  region == 13 # Usamos el código numérico de la RM
+)
+head(casen_anidado)
+```
+
+```
+## # A tibble: 6 × 3
+##   region                                 edad ytotcorh
+##   <dbl+lbl>                             <dbl>    <dbl>
+## 1 13 [Región Metropolitana de Santiago]    54  2945500
+## 2 13 [Región Metropolitana de Santiago]    28  2945500
+## 3 13 [Región Metropolitana de Santiago]    27  2945500
+## 4 13 [Región Metropolitana de Santiago]    19  2945500
+## 5 13 [Región Metropolitana de Santiago]    56  2945500
+## 6 13 [Región Metropolitana de Santiago]    81   963997
+```
+
+**Con el *pipe* (`%>%`):**
+El código se lee de izquierda a derecha. ¡Mucho más intuitivo!
+
+```r
+# Atajo para el pipe: Ctrl + Shift + M
+casen_pipe <- casen_sub %>%
+  select(region, edad, ytotcorh) %>%
+  filter(region == 13)
+
+head(casen_pipe)
+```
+
+```
+## # A tibble: 6 × 3
+##   region                                 edad ytotcorh
+##   <dbl+lbl>                             <dbl>    <dbl>
+## 1 13 [Región Metropolitana de Santiago]    54  2945500
+## 2 13 [Región Metropolitana de Santiago]    28  2945500
+## 3 13 [Región Metropolitana de Santiago]    27  2945500
+## 4 13 [Región Metropolitana de Santiago]    19  2945500
+## 5 13 [Región Metropolitana de Santiago]    56  2945500
+## 6 13 [Región Metropolitana de Santiago]    81   963997
+```
+**A partir de ahora, usaremos el *pipe* para todas nuestras operaciones.**
+
+## 4. Aplicando los Verbos de `dplyr`
+
+Ahora, usemos esta nueva gramática para responder preguntas de investigación.
+
+### 4.1 `arrange()`: Ordenando los datos
+
+**Pregunta:** ¿Cuáles son los 5 hogares con mayor ingreso (`ytotcorh`) en nuestra submuestra?
+
+
+```r
+# Usamos arrange() con desc() para ordenar de mayor a menor
+casen_sub %>%
+  filter(pco1 == 1) %>% # 1. Filtramos solo jefes de hogar
+  arrange(desc(ytotcorh)) %>%
+  head(5) # Usamos head() para ver solo los primeros 5 resultados
+```
+
+```
+## # A tibble: 5 × 7
+##       folio pco1                     region         sexo     edad   esc ytotcorh
+##       <dbl> <dbl+lbl>                <dbl+lbl>      <dbl+l> <dbl> <dbl>    <dbl>
+## 1 295720201 1 [1. Jefatura de Hogar] 13 [Región Me… 1 [1. …    44    17 77300000
+## 2 246360701 1 [1. Jefatura de Hogar] 14 [Región de… 1 [1. …    72    17 65167000
+## 3 391140701 1 [1. Jefatura de Hogar]  3 [Región de… 1 [1. …    45    13 56833333
+## 4 306270201 1 [1. Jefatura de Hogar]  4 [Región de… 1 [1. …    54    15 53783334
+## 5 320530301 1 [1. Jefatura de Hogar] 14 [Región de… 1 [1. …    44    12 35143333
+```
+**Interpretación del output:** La tabla muestra las 5 filas que corresponden a los jefes de los hogares con los ingresos más altos en toda la muestra.
+
+### 4.2 `mutate()`: Creando nuevas variables
+
+`mutate()` nos permite crear nuevas columnas. La **buena práctica** es crear nuevas columnas con nombres diferentes (ej. `sexo_factor`) para no perder la información original (ej. `sexo`).
+
+**Objetivo:** Crear una variable con la edad en meses y convertir `sexo` y `region` a factores para que sean más legibles.
+
+
+```r
+casen_procesada <- casen_sub %>%
+  mutate(
+    edad_meses = edad * 12, # Un cálculo aritmético simple
+    sexo_factor = as_factor(sexo), # Creamos una nueva variable factor
+    region_factor = as_factor(region) # Creamos otra variable factor
+  )
+
+# Veamos las nuevas columnas (al final a la derecha)
+head(casen_procesada)
+```
+
+```
+## # A tibble: 6 × 10
+##      folio pco1     region   sexo     edad   esc ytotcorh edad_meses sexo_factor
+##      <dbl> <dbl+lb> <dbl+lb> <dbl+l> <dbl> <dbl>    <dbl>      <dbl> <fct>      
+## 1   1.00e8  2 [2. … 16 [Reg… 2 [2. …    72     1  1010894        864 2. Mujer   
+## 2   1.00e8  1 [1. … 16 [Reg… 1 [1. …    67     4  1010894        804 1. Hombre  
+## 3   1.00e8  4 [4. … 16 [Reg… 2 [2. …    40    15  1010894        480 2. Mujer   
+## 4   1.00e8  2 [2. … 16 [Reg… 1 [1. …    56    NA   418192        672 1. Hombre  
+## 5   1.00e8  4 [4. … 16 [Reg… 2 [2. …    25    12   418192        300 2. Mujer   
+## 6   1.00e8 10 [10.… 16 [Reg… 1 [1. …     2    NA   418192         24 1. Hombre  
+## # ℹ 1 more variable: region_factor <fct>
+```
+**Interpretación del output:** Nuestra nueva base de datos `casen_procesada` ahora tiene 10 columnas. Las tres últimas son las que acabamos de crear. `sexo_factor` y `region_factor` ahora contienen texto legible en lugar de códigos numéricos.
+
+### 4.3 `group_by()` y `summarise()`: El corazón del análisis descriptivo
+
+**Pregunta 1:** ¿Cuál es el promedio de años de escolaridad (`esc`) por sexo?
+
+Ahora podemos usar nuestra nueva variable `sexo_factor` para que el resultado sea más claro.
+
+
+```r
+casen_procesada %>%
+  group_by(sexo_factor) %>% # Agrupamos los datos por la variable factor
+  summarise(
+    escolaridad_promedio = mean(esc, na.rm = TRUE), # Calculamos la media para cada grupo
+    n_casos = n() # n() es una función especial que cuenta los casos por grupo
+  )
+```
+
+```
+## # A tibble: 2 × 3
+##   sexo_factor escolaridad_promedio n_casos
+##   <fct>                      <dbl>   <int>
+## 1 1. Hombre                   11.2   95656
+## 2 2. Mujer                    11.1  106575
+```
+**Interpretación del output:** La tabla resultante muestra que, en promedio, los hombres en la muestra tienen 11.2 años de escolaridad, mientras que las mujeres tienen 11.1. La columna `n_casos` nos informa sobre el número de personas en cada grupo.
+
+**Pregunta 2 (más compleja):** ¿Cuál es el ingreso promedio del hogar (`ytotcorh`) en cada región, pero considerando solo a los jefes de hogar (`pco1 == 1`)? Ordena los resultados de mayor a menor.
+
+
+```r
+casen %>% # Volvemos a la base original porque necesitamos pco1
+  mutate(region_factor = as_factor(region)) %>% # Creamos el factor de región
+  filter(pco1 == 1) %>% # 1. Filtramos solo jefes de hogar
+  group_by(region_factor) %>% # 2. Agrupamos por la región (factor)
+  summarise(
+    ingreso_hog_promedio = mean(ytotcorh, na.rm = TRUE) # 3. Calculamos la media
+  ) %>%
+  arrange(desc(ingreso_hog_promedio)) # 4. Ordenamos el resultado
+```
+
+```
+## # A tibble: 16 × 2
+##    region_factor                                     ingreso_hog_promedio
+##    <fct>                                                            <dbl>
+##  1 Región Metropolitana de Santiago                              1863656.
+##  2 Región de Magallanes y de la Antártica Chilena                1603080.
+##  3 Región de Aysén del Gral. Carlos Ibáñez del Campo             1550975.
+##  4 Región de Antofagasta                                         1502477.
+##  5 Región de Tarapacá                                            1334223.
+##  6 Región de Arica y Parinacota                                  1273240.
+##  7 Región de Valparaíso                                          1255938.
+##  8 Región de Atacama                                             1226856.
+##  9 Región del Libertador Gral. Bernardo O'Higgins                1214506.
+## 10 Región de Coquimbo                                            1204635.
+## 11 Región de Los Ríos                                            1203132.
+## 12 Región de Los Lagos                                           1158288.
+## 13 Región del Biobío                                             1140827.
+## 14 Región del Maule                                              1000071.
+## 15 Región de La Araucanía                                         996879.
+## 16 Región de Ñuble                                                959050.
+```
+**Interpretación del output:** Esta tabla nos muestra un ranking de las regiones según el ingreso promedio de sus hogares. Podemos ver claramente que la Región Metropolitana tiene el promedio más alto, mientras que la Región de Ñuble tiene el más bajo, revelando patrones de desigualdad territorial.
+
+## 5. Actividad de Desafío
+
+Ahora te toca a ti. Usando la base `casen_procesada` y la gramática de `dplyr`, escribe el código necesario para responder la siguiente pregunta de investigación:
+
+**Pregunta:** ¿Cuál es la **edad promedio** y el **promedio de años de escolaridad** para cada **región**? Asegúrate de que los resultados estén ordenados de mayor a menor años de escolaridad promedio.
+
+
+```r
+# 
+```
+
+## 6. Reflexiones Finales
+
+En este práctico, hemos aprendido a usar la poderosa gramática de `dplyr` para manipular datos de forma eficiente y reproducible. Hemos visto que con unos pocos verbos (`select`, `filter`, `arrange`, `mutate`, `summarise`) y el operador `%>%`, podemos pasar de una base de datos cruda a una tabla de resultados que responde a nuestras preguntas de investigación.
+
+En la próxima clase, profundizaremos en la creación de variables más complejas, como índices, usando `mutate()` y `case_when()`.
+
+
+---
+title: "Construcción y Combinación de Datos: Un Análisis de Bienestar Infantil con la ELPI"
+linktitle: "7: Creación y Combinación de Datos"
+date: "2025-09-29"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 7
+type: docs
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es aplicar las técnicas avanzadas de manipulación de datos vistas en clase. Al finalizar, serás capaz de:
+
+*   Manejar un proyecto con **múltiples bases de datos** en diferentes formatos.
+*   Aplicar `left_join()` para **combinar información** de diferentes fuentes (cuidador y niño/a).
+*   Realizar recodificaciones complejas usando `case_when()` para crear una **tipología**.
+*   Construir un **índice sumativo** a partir de múltiples indicadores.
+*   Aplicar un flujo de trabajo completo para limpiar, preparar y analizar los datos, respondiendo a una pregunta de investigación.
+
+## 1. Contexto: La Encuesta Longitudinal de Primera Infancia (ELPI)
+
+La **Encuesta Longitudinal de Primera Infancia (ELPI)** es un estudio a nivel nacional que sigue a una cohorte de niños y niñas desde su nacimiento para monitorear su desarrollo en el tiempo. Es una herramienta fundamental para el diseño y evaluación de políticas públicas en el área de la niñez en Chile.
+
+La ELPI recolecta información de diferentes fuentes y a través de distintos cuestionarios. Hoy trabajaremos con dos de ellos de la ronda 2017:
+1.  La base del **Cuidador Principal**, que contiene información socioeconómica detallada del hogar.
+2.  La base de **Niños y Niñas**, que contiene las respuestas de un cuestionario auto-aplicado contestado por los niños y niñas de 7 años o más.
+
+Nuestro primer desafío será unir estas dos fuentes para poder analizar cómo las características del hogar se relacionan con el bienestar de los niños/as.
+
+## 2. Preparación del Entorno y Carga de Datos
+
+### 2.1 Configuración del Proyecto y Descarga de Datos
+
+Como siempre, un flujo de trabajo reproducible comienza con una buena organización.
+
+1.  **Crea un Proyecto de RStudio:** Si aún no lo has hecho, crea un nuevo Proyecto para esta unidad.
+2.  **Crea una carpeta de datos:** Dentro de tu proyecto, crea una carpeta llamada `datos`.
+3.  **Descarga las bases de datos:**
+    *   [Base Cuidador Principal ELPI III (Formato STATA, `.dta`)](https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/elpi/2017/Base_Cuidador_Principal_ELPI_III(STATA)_241010.dta.zip)
+    *   [Base Niños y Niñas ELPI III (Formato SPSS, `.sav`)](https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/elpi/2017/Base_Ni%C3%B1os_y_Ni%C3%B1as_ELPI_III_(SPSS).sav.zip)
+4.  **Guarda los archivos:** Descomprime los archivos `.zip` y guarda los archivos `.dta` y `.sav` dentro de tu carpeta `datos`.
+
+### 2.2 Carga de Paquetes
+
+Cargamos los paquetes que usaremos hoy. `haven` es esencial porque nos permite leer datos de otros software estadísticos como Stata y SPSS.
+
+
+```r
+library(haven)
+library(tidyverse)
+```
+
+### 2.3 Carga de las Bases de Datos desde Archivos Locales
+
+Ahora, cargaremos los datos en R. Fíjate que usamos una función diferente para cada tipo de archivo: `read_dta()` para Stata y `read_sav()` para SPSS.
+
+
+```r
+# Cargar la base de datos del Cuidador Principal (formato Stata)
+elpicp <- haven::read_dta("datos/Base_Cuidador_Principal_ELPI_III(STATA)_241010.dta")
+
+# Cargar la base de datos de Niños y Niñas (formato SPSS)
+elpinna <- haven::read_sav("datos/Base Niños y Niñas ELPI III (SPSS).sav")
+```
+
+---
+
+*Nota sobre la reproducibilidad:* Para que este práctico funcione de manera autocontenida, a continuación se incluye el código que realiza la descarga y carga de forma automática. **No necesitas ejecutarlo si ya cargaste las bases manualmente.**
+
+
+```r
+# Carga Base Cuidador Principal (STATA)
+temp_cp <- tempfile() 
+download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/elpi/2017/Base_Cuidador_Principal_ELPI_III(STATA)_241010.dta.zip", temp_cp)
+elpicp <- haven::read_dta(unz(temp_cp, "Base_Cuidador_Principal_ELPI_III(STATA)_241010.dta"))
+unlink(temp_cp); remove(temp_cp)
+
+# Carga Base Niños y Niñas (SPSS)
+temp_nna <- tempfile()
+download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/elpi/2017/Base_Ni%C3%B1os_y_Ni%C3%B1as_ELPI_III_(SPSS).sav.zip", temp_nna)
+elpinna <- haven::read_sav(unz(temp_nna, "Base Niños y Niñas ELPI III (SPSS).sav"))
+unlink(temp_nna); remove(temp_nna)
+```
+
+## 3. Limpieza y Preparación de las Bases (Por Separado)
+
+Antes de unir las tablas, debemos prepararlas para asegurarnos de que contengan solo la información que necesitamos.
+
+### 3.1 Base del Cuidador Principal (`elpicp`)
+
+Esta base contiene información de todos los miembros del hogar, pero nos interesan las características asociadas al **niño/a ELPI**. Además, solo queremos a los niños/as de 10 años o más, ya que son quienes, por los lineamientos de aplicación de la escala de bienestar, contestaron dicho módulo.
+
+
+```r
+elpicp_limpia <- elpicp %>%
+  # 1. Filtramos para quedarnos solo con las filas que corresponden al niño/a (tipopersona == 1)
+  filter(tipopersona == 1) %>%
+  # 2. Filtramos para quedarnos solo con los nna de 10 años o más (variable h3 es la edad)
+  filter(h3 >= 10) %>%
+  # 3. Seleccionamos las variables que nos interesan para nuestro análisis
+  select(folio, idregion, qaut_casen)
+
+# Verificamos las dimensiones de nuestra base limpia
+dim(elpicp_limpia)
+```
+
+```
+## [1] 6066    3
+```
+
+**Interpretación:** Nuestra base de datos del cuidador principal (`elpicp_limpia`) ahora solo tiene **6,066 filas**, que corresponden a los niños/as de 10 años o más, y 3 columnas con la información que necesitamos.
+
+### 3.2 Base de Niños y Niñas (`elpinna`)
+
+Esta base contiene las respuestas de bienestar. La limpiaremos y renombraremos las variables para que sea más fácil de usar.
+
+
+```r
+elpinna_limpia <- elpinna %>%
+  # Nos quedamos solo con los niños/as de 10 años o más para ser consistentes
+  filter(edad >= 10) %>%  
+  # Seleccionamos el identificador del hogar y las 6 preguntas de satisfacción, renombrándolas
+  select(folio, 
+         satisf_familia = e1, 
+         satisf_amigos = e2, 
+         satisf_colegio = e3, 
+         satisf_contigo = e4, 
+         satisf_barrio = e5, 
+         satisf_vida = e6)
+
+# Vemos un resumen para verificar la limpieza
+summary(elpinna_limpia)
+```
+
+```
+##      folio        satisf_familia  satisf_amigos   satisf_colegio 
+##  Min.   :100011   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:164216   1st Qu.:6.000   1st Qu.:6.000   1st Qu.:6.000  
+##  Median :231891   Median :7.000   Median :7.000   Median :7.000  
+##  Mean   :237839   Mean   :6.487   Mean   :6.282   Mean   :6.167  
+##  3rd Qu.:314551   3rd Qu.:7.000   3rd Qu.:7.000   3rd Qu.:7.000  
+##  Max.   :399641   Max.   :7.000   Max.   :7.000   Max.   :7.000  
+##                   NA's   :6       NA's   :6       NA's   :6      
+##  satisf_contigo  satisf_barrio    satisf_vida   
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:6.000   1st Qu.:5.000   1st Qu.:6.000  
+##  Median :7.000   Median :7.000   Median :7.000  
+##  Mean   :6.336   Mean   :5.912   Mean   :6.489  
+##  3rd Qu.:7.000   3rd Qu.:7.000   3rd Qu.:7.000  
+##  Max.   :7.000   Max.   :7.000   Max.   :7.000  
+##  NA's   :6       NA's   :6       NA's   :6
+```
+
+**Interpretación:** El resumen nos muestra que las variables de satisfacción ahora tienen muy pocos `NA's` (solo 6). Esto confirma que nuestro filtro por edad fue correcto y que casi todos los niños y niñas de 10 años o más respondieron estas preguntas.
+
+## 4. Combinando las Bases con `left_join()` (Paso Central)
+
+Ahora que tenemos nuestras dos tablas limpias, las uniremos. La **variable llave** que conecta ambas tablas es `folio`, el identificador del hogar.
+
+
+```r
+# Unimos las dos bases de datos.
+# La tabla del cuidador es la "izquierda" (la principal), y le "pegamos" las respuestas de los niños/as.
+elpi_completa <- left_join(elpicp_limpia, elpinna_limpia, by = "folio")
+
+# Verificamos el resultado
+head(elpi_completa)
+```
+
+```
+## # A tibble: 6 × 9
+##    folio idregion         qaut_casen satisf_familia satisf_amigos satisf_colegio
+##    <dbl> <dbl+lbl>        <dbl+lbl>  <dbl+lbl>      <dbl+lbl>     <dbl+lbl>     
+## 1 100011 15 [Regi\xf3n d… 2 [II]     5 [5]          4 [4]         4 [4]         
+## 2 100081 15 [Regi\xf3n d… 1 [I]      7 [7. Muy sat… 7 [7. Muy sa… 7 [7. Muy sat…
+## 3 100091 15 [Regi\xf3n d… 1 [I]      7 [7. Muy sat… 7 [7. Muy sa… 7 [7. Muy sat…
+## 4 100121 15 [Regi\xf3n d… 3 [III]    7 [7. Muy sat… 4 [4]         7 [7. Muy sat…
+## 5 100131 15 [Regi\xf3n d… 4 [IV]     6 [6]          5 [5]         4 [4]         
+## 6 100151 15 [Regi\xf3n d… 1 [I]      5 [5]          7 [7. Muy sa… 4 [4]         
+## # ℹ 3 more variables: satisf_contigo <dbl+lbl>, satisf_barrio <dbl+lbl>,
+## #   satisf_vida <dbl+lbl>
+```
+
+```r
+dim(elpi_completa)
+```
+
+```
+## [1] 6066    9
+```
+
+**Interpretación:** ¡Éxito! Ahora tenemos una única base de datos (`elpi_completa`) con 6,066 filas y 9 columnas, que contiene, para cada niño/a de 10 años o más, tanto sus características socioeconómicas (región, quintil) como sus respuestas de bienestar.
+
+## 5. Construcción de Nuevas Variables
+
+Con nuestra base unificada, podemos crear las variables que necesitamos para nuestro análisis.
+
+### 5.1 Construcción de un Índice de Bienestar Subjetivo
+
+**Objetivo:** Crear un puntaje global de satisfacción con la vida promediando las 6 preguntas.
+
+
+```r
+elpi_completa <- elpi_completa %>%
+  mutate(
+    # Sumamos las 6 variables y dividimos por 6 para obtener el promedio
+    indice_bienestar = (satisf_familia + satisf_amigos + satisf_colegio + satisf_contigo + satisf_barrio + satisf_vida) / 6
+  )
+
+# Exploremos la distribución de nuestro nuevo índice
+summary(elpi_completa$indice_bienestar)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   1.000   6.000   6.500   6.279   6.833   7.000     478
+```
+
+```r
+hist(elpi_completa$indice_bienestar, main = "Distribución del Índice de Bienestar", xlab = "Puntaje Promedio (1-7)")
+```
+
+<img src="/example/07-practico_files/figure-html/create-index-1.png" width="672" />
+
+**Interpretación:** El `summary` nos muestra que el promedio del índice de bienestar es **6.28**, con la mayoría de los casos concentrados en los valores altos de la escala (la mediana es 6.5). El histograma confirma esta distribución, fuertemente sesgada hacia la izquierda, lo que indica altos niveles generales de satisfacción en esta submuestra.
+
+### 5.2 Construcción de una Tipología Socio-Territorial
+
+**Objetivo:** Crear perfiles de estudiantes según si viven en la Región Metropolitana (código 13) y si pertenecen a los quintiles de mayores ingresos (4 y 5).
+
+
+```r
+elpi_final <- elpi_completa %>%
+  mutate(
+    tipo_perfil = case_when(
+      idregion == 13 & qaut_casen %in% c(4, 5)   ~ "RM - Quintil Alto",
+      idregion == 13 & !qaut_casen %in% c(4, 5)  ~ "RM - Quintil Bajo/Medio",
+      idregion != 13 & qaut_casen %in% c(4, 5)   ~ "Otras Regiones - Quintil Alto",
+      idregion != 13 & !qaut_casen %in% c(4, 5)  ~ "Otras Regiones - Quintil Bajo/Medio",
+      TRUE                                       ~ "Sin Información" # Para casos con NA
+    )
+  )
+
+# Verificamos el tamaño de cada grupo con table()
+table(elpi_final$tipo_perfil)
+```
+
+```
+## 
+##       Otras Regiones - Quintil Alto Otras Regiones - Quintil Bajo/Medio 
+##                                 728                                3385 
+##                   RM - Quintil Alto             RM - Quintil Bajo/Medio 
+##                                 396                                1557
+```
+
+## 6. Análisis Descriptivo Final
+
+**Pregunta de Investigación:** ¿Existen diferencias en el bienestar subjetivo (nuestro índice) según el perfil socio-territorial de los niños y niñas?
+
+
+```r
+elpi_final %>%
+  # Agrupamos por nuestra nueva tipología
+  group_by(tipo_perfil) %>%
+  # Calculamos el promedio del índice y el número de casos por grupo
+  summarise(
+    bienestar_promedio = mean(indice_bienestar, na.rm = TRUE),
+    n_casos = n()
+  ) %>%
+  # Ordenamos para ver los resultados más claramente
+  arrange(desc(bienestar_promedio))
+```
+
+```
+## # A tibble: 4 × 3
+##   tipo_perfil                         bienestar_promedio n_casos
+##   <chr>                                            <dbl>   <int>
+## 1 Otras Regiones - Quintil Alto                     6.37     728
+## 2 Otras Regiones - Quintil Bajo/Medio               6.31    3385
+## 3 RM - Quintil Alto                                 6.25     396
+## 4 RM - Quintil Bajo/Medio                           6.16    1557
+```
+
+**Actividad de Interpretación:** Observa la tabla de resultados. ¿Qué grupo presenta el mayor promedio de bienestar? ¿Y el menor? Vemos que los niños/as de regiones de quintiles altos reportan el mayor bienestar, mientras que los de la RM de quintiles bajos/medios, el menor. ¿Te sorprenden estos resultados? ¿Qué hipótesis sociológica podrías formular a partir de esta tabla?
+
+## 7. Actividad de Desafío
+
+Ahora te toca a ti.
+
+**Pregunta:** ¿Cómo varía la satisfacción específica con la **vida familiar** (`satisf_familia`) y con el **colegio** (`satisf_colegio`) a través de los quintiles de ingreso (`qaut_casen`)?
+
+**Instrucciones:**
+1.  Usa la base `elpi_final`.
+2.  Agrupa por la variable `qaut_casen`.
+3.  Calcula el promedio de `satisf_familia` y `satisf_colegio` para cada quintil.
+4.  No olvides manejar los `NA` y contar el número de casos por grupo.
+
+
+```r
+# Escribe tu código aquí
+```
+
+
+---
+title: "Descripción de Variables Categóricas: Frecuencias y Gráficos de Barras en R"
+linktitle: "8: Descripción de Variables Categóricas"
+date: "2025-10-13"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 8
+type: docs
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es aplicar los conceptos de descripción de variables categóricas vistos en clase, utilizando R para el análisis. Al finalizar, serás capaz de:
+
+*   Importar una base de datos en formato Stata (`.dta`).
+*   Generar e interpretar tablas de frecuencias (absolutas y porcentuales) usando R base y `dplyr`, **considerando los factores de expansión**.
+*   Crear tablas de presentación estéticas con el paquete `knitr`.
+*   Visualizar la distribución de una variable categórica usando gráficos de barras, tanto con R base como con `ggplot2`.
+
+## 1. Contexto: La Encuesta Nacional de Empleo (ENE)
+
+La **Encuesta Nacional de Empleo (ENE)**, realizada por el Instituto Nacional de Estadísticas (INE), es el principal instrumento para medir el mercado laboral en Chile. Sus datos se publican mensualmente y son fundamentales para el diagnóstico económico y social del país.
+
+Hoy trabajaremos con los datos del trimestre móvil **Junio-Julio-Agosto de 2025**, y nos enfocaremos en la variable **`activ`**, que mide la condición de actividad de las personas.
+
+## 2. Preparación del Entorno y Carga de Datos
+
+### 2.1 Configuración del Proyecto y Descarga de Datos
+
+1.  **Crea un Proyecto de RStudio** y una carpeta `datos` dentro de él.
+2.  **Descarga la base de datos** desde el sitio del INE. El archivo está en formato Stata (`.dta`).
+    *   [Enlace de descarga: ENE Junio-Julio-Agosto 2025](https://www.ine.gob.cl/docs/default-source/ocupacion-y-desocupacion/bbdd/2025/stata/ene-2025-07-jja.dta?sfvrsn=3f9c9348_5&download=true)
+3.  **Guarda el archivo:** Guarda el archivo `ene-2025-07-jja.dta` dentro de tu carpeta `datos`.
+
+### 2.2 Carga de Paquetes
+
+
+``` r
+library(haven)
+library(tidyverse) #incluye ggplot2
+library(knitr)
+library(kableExtra)
+```
+
+### 2.3 Carga de la Base de Datos
+
+Vamos a cargar los datos usando `read_dta()` del paquete `haven`, ya que es un archivo de Stata.
+
+
+``` r
+# Cargar la base de datos de la ENE desde tu carpeta local
+ene <- haven::read_dta("datos/ene-2025-07-jja.dta")
+```
+
+---
+*Nota sobre la reproducibilidad:* Para que este práctico funcione de manera autocontenida, a continuación se incluye el código que realiza la descarga y carga de forma automática.
+
+
+``` r
+# Este código cargará automáticamente los datos desde la web
+temp <- tempfile(fileext = ".dta")
+download.file("https://www.ine.gob.cl/docs/default-source/ocupacion-y-desocupacion/bbdd/2025/stata/ene-2025-07-jja.dta?sfvrsn=3f9c9348_5&download=true", temp, mode="wb")
+ene <- haven::read_dta(temp)
+unlink(temp); remove(temp)
+
+knitr::opts_knit$set(bookdown.internal.label = FALSE)
+```
+
+## 3. Tablas de Frecuencia
+
+El primer paso para describir una variable categórica es crear una tabla de frecuencias. Veremos diferentes formas de hacerlo, prestando atención a si estamos describiendo solo la **muestra** o estimando para la **población**.
+
+### 3.1 Con R Base: `table()` y `prop.table()` (Descripción de la Muestra)
+
+Las funciones de R base `table()` y `prop.table()` son excelentes para una exploración rápida de la **muestra**, pero **no incorporan los factores de expansión**.
+
+
+``` r
+# Primero, creamos la variable factor para que sea legible
+ene$condicion_actividad <- as_factor(ene$activ)
+
+# Frecuencias absolutas de la muestra
+frec_abs_muestra <- table(ene$condicion_actividad)
+frec_abs_muestra
+```
+
+```
+## 
+##                   Ocupados/as                Desocupados/as 
+##                         42467                          3918 
+## Fuera de la fuerza de trabajo 
+##                         36286
+```
+
+``` r
+# Frecuencias relativas (porcentajes) de la muestra
+prop.table(frec_abs_muestra) * 100
+```
+
+```
+## 
+##                   Ocupados/as                Desocupados/as 
+##                     51.368678                      4.739268 
+## Fuera de la fuerza de trabajo 
+##                     43.892054
+```
+**Interpretación:** Es un método rápido, pero requiere dos pasos y el resultado es menos prolijo que con otras alternativas. Estos resultados nos describen la composición de los datos que tenemos en R, pero **no son una estimación correcta de la población chilena** porque no están ponderados. 
+
+### 3.2 Con `dplyr`: Estimando para la Población
+
+Para obtener estimaciones poblacionales, debemos usar el **factor de expansión** (en la ENE, se llama `fact_cal`). El flujo de `dplyr` nos permite incorporar este peso de manera muy sencilla.
+
+**Importante:** La condición de actividad se mide para la **población en edad de trabajar (15 años o más)**. Por lo tanto, debemos filtrar la base antes de hacer los cálculos.
+
+
+``` r
+# Explicación del código:
+# 1. Filtramos para quedarnos solo con las personas de 15 años o más.
+# 2. count() ahora tiene el argumento `wt = fact_cal`. Esto le dice a R que, en lugar de contar cada fila como 1, debe sumar el valor de la columna 'fact_cal'. El resultado es una estimación del número total de personas en la población.
+# 3. mutate() crea una nueva columna 'Porcentaje'. Para calcularla:
+#    - Dividimos la frecuencia de cada fila (Frecuencia_Absoluta) por el total de casos (sum(Frecuencia_Absoluta)).
+#    - Multiplicamos por 100 para obtener el porcentaje.
+
+tabla_frec_pob <- ene %>%
+  filter(edad >= 15) %>%
+  count(condicion_actividad, wt = fact_cal, name = "Poblacion_Estimada") %>%
+  mutate(
+    Porcentaje = (Poblacion_Estimada / sum(Poblacion_Estimada)) * 100
+  )
+
+tabla_frec_pob
+```
+
+```
+## # A tibble: 3 × 3
+##   condicion_actividad           Poblacion_Estimada Porcentaje
+##   <fct>                                      <dbl>      <dbl>
+## 1 Ocupados/as                             9355097.      56.5 
+## 2 Desocupados/as                           875888.       5.29
+## 3 Fuera de la fuerza de trabajo           6312197.      38.2
+```
+
+## 4. Presentando Tablas con `knitr::kable()`
+
+Presentemos la tabla de forma limpia y profesional: `kable()` crea la tabla a partir del data frame (aplica formato y el caption) y `kable_styling()` le da el aspecto visual (estilos HTML) para que se vea bien en el Viewer de RStudio.
+
+
+``` r
+kable(
+  tabla_frec_pob,
+  digits = c(0, 0, 1),
+  col.names = c("Condición de Actividad", "Población Estimada", "Porcentaje (%)"),
+  caption = "Estimación de la Condición de Actividad (Población 15 años y más, ponderada)"
+) |> 
+  kable_styling()
+```
+
+<table class="table" style="color: black; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:unnamed-chunk-1"></span>Table 1: Estimación de la Condición de Actividad (Población 15 años y más, ponderada)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Condición de Actividad </th>
+   <th style="text-align:right;"> Población Estimada </th>
+   <th style="text-align:right;"> Porcentaje (%) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Ocupados/as </td>
+   <td style="text-align:right;"> 9355097 </td>
+   <td style="text-align:right;"> 56.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Desocupados/as </td>
+   <td style="text-align:right;"> 875888 </td>
+   <td style="text-align:right;"> 5.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Fuera de la fuerza de trabajo </td>
+   <td style="text-align:right;"> 6312197 </td>
+   <td style="text-align:right;"> 38.2 </td>
+  </tr>
+</tbody>
+</table>
+
+**Interpretación:** Esta tabla es una estimación para la población total de Chile. Ahora sí podemos decir que, para este trimestre, se estima que un **56.5%** de la población en edad de trabajar estaba ocupada. Estos son los números que se acercan a las cifras oficiales del INE.
+
+## 5. Visualización: Gráficos de Barras
+
+Ahora, vamos a visualizar la información, manteniendo la distinción entre muestra y población.
+
+### 5.1 Gráfico de Barras con R Base (Descripción de la Muestra)
+
+`barplot()` trabaja con tablas pre-calculadas. Por defecto, no tiene un argumento simple para ponderar, por lo que lo usaremos para visualizar las **frecuencias de la muestra**. Es una herramienta rápida para una exploración inicial.
+
+
+``` r
+# 1. Creamos la tabla de frecuencias de la muestra (mayores de 15)
+frecuencias_muestra <- table(ene$condicion_actividad[ene$edad >= 15])
+
+# 2. Creamos el gráfico, explicando sus argumentos
+barplot(
+  height = frecuencias_muestra, # Altura de las barras
+  main = "Distribución de la Muestra por Condición de Actividad",
+  xlab = "Condición de Actividad",
+  ylab = "Frecuencia (conteo de la muestra)",
+  col = "#D76D77",
+  ylim = c(0, 50000)
+)
+```
+
+<img src="/example/08-practico_files/figure-html/barplot-base-1.png" width="672" />
+**Análisis:** El gráfico nos da una idea visual rápida de las magnitudes, sin ponderar. Su principal ventaja es la simplicidad y la velocidad, pero su personalización es menos intuitiva que con `ggplot2`.  
+
+### 5.2 Gráfico de Barras con `ggplot2` (Estimación para la Población)
+
+`ggplot2` nos permite construir gráficos por capas, dándonos un control total. `geom_bar()` puede calcular las frecuencias por nosotros directamente desde los datos e incorporar los ponderadores directamente en la construcción del gráfico a través del argumento `weight`.
+
+
+``` r
+# Explicación del código:
+# 1. ggplot(data, aes(x)): Iniciamos el gráfico, definimos los datos y el mapeo estético principal (qué va en el eje x). En `aes()`, además de `x`, añadimos `weight = fact_cal`. Esto le dice a ggplot2
+# 2. geom_bar(): Añadimos la capa geométrica. Al no especificar un eje 'y', `geom_bar` cuenta automáticamente los casos por cada categoría de 'x'.
+# 3. labs(): Añadimos las etiquetas, títulos y fuentes.
+
+ene %>%
+  filter(edad >= 15) %>%
+  ggplot(aes(x = condicion_actividad, weight = fact_cal)) +
+  geom_bar(fill = "#3A1C71") +
+  labs(
+    title = "Estimación de la Condición de Actividad en la Población",
+    subtitle = "Trimestre Junio-Julio-Agosto 2025",
+    x = "Condición de Actividad",
+    y = "Población Estimada",
+    caption = "Fuente: ENE"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/08-practico_files/figure-html/barplot-ggplot-simple-1.png" width="672" />
+**Análisis:** Este gráfico es una representación visual de las **estimaciones poblacionales**. La altura de las barras representa el número total de personas que se estima hay en cada categoría en todo el país.
+
+## 6. Actividad de Desafío
+
+1.  **Crear una tabla de frecuencias completa:** Usando el flujo de `dplyr` y `knitr::kable()`, crea una tabla de frecuencias para la variable `region` de la encuesta ENE. Usar el factor de expansión `fact_cal`.Asegúrate de incluir frecuencias absolutas y porcentajes.
+2.  **Crear un gráfico de barras:** Usando `ggplot2`, crea un gráfico de barras que muestre la distribución de personas por `region`.
+    *   **Pista 1:** No olvides filtrar por edad y usar `aes(weight = fact_cal)`.
+    *   **Pista 2:** Para que el eje X sea legible, puedes usar `+ theme(axis.text.x = element_text(angle = 45, hjust = 1))` para rotar las etiquetas de las regiones.
+
+
+
+``` r
+# Escribe tu código para la tabla aquí
+
+
+# Escribe tu código para el gráfico aquí
+```
+
+
+---
+title: "Visualizando Distribuciones y Medidas Robustas: Histogramas y Boxplots en R"
+linktitle: "9: Medidas Robustas y Visualización"
+date: "2025-10-20"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 9
+type: docs
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es aplicar las herramientas de análisis exploratorio de datos (EDA) para describir la distribución de variables cuantitativas. Al finalizar, serás capaz de:
+
+*   Crear e interpretar **histogramas** con R base y `ggplot2` para analizar la **forma** de una distribución.
+*   Calcular e interpretar medidas de **centro y dispersión robustas** (Mediana, Cuartiles, IQR) utilizando funciones base de R y `dplyr`.
+*   Entender la necesidad de usar **ponderadores (factores de expansión)** para obtener estimaciones poblacionales precisas.
+*   Construir e interpretar **boxplots** (`geom_boxplot`) como una poderosa herramienta visual para resumir y explorar datos.
+*   Guardar los gráficos creados en archivos de imagen con `ggsave()`.
+
+## 1. Contexto y Preparación de Datos
+
+### 1.1 La Encuesta Suplementaria de Ingresos (ESI)
+
+En este práctico, trabajaremos con la **Encuesta Suplementaria de Ingresos (ESI)** del INE, correspondiente al año 2024. Esta encuesta es un módulo especializado de la Encuesta Nacional de Empleo (ENE) y es la principal fuente de datos de Chile para caracterizar en detalle los **ingresos laborales** de las personas ocupadas. Sus resultados son fundamentales para analizar la desigualdad, la pobreza y la efectividad de las políticas públicas.
+
+Nos centraremos en la variable `ing_t_p` (ingreso del trabajo principal), un ejemplo clásico de una variable cuantitativa con una distribución asimétrica.
+
+### 1.2 Carga de Paquetes y Datos
+
+**Paso 1: Organiza tu entorno de trabajo**
+
+Antes de empezar, asegúrate de tener una buena organización.
+1.  **Crea un Proyecto de RStudio** para este curso o unidad si aún no lo tienes.
+2.  Dentro de tu proyecto, **crea una carpeta llamada `datos`**.
+
+**Paso 2: Cargar paquetes**
+
+Cargamos `tidyverse`, que incluye `ggplot2` para los gráficos, y `haven` para leer los datos.
+
+
+``` r
+# Cargar los paquetes que usaremos hoy
+library(tidyverse)
+library(haven)
+# Instala el paquete si no lo tienes: install.packages("DescTools")
+library(DescTools)
+library(knitr)
+library(kableExtra)
+```
+
+**Paso 3: Cargar la base de datos**
+
+Vamos a cargar la base de datos de la ESI. El método recomendado es descargar el archivo y cargarlo desde tu proyecto.
+
+
+``` r
+# Paso 1: Descarga la base de datos desde el sitio del INE y guárdala 
+# en tu carpeta 'datos'. El archivo viene en formato .Rdata.
+# Enlace: https://www.ine.gob.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/rdata/2024/esi_2024.rdata
+
+# Paso 2: Carga los datos usando la función load() y una ruta relativa
+load("datos/esi_2024.rdata")
+esi <- base # El objeto dentro del .Rdata se llama 'base', lo renombramos a 'esi'
+```
+
+---
+
+*Nota sobre la reproducibilidad:* Para que este práctico funcione de manera autocontenida, a continuación se incluye un código que realiza la descarga y carga de forma automática. **No necesitas ejecutarlo si ya cargaste la base manualmente**.
+
+
+```r
+# Código automático para cargar los datos desde la web
+tmp <- tempfile(fileext = ".rdata")
+download.file("https://www.ine.gob.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/rdata/2024/esi_2024.rdata?sfvrsn=582b8630_4&download=true", tmp, mode = "wb")
+load(tmp); esi <- base; unlink(tmp); rm(base, tmp)
+```
+
+---
+**Paso 4: Preparar la base de trabajo**
+
+Para nuestro análisis, nos enfocaremos en la población de referencia del estudio: personas ocupadas que tienen la misma ocupación que el mes pasado (`ocup_ref == 1`). Esto es importante para que los ingresos que declaran coincidan con la información de su ocupación.
+
+
+``` r
+# Creamos nuestra base de trabajo filtrada
+esi_trabajo <- esi %>%
+  filter(ocup_ref == 1)
+```
+
+## 2. Visualizando la Forma: Histogramas
+
+### 2.1 Histograma con R Base: Un Vistazo Rápido
+
+La función `hist()` de R base es excelente para una exploración inicial y rápida, pero ten en cuenta que **no utiliza el ponderador**.
+
+
+``` r
+hist(esi_trabajo$ing_t_p,
+     main = "Histograma de Ingreso del Trabajo Principal (R Base)",
+     xlab = "Ingreso Mensual ($ CLP)",
+     ylab = "Frecuencia (conteo de la muestra)",
+     col = "#D76D77",
+     breaks = 100) # 'breaks' controla el número de barras
+```
+
+<img src="/example/09-practico_files/figure-html/hist-base-1.png" width="672" />
+
+**Interpretación:** Vemos una distribución muy concentrada a la izquierda. La mayoría de los trabajadores en la *muestra* tiene ingresos bajos, pero la larga cola a la derecha indica la presencia de unos pocos con ingresos muy altos.
+
+### 2.2 Histograma con `ggplot2`: Más Control y Estimación Poblacional
+
+`ggplot2` nos da un control más detallado y nos permite incorporar los factores de expansión en la estética (`aes`) del gráfico para obtener una estimación de la distribución en la población.
+
+
+``` r
+# Filtramos para ingresos menores a 5 millones para visualizar mejor la forma
+esi_trabajo %>%
+  filter(ing_t_p < 5000000) %>%
+  ggplot(aes(x = ing_t_p, weight = fact_cal_esi)) +
+  geom_histogram(binwidth = 100000, fill = "#D76D77", color = "white") +
+  labs(
+    title = "Distribución del Ingreso del Trabajo Principal (acotado a < $5M)",
+    subtitle = "Fuerte asimetría a la derecha, con la mayoría de los casos bajo $1M",
+    x = "Ingreso Mensual ($ CLP)",
+    y = "Población Estimada"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/09-practico_files/figure-html/histograma-ingreso-acotado-1.png" width="672" />
+
+## 3. Cálculo de Medidas Robustas
+
+### 3.1 Mediana y Cuantiles con Funciones Base (Sin Ponderar)
+
+Antes de realizar cálculos poblacionales, es útil explorar la **muestra**. Las funciones `median()` y `quantile()` son perfectas para esto.
+
+
+``` r
+# Mediana de la muestra (sin ponderar)
+mediana_muestra <- median(esi_trabajo$ing_t_p, na.rm = TRUE)
+mediana_muestra
+```
+
+```
+## [1] 560000
+```
+**Interpretación:** El 50% de las personas **en nuestra muestra** gana **$560.000** o menos.
+
+
+``` r
+# Cuantiles de la muestra (sin ponderar)
+# La función quantile() nos permite pedir cualquier percentil usando el argumento 'probs'
+quantile(esi_trabajo$ing_t_p, probs = c(0, 0.25, 0.5, 0.75, 1), na.rm = TRUE)
+```
+
+```
+##         0%        25%        50%        75%       100% 
+##        0.0   400000.0   560000.0   888579.9 60756649.4
+```
+**Interpretación:** El 25% de la muestra gana **$400.000** o menos (Q1), mientras que el 75% gana **$888.580** o menos (Q3). Esto nos da una idea de la dispersión del 50% central de los datos en la muestra.
+
+### 3.2 Agregando Medidas con `summarise()`
+
+Podemos calcular múltiples estadísticos a la vez usando `summarise()` de `dplyr`, lo que es mucho más eficiente.
+
+
+``` r
+esi_trabajo %>%
+  summarise(
+    mediana = median(ing_t_p, na.rm = TRUE),
+    q1 = quantile(ing_t_p, probs = 0.25, na.rm = TRUE),
+    q3 = quantile(ing_t_p, probs = 0.75, na.rm = TRUE),
+    iqr = IQR(ing_t_p, na.rm = TRUE)
+  )
+```
+
+```
+## # A tibble: 1 × 4
+##   mediana     q1      q3     iqr
+##     <dbl>  <dbl>   <dbl>   <dbl>
+## 1  560000 400000 888580. 488580.
+```
+
+### 3.3 Incorporando Factores de Expansión
+
+Los cálculos anteriores describen la muestra. Para describir a la **población**, debemos usar ponderadores. El paquete `DescTools` tiene funciones que lo permiten, y podemos integrarlas dentro de nuestro flujo de `dplyr`.
+
+
+``` r
+# Calculamos la mediana y cuantiles ponderados usando summarise()
+esi_trabajo %>%
+  summarise(
+    mediana_pob = Median(ing_t_p, weights = fact_cal_esi, na.rm = TRUE),
+    q1_pob = Quantile(ing_t_p, weights = fact_cal_esi, probs = 0.25, na.rm = TRUE),
+    q3_pob = Quantile(ing_t_p, weights = fact_cal_esi, probs = 0.75, na.rm = TRUE)
+  )
+```
+
+```
+## # A tibble: 1 × 3
+##   mediana_pob  q1_pob   q3_pob
+##         <dbl>   <dbl>    <dbl>
+## 1      611000 451725. 1003420.
+```
+**Interpretación:** Ahora sí podemos afirmar que se estima que el 50% de la población ocupada en Chile gana **$611.000** o menos. Además, el 25% más bajo gana $451.725 o menos, y el 75% gana $1.003.420 o menos. Estos valores son distintos a los de la muestra, lo que demuestra la importancia de usar siempre el factor de expansión para realizar inferencias.
+
+Para presentar estos resultados de manera más formal y clara en nuestro informe, podemos usar la función `kable()` del paquete `knitr`, junto con `kable_styling()` del paquete `kableExtra`.
+
+
+``` r
+# Primero, guardamos el resultado de nuestro cálculo en un objeto
+tabla_resumen_pob <- esi_trabajo %>%
+  summarise(
+    `Primer Cuartil (Q1)` = Quantile(ing_t_p, weights = fact_cal_esi, probs = 0.25, na.rm = TRUE),
+    `Mediana` = Median(ing_t_p, weights = fact_cal_esi, na.rm = TRUE),
+    `Tercer Cuartil (Q3)` = Quantile(ing_t_p, weights = fact_cal_esi, probs = 0.75, na.rm = TRUE)
+  )
+
+# Ahora, creamos la tabla formateada
+knitr::kable(
+  tabla_resumen_pob,
+  caption = "Estadísticos Robustos Ponderados para el Ingreso del Trabajo Principal ($ CLP)",
+  digits = 0, # Sin decimales
+  format.args = list(big.mark = ".") # Usamos punto como separador de miles
+) %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:unnamed-chunk-3"></span>Table 1: (\#tab:unnamed-chunk-3)Estadísticos Robustos Ponderados para el Ingreso del Trabajo Principal ($ CLP)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Primer Cuartil (Q1) </th>
+   <th style="text-align:right;"> Mediana </th>
+   <th style="text-align:right;"> Tercer Cuartil (Q3) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 451.725 </td>
+   <td style="text-align:right;"> 611.000 </td>
+   <td style="text-align:right;"> 1.003.420 </td>
+  </tr>
+</tbody>
+</table>
+
+## 4. Visualizando con Boxplots
+
+### 4.1 Boxplot del Ingreso: El Problema de la Asimetría
+
+
+
+``` r
+esi_trabajo %>%
+  ggplot(aes(x = "", y = ing_t_p, weight = fact_cal_esi )) + # Eje X vacío para un solo boxplot
+  geom_boxplot(fill = "#3A1C71", outlier.alpha = 0.1) +
+  labs(
+    title = "Boxplot del Ingreso del Trabajo Principal (Muestra sin ponderar)",
+    y = "Ingreso Mensual ($ CLP)",
+    x = ""
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/09-practico_files/figure-html/boxplot-ingreso-1.png" width="672" />
+
+**Interpretación:** El gráfico es casi inútil. La caja está completamente aplastada en la parte inferior y una nube masiva de outliers domina la visualización. Esto es una señal visual muy potente de la **extrema asimetría** de la variable.
+
+### 4.2 La Solución: Escala Logarítmica
+
+Para solucionarlo, usamos una **escala logarítmica** en el eje Y para "comprimir" los valores altos y poder ver la caja.
+
+
+``` r
+# Creamos el boxplot con escala logarítmica y lo guardamos en un objeto
+boxplot_log <- esi_trabajo %>%
+  ggplot(aes(x = "", y = ing_t_p, weight = fact_cal_esi)) +
+  geom_boxplot(fill = "#3A1C71", outlier.alpha = 0.1) +
+  scale_y_log10(labels = scales::dollar_format(prefix = "$", big.mark = ".")) +
+  labs(
+    title = "Boxplot del Ingreso (Eje Y Logarítmico)",
+    subtitle = "Visualización de la muestra sin ponderar",
+    y = "Ingreso Mensual ($ CLP, escala log)",
+    x = ""
+  ) +
+  theme_minimal()
+
+# Mostramos el gráfico
+boxplot_log
+```
+
+<img src="/example/09-practico_files/figure-html/boxplot-ingreso-log-1.png" width="672" />
+**Interpretación:** Ahora la caja es visible. Podemos apreciar la posición de la mediana, el rango intercuartil (el tamaño de la caja) y la extensión de los bigotes, dándonos una visión completa y robusta de la distribución del ingreso en la muestra.
+
+## 5. Guardando tus Gráficos con `ggsave()`
+
+Una vez que tienes un gráfico de `ggplot2` que te gusta, puedes guardarlo como un archivo de imagen de alta calidad con `ggsave()`.
+
+
+``` r
+# La función ggsave() guarda el último gráfico que mostraste por defecto.
+# Es buena práctica guardarlo en una carpeta separada, por ejemplo, 'output' o 'graficos'.
+
+# Primero, asegúrate de crear la carpeta 'graficos' en tu proyecto.
+dir.create("graficos")
+
+ggsave("graficos/boxplot_ingreso_log.png", 
+       plot = boxplot_log, # Es buena práctica especificar qué gráfico guardar
+       width = 8,         # Ancho en pulgadas
+       height = 6,        # Alto en pulgadas
+       dpi = 300)         # Resolución (puntos por pulgada), 300 es ideal para publicación
+```
+
+## 6. Actividad de Desafío
+
+Usando la base de datos `esi_trabajo` y las herramientas que aprendimos hoy, realiza el siguiente análisis sobre la variable `efectivas` ("Horas efectivas semanales trabajadas"):
+
+1.  Primero, debes limpiar la variable: los valores `888` y `999` son códigos para casos perdidos y deben ser reemplazados por `NA`.
+2.  Crea un **histograma ponderado** de `efectivas` usando `ggplot2`. Describe su **forma** (¿es simétrica, asimétrica, unimodal, bimodal?). Presta especial atención a los picos más prominentes.
+3.  Calcula la **mediana ponderada** y los **cuartiles ponderados (Q1 y Q3)** para la misma variable. Interpreta el valor de la mediana en una frase completa (ej. "Se estima que el 50% de la población ocupada trabajó...").
+4.  Crea un **boxplot** de `efectivas`. ¿Qué te dice este gráfico sobre la distribución que complementa (o confirma) lo que viste en el histograma?
+5.  Guarda tu histograma en un archivo llamado `"histograma_horas.png"` dentro de tu carpeta `graficos`.
+
+
+``` r
+# 1. Limpiar casos perdidos
+esi_trabajo <- esi_trabajo %>% 
+  mutate(efectivas = ifelse(efectivas %in% c(888, 999), NA, efectivas))
+
+
+# 2. Código para el histograma
+
+
+# 3. Código para el cálculo de mediana y cuartiles ponderados
+
+
+# 4. Código para el boxplot
+
+
+# 5. Código para guardar el gráfico
+```
+
+
+---
+title: "La Media, la Desviación Estándar y la Estandarización en R"
+linktitle: "10: Medidas No Robustas y Estandarización"
+date: "2025-10-27"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 10
+type: docs
+toc: true
+editor_options:
+  chunk_output_type: console
+---
+
+
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es aplicar las medidas de tendencia central y dispersión no robustas para describir variables cuantitativas y aprender a estandarizar sus valores. Al finalizar, serás capaz de:
+
+*   Calcular la **media** de forma "manual" y con la función `mean()`.
+*   Comparar la **media y la mediana** para diagnosticar la asimetría de una distribución.
+*   Calcular la **varianza** y la **desviación estándar** paso a paso para entender su lógica.
+*   Utilizar las funciones `var()` y `sd()` para obtener estas medidas de forma eficiente.
+*   Aplicar **ponderadores (factores de expansión)** para calcular estimaciones poblacionales.
+*   Calcular e interpretar **puntuaciones Z** para comparar observaciones de distintas distribuciones.
+
+## 1. Contexto y Preparación de Datos
+
+### 1.1 La Encuesta Suplementaria de Ingresos (ESI) 2024
+
+Continuaremos trabajando con la **ESI 2024**. En este práctico, analizaremos dos variables cuantitativas clave:
+1.  `ing_t_p`: El **ingreso del trabajo principal**, una variable con fuerte asimetría positiva.
+2.  `efectivas`: Las **horas efectivas semanales trabajadas**, una variable con una ligera asimetría negativa.
+
+### 1.2 Carga de Paquetes y Datos
+
+**Paso 1: Organiza tu entorno de trabajo**
+1.  Asegúrate de estar trabajando dentro de tu **Proyecto de RStudio**.
+2.  Dentro de tu proyecto, **crea una carpeta llamada `datos`**.
+
+**Paso 2: Cargar paquetes**
+Cargamos los paquetes que usaremos hoy.
+
+
+``` r
+# Cargar los paquetes que usaremos hoy
+library(tidyverse)
+library(haven)
+library(DescTools) 
+library(Hmisc)
+```
+
+**Paso 3: Cargar la base de datos**
+El método recomendado es descargar el archivo y cargarlo desde tu proyecto. Puedes encontrar la base de datos en el [siguiente enlace](https://www.ine.gob.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/rdata/2024/esi_2024.rdata) 
+
+
+``` r
+# Paso 1: Descarga la base de datos desde el sitio del INE y guárdala 
+# en tu carpeta 'datos'. El archivo viene en formato .Rdata.
+# Enlace: https://www.ine.gob.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/rdata/2024/esi_2024.rdata
+
+# Paso 2: Carga los datos usando la función load() y una ruta relativa
+load("datos/esi_2024.rdata")
+esi <- base # El objeto se llama 'base', lo renombramos a 'esi'
+```
+
+***
+Para asegurar que este documento se pueda ejecutar de forma autocontenida, el siguiente código realiza la descarga y carga de forma automática. No necesitas ejecutarlo si ya cargaste la base manualmente.
+
+
+``` r
+# Código automático para cargar los datos desde la web
+tmp <- tempfile(fileext = ".rdata")
+download.file("https://www.ine.gob.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/rdata/2024/esi_2024.rdata?sfvrsn=582b8630_4&download=true", tmp, mode = "wb")
+load(tmp); esi <- base; unlink(tmp); rm(base, tmp)
+```
+***
+
+**Paso 4: Preparar la base de trabajo**
+Filtramos por la población de referencia (`ocup_ref == 1`) y limpiamos la variable de horas trabajadas, ya que los códigos `888` y `999` representan valores perdidos.
+
+
+``` r
+# Creamos nuestra base de trabajo filtrada y limpiamos la variable 'efectivas'
+esi_trabajo <- esi %>%
+  filter(ocup_ref == 1) %>%
+  mutate(efectivas = ifelse(efectivas %in% c(888, 999), NA, efectivas))
+```
+
+## 2. La Media y el Diagnóstico de Asimetría
+
+### 2.1 Media "Manual" vs. Función `mean()`
+
+Para entender qué hace la media, podemos replicar su fórmula en R (`suma / n`). Lo haremos para la variable `edad` de la **muestra**.
+
+
+``` r
+# 1. Sumamos todos los valores
+suma_edades <- sum(esi_trabajo$edad, na.rm = TRUE)
+# 2. Contamos el número de casos validos
+n_casos <- nrow(esi_trabajo %>% filter(!is.na(edad)))
+# 3. Dividimos
+media_manual <- suma_edades / n_casos
+media_manual
+```
+
+```
+## [1] 45.18962
+```
+
+``` r
+# Ahora, con la función de R (da el mismo resultado)
+mean(esi_trabajo$edad, na.rm = TRUE)
+```
+
+```
+## [1] 45.18962
+```
+
+### 2.2 Media vs. Mediana: Diagnóstico de Asimetría en la Muestra
+
+Comparemos la media y la mediana para `ing_t_p` y `efectivas` para ver qué nos dicen sobre la forma de la distribución en nuestra **muestra**.
+
+
+``` r
+esi_trabajo %>%
+  summarise(
+    media_horas = mean(efectivas, na.rm = TRUE),
+    mediana_horas = median(efectivas, na.rm = TRUE),
+    media_ingreso = mean(ing_t_p, na.rm = TRUE),
+    mediana_ingreso = median(ing_t_p, na.rm = TRUE)
+  )
+```
+
+```
+## # A tibble: 1 × 4
+##   media_horas mediana_horas media_ingreso mediana_ingreso
+##         <dbl>         <dbl>         <dbl>           <dbl>
+## 1        37.0            44       758430.          560000
+```
+**Interpretación:**
+-   **Horas trabajadas:** La media (37) es menor que la mediana (44), sugiriendo una **asimetría a la izquierda**.
+-   **Ingreso:** La media (758,430) es mucho mayor que la mediana (560,000), una señal clara de **asimetría a la derecha**.
+
+
+
+``` r
+# Plot para 'efectivas' (horas trabajadas)
+mean_efectivas <- mean(esi_trabajo$efectivas, na.rm = TRUE)
+median_efectivas <- median(esi_trabajo$efectivas, na.rm = TRUE)
+
+ggplot(esi_trabajo, aes(x = efectivas)) +
+geom_histogram(fill = "lightblue", color = "white", alpha = 0.7) +
+geom_vline(aes(xintercept = mean_efectivas, color = "Media"), linetype = "dashed") +
+geom_vline(aes(xintercept = median_efectivas, color = "Mediana"), linetype = "solid") +
+scale_color_manual(name = "Estadístico", values = c("Media" = "red", "Mediana" = "blue")) +
+labs(
+title = "Distribución de Horas Efectivas Trabajadas",
+subtitle = paste0(
+"Media: ", round(mean_efectivas, 1),
+" | Mediana: ", round(median_efectivas, 1)
+),
+x = "Horas Efectivas",
+y = "Frecuencia"
+) +
+theme_minimal()
+```
+
+<img src="/example/10-practico_files/figure-html/unnamed-chunk-1-1.png" width="672" />
+
+
+``` r
+# Plot para 'ing_t_p' (ingreso del trabajo principal)
+mean_ing_t_p <- mean(esi_trabajo$ing_t_p, na.rm = TRUE)
+median_ing_t_p <- median(esi_trabajo$ing_t_p, na.rm = TRUE)
+
+ggplot(esi_trabajo, aes(x = ing_t_p)) +
+geom_density(fill = "lightgreen", color = "darkgreen", alpha = 0.7) +
+geom_vline(aes(xintercept = mean_ing_t_p, color = "Media"), linetype = "dashed") +
+geom_vline(aes(xintercept = median_ing_t_p, color = "Mediana"), linetype = "solid") +
+scale_color_manual(name = "Estadístico", values = c("Media" = "red", "Mediana" = "blue")) +
+scale_x_continuous(labels = scales::label_dollar(prefix = "$", big.mark = ",", decimal.mark = ".")) +
+labs(
+title = "Distribución del Ingreso del Trabajo Principal",
+subtitle = paste0(
+"Media: ", format(round(mean_ing_t_p), big.mark = ","),
+" | Mediana: ", format(round(median_ing_t_p), big.mark = ",")
+),
+x = "Ingreso del Trabajo Principal",
+y = "Densidad"
+) +
+theme_minimal() +
+coord_cartesian(xlim = c(0, quantile(esi_trabajo$ing_t_p, 0.99, na.rm = TRUE) * 1.05)) # Ajusta el límite para visibilidad
+```
+
+<img src="/example/10-practico_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+
+
+## 3. Comprendiendo la Varianza y la Desviación Estándar
+
+Vamos a calcular la desviación estándar "paso a paso" para entender su lógica, usando la variable `efectivas` (horas trabajadas) de la muestra.
+
+
+``` r
+# Paso 1: Calcular la media de la muestra
+media_horas <- mean(esi_trabajo$efectivas, na.rm = TRUE)
+
+# Paso 2: Calcular las desviaciones al cuadrado
+# Usamos mutate para crear una nueva columna con el cálculo
+esi_trabajo <- esi_trabajo %>%
+  mutate(desv_cuadrado_horas = (efectivas - media_horas)^2)
+
+# Paso 3: Sumar las desviaciones al cuadrado (esto es la "suma de cuadrados")
+suma_cuadrados <- sum(esi_trabajo$desv_cuadrado_horas, na.rm = TRUE)
+
+# Paso 4: Calcular la Varianza (dividiendo por n-1)
+n <- sum(!is.na(esi_trabajo$efectivas)) # n de casos válidos
+varianza_manual <- suma_cuadrados / (n - 1)
+varianza_manual
+```
+
+```
+## [1] 269.5194
+```
+
+``` r
+# Paso 5: Calcular la Desviación Estándar (raíz cuadrada de la varianza)
+sd_manual <- sqrt(varianza_manual)
+sd_manual
+```
+
+```
+## [1] 16.41705
+```
+
+``` r
+# Comparemos con las funciones directas de R:
+var(esi_trabajo$efectivas, na.rm = TRUE)
+```
+
+```
+## [1] 269.5194
+```
+
+``` r
+sd(esi_trabajo$efectivas, na.rm = TRUE)
+```
+
+```
+## [1] 16.41705
+```
+Los resultados son idénticos. Ahora sabemos exactamente qué hacen las funciones `var()` y `sd()` por dentro.
+
+## 4. Estimaciones Poblacionales Ponderadas
+
+Para hacer afirmaciones sobre la población de Chile, debemos usar los ponderadores (`fact_cal_esi`).
+
+
+``` r
+# Usamos summarise() para calcular todas nuestras estimaciones poblacionales de una vez
+resumen_poblacional <- esi_trabajo %>%
+  summarise(
+    media_ing_pob = weighted.mean(ing_t_p, w = fact_cal_esi, na.rm = TRUE),
+    sd_ing_pob = sqrt(wtd.var(ing_t_p, weights = fact_cal_esi, na.rm = TRUE)),
+    media_horas_pob = weighted.mean(efectivas, w = fact_cal_esi, na.rm = TRUE),
+    sd_horas_pob = sqrt(wtd.var(efectivas, weights = fact_cal_esi, na.rm = TRUE))
+  )
+
+resumen_poblacional
+```
+
+```
+## # A tibble: 1 × 4
+##   media_ing_pob sd_ing_pob media_horas_pob sd_horas_pob
+##           <dbl>      <dbl>           <dbl>        <dbl>
+## 1       897019.   1043897.            37.8         15.8
+```
+**Interpretación:**
+-   Se estima que el ingreso promedio del trabajo principal en Chile es de **897,019**, con una desviación estándar de **1,043,897**.
+-   Se estima que las horas efectivas trabajadas promedian **37.8 horas** semanales, con una desviación estándar de **15.8 horas**.
+
+## 5. Cuantificando la Forma: Asimetría y Curtosis
+
+Podemos confirmar numéricamente la forma de nuestras distribuciones poblacionales.
+
+
+``` r
+esi_trabajo %>%
+  summarise(
+    asimetria_ing = Skew(ing_t_p, weights = fact_cal_esi, na.rm = TRUE),
+    curtosis_ing = Kurt(ing_t_p, weights = fact_cal_esi, na.rm = TRUE),
+    asimetria_horas = Skew(efectivas, weights = fact_cal_esi, na.rm = TRUE),
+    curtosis_horas = Kurt(efectivas, weights = fact_cal_esi, na.rm = TRUE)
+  )
+```
+
+```
+## # A tibble: 1 × 4
+##   asimetria_ing curtosis_ing asimetria_horas curtosis_horas
+##           <dbl>        <dbl>           <dbl>          <dbl>
+## 1          15.0         703.          -0.473           1.72
+```
+**Interpretación:**
+-   **Ingreso:** La asimetría es extremadamente alta y positiva (14.98), y la curtosis también (702.66), indicando una distribución muy propensa a outliers.
+-   **Horas:** La asimetría es negativa (-0.47), confirmando la asimetría a la izquierda.
+
+## 6. Puntuaciones Z: Estandarizando Nuestros Datos
+
+### 6.1 Cálculo "Manual" y con la Función `scale()`
+
+Vamos a crear una nueva columna con la puntuación Z para la variable `edad`.
+
+
+``` r
+# Primero, calculamos y guardamos la media y SD poblacionales de la edad
+media_edad_pob <- weighted.mean(esi_trabajo$edad, w = esi_trabajo$fact_cal_esi, na.rm = TRUE)
+sd_edad_pob <- sqrt(wtd.var(esi_trabajo$edad, weights = esi_trabajo$fact_cal_esi, na.rm = TRUE))
+
+# Ahora usamos mutate para calcular la Z-score "manualmente" (método correcto)
+esi_con_z <- esi_trabajo %>%
+  mutate(
+    z_edad_ponderado = (edad - media_edad_pob) / sd_edad_pob
+  )
+
+# R base tiene la función scale() que hace esto, pero ¡cuidado! no es ponderada.
+# La usamos solo para ver que la lógica es la misma y comparar.
+esi_con_z <- esi_con_z %>%
+  mutate(z_edad_simple = as.numeric(scale(edad)))
+
+# Comparamos las nuevas columnas
+esi_con_z %>%
+  select(edad, z_edad_ponderado, z_edad_simple) %>%
+  head()
+```
+
+```
+## # A tibble: 6 × 3
+##    edad z_edad_ponderado z_edad_simple
+##   <dbl>            <dbl>         <dbl>
+## 1    54            0.827        0.626 
+## 2    22           -1.58        -1.65  
+## 3    63            1.50         1.27  
+## 4    45            0.148       -0.0135
+## 5    29           -1.06        -1.15  
+## 6    49            0.450        0.271
+```
+Como vemos, los valores son muy similares, pero el cálculo manual con los estadísticos ponderados (`z_edad_ponderado`) es el **correcto** para interpretar la posición relativa a la población.
+
+### 6.2 Interpretando las Puntuaciones Z
+
+Las puntuaciones Z nos permiten encontrar los casos más "atípicos" o "extremos".
+
+
+``` r
+# ¿Quién es la persona ocupada más joven en términos relativos?
+esi_con_z %>%
+  arrange(z_edad_ponderado) %>% # Ordenamos de menor a mayor Z
+  select(edad, z_edad_ponderado) %>%
+  head(1)
+```
+
+```
+## # A tibble: 1 × 2
+##    edad z_edad_ponderado
+##   <dbl>            <dbl>
+## 1    15            -2.11
+```
+**Interpretación:** La persona ocupada más joven en la muestra tiene 15 años. Su puntuación Z de **-2.11** significa que su edad está casi **2.1 desviaciones estándar por debajo** de la edad promedio de la población ocupada.
+
+## 7. Actividad de Desafío
+
+Ahora te toca a ti. Usando la base `esi_trabajo`:
+
+1.  **Cálculo de Estadísticos:** Calcula la media, mediana, desviación estándar, asimetría y curtosis **ponderadas** para la variable `ing_t_p` (ingreso del trabajo principal).
+2.  **Diagnóstico:** Escribe un párrafo de texto interpretando estos estadísticos. ¿Qué te dicen sobre el "ingreso típico" y sobre la forma de la distribución del ingreso en Chile?
+3.  **Cálculo de Puntuación Z:** Calcula la puntuación Z para la variable `ing_t_p` usando los estadísticos ponderados.
+4.  **Análisis de Caso:** Encuentra a una persona en la muestra cuyo ingreso sea lo más cercano posible al promedio (es decir, cuya puntuación Z sea la más cercana a 0 en valor absoluto). ¿Cuál es su ingreso y su puntuación Z? *Pista: usa `mutate()` para crear una Z absoluta (`abs(z_ingreso)`) y luego `arrange()` sobre esa nueva variable.*
+
+
+``` r
+# 1. Código para calcular los 5 estadísticos
+
+
+# 2. Párrafo de interpretación (escríbelo como comentario en R)
+
+
+# 3. Código para calcular la Z-score del ingreso
+
+
+# 4. Código para encontrar a la persona "promedio"
+```
+
+
+---
+title: "La Visualización como Argumento Sociológico con ggplot2"
+linktitle: "11: Gramática de Gráficos con ggplot2"
+date: "2025-11-03"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 11
+type: docs
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es dominar la "Gramática de Gráficos" para construir visualizaciones de datos informativas y de alta calidad en R. Al finalizar, serás capaz de:
+
+*   Argumentar **por qué** la visualización de datos es un paso indispensable en el análisis.
+*   Construir gráficos en `ggplot2` **capa por capa**, entendiendo la función de `data`, `aes()` y `geom`.
+*   Crear los principales **gráficos univariados y bivariados** (`geom_histogram`, `geom_bar`, `geom_point`, `geom_boxplot`).
+*   Aplicar **mejores prácticas** para crear gráficos claros, honestos y estéticamente pulcros.
+*   Utilizar **faceting (`facet_wrap`)** para comparar distribuciones a través de múltiples categorías.
+
+## 1. Contexto y Preparación de Datos
+
+### 1.1 El "Porqué" de la Visualización
+
+Como vimos en la clase, la visualización de datos no es un simple adorno. Es una forma de **argumento sociológico** y una herramienta de **diagnóstico fundamental**. AVimosen la clase como autores como Piketty y Bourdieu usan gráficos como el núcleo de sus teorías. Estadísticamente, graficar nuestros datos es la mejor forma de descubrir la verdadera forma de una distribución, que puede ocultarse detrás de estadísticos descriptivos similares.
+
+### **1.2 Preparación del Entorno y Datos (CASEN 2022)**
+
+Como en prácticos anteriores, nuestro primer paso es asegurar un entorno de trabajo reproducible.
+
+1.  **Asegúrate de estar en tu Proyecto de RStudio** y de tener una carpeta `datos`.
+2.  **Descarga la Base de Datos CASEN 2022 (formato SPSS)** desde [este enlace](https://observatorio.ministeriodesarrollosocial.gob.cl/encuesta-casen-2022) y guarda el archivo `.sav` en tu carpeta `datos`.
+
+#### Carga de Paquetes
+Cargamos los paquetes que necesitaremos para la sesión de hoy.
+
+``` r
+# Cargar los paquetes que usaremos hoy
+library(tidyverse)
+library(haven)
+```
+
+#### Carga de Datos
+A continuación, hay dos formas de cargar los datos. **Debes usar el Método 1 (Carga Manual)**.
+
+**Método 1: Carga Manual (Para tu trabajo)**
+Este bloque de código carga la base de datos que guardaste en tu carpeta `datos`.
+
+``` r
+# Usamos read_sav() con la ruta relativa a nuestro proyecto
+casen <- read_sav("datos/Base de datos Casen 2022 SPSS.sav")
+```
+
+**Método 2: Carga Automática (Para reproducibilidad del documento)**
+El siguiente bloque es para que este práctico se pueda generar automáticamente. **No necesitas ejecutarlo** si ya cargaste los datos con el método anterior.
+
+
+``` r
+# Código automático para cargar los datos desde la web
+temp <- tempfile() 
+download.file("https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/casen/2022/Base%20de%20datos%20Casen%202022%20SPSS.sav.zip", temp)
+casen <- haven::read_sav(unz(temp, "Base de datos Casen 2022 SPSS.sav"))
+unlink(temp); remove(temp)
+```
+
+## 2. Diagnóstico Visual: ¡Grafica Siempre tus Datos!
+
+Vamos a demostrar con un ejemplo por qué los estadísticos resumen no son suficientes. Crearemos tres conjuntos de datos simulados que tienen la misma media y desviación estándar, pero formas muy diferentes.
+
+
+``` r
+# 1. Creamos los datos simulados
+set.seed(123)
+grupo_a <- tibble(valor = rnorm(500, 75, 10), grupo = "A: Simétrico (Unimodal)")
+grupo_b <- tibble(valor = c(rnorm(250, 65, 5), rnorm(250, 85, 5)), grupo = "B: Bimodal (Dos grupos)")
+grupo_c <- tibble(valor = rexp(500, 1/10) * 5 + 25, grupo = "C: Asimétrico (con Outliers)")
+
+# Forzamos que los estadísticos sean casi idénticos por motivos pedagógicos
+trio_enganoso <- bind_rows(grupo_a, grupo_b, grupo_c) %>%
+  group_by(grupo) %>%
+  mutate(valor = as.numeric(scale(valor)) * 10 + 75)
+
+# 2. Calculamos los estadísticos descriptivos
+trio_enganoso %>%
+  summarise(
+    Media = mean(valor),
+    `Desv. Estándar` = sd(valor)
+  )
+```
+
+```
+## # A tibble: 3 × 3
+##   grupo                        Media `Desv. Estándar`
+##   <chr>                        <dbl>            <dbl>
+## 1 A: Simétrico (Unimodal)         75             10.0
+## 2 B: Bimodal (Dos grupos)         75             10  
+## 3 C: Asimétrico (con Outliers)    75             10
+```
+
+``` r
+# 3. Visualizamos los datos
+ggplot(trio_enganoso, aes(x = valor)) +
+  geom_histogram(fill = "#008080", color = "white", bins = 20) +
+  facet_wrap(~grupo) +
+  labs(title = "El Trío Engañoso: Mismos Estadísticos, Diferentes Distribuciones") +
+  theme_minimal()
+```
+
+<img src="/example/11-practico_files/figure-html/trio-enganoso-1.png" width="672" />
+**Interpretación:** La tabla muestra que los tres grupos son numéricamente casi idénticos. Sin embargo, los histogramas revelan realidades completamente distintas. El Grupo A es simétrico, el Grupo B claramente contiene dos subpoblaciones, y el Grupo C está fuertemente sesgado a la derecha. **Esta es la razón por la que siempre debemos empezar visualizando nuestros datos.**
+
+## 3. La Gramática de Gráficos en la Práctica
+
+Construiremos un histograma de `edad` capa por capa para entender la lógica de `ggplot2`.
+
+
+``` r
+# Capa 1: Los Datos y las Estéticas (aes). Crea un lienzo en blanco con el eje X definido.
+p <- ggplot(data = casen, mapping = aes(x = edad))
+p
+```
+
+<img src="/example/11-practico_files/figure-html/ggplot-paso-a-paso-1.png" width="672" />
+
+``` r
+# Capa 2: La Geometría. Añadimos la capa que dibuja el histograma.
+p <- p + geom_histogram() 
+p
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+<img src="/example/11-practico_files/figure-html/ggplot-paso-a-paso-2.png" width="672" />
+
+``` r
+# Capa 3: Personalización estética. Ajustamos colores y número de bins.
+# p <- p + geom_histogram(fill = "#40E0D0", color = "white", bins = 30)
+# (Para ver el cambio, tendríamos que volver a dibujar p. Lo haremos todo junto)
+
+# Capa 4: Etiquetas y Título. Añadimos contexto con labs() y ponderador.
+p_final <- ggplot(data = casen, mapping = aes(x = edad, weight = expr)) +
+  geom_histogram(fill = "#40E0D0", color = "white", bins = 30) +
+  labs(
+    title = "Distribución de Edades en la Encuesta Casen 2022",
+    x = "Edad (en años)",
+    y = "Población Estimada",
+    caption = "Fuente: Encuesta Casen 2022"
+  ) +
+  theme_minimal()
+
+p_final
+```
+
+<img src="/example/11-practico_files/figure-html/ggplot-paso-a-paso-3.png" width="672" />
+
+## 4. Gráficos para variables categóricas: `geom_bar`
+
+En esta sección graficamos **frecuencias absolutas** y **frecuencias relativas (porcentajes del total)** para la variable `pobreza`, aplicando los ponderadores.
+
+### 4.1 Preparación de la variable
+
+Creamos una versión factorial legible de `pobreza` para etiquetas claras en el eje X.
+
+
+``` r
+casen <- casen %>%
+  mutate(pobreza_factor = as_factor(pobreza))
+```
+
+### 4.2 Frecuencias absolutas (ponderadas)
+
+Usamos `weight = expr` para que las alturas representen población expandida.
+
+
+``` r
+casen %>% 
+  filter(!is.na(pobreza_factor)) %>%
+  ggplot(aes(x = pobreza_factor, weight = expr)) +
+  geom_bar(fill = "#008080") +
+  labs(
+    title = "Distribución de la población por nivel de pobreza",
+    subtitle = "CASEN 2022, estimaciones ponderadas",
+    x = "Situación de pobreza",
+    y = "Población estimada"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/11-practico_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+
+### 4.3 Frecuencias relativas (porcentajes del total, ponderadas)
+
+Para porcentajes del total del gráfico, definimos `y = after_stat(count / sum(count))` y formateamos el eje Y como porcentaje.
+
+
+``` r
+casen %>% 
+  filter(!is.na(pobreza_factor)) %>%
+  ggplot(aes(x = pobreza_factor, weight = expr)) +
+  geom_bar(aes(y = after_stat(count / sum(count))), fill = "#42affa") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Distribución porcentual de la población por nivel de pobreza",
+    subtitle = "CASEN 2022, estimaciones ponderadas",
+    x = "Situación de pobreza",
+    y = "Porcentaje del total"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/11-practico_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+
+
+Perfecto. Agrego la **sección 4.4** con estructura docente y lista para usar.
+
+---
+
+### 4.4 Etiquetas sobre las barras
+
+Usamos `geom_text()` para añadir etiquetas. La idea clave es **usar la misma estadística** que define la altura de la barra también para la posición (`y`) y para el texto (`label`).
+
+#### 4.4.1 Frecuencias absolutas (ponderadas) con etiquetas
+
+
+``` r
+casen %>% 
+  filter(!is.na(pobreza_factor)) %>%
+  ggplot(aes(x = pobreza_factor, weight = expr)) +
+  geom_bar(fill = "#008080") +
+  geom_text(
+    aes(
+      y = after_stat(count),
+      label = after_stat(sprintf("%.0f", count))
+    ),
+    stat = "count",
+    vjust = -0.5,
+    size = 3.8
+  ) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.08))  # pequeño margen superior para que entren las etiquetas
+  ) +
+  labs(
+    title = "Distribución de la población por nivel de pobreza",
+    subtitle = "CASEN 2022, estimaciones ponderadas",
+    x = "Situación de pobreza",
+    y = "Población estimada"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/11-practico_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+
+#### 4.4.2 Porcentajes del total (ponderados) con etiquetas
+
+
+``` r
+casen %>% 
+  filter(!is.na(pobreza_factor)) %>%
+  ggplot(aes(x = pobreza_factor, weight = expr)) +
+  geom_bar(aes(y = after_stat(count / sum(count))), fill = "#42affa") +
+  geom_text(
+    aes(
+      y     = after_stat(count / sum(count)),
+      label = after_stat(scales::percent(count / sum(count), accuracy = 0.1))
+    ),
+    stat = "count",
+    vjust = -0.5,
+    size  = 3.8
+  ) +
+  scale_y_continuous(
+    labels = scales::percent,
+    expand = expansion(mult = c(0, 0.08))
+  ) +
+  labs(
+    title = "Distribución porcentual de la población por nivel de pobreza",
+    subtitle = "CASEN 2022, estimaciones ponderadas",
+    x = "Situación de pobreza",
+    y = "Porcentaje del total"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/11-practico_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+
+
+
+## 5. La utilidad del Faceting: `facet_wrap()`
+
+El faceting nos permite crear una grilla de gráficos para comparar subgrupos. Vamos a visualizar la relación entre edad y pobreza, separando por zona urbana y rural.
+
+
+``` r
+# 1. Preparamos los datos: calculamos el porcentaje de pobreza para cada edad y zona
+casen_pob_zona <- casen %>%
+  mutate(
+    es_pobre = ifelse(pobreza %in% c(1, 2), 1, 0),
+    zona_factor = as_factor(area)
+    ) %>%
+  filter(edad < 90) %>%
+  group_by(edad, zona_factor) %>%
+  # Usamos weighted.mean para un cálculo ponderado correcto de la proporción
+  summarize(porc_pobreza = weighted.mean(es_pobre, w = expr, na.rm = TRUE) * 100, .groups = 'drop')
+
+# 2. Creamos el gráfico facetado
+ggplot(casen_pob_zona, aes(x = edad, y = porc_pobreza)) +
+  geom_line(color = "#D76D77", linewidth = 1) +
+  labs(
+    title = "Porcentaje de Pobreza por Edad, según Zona Geográfica",
+    x = "Edad",
+    y = "% de Personas en Situación de Pobreza",
+    caption = "Fuente: Casen 2022"
+  ) +
+  theme_bw() +
+  facet_wrap(~ zona_factor) # La variable que define los paneles
+```
+
+<img src="/example/11-practico_files/figure-html/facet-example-1.png" width="672" />
+**Interpretación:** El faceting revela un patrón claro: la tasa de pobreza es sistemáticamente más alta en la zona Rural que en la Urbana a lo largo de casi todo el ciclo de vida.
+
+## 6. Actividad de Desafío
+
+Tu misión es crear **una sola figura (usando faceting)** que compare la distribución del **ingreso del trabajo (`ytrabajocor`)** a través de las distintas **categorías de pobreza (`pobreza_factor`)**.
+
+**Instrucciones:**
+1.  Filtra los datos para quedarte con `ytrabajocor > 0` y `ytrabajocor < 5000000` para una mejor visualización.
+2.  Usa `ggplot()` y `facet_wrap(~ pobreza_factor)`.
+3.  Dentro de cada faceta, elige la geometría que mejor muestre la distribución del ingreso (`geom_histogram` o `geom_density`).
+4.  Asegúrate de que tu gráfico sea ponderado (usa `weight = expr`).
+5.  Aplica buenas prácticas: añade un título informativo, etiqueta los ejes y cita la fuente.
+6.  Escribe un breve párrafo de **interpretación**: ¿Cómo cambia la distribución del ingreso (su centro, forma y dispersión) a medida que pasamos de "Pobreza Extrema" a "No Pobres"?
+
+
+
+
+---
+title: "Introducción al Análisis Bivariado: Explorando el Uso del Tiempo con la ENUT 2023"
+linktitle: "12: Introducción al Análisis Bivariado"
+date: "2025-11-10"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 12
+type: docs
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es aplicar el marco de análisis bivariado para explorar relaciones entre variables en la Encuesta Nacional de Uso del Tiempo (ENUT) 2023. Al finalizar, serás capaz de:
+
+*   **Aplicar** el flujo de trabajo para cada uno de los **tres tipos de relaciones** (Categórica-Cuantitativa, Categórica-Categórica, Cuantitativa-Cuantitativa).
+*   **Dominar** el uso de `group_by()` y `summarise()` como herramientas centrales para la comparación de grupos.
+*   **Utilizar el factor de expansión `fe_cut`** para obtener estimaciones poblacionales válidas.
+*   **Interpretar** tablas de resumen y visualizaciones bivariadas en el contexto del uso del tiempo y las desigualdades de género.
+
+## 1. Contexto y Preparación: La Encuesta Nacional de Uso del Tiempo (ENUT)
+
+### 1.1 El "Porqué" de la ENUT
+
+El tiempo es un recurso universal, pero su distribución y uso no lo son. Gran parte del trabajo que sostiene a la sociedad, como las tareas domésticas y de cuidados, es **trabajo no remunerado**, históricamente invisibilizado y feminizado. La **Encuesta Nacional de Uso del Tiempo (ENUT)** es la principal herramienta en Chile para medir este fenómeno, haciendo visible lo invisible para el diseño de políticas públicas más equitativas.
+
+### 1.2 Variables Clave y el "Día Tipo"
+
+En este práctico, nos enfocaremos en las variables de "Día Tipo", que representan un promedio ponderado del tiempo dedicado a una actividad: `(tiempo en día de semana * 5 + tiempo en día de fin de semana * 2) / 7`.
+*   `t_to_dt`: Trabajo en la Ocupación (remunerado).
+*   `t_tdnr_dt`: Trabajo Doméstico No Remunerado.
+*   `t_tcnr_dt`: Trabajo de Cuidados No Remunerado.
+
+### 1.3 Preparación del Entorno
+
+
+``` r
+# Cargar paquetes
+library(tidyverse)
+library(haven)
+library(DescTools) # Para estadísticos ponderados
+library(rio)       # Para importar datos fácilmente
+library(knitr)
+library(kableExtra)
+```
+
+
+``` r
+# Carga Manual (Método recomendado)
+# 1. Crea una carpeta 'datos' en tu Proyecto de RStudio.
+# 2. Descarga el archivo .zip desde: https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7
+# 3. Guarda el archivo .zip en tu carpeta 'datos'.
+# 4. Ejecuta el siguiente código:
+enut <- rio::import("datos/250403-ii-enut-bdd-r-v2.zip", which = "250403-ii-enut-bdd-r-v2.RDS")
+```
+
+
+El siguiente bloque carga los datos automáticamente para la reproducibilidad del documento.
+
+
+``` r
+# Carga automática de datos
+enut <- rio::import("https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7", which = "250403-ii-enut-bdd-r-v2.RDS")
+```
+
+
+### 1.4 Limpieza Inicial de Datos
+
+Preparamos nuestra base de trabajo.
+
+``` r
+# Filtramos, limpiamos NAs y creamos variables factoriales
+enut_trabajo <- enut %>%
+  filter(tiempo == 1) %>% # Nos quedamos solo con quienes contestaron el cuestionario de uso tiempo
+  mutate(
+    # Reemplazamos el código de 'no aplica' (96) por NA
+    t_tnr_dt = na_if(t_tnr_dt, 96),
+    t_tcnr_dt = na_if(t_tcnr_dt, 96),
+    t_to_dt = na_if(t_to_dt, 96),
+    t_tdnr_dt = na_if(t_tdnr_dt, 96),
+    # Creamos variables factor para análisis
+    sexo_factor = as_factor(sexo),
+    nivel_educ_factor = as_factor(nivel_educ),
+    bs2_factor = as_factor(bs2)
+  )
+```
+
+## 2. Categórica (X) ➞ Cuantitativa (Y): La Brecha de Género
+
+### 2.1 La Lógica de `group_by()`: El Motor de la Comparación
+`group_by()` es la función clave que transforma nuestras herramientas univariadas en bivariadas. No cambia los datos visiblemente, sino que le dice a `dplyr` que cualquier operación posterior (como `summarise`) debe realizarse **por separado para cada grupo** definido.
+
+### 2.2 Análisis Numérico
+**Pregunta:** ¿Cómo difieren las horas de trabajo no remunerado (doméstico y de cuidados) entre hombres y mujeres?
+
+``` r
+tabla_caso1 <- enut_trabajo %>%
+  group_by(sexo_factor) %>%
+  summarise(
+    Media_TDNR = weighted.mean(t_tdnr_dt, w = fe_cut, na.rm = TRUE),
+    Mediana_TDNR = Median(t_tdnr_dt, weights = fe_cut, na.rm = TRUE),
+    Media_TCNR = weighted.mean(t_tcnr_dt, w = fe_cut, na.rm = TRUE),
+    Mediana_TCNR = Median(t_tcnr_dt, weights = fe_cut, na.rm = TRUE)
+  )
+
+knitr::kable(tabla_caso1, digits = 2)
+```
+
+
+
+|sexo_factor | Media_TDNR| Mediana_TDNR| Media_TCNR| Mediana_TCNR|
+|:-----------|----------:|------------:|----------:|------------:|
+|Hombre      |       2.15|          1.6|       1.49|         0.93|
+|Mujer       |       3.52|          3.1|       2.28|         1.49|
+
+**Interpretación:** La tabla muestra una fuerte brecha de género. En promedio, las mujeres dedican casi el doble de horas al trabajo doméstico (3.52 vs. 2.15) y al trabajo de cuidados (1.93 vs. 1.05) que los hombres.
+
+### 2.3 Análisis Visual
+
+
+``` r
+# Boxplots comparativos para el trabajo doméstico no remunerado
+ggplot(enut_trabajo, aes(x = sexo_factor, y = t_tnr_dt, fill = sexo_factor)) +
+  geom_boxplot(outlier.alpha = 0.1) +
+  labs(
+    title = "Distribución de Horas de Trabajo No Remunerado por Sexo",
+    x = "Sexo", y = "Horas diarias"
+  ) +
+  theme_minimal() + 
+  theme(legend.position = "none")
+```
+
+```
+## Warning: Removed 918 rows containing non-finite outside the scale range
+## (`stat_boxplot()`).
+```
+
+<img src="/example/12-practico_files/figure-html/cat-quant-vis-1.png" width="672" />
+
+**Interpretación:** La mediana de las mujeres es superior al tercer cuartil de los hombres. Esto significa que **más del 50% de las mujeres dedica más tiempo a tareas domésticas que el 75% de los hombres**.
+
+### 2.4 Actividad 1
+**Pregunta:** Analiza la relación entre el **Nivel Socioeconómico (`NSE`)** y el **tiempo dedicado al trabajo remunerado (`t_to_dt`)**. ¿Existen diferencias en el promedio de horas de trabajo remunerado entre los distintos NSE? Realiza un análisis numérico (tabla con medias y medianas ponderadas) y uno visual (boxplots comparativos).
+
+
+``` r
+# Escribe aquí tu código para el análisis numérico (tabla)
+
+
+# Escribe aquí tu código para el análisis visual (boxplot)
+```
+
+## 3. Categórica (X) ➞ Categórica (Y): Satisfacción y Género
+
+### 3.1 Análisis Numérico con `dplyr`
+
+**Pregunta:** ¿Se asocia el `sexo` (X) con la **satisfacción con el reparto de tareas domésticas** (`bs2`, Y)?
+
+Para responder, construiremos una tabla de contingencia que muestre cómo se distribuye la satisfacción *dentro de* cada sexo, calculando los porcentajes de columna.
+
+
+``` r
+# 1. Creamos y limpiamos las variables factoriales que usaremos
+enut_limpio_cat <- enut_trabajo %>%
+  mutate(
+    bs2_factor = as_factor(bs2)
+  ) %>%
+  filter(!is.na(sexo_factor), !is.na(bs2_factor), !bs2_factor %in% c("No Aplica", "Valor Perdido"))
+
+# 2. Construimos la tabla de porcentajes de columna
+tabla_catcat <- enut_limpio_cat %>%
+   # Agrupamos por la variable explicativa (sexo) 
+  group_by(sexo_factor) %>%
+  # Contamos las combinaciones, usando el ponderador
+  count(bs2_factor, wt = fe_cut, name = "n") %>%
+  # Calculamos el porcentaje que cada celda representa del total de su columna (grupo)
+  mutate(Porcentaje = n / sum(n) * 100) %>%
+  # Seleccionamos y pivoteamos para la presentación final
+  select(sexo_factor, bs2_factor, Porcentaje) %>%
+  pivot_wider(names_from = sexo_factor, values_from = Porcentaje)
+
+# 3. Presentamos la tabla con kable()
+knitr::kable(
+  tabla_catcat,
+  digits = 1,
+  caption = "Satisfacción con el reparto de tareas por sexo (%)"
+) %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+<table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:cat-cat-num"></span>Table 1: (\#tab:cat-cat-num)Satisfacción con el reparto de tareas por sexo (%)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> bs2_factor </th>
+   <th style="text-align:right;"> Hombre </th>
+   <th style="text-align:right;"> Mujer </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Totalmente insatisfecho(a) </td>
+   <td style="text-align:right;"> 1.0 </td>
+   <td style="text-align:right;"> 3.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Insatisfecho(a) </td>
+   <td style="text-align:right;"> 5.2 </td>
+   <td style="text-align:right;"> 11.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Ni insatisfecho(a) ni satisfecho(a) </td>
+   <td style="text-align:right;"> 14.2 </td>
+   <td style="text-align:right;"> 17.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Satisfecho(a) </td>
+   <td style="text-align:right;"> 51.2 </td>
+   <td style="text-align:right;"> 46.7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Totalmente satisfecho(a) </td>
+   <td style="text-align:right;"> 28.3 </td>
+   <td style="text-align:right;"> 21.2 </td>
+  </tr>
+</tbody>
+</table>
+
+
+**Interpretación:** La tabla revela una clara diferencia de género en la satisfacción. Mientras que un **28.3%** de los hombres se declara "Totalmente satisfecho(a)", solo un **21.2%** de las mujeres lo hace. Por el contrario, la insatisfacción (sumando "Insatisfecho(a)" y "Totalmente insatisfecho(a)") es mucho mayor en mujeres (**14.8%**) que en hombres (**6.2%**).
+
+### 3.2 Análisis Visual
+
+El gráfico de barras apiladas al 100% visualiza directamente los porcentajes que calculamos.
+
+
+``` r
+enut_limpio_cat %>%
+  ggplot(aes(x = sexo_factor, fill = fct_rev(bs2_factor), weight = fe_cut)) +
+  geom_bar(position = "fill", width = 0.6) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_viridis_d(option = "viridis", direction = -1) +
+  labs(
+    title = "Satisfacción con el Reparto de Tareas Domésticas por Sexo",
+    x = "Sexo", 
+    y = "Porcentaje de Respuestas", 
+    fill = "Nivel de Satisfacción"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom")
+```
+
+<img src="/example/12-practico_files/figure-html/cat-cat-vis-1.png" width="672" />
+
+
+### 3.3 Actividad 2
+**Pregunta:** ¿Existe una relación entre la **Condición de Actividad (`cae`)** y la **Participación en Trabajo de Cuidados no Remunerado (`p_tcnr_dt`)**? Crea una tabla de contingencia ponderada con porcentajes de fila e interprétala.
+
+
+``` r
+# Escribe aquí tu código para la tabla de contingencia
+```
+
+## 4. Cuantitativa (X) ➞ Cuantitativa (Y): Edad y Trabajo Doméstico
+
+### 4.1 Análisis Visual
+**Pregunta:** ¿Cómo se relaciona la `edad` con el tiempo dedicado al trabajo doméstico (`t_tdnr_dt`)?
+
+``` r
+ggplot(enut_trabajo, aes(x = edad, y = t_tdnr_dt)) +
+  geom_point(alpha = 0.05, color = "#008080", position = "jitter") +
+  geom_smooth(color = "red", se = FALSE, method = "loess") +
+    geom_smooth(color = "blue", se = FALSE, method = "lm") +
+  labs(
+    title = "Horas de Trabajo Doméstico No Remunerado según Edad",
+    x = "Edad", y = "Horas diarias de trabajo no remunerado"
+  ) +
+  theme_minimal()
+```
+
+```
+## `geom_smooth()` using formula = 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+<img src="/example/12-practico_files/figure-html/quant-quant-vis-1.png" width="672" />
+
+**Interpretación:** La relación es **curvilínea**. El tiempo aumenta hasta la adultez media y luego disminuye. La correlación representa la relación lineal (linea azul).
+
+### 4.2 Análisis Numérico
+Calculamos la correlación para cuantificar la parte *lineal* de la relación.
+
+``` r
+cor(enut_trabajo$edad, enut_trabajo$t_tdnr_dt, use = "pairwise.complete.obs")
+```
+
+```
+## [1] 0.204062
+```
+
+**Interpretación:** La correlación es 0.2, un valor bajo que confirma que la relación **no es lineal**, como ya habíamos visto en el gráfico.
+
+### 4.3 Actividad 3
+**Pregunta:** Explora la relación entre las **horas de trabajo remunerado (`t_to_dt`)** y las **horas de trabajo doméstico (`t_tdnr_dt`)**. ¿Esperarías una relación positiva, negativa o nula? Crea un gráfico de dispersión y calcula la correlación para comprobar tu hipótesis.
+
+
+``` r
+# Escribe aquí tu código para el gráfico de dispersión y la correlación
+```
+
+## 5. Actividad de Desafío Final (Integradora)
+
+**Pregunta:** Como sociólogo/a, quieres investigar la 'doble jornada'. La hipótesis es que las mujeres que trabajan más horas de forma remunerada no ven una disminución proporcional en su trabajo doméstico no remunerado.
+
+1.  **Filtra** la base de datos para quedarte solo con las **mujeres ocupadas** `(sexo == 2 & cae == 2)`.
+2.  Crea un **gráfico de dispersión** que muestre la relación entre las horas de trabajo en la ocupación (`t_to_dt`, eje X) y las horas de trabajo doméstico no remunerado (`t_tdnr_dt`, eje Y). Añade una línea de tendencia.
+3.  **Calcula la correlación** entre estas dos variables para este subgrupo.
+4.  Escribe un párrafo de **interpretación final**: ¿Qué te dicen el gráfico y la correlación sobre la hipótesis de la 'doble jornada' para las mujeres ocupadas en Chile?
+
+
+``` r
+# Escribe aquí tu código para el desafío final
+```
+
+
+---
+title: "Análisis Categórico Bivariado: Tablas de Contingencia y Control"
+linktitle: "13: Tablas de Contingencia y Control"
+date: "2025-11-17"
+menu:
+  example:
+    parent: Ejemplos
+    weight: 13
+type: docs
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+
+## 0. Objetivos del Práctico
+
+El objetivo de este práctico es dominar las herramientas para analizar la relación entre dos variables categóricas. Al finalizar, serás capaz de:
+
+*   Utilizar `table()` y `proportions()` de R base para una exploración rápida.
+*   **Construir e interpretar** tablas de contingencia ponderadas usando un flujo de `dplyr` y `janitor`.
+*   **Aplicar** el procedimiento de análisis: calcular porcentajes en la dirección de la variable explicativa y comparar en la opuesta.
+*   **Visualizar** relaciones categóricas bivariadas con `ggplot2`, comparando flujos de trabajo.
+*   **Implementar** el análisis de control **estratificando** por una tercera variable.
+
+## 1. Contexto y Preparación de Datos
+
+### 1.1 Contexto del Práctico
+
+Hoy nos sumergiremos en el **Caso 2 (Categórica ➞ Categórica)** del análisis bivariado. Nuestra herramienta principal será la **tabla de contingencia**, que nos permitirá analizar cómo la distribución de una variable categórica (Y) cambia a través de las categorías de otra (X). Utilizaremos la **Encuesta Nacional de Uso del Tiempo (ENUT) 2023** para explorar las desigualdades en la distribución del trabajo y el bienestar.
+
+### 1.2 Preparación del Entorno y Datos
+
+**Paso 1: Organiza tu entorno**
+Como siempre, asegúrate de estar trabajando dentro de tu **Proyecto de RStudio** y de tener una carpeta `datos`.
+
+**Paso 2: Descarga la Base de Datos**
+Descarga la base de datos de la ENUT 2023 desde el siguiente enlace y guarda el archivo `.zip` en tu carpeta `datos`:
+-   **Enlace de descarga:** [Base de datos ENUT 2023 (formato R)](https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7)
+
+**Paso 3: Carga de Paquetes y Datos**
+
+``` r
+# Cargar paquetes
+library(tidyverse)
+library(haven)
+library(rio)       # Para importar datos fácilmente
+library(janitor)   # Para crear tablas de contingencia
+library(knitr)     # Para dar formato a las tablas
+library(kableExtra)# Para estilos adicionales a las tablas
+```
+
+
+``` r
+# Carga Manual (Método recomendado)
+enut <- rio::import("datos/250403-ii-enut-bdd-r-v2.zip", which = "250403-ii-enut-bdd-r-v2.RDS")
+```
+
+
+El siguiente bloque carga los datos automáticamente para la reproducibilidad del documento.
+
+``` r
+# Carga automática de datos
+enut <- rio::import("https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7", which = "250403-ii-enut-bdd-r-v2.RDS")
+```
+
+
+### 1.3 Limpieza y Preparación de Variables
+Crearemos un único `dataframe` llamado `enut_practico` que contenga todas las variables que usaremos, ya limpias y transformadas a formato factorial.
+
+``` r
+enut_practico <- enut %>%
+  filter(tiempo == 1) %>% # Nos quedamos solo con quienes contestaron el diario de tiempo
+  mutate(
+    sexo_factor = as_factor(sexo),
+    p_tdnr_dt_factor = as_factor(p_tdnr_dt),
+    p_tcnr_dt_factor = as_factor(p_tcnr_dt),
+    cae_factor = as_factor(cae),
+    bs2_factor = as_factor(bs2),
+    nivel_educ_factor = fct_recode(as_factor(nivel_educ),
+                                   "Básica (in)completa" = "Sin educación primaria o primaria incompleta",
+                                   "Básica (in)completa" = "Primaria completa",
+                                   "Media" = "Secundaria completa",
+                                   "Técnica" = "Técnica o postsecundaria no terciaria",
+                                   "Universitaria" = "Universitaria completa"),
+    grupo_edad = case_when(
+      edad <= 29 ~ "Jóvenes (12-29)",
+      edad <= 59 ~ "Adultos (30-59)",
+      edad >= 60 ~ "Adultos Mayores (60+)"
+    )
+  ) %>%
+  filter(
+    cae_factor %in% c("Persona ocupada", "Persona desocupada", "Personas fuera de la fuerza de trabajo")
+  )
+```
+
+## 2. Exploración Rápida con R Base: `table()` y `proportions()`
+
+Antes de crear tablas de publicación, es útil hacer una exploración rápida de la **muestra sin ponderar**.
+
+
+``` r
+# 1. Crear una tabla de contingencia con frecuencias absolutas
+tabla_simple <- table(enut_practico$sexo_factor, enut_practico$cae_factor)
+tabla_simple
+```
+
+```
+##                
+##                 Menores de 15 años Persona ocupada Persona desocupada
+##   Hombre                         0            7551                480
+##   Mujer                          0            8068                554
+##   Valor Perdido                  0               0                  0
+##                
+##                 Personas fuera de la fuerza de trabajo
+##   Hombre                                          3258
+##   Mujer                                           7461
+##   Valor Perdido                                      0
+```
+
+``` r
+# 2. Calcular porcentajes de columna (margin = 2)
+proportions(tabla_simple, margin = 2) %>% round(2)
+```
+
+```
+##                
+##                 Menores de 15 años Persona ocupada Persona desocupada
+##   Hombre                                      0.48               0.46
+##   Mujer                                       0.52               0.54
+##   Valor Perdido                               0.00               0.00
+##                
+##                 Personas fuera de la fuerza de trabajo
+##   Hombre                                          0.30
+##   Mujer                                           0.70
+##   Valor Perdido                                   0.00
+```
+
+``` r
+# 3. Calcular porcentajes de fila (margin = 1)
+proportions(tabla_simple, margin = 1) %>% round(2)
+```
+
+```
+##                
+##                 Menores de 15 años Persona ocupada Persona desocupada
+##   Hombre                      0.00            0.67               0.04
+##   Mujer                       0.00            0.50               0.03
+##   Valor Perdido                                                      
+##                
+##                 Personas fuera de la fuerza de trabajo
+##   Hombre                                          0.29
+##   Mujer                                           0.46
+##   Valor Perdido
+```
+**Interpretación:** Estas funciones son excelentes para una inspección inicial. Por ejemplo, en los porcentajes de columna, vemos que el 52% de las personas ocupadas en la *muestra* son mujeres. Sin embargo, para hacer afirmaciones sobre la población, necesitamos usar los ponderadores.
+
+## 3. Creando Tablas de Publicación Ponderadas
+
+Para crear tablas ponderadas, usaremos un flujo que combina `dplyr` (para el cálculo) y `janitor` (para el formato).
+
+
+``` r
+# Flujo correcto para crear una tabla ponderada de porcentajes de columna
+enut_practico %>%
+  # Paso 1: Contar las combinaciones ponderadas con dplyr
+  count(cae_factor, sexo_factor, wt = fe_cut, name = "n_pond") %>%
+  
+  # Paso 2: Reestructurar a formato ancho
+  pivot_wider(names_from = sexo_factor, values_from = n_pond) %>%
+  
+  # Paso 3: Usar janitor para adornar la tabla con totales y porcentajes
+  adorn_totals("row") %>%
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  
+  # Paso 4: Presentar con kable
+  kable(caption = "Condición de Actividad por Sexo (%)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+<table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:janitor-example"></span>Table 1: (\#tab:janitor-example)Condición de Actividad por Sexo (%)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> cae_factor </th>
+   <th style="text-align:left;"> Hombre </th>
+   <th style="text-align:left;"> Mujer </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Persona ocupada </td>
+   <td style="text-align:left;"> 4,891,103.4  (69.3%) </td>
+   <td style="text-align:left;"> 3,931,116.0  (52.6%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Persona desocupada </td>
+   <td style="text-align:left;"> 338,414.7   (4.8%) </td>
+   <td style="text-align:left;"> 294,875.5   (3.9%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Personas fuera de la fuerza de trabajo </td>
+   <td style="text-align:left;"> 1,825,378.7  (25.9%) </td>
+   <td style="text-align:left;"> 3,254,677.4  (43.5%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Total </td>
+   <td style="text-align:left;"> 7,054,896.8 (100.0%) </td>
+   <td style="text-align:left;"> 7,480,668.9 (100.0%) </td>
+  </tr>
+</tbody>
+</table>
+
+### 3.1 Actividad 1
+**Pregunta:** Usando el flujo completo (`count` -> `pivot_wider` -> `adorn_...` -> `kable`), crea e interpreta una tabla ponderada que muestre la relación entre el **nivel educacional (`nivel_educ_factor`)** (X, en las columnas) y la **condición de actividad (`cae_factor`)** (Y, en las filas). ¿Qué nivel educativo presenta el mayor porcentaje de 'Personas Ocupadas'?
+
+
+``` r
+# Escribe aquí tu código para la Actividad 1
+```
+
+## 4. Visualizando Relaciones Categóricas
+
+### 4.1 Flujo 1: Graficar Directamente (`position = "fill"`)
+
+Este método es el más rápido: `ggplot2` calcula las proporciones internamente.
+
+
+``` r
+enut_practico %>%
+  filter(!bs2_factor %in% c("No Aplica", "Valor Perdido") & !is.na(bs2_factor)) %>% # Filtramos NAs
+  ggplot(aes(x = sexo_factor, fill = bs2_factor, weight = fe_cut)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Satisfacción con el Reparto de Tareas por Sexo",
+    x = "Sexo", y = "Porcentaje de Respuestas", fill = "Nivel de Satisfacción"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/13-practico_files/figure-html/vis-direct-1.png" width="672" />
+
+### 4.2 Flujo 2: Pre-tabular con `dplyr` y Graficar (`geom_col`)
+Este método da más control y es útil para gráficos complejos.
+
+
+``` r
+# Paso 1: Crear una tabla de resumen con los porcentajes
+tabla_para_grafico <- enut_practico %>%
+  filter(!bs2_factor %in% c("No Aplica", "Valor Perdido") & !is.na(bs2_factor)) %>%
+  count(sexo_factor, bs2_factor, wt = fe_cut) %>%
+  group_by(sexo_factor) %>%
+  mutate(porcentaje = n / sum(n))
+
+# Paso 2: Usar geom_col() para graficar los valores pre-calculados
+ggplot(tabla_para_grafico, aes(x = sexo_factor, y = porcentaje, fill = fct_rev(bs2_factor))) +
+  geom_col() + # Usamos geom_col, no geom_bar
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Satisfacción con el Reparto de Tareas por Sexo",
+    x = "Sexo", y = "Porcentaje de Respuestas", fill = "Nivel de Satisfacción"
+  ) +
+  theme_minimal()
+```
+
+<img src="/example/13-practico_files/figure-html/vis-tabular-1.png" width="672" />
+
+### 4.3 Actividad 2
+**Pregunta:** Crea un gráfico de barras apiladas al 100% que visualice la relación de la **Actividad 1** (nivel educacional vs. condición de actividad). Elige cualquiera de los dos flujos de trabajo. ¿Qué patrón visual confirma lo que viste en la tabla?
+
+
+``` r
+# Escribe aquí tu código para la Actividad 2
+```
+
+
+## 5. Análisis de Control por Tercera Variable en R
+
+### 5.1 Control en Tablas usando `filter()`
+
+Para controlar por una tercera variable en una tabla, simplemente la añadimos a nuestro flujo de `dplyr` un filtro. La estrategia es filtrar el `dataframe` para cada categoría de la variable de control y luego construir la tabla de contingencia para ese subgrupo.
+
+**Pregunta de investigación:** Analicemos la relación entre la **condición de actividad** (X) y la **participación en trabajo de cuidados** (Y), pero esta vez **controlando por sexo** (Z).
+
+
+``` r
+# Tabla Parcial 1: Solo para Hombres
+enut_practico %>%
+  filter(sexo_factor == "Hombre") %>%
+  count(p_tcnr_dt_factor, cae_factor, wt = fe_cut, name = "n_pond") %>%
+  pivot_wider(names_from = cae_factor, values_from = n_pond) %>%
+
+  adorn_totals("row") %>% 
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  
+  kable(caption = "Tabla 1: Participación en Cuidados por Condición de Actividad (Hombres)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+<table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:control-tabyl"></span>Table 3: (\#tab:control-tabyl)Tabla 1: Participación en Cuidados por Condición de Actividad (Hombres)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> p_tcnr_dt_factor </th>
+   <th style="text-align:left;"> Persona ocupada </th>
+   <th style="text-align:left;"> Persona desocupada </th>
+   <th style="text-align:left;"> Personas fuera de la fuerza de trabajo </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> 3,102,858  (63.4%) </td>
+   <td style="text-align:left;"> 231,206.2  (68.3%) </td>
+   <td style="text-align:left;"> 1,418,909.8  (77.7%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sí </td>
+   <td style="text-align:left;"> 1,788,245  (36.6%) </td>
+   <td style="text-align:left;"> 107,208.5  (31.7%) </td>
+   <td style="text-align:left;"> 406,468.9  (22.3%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Total </td>
+   <td style="text-align:left;"> 4,891,103 (100.0%) </td>
+   <td style="text-align:left;"> 338,414.7 (100.0%) </td>
+   <td style="text-align:left;"> 1,825,378.7 (100.0%) </td>
+  </tr>
+</tbody>
+</table>
+
+``` r
+# Tabla Parcial 2: Solo para Mujeres
+enut_practico %>%
+  filter(sexo_factor == "Mujer") %>%
+  count(p_tcnr_dt_factor, cae_factor, wt = fe_cut, name = "n_pond") %>%
+  pivot_wider(names_from = cae_factor, values_from = n_pond) %>%
+
+  adorn_totals("row") %>% 
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns("front") %>%
+  
+  kable(caption = "Tabla 1: Participación en Cuidados por Condición de Actividad (Hombres)") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+<table class="table table-striped" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption><span id="tab:control-tabyl"></span>Table 3: (\#tab:control-tabyl)Tabla 1: Participación en Cuidados por Condición de Actividad (Hombres)</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> p_tcnr_dt_factor </th>
+   <th style="text-align:left;"> Persona ocupada </th>
+   <th style="text-align:left;"> Persona desocupada </th>
+   <th style="text-align:left;"> Personas fuera de la fuerza de trabajo </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> 2,050,628  (52.2%) </td>
+   <td style="text-align:left;"> 145,738.2  (49.4%) </td>
+   <td style="text-align:left;"> 2,060,679  (63.3%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sí </td>
+   <td style="text-align:left;"> 1,880,488  (47.8%) </td>
+   <td style="text-align:left;"> 149,137.3  (50.6%) </td>
+   <td style="text-align:left;"> 1,193,998  (36.7%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Total </td>
+   <td style="text-align:left;"> 3,931,116 (100.0%) </td>
+   <td style="text-align:left;"> 294,875.5 (100.0%) </td>
+   <td style="text-align:left;"> 3,254,677 (100.0%) </td>
+  </tr>
+</tbody>
+</table>
+
+**Interpretación:** Al estratificar, vemos que la relación cambia. Entre los hombres, las personas ocupadas son quienes más participan en cuidados (36.6%). Entre las mujeres, en cambio, la participación es mayor entre las ocupadas (47.8%), pero también alta entre las fuera de la fuerza de trabajo (36.7%), mostrando patrones diferentes.
+
+### 5.2 Control en Gráficos con `facet_wrap()`
+
+`facet_wrap()` es la contraparte visual de la estratificación, creando un panel para cada categoría de la variable de control de forma automática y mucho más directa.
+
+
+``` r
+enut_practico %>%
+  filter(!is.na(p_tcnr_dt_factor)) %>% # Filtramos NAs para el gráfico
+  ggplot(aes(x = cae_factor, fill = p_tcnr_dt_factor, weight = fe_cut)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  # Añadimos una paleta de colores más atractiva
+  scale_fill_viridis_d(name = "Participa en Cuidados") +
+  labs(
+    title = "Participación en Cuidados por Condición de Actividad, según Sexo",
+    x = "Condición de Actividad",
+    y = "Porcentaje"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "bottom") +
+  # La magia del control: creamos un panel para cada sexo
+  facet_wrap(~ sexo_factor)
+```
+
+<img src="/example/13-practico_files/figure-html/control-facet-1.png" width="672" />
+
+## 6. Actividad de Desafío Final (Integradora)
+
+**Pregunta de Investigación:** Se argumenta que la percepción de "falta de tiempo para el descanso" (`bs2`) está influenciada por la "doble jornada". Queremos investigar si la relación entre el **sexo** (X) y la **satisfacción con el reparto de tareas** (Y) es en realidad un efecto de la **condición de actividad (`cae_factor`)** (Z).
+
+1.  **Análisis Bivariado:** Crea una tabla de contingencia ponderada (usando el flujo con `dplyr` y `janitor`) con porcentajes de columna para la relación entre `sexo_factor` (X) y `bs2_factor` (Y). Interprétala brevemente.
+2.  **Análisis Estratificado:** Ahora, controla por `cae_factor`. La forma más fácil de hacerlo es con `group_by()` antes de `count()` o usando `facet_wrap()` en el gráfico. Elige uno de los dos métodos.
+3.  **Conclusión:** Compara los resultados en los distintos grupos. ¿La brecha de género en la satisfacción con el descanso se mantiene, desaparece o cambia dentro de cada grupo de actividad? Escribe un párrafo de conclusión: ¿La relación original era espuria o se trata de una interacción/especificación?
+
+
+``` r
+# 1. Código para el análisis bivariado
+
+
+# 2. Código para el análisis estratificado
+
+
+# 3. Párrafo de conclusión (como comentario)
+```

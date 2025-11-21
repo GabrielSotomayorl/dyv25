@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="14-slides_files/libs/clipboard/clipboard.min.js"></script>
+<script src="14-slides_files/libs/quarto-html/tabby.min.js"></script>
+<script src="14-slides_files/libs/quarto-html/popper.min.js"></script>
+<script src="14-slides_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="14-slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="14-slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="14-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
+
+  <meta name="author" content="Gabriel Sotomayor">
+  <meta name="dcterms.date" content="2025-11-24">
+  <title>Síntesis Bivariada y Medidas de Asociación</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="14-slides_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="14-slides_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="14-slides_files/libs/revealjs/dist/theme/quarto-aff1f7264a615286def6c13f54e8bcad.css">
+  <link href="14-slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="14-slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="14-slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="14-slides_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <style>
+  #title-slide .title {
+    font-size: 1.8em;
+  }
+  </style>
+</head>
+<body class="quarto-dark">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Síntesis Bivariada y Medidas de Asociación</h1>
+  <p class="subtitle">Unidad 5: Estadística Descriptiva Bivariada</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Gabriel Sotomayor 
+</div>
+</div>
+</div>
+
+  <p class="date">2025-11-24</p>
+</section>
+<section id="objetivos-de-la-sesión-de-hoy" class="slide level2 smaller" data-background-color="white">
+<h2>Objetivos de la Sesión de Hoy</h2>
+<ul>
+<li><strong>Sintetizar</strong> las estrategias visuales para cada tipo de análisis bivariado.</li>
+<li><strong>Introducir</strong> el coeficiente de <strong>Correlación de Pearson (r)</strong> para cuantificar la fuerza y dirección de una relación lineal.</li>
+<li><strong>Desglosar</strong> el concepto de <strong>covarianza</strong> como el paso previo a la correlación.</li>
+<li><strong>Discutir</strong> las <strong>limitaciones</strong> de la correlación (outliers, no linealidad, causalidad).</li>
+<li><strong>Concluir</strong> el curso conectando la estadística descriptiva con la <strong>incertidumbre del muestreo</strong> y el rol de la <strong>probabilidad</strong>.</li>
+</ul>
+</section>
+<section>
+<section id="el-mapa-del-análisis-bivariado-síntesis-visual" class="title-slide slide level1 center">
+<h1>1. El Mapa del Análisis Bivariado: Síntesis Visual</h1>
+
+</section>
+<section id="eligiendo-la-herramienta-correcta" class="slide level2 smaller" data-background-color="white">
+<h2>Eligiendo la Herramienta Correcta</h2>
+<p>Hemos explorado tres tipos de relaciones. A modo de resumen, este es nuestro mapa conceptual para elegir la visualización y el análisis numérico correctos:</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tipo de Relación</th>
+<th style="text-align: left;">Pregunta Sociológica</th>
+<th style="text-align: left;">Herramienta Visual (<code>ggplot2</code>)</th>
+<th style="text-align: left;">Herramienta Numérica</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Cat ➞ Quant</strong></td>
+<td style="text-align: left;">¿Difieren los grupos?</td>
+<td style="text-align: left;"><code>geom_boxplot</code>, <code>geom_density</code></td>
+<td style="text-align: left;">Tabla de medias/medianas por grupo</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Cat ➞ Cat</strong></td>
+<td style="text-align: left;">¿Se asocian las categorías?</td>
+<td style="text-align: left;"><code>geom_bar(position="fill")</code></td>
+<td style="text-align: left;">Tabla de contingencia (% cond.)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Quant ➞ Quant</strong></td>
+<td style="text-align: left;">¿Cómo covarían las variables?</td>
+<td style="text-align: left;"><code>geom_point</code> (Scatterplot)</td>
+<td style="text-align: left;">Correlación</td>
+</tr>
+</tbody>
+</table>
+<p>Hoy, nos enfocaremos en profundidad en el último caso: la relación entre dos variables cuantitativas.</p>
+</section></section>
+<section>
+<section id="del-gráfico-de-dispersión-a-la-correlación" class="title-slide slide level1 center">
+<h1>2. Del Gráfico de Dispersión a la Correlación</h1>
+
+</section>
+<section id="el-gráfico-de-dispersión-scatterplot" class="slide level2 smaller" data-background-color="white">
+<h2>El Gráfico de Dispersión (Scatterplot)</h2>
+<p>El <strong>gráfico de dispersión</strong> es nuestra herramienta visual principal para analizar la relación entre dos variables cuantitativas. Nos permite evaluar tres aspectos clave:</p>
+<ol type="1">
+<li><strong>Dirección:</strong> ¿La nube de puntos va hacia arriba o hacia abajo?
+<ul>
+<li><strong>Asociación Positiva:</strong> A medida que X aumenta, Y tiende a aumentar.</li>
+<li><strong>Asociación Negativa:</strong> A medida que X aumenta, Y tiende a disminuir.</li>
+</ul></li>
+<li><strong>Forma:</strong> ¿El patrón sigue una línea recta (<strong>lineal</strong>) o una curva (<strong>curvilíneo</strong>)?</li>
+<li><strong>Fuerza:</strong> ¿Qué tan agrupados están los puntos alrededor del patrón principal? Puntos muy dispersos indican una relación débil; puntos muy juntos indican una relación fuerte.</li>
+</ol>
+</section>
+<section id="hacia-una-medida-numérica-la-covarianza" class="slide level2 smaller" data-background-color="white">
+<h2>Hacia una Medida Numérica: La Covarianza</h2>
+<p>Un gráfico de dispersión es subjetivo. Para cuantificar la relación, necesitamos un número. El primer paso es la <strong>covarianza</strong>.</p>
+<p>La idea es dividir el gráfico en cuatro cuadrantes usando las medias de X e Y.</p>
+
+<img data-src="14-slides_files/figure-revealjs/unnamed-chunk-1-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><ul>
+<li><strong>Asociación Positiva:</strong> La mayoría de los puntos caen en los cuadrantes <strong>I</strong> y <strong>III</strong>.</li>
+<li><strong>Asociación Negativa:</strong> La mayoría de los puntos caen en los cuadrantes <strong>II</strong> y <strong>IV</strong>.</li>
+</ul>
+</section>
+<section id="la-covarianza-sxy" class="slide level2 smaller" data-background-color="white">
+<h2>La Covarianza (sxy)</h2>
+<p>La covarianza calcula el “promedio” del producto de las desviaciones de cada punto a sus respectivas medias.</p>
+<p><span class="math display">\[
+Cov(x, y) = s_{xy} = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n - 1}
+\]</span></p>
+<ul>
+<li><strong>Interpretación del signo:</strong>
+<ul>
+<li>Si <strong>Cov(x, y) &gt; 0</strong>, la relación es positiva (puntos en cuadrantes I y III).</li>
+<li>Si <strong>Cov(x, y) &lt; 0</strong>, la relación es negativa (puntos en cuadrantes II y IV).</li>
+</ul></li>
+<li><strong>Problema:</strong> La magnitud de la covarianza depende de las unidades de las variables (ej. <code>pesos * años</code>). <strong>¡No es comparable!</strong> No nos dice si la relación es “fuerte” o “débil”.</li>
+</ul>
+</section>
+<section id="la-solución-correlación-de-pearson-r" class="slide level2 smaller" data-background-color="white">
+<h2>La Solución: Correlación de Pearson (r)</h2>
+<p>Para resolver el problema de las unidades, <strong>estandarizamos</strong> la covarianza. La dividimos por el producto de las desviaciones estándar de cada variable. El resultado es el <strong>coeficiente de correlación de Pearson (r)</strong>.</p>
+<p><span class="math display">\[
+r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
+\]</span></p>
+<ul>
+<li><strong>¡Clave!</strong> La fórmula de <code>r</code> es el promedio del producto de las <strong>puntuaciones Z</strong> de X e Y.</li>
+<li><code>r</code> es un número <strong>sin unidades</strong>, que siempre va de <strong>-1 a +1</strong>, lo que lo hace universalmente comparable.</li>
+</ul>
+</section>
+<section id="interpretando-la-correlación-r" class="slide level2 smaller" data-background-color="white">
+<h2>Interpretando la Correlación (r)</h2>
+<ul>
+<li><strong>Rango:</strong> Siempre entre -1 y +1.</li>
+<li><strong>Dirección:</strong>
+<ul>
+<li>r &gt; 0 indica una <strong>asociación positiva</strong>.</li>
+<li>r &lt; 0 indica una <strong>asociación negativa</strong>.</li>
+</ul></li>
+<li><strong>Fuerza:</strong> La magnitud (el valor absoluto).
+<ul>
+<li>r cercano a 0: relación <strong>lineal débil o nula</strong>.</li>
+<li>r cercano a -1 o +1: relación <strong>lineal fuerte</strong>.</li>
+</ul></li>
+</ul>
+</section>
+<section id="interpretando-la-correlación-r-1" class="slide level2 smaller" data-background-color="white">
+<h2>Interpretando la Correlación (r)</h2>
+
+<img data-src="14-slides_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section></section>
+<section>
+<section id="las-tres-advertencias-sobre-la-correlación" class="title-slide slide level1 center">
+<h1>3. Las Tres Advertencias sobre la Correlación</h1>
+
+</section>
+<section id="correlación-no-implica-causalidad" class="slide level2 smaller" data-background-color="white">
+<h2>1. Correlación no implica Causalidad</h2>
+<p>Este es el mantra más importante de la estadística. Una correlación fuerte entre dos variables <strong>nunca</strong> es, por sí sola, evidencia suficiente para concluir que una causa la otra.</p>
+<p>La relación podría ser una <strong>asociación espuria</strong>, causada por una tercera variable latente.</p>
+
+<img data-src="14-slides_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="la-correlación-es-sensible-a-outliers" class="slide level2 smaller" data-background-color="white">
+<h2>2. La Correlación es Sensible a Outliers</h2>
+<p>Al igual que la media y la desviación estándar, la correlación es una medida <strong>no robusta</strong>. Un solo valor atípico puede distorsionar dramáticamente el coeficiente.</p>
+
+<img data-src="14-slides_files/figure-revealjs/unnamed-chunk-4-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p><strong>Lección:</strong> Siempre inspecciona visualmente tu gráfico de dispersión para detectar outliers antes de interpretar <code>r</code>.</p>
+</section>
+<section id="r-solo-mide-relaciones-lineales" class="slide level2 smaller" data-background-color="white">
+<h2>3. <code>r</code> Solo Mide Relaciones LINEALES</h2>
+<p>El coeficiente de correlación de Pearson está diseñado para medir qué tan bien se ajustan los datos a una <strong>línea recta</strong>. Si la relación es fuerte pero <strong>curvilínea</strong>, <code>r</code> puede ser engañosamente bajo.</p>
+
+<img data-src="14-slides_files/figure-revealjs/unnamed-chunk-5-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p><strong>Conclusión:</strong> Un <code>r</code> cercano a 0 <strong>no significa “ausencia de relación”</strong>. Significa <strong>“ausencia de relación <em>lineal</em>”</strong>. Por eso, el análisis visual es irremplazable.</p>
+</section>
+<section id="cierre-del-curso-más-allá-de-la-descripción" class="slide level2 smaller" data-background-color="white">
+<h2>Cierre del Curso: Más Allá de la Descripción</h2>
+<p>Hemos pasado el curso aprendiendo a explorar, resumir y visualizar los patrones en <strong>nuestros datos</strong>.</p>
+<p>Pero casi siempre, nuestros datos provienen de una <strong>muestra</strong>. Esto nos deja con la pregunta más importante de la estadística:</p>
+<blockquote>
+<p><em>“En nuestra muestra de la ENUT, la brecha de género en trabajo doméstico es de 2.1 horas. ¿Es esta diferencia ‘real’ o podría ser una simple casualidad producto del azar del muestreo?”</em></p>
+</blockquote>
+<p>Responder esta pregunta es el trabajo de la <strong>Estadística Inferencial</strong>.</p>
+<ul>
+<li><strong>El Problema:</strong> La <strong>incertidumbre del muestreo</strong>.</li>
+<li><strong>La Herramienta:</strong> La <strong>Teoría de la Probabilidad</strong>.</li>
+<li><strong>El Objetivo:</strong> Hacer <strong>inferencias</strong> sobre la población a partir de la muestra y cuantificar nuestra confianza en esas conclusiones (p-valores, intervalos de confianza).</li>
+</ul>
+<p>La estadística descriptiva que han aprendido es el fundamento indispensable para poder hacer inferencia de manera correcta. ¡Felicitaciones por completar este primer gran paso</p>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="images/logo.png" class="slide-logo"></p>
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="14-slides_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="14-slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="14-slides_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="14-slides_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="14-slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="14-slides_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="14-slides_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="14-slides_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="14-slides_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="14-slides_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
