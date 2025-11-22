@@ -6,8 +6,8 @@
 <script src="14-slides_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="14-slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="14-slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="14-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.25">
+<link href="14-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Gabriel Sotomayor">
   <meta name="dcterms.date" content="2025-11-24">
@@ -30,7 +30,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="14-slides_files/libs/revealjs/dist/theme/quarto-aff1f7264a615286def6c13f54e8bcad.css">
+  <link rel="stylesheet" href="14-slides_files/libs/revealjs/dist/theme/quarto-e1cbb759e4a46ec0f203c77955f7056a.css">
   <link href="14-slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="14-slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="14-slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -234,7 +234,7 @@ Gabriel Sotomayor
 <h2>La Covarianza (sxy)</h2>
 <p>La covarianza calcula el “promedio” del producto de las desviaciones de cada punto a sus respectivas medias.</p>
 <p><span class="math display">\[
-Cov(x, y) = s_{xy} = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n - 1}
+Cov(x, y) = s\_{xy} = \frac{\sum\_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n - 1}
 \]</span></p>
 <ul>
 <li><strong>Interpretación del signo:</strong>
@@ -249,10 +249,10 @@ Cov(x, y) = s_{xy} = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n - 1}
 <h2>La Solución: Correlación de Pearson (r)</h2>
 <p>Para resolver el problema de las unidades, <strong>estandarizamos</strong> la covarianza. La dividimos por el producto de las desviaciones estándar de cada variable. El resultado es el <strong>coeficiente de correlación de Pearson (r)</strong>.</p>
 <p><span class="math display">\[
-r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
+r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum\_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
 \]</span></p>
 <ul>
-<li><strong>¡Clave!</strong> La fórmula de <code>r</code> es el promedio del producto de las <strong>puntuaciones Z</strong> de X e Y.</li>
+<li>La fórmula de <code>r</code> es el promedio del producto de las <strong>puntuaciones Z</strong> de X e Y.</li>
 <li><code>r</code> es un número <strong>sin unidades</strong>, que siempre va de <strong>-1 a +1</strong>, lo que lo hace universalmente comparable.</li>
 </ul>
 </section>
@@ -275,15 +275,47 @@ r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum_{i=1}^{n} \left( \frac{
 <section id="interpretando-la-correlación-r-1" class="slide level2 smaller" data-background-color="white">
 <h2>Interpretando la Correlación (r)</h2>
 
-<img data-src="14-slides_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section></section>
+<img data-src="14-slides_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="características-de-la-correlación-i" class="slide level2 smaller" data-background-color="white">
+<h2>Características de la correlación (I)</h2>
+<ul>
+<li><strong>Simetría en las Variables:</strong> La correlación no distingue entre variables explicativas y respuesta; es indiferente cuál se llame x o y.<br>
+</li>
+<li><strong>Requisito Cuantitativo:</strong> Las dos variables deben ser cuantitativas para que los cálculos de la correlación tengan sentido. No se puede calcular la correlación entre una variable cuantitativa y una categórica.<br>
+</li>
+<li><strong>Independencia de Unidades:</strong> Como la correlación utiliza valores estandarizados, no cambia si se modifican las unidades de medida de las variables. La correlación es un valor sin unidades.<br>
+</li>
+<li><strong>Significado del Signo:</strong><br>
+
+<ul>
+<li>Correlación positiva: Indica una asociación positiva entre las variables.<br>
+</li>
+<li>Correlación negativa: Indica una asociación negativa.</li>
+</ul></li>
+</ul>
+</section>
+<section id="características-de-la-correlación-ii" class="slide level2 smaller" data-background-color="white">
+<h2>Características de la correlación (II)</h2>
+<ul>
+<li><strong>Rango de la Correlación:</strong> La correlación siempre toma valores entre −1 y 1.<br>
+</li>
+<li>Cercanía a 0: Indica una relación lineal débil.<br>
+</li>
+<li>Cercanía a ±1: Indica una relación lineal fuerte. Un valor de ±1 indica una relación lineal perfecta.<br>
+</li>
+<li><strong>Limitación a Relaciones Lineales:</strong> La correlación sólo mide la fuerza de relaciones lineales, no describe adecuadamente las relaciones curvilíneas, aunque estas sean fuertes.<br>
+</li>
+<li><strong>Sensibilidad a Observaciones Atípicas:</strong> La correlación puede verse fuertemente afectada por valores atípicos, lo que puede distorsionar la percepción de la relación entre las variables. Es importante utilizar la correlación con precaución cuando se detectan atípicos.</li>
+</ul>
+</section></section>
 <section>
-<section id="las-tres-advertencias-sobre-la-correlación" class="title-slide slide level1 center">
-<h1>3. Las Tres Advertencias sobre la Correlación</h1>
+<section id="advertencias-sobre-la-correlación" class="title-slide slide level1 center">
+<h1>3. Advertencias sobre la Correlación</h1>
 
 </section>
 <section id="correlación-no-implica-causalidad" class="slide level2 smaller" data-background-color="white">
 <h2>1. Correlación no implica Causalidad</h2>
-<p>Este es el mantra más importante de la estadística. Una correlación fuerte entre dos variables <strong>nunca</strong> es, por sí sola, evidencia suficiente para concluir que una causa la otra.</p>
+<p>Una correlación fuerte entre dos variables <strong>nunca</strong> es, por sí sola, evidencia suficiente para concluir que una causa la otra.</p>
 <p>La relación podría ser una <strong>asociación espuria</strong>, causada por una tercera variable latente.</p>
 
 <img data-src="14-slides_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
@@ -298,21 +330,40 @@ r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum_{i=1}^{n} \left( \frac{
 <p>El coeficiente de correlación de Pearson está diseñado para medir qué tan bien se ajustan los datos a una <strong>línea recta</strong>. Si la relación es fuerte pero <strong>curvilínea</strong>, <code>r</code> puede ser engañosamente bajo.</p>
 
 <img data-src="14-slides_files/figure-revealjs/unnamed-chunk-5-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p><strong>Conclusión:</strong> Un <code>r</code> cercano a 0 <strong>no significa “ausencia de relación”</strong>. Significa <strong>“ausencia de relación <em>lineal</em>”</strong>. Por eso, el análisis visual es irremplazable.</p>
+</section></section>
+<section>
+<section id="conclusión-del-curso" class="title-slide slide level1 center">
+<h1>4. Conclusión del Curso</h1>
+
 </section>
-<section id="cierre-del-curso-más-allá-de-la-descripción" class="slide level2 smaller" data-background-color="white">
-<h2>Cierre del Curso: Más Allá de la Descripción</h2>
-<p>Hemos pasado el curso aprendiendo a explorar, resumir y visualizar los patrones en <strong>nuestros datos</strong>.</p>
-<p>Pero casi siempre, nuestros datos provienen de una <strong>muestra</strong>. Esto nos deja con la pregunta más importante de la estadística:</p>
-<blockquote>
-<p><em>“En nuestra muestra de la ENUT, la brecha de género en trabajo doméstico es de 2.1 horas. ¿Es esta diferencia ‘real’ o podría ser una simple casualidad producto del azar del muestreo?”</em></p>
-</blockquote>
-<p>Responder esta pregunta es el trabajo de la <strong>Estadística Inferencial</strong>.</p>
+<section id="más-allá-de-lo-descriptivo-incertidumbre-y-probabilidad" class="slide level2 smaller" data-background-color="white">
+<h2>Más Allá de lo Descriptivo: Incertidumbre y Probabilidad</h2>
+<p>En este curso hemos aprendiendo a describir los patrones que vemos en <strong>nuestros datos</strong>. Pero casi siempre, estos datos provienen de una <strong>muestra</strong>.</p>
+<p>Esto nos deja con la pregunta muy importante en estadística y para los resultados de nuestras investigaciones:</p>
+<p>“En nuestra muestra de la ENUT, encontramos que las mujeres dedican, en promedio, 2.1 horas más de trabajo no remunerado que los hombres. ¿Qué tan seguros podemos estar de que esta diferencia no es solo una casualidad producto del azar del muestreo? ¿Podemos <strong>generalizar</strong> o <strong>inferir</strong> que esta brecha existe en toda la población chilena?”</p>
+<p>Responder esta pregunta no es posible usando solo estadística descriptiva.</p>
+</section>
+<section id="el-puente-a-la-estadística-inferencial" class="slide level2 smaller" data-background-color="white">
+<h2>El Puente a la Estadística Inferencial</h2>
 <ul>
-<li><strong>El Problema:</strong> La <strong>incertidumbre del muestreo</strong>.</li>
-<li><strong>La Herramienta:</strong> La <strong>Teoría de la Probabilidad</strong>.</li>
-<li><strong>El Objetivo:</strong> Hacer <strong>inferencias</strong> sobre la población a partir de la muestra y cuantificar nuestra confianza en esas conclusiones (p-valores, intervalos de confianza).</li>
+<li><p><strong>El Problema:</strong> La <strong>incertidumbre del muestreo</strong>. Cada muestra que saquemos será ligeramente diferente, y nuestros estadísticos (media, correlación, etc.) variarán de muestra en muestra.</p></li>
+<li><p><strong>La Solución:</strong> La <strong>Teoría de la Probabilidad</strong>. La probabilidad es la herramienta matemática que nos permite cuantificar la incertidumbre. Nos permite decir qué tan “probable” es que un resultado observado en una muestra ocurra por pura casualidad.</p></li>
+<li><p><strong>El Siguiente Paso:</strong> Al combinar nuestros estadísticos descriptivos con la probabilidad, podemos hacer <strong>inferencia estadística</strong>: sacar conclusiones sobre la población a partir de la muestra, y cuantificar nuestra confianza en esas conclusiones (ej. p-valores, intervalos de confianza).</p></li>
 </ul>
-<p>La estadística descriptiva que han aprendido es el fundamento indispensable para poder hacer inferencia de manera correcta. ¡Felicitaciones por completar este primer gran paso</p>
+<p>Lo que han aprendido en este curso es el fundamento indispensable para poder hacer inferencia de manera rigurosa y crítica.</p>
+</section>
+<section id="cierre-y-próximos-pasos" class="slide level2 smaller" data-background-color="white">
+<h2>Cierre y Próximos Pasos</h2>
+<p><strong>Resumen de la sesión de hoy:</strong></p>
+<ul>
+<li>Hemos <strong>sintetizado</strong> las estrategias visuales y numéricas para los tres tipos de análisis bivariado.</li>
+<li>El <strong>coeficiente de correlación (r)</strong> cuantifica la fuerza y dirección de una relación <strong>lineal</strong>, pero tiene importantes <strong>limitaciones</strong>.</li>
+<li>La <strong>estadística descriptiva</strong> es el primer paso, y la <strong>probabilidad</strong> es el puente hacia la <strong>estadística inferencial</strong>.</li>
+</ul>
+<p><strong>En el práctico de hoy:</strong></p>
+<ul>
+<li>Aplicarán estas técnicas para crear gráficos de dispersión, calcular correlaciones e interpretar los resultados en el contexto de sus limitaciones.</li>
+</ul>
 
 </section></section>
     </div>
@@ -505,7 +556,7 @@ r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum_{i=1}^{n} \left( \frac{
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -532,42 +583,80 @@ r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum_{i=1}^{n} \left( \frac{
       });
     </script>
     
+
     <script>
+
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
       // slide changes (different for each slide format).
+
       (function () {
+
         // dispatch for htmlwidgets
+
         function fireSlideEnter() {
+
           const event = window.document.createEvent("Event");
+
           event.initEvent("slideenter", true, true);
+
           window.document.dispatchEvent(event);
+
         }
+
+    
 
         function fireSlideChanged(previousSlide, currentSlide) {
+
           fireSlideEnter();
 
+    
+
           // dispatch for shiny
+
           if (window.jQuery) {
+
             if (previousSlide) {
+
               window.jQuery(previousSlide).trigger("hidden");
+
             }
+
             if (currentSlide) {
+
               window.jQuery(currentSlide).trigger("shown");
+
             }
+
           }
+
         }
+
+    
 
         // hookup for slidy
+
         if (window.w3c_slidy) {
+
           window.w3c_slidy.add_observer(function (slide_num) {
+
             // slide_num starts at position 1
+
             fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
           });
+
         }
 
+    
+
       })();
+
     </script>
+
+    
 
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -617,14 +706,13 @@ r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum_{i=1}^{n} \left( \frac{
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-          const outerScaffold = trigger.parentElement.cloneNode(true);
-          const codeEl = outerScaffold.querySelector('code');
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
             }
-          }
-          return codeEl.innerText;
+            return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

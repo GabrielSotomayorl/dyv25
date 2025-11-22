@@ -18,7 +18,7 @@ En este práctico cerraremos el ciclo de análisis bivariado explorando la relac
 
 *   **Diagnosticar visualmente** la relación entre variables usando gráficos de dispersión (*scatterplots*), identificando patrones lineales, curvos y problemas de densidad de datos.
 *   **Interpretar** líneas de tendencia (`lm` para relaciones lineales vs `loess` para relaciones locales) para detectar comportamientos complejos.
-*   **Cuantificar** la fuerza de una asociación lineal utilizando el **Coeficiente de Correlación de Pearson ($r$)**.
+*   **Cuantificar** la fuerza de una asociación lineal utilizando el **Coeficiente de Correlación de Pearson (`\(r\)`)**.
 *   **Gestionar matrices de correlación** de manera eficiente y ordenada utilizando el paquete `corrr`.
 *   **Integrar** estas herramientas para poner a prueba hipótesis sobre la distribución del tiempo y la carga laboral.
 
@@ -28,7 +28,8 @@ En este práctico cerraremos el ciclo de análisis bivariado explorando la relac
 
 Como es habitual, cargamos nuestros paquetes. Hoy incorporamos `corrr`, una herramienta moderna del ecosistema `tidyverse` diseñada específicamente para trabajar con correlaciones de forma ordenada y compatible con el flujo de datos que ya conoces.
 
-```{r setup, message=FALSE, warning=FALSE}
+
+``` r
 # Cargar paquetes esenciales
 library(tidyverse)  # Manipulación y gráficos
 library(haven)      # Manejo de etiquetas
@@ -44,12 +45,14 @@ library(corrr)      # Análisis de correlaciones estilo 'tidy'
 
 Continuamos trabajando con la Encuesta Nacional de Uso del Tiempo.
 
-```{r load-manual, eval=FALSE, echo=TRUE}
+
+``` r
 # Carga Manual (Método recomendado desde tu carpeta de proyecto)
 enut <- rio::import("datos/250403-ii-enut-bdd-r-v2.zip", which = "250403-ii-enut-bdd-r-v2.RDS")
 ```
 
-```{r load-auto, message=FALSE, warning=FALSE, cache=TRUE}
+
+``` r
 # Carga automática (Solo para reproducción del documento)
 enut <- rio::import("https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7", which = "250403-ii-enut-bdd-r-v2.RDS")
 ```
@@ -60,7 +63,8 @@ Para analizar correlaciones, necesitamos variables puramente numéricas. Los có
 
 Seleccionaremos variables clave sobre **ciclo de vida** (edad) y **cargas de trabajo** (remunerado, doméstico y de cuidados).
 
-```{r clean-data}
+
+``` r
 enut_cuant <- enut %>%
   filter(tiempo == 1) %>% # Solo quienes respondieron el diario de actividades
   mutate(
@@ -93,7 +97,8 @@ Antes de calcular cualquier número, **siempre debemos visualizar**. El coeficie
 
 Utilizaremos `geom_point()` para los datos y `geom_smooth()` para comparar tendencias.
 
-```{r scatterplot-basic, warning=FALSE}
+
+``` r
 # Construcción del gráfico capa por capa
 ggplot(enut_cuant, aes(x = edad, y = t_tdnr_dt)) +
   
@@ -119,6 +124,13 @@ ggplot(enut_cuant, aes(x = edad, y = t_tdnr_dt)) +
   theme_minimal()
 ```
 
+```
+## `geom_smooth()` using formula = 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+<img src="/example/14-practico_files/figure-html/scatterplot-basic-1.png" width="672" />
+
 ### Interpretación Pedagógica
 Observa las diferencias entre las líneas de tendencia:
 1.  **Línea Roja (Lineal):** Muestra una pendiente positiva suave. Nos dice que, *en general*, a mayor edad, mayor trabajo doméstico.
@@ -128,18 +140,23 @@ En este caso la línea roja (correlación lineal) "aplana" la realidad. Si solo 
 
 ## 3. Cuantificando la Relación: Correlación de Pearson
 
-El coeficiente $r$ de Pearson mide la fuerza y dirección de una relación **lineal**. Varía entre -1 (negativa perfecta) y +1 (positiva perfecta).
+El coeficiente `\(r\)` de Pearson mide la fuerza y dirección de una relación **lineal**. Varía entre -1 (negativa perfecta) y +1 (positiva perfecta).
 
 ### 3.1 Cálculo Simple con R Base
 
 Calcularemos el coeficiente para las variables graficadas arriba. Es crucial usar el argumento `use = "pairwise.complete.obs"`, que le indica a R que ignore los valores `NA` (perdidos) solo para el par de variables que está calculando en ese momento.
 
-```{r cor-simple}
+
+``` r
 # Calculamos la correlación ignorando los NA
 correlacion_edad_tdnr <- cor(enut_cuant$edad, enut_cuant$t_tdnr_dt, use = "pairwise.complete.obs")
 
 # Imprimimos el resultado redondeado
 round(correlacion_edad_tdnr, 3)
+```
+
+```
+## [1] 0.204
 ```
 
 **Interpretación del Resultado:**
@@ -156,9 +173,9 @@ El resultado es **0.204**. ¿Cómo leemos esto?
 *   ¿Es más fuerte o más débil que la relación con la edad?
 *   **Reflexión:** ¿Significa esto que las tareas se acumulan (quien cocina también cuida) o se sustituyen?
 
-```{r, eval=FALSE, echo=TRUE}
-# Escribe tu código aquí usando cor(..., use = "pairwise.complete.obs")
 
+``` r
+# Escribe tu código aquí usando cor(..., use = "pairwise.complete.obs")
 ```
 
 ## 4. Matrices de Correlación con `corrr`
@@ -167,33 +184,64 @@ En las ciencias sociales rara vez analizamos solo dos variables aisladas. Necesi
 
 ### 4.1 Creación de la Matriz Tidy
 
-```{r corrr-matrix}
+
+``` r
 # 1. Selección de variables y cálculo
 matriz_tidy <- enut_cuant %>%
   select(edad, t_to_dt, t_tdnr_dt, t_tcnr_dt) %>%
   correlate() # Función clave de corrr para calcular la matriz
+```
 
+```
+## Correlation computed with
+## • Method: 'pearson'
+## • Missing treated using: 'pairwise.complete.obs'
+```
+
+``` r
 # 2. Visualización elegante de la tabla
 matriz_tidy %>%
   shave() %>% # Elimina la mitad superior duplicada (espejo) para limpiar la vista
   fashion()   # Formatea decimales para lectura humana
 ```
 
+```
+##        term edad t_to_dt t_tdnr_dt t_tcnr_dt
+## 1      edad                                 
+## 2   t_to_dt  .02                            
+## 3 t_tdnr_dt  .20    -.20                    
+## 4 t_tcnr_dt -.15    -.15       .20
+```
+
 ### 4.2 Visualización de la Matriz (`rplot`)
 
 Podemos visualizar la intensidad y dirección de todas las correlaciones simultáneamente.
 
-```{r corrr-plot}
+
+``` r
 matriz_tidy %>%
   rplot(colors = c("#e74c3c", "white", "#3498db")) + # Rojo (neg) - Blanco - Azul (pos)
   labs(title = "Mapa de Correlaciones: Uso del Tiempo")
 ```
 
+```
+## Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+## ℹ Please use tidy evaluation idioms with `aes()`.
+## ℹ See also `vignette("ggplot2-in-packages")` for more information.
+## ℹ The deprecated feature was likely used in the corrr package.
+##   Please report the issue at <https://github.com/tidymodels/corrr/issues>.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+<img src="/example/14-practico_files/figure-html/corrr-plot-1.png" width="672" />
+
 **Interpretación Detallada del Mapa:**
 Mirando la tabla y el gráfico, podemos extraer conclusiones sistémicas:
 
-1.  **Trabajo Doméstico vs. Cuidados ($r = 0.20$, Azul):** Existe una correlación positiva. Esto sugiere una **acumulación de roles**: las personas que dedican tiempo a cuidar (niños/ancianos) también tienden a dedicar tiempo a las tareas domésticas. No son tareas excluyentes, sino superpuestas.
-2.  **Trabajo Remunerado vs. No Remunerado ($r = -0.20$, Rojo):** Observa la fila de `t_to_dt` frente a `t_tdnr_dt`. La correlación es negativa ($-0.20$). Esto indica un conflicto de tiempo: quienes pasan más horas en el empleo tienden a hacer menos trabajo doméstico. Sin embargo, la magnitud no es muy alta (no es -0.8), lo que sugiere que **la reducción del trabajo doméstico no es proporcional** a las horas trabajadas fuera de casa (la famosa "doble jornada").
+1.  **Trabajo Doméstico vs. Cuidados (`\(r = 0.20\)`, Azul):** Existe una correlación positiva. Esto sugiere una **acumulación de roles**: las personas que dedican tiempo a cuidar (niños/ancianos) también tienden a dedicar tiempo a las tareas domésticas. No son tareas excluyentes, sino superpuestas.
+2.  **Trabajo Remunerado vs. No Remunerado (`\(r = -0.20\)`, Rojo):** Observa la fila de `t_to_dt` frente a `t_tdnr_dt`. La correlación es negativa (`\(-0.20\)`). Esto indica un conflicto de tiempo: quienes pasan más horas en el empleo tienden a hacer menos trabajo doméstico. Sin embargo, la magnitud no es muy alta (no es -0.8), lo que sugiere que **la reducción del trabajo doméstico no es proporcional** a las horas trabajadas fuera de casa (la famosa "doble jornada").
 
 ## 5. Actividad de Desafío Final (Integradora)
 
@@ -215,7 +263,8 @@ Mirando la tabla y el gráfico, podemos extraer conclusiones sistémicas:
 **Interpretación Final:** Compara los coeficientes de hombres y mujeres.
 *   Si el coeficiente de los hombres es más negativo (ej. -0.4) que el de las mujeres (ej. -0.1), ¿qué significa? Significaría que los hombres logran "deshacerse" de las tareas domésticas cuando encuentran empleo, mientras que las mujeres las mantienen (doble jornada). ¿Qué dicen tus datos?
 
-```{r, eval=FALSE, echo=TRUE}
+
+``` r
 # 1. Preparación de datos (filtro)
 
 
@@ -227,5 +276,4 @@ Mirando la tabla y el gráfico, podemos extraer conclusiones sistémicas:
 
 
 # 4. Comentario de interpretación sociológica
-
 ```

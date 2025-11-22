@@ -37,10 +37,10 @@ title_slide_background: "#008080"
 Hemos explorado tres tipos de relaciones. A modo de resumen, este es nuestro mapa conceptual para elegir la visualización y el análisis numérico correctos:
 
 | Tipo de Relación | Pregunta Sociológica | Herramienta Visual (`ggplot2`) | Herramienta Numérica |
-| :--- | :--- | :--- | :--- |
+|:-----------------|:-----------------|:-----------------|:-----------------|
 | **Cat ➞ Quant** | ¿Difieren los grupos? | `geom_boxplot`, `geom_density` | Tabla de medias/medianas por grupo |
 | **Cat ➞ Cat** | ¿Se asocian las categorías? | `geom_bar(position="fill")` | Tabla de contingencia (% cond.) |
-| **Quant ➞ Quant** | ¿Cómo covarían las variables?| `geom_point` (Scatterplot) | Correlación |
+| **Quant ➞ Quant** | ¿Cómo covarían las variables? | `geom_point` (Scatterplot) | Correlación |
 
 Hoy, nos enfocaremos en profundidad en el último caso: la relación entre dos variables cuantitativas.
 
@@ -92,13 +92,12 @@ ggplot(datos_cov, aes(x, y)) +
 La covarianza calcula el "promedio" del producto de las desviaciones de cada punto a sus respectivas medias.
 
 $$
-Cov(x, y) = s_{xy} = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n - 1}
+Cov(x, y) = s\_{xy} = \frac{\sum\_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n - 1}
 $$
 
 -   **Interpretación del signo:**
-    -   Si **Cov(x, y) > 0**, la relación es positiva (puntos en cuadrantes I y III).
-    -   Si **Cov(x, y) < 0**, la relación es negativa (puntos en cuadrantes II y IV).
-
+    -   Si **Cov(x, y) \> 0**, la relación es positiva (puntos en cuadrantes I y III).
+    -   Si **Cov(x, y) \< 0**, la relación es negativa (puntos en cuadrantes II y IV).
 -   **Problema:** La magnitud de la covarianza depende de las unidades de las variables (ej. `pesos * años`). **¡No es comparable!** No nos dice si la relación es "fuerte" o "débil".
 
 ## La Solución: Correlación de Pearson (r) {.smaller background-color="white"}
@@ -106,22 +105,21 @@ $$
 Para resolver el problema de las unidades, **estandarizamos** la covarianza. La dividimos por el producto de las desviaciones estándar de cada variable. El resultado es el **coeficiente de correlación de Pearson (r)**.
 
 $$
-r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
+r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum\_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
 $$
 
--   **¡Clave!** La fórmula de `r` es el promedio del producto de las **puntuaciones Z** de X e Y.
+-   La fórmula de `r` es el promedio del producto de las **puntuaciones Z** de X e Y.
 -   `r` es un número **sin unidades**, que siempre va de **-1 a +1**, lo que lo hace universalmente comparable.
 
 ## Interpretando la Correlación (r) {.smaller background-color="white"}
 
 -   **Rango:** Siempre entre -1 y +1.
 -   **Dirección:**
-    -   r > 0 indica una **asociación positiva**.
-    -   r < 0 indica una **asociación negativa**.
+    -   r \> 0 indica una **asociación positiva**.
+    -   r \< 0 indica una **asociación negativa**.
 -   **Fuerza:** La magnitud (el valor absoluto).
     -   r cercano a 0: relación **lineal débil o nula**.
     -   r cercano a -1 o +1: relación **lineal fuerte**.
-
 
 ## Interpretando la Correlación (r) {.smaller background-color="white"}
 
@@ -130,54 +128,74 @@ $$
 
 library(ggplot2)
 library(gridExtra)
-
-# Función corregida para generar datos correlacionados
+# Función para crear un conjunto de datos con una correlación específica
 crear_datos <- function(n, cor) {
-  x <- rnorm(n) # Generamos x una sola vez
-  # Calculamos y basándonos en el vector x específico
-  # Fórmula: Y = rho * X + sqrt(1 - rho^2) * Z
+  x <- rnorm(n)
   y <- cor * x + sqrt(1 - cor^2) * rnorm(n)
-  
   data.frame(x = x, y = y)
 }
 
+# Crear seis conjuntos de datos con diferentes correlaciones
 set.seed(42)
+datos_0 <- crear_datos(100, 0)
+datos_neg03 <- crear_datos(100, -0.3)
+datos_pos05 <- crear_datos(100, 0.5)
+datos_neg07 <- crear_datos(100, -0.7)
+datos_pos09 <- crear_datos(100, 0.9)
+datos_neg099 <- crear_datos(100, -0.99)
 
-# Generación de los gráficos
-g0 <- ggplot(crear_datos(100, 0), aes(x, y)) + 
-  geom_point(alpha = 0.6) + 
-  labs(title = "r ≈ 0") +
-  theme_minimal()
+# Función para crear gráficos con líneas de la media
+crear_grafico <- function(data, title) {
+  ggplot(data, aes(x = x, y = y)) + 
+    geom_point() + 
+    geom_vline(xintercept = mean(data$x), color = "red", linetype = "dotted") +  # Línea vertical para la media de x
+    geom_hline(yintercept = mean(data$y), color = "red", linetype = "dotted") +  # Línea horizontal para la media de y
+    labs(title = title) + 
+    theme_minimal()
+}
 
-g_neg05 <- ggplot(crear_datos(100, -0.5), aes(x, y)) + 
-  geom_point(alpha = 0.6) + 
-  labs(title = "r ≈ -0.5") +
-  theme_minimal()
+# Crear los gráficos individuales con líneas de la media
+g0 <- crear_grafico(datos_0, "Correlación r = 0")
+g_neg03 <- crear_grafico(datos_neg03, "Correlación r = -0.3")
+g_pos05 <- crear_grafico(datos_pos05, "Correlación r = 0.5")
+g_neg07 <- crear_grafico(datos_neg07, "Correlación r = -0.7")
+g_pos09 <- crear_grafico(datos_pos09, "Correlación r = 0.9")
+g_neg099 <- crear_grafico(datos_neg099, "Correlación r = -0.99")
 
-g_pos09 <- ggplot(crear_datos(100, 0.9), aes(x, y)) + 
-  geom_point(alpha = 0.6) + 
-  labs(title = "r ≈ 0.9") +
-  theme_minimal()
+# Organizar los gráficos en una cuadrícula 2x3
+grid.arrange(g0,g_pos05, g_pos09,g_neg03, g_neg07, g_neg099, ncol = 3)
 
-g_neg099 <- ggplot(crear_datos(100, -0.99), aes(x, y)) + 
-  geom_point(alpha = 0.6) + 
-  labs(title = "r ≈ -0.99") +
-  theme_minimal()
-
-# Visualización conjunta
-grid.arrange(g0, g_pos09, g_neg05, g_neg099, ncol = 2)
 
 ```
+
+
+## Características de la correlación (I) {.smaller background-color="white"}
+
+- **Simetría en las Variables:** La correlación no distingue entre variables explicativas y respuesta; es indiferente cuál se llame x o y.\
+- **Requisito Cuantitativo:** Las dos variables deben ser cuantitativas para que los cálculos de la correlación tengan sentido. No se puede calcular la correlación entre una variable cuantitativa y una categórica.\
+- **Independencia de Unidades:** Como la correlación utiliza valores estandarizados, no cambia si se modifican las unidades de medida de las variables. La correlación es un valor sin unidades.\
+- **Significado del Signo:**\
+  - Correlación positiva: Indica una asociación positiva entre las variables.\
+  - Correlación negativa: Indica una asociación negativa.
+
+## Características de la correlación (II) {.smaller background-color="white"}
+
+- **Rango de la Correlación:** La correlación siempre toma valores entre −1 y 1.\
+- Cercanía a 0: Indica una relación lineal débil.\
+- Cercanía a ±1: Indica una relación lineal fuerte. Un valor de ±1 indica una relación lineal perfecta.\
+- **Limitación a Relaciones Lineales:** La correlación sólo mide la fuerza de relaciones lineales, no describe adecuadamente las relaciones curvilíneas, aunque estas sean fuertes.\
+- **Sensibilidad a Observaciones Atípicas:** La correlación puede verse fuertemente afectada por valores atípicos, lo que puede distorsionar la percepción de la relación entre las variables. Es importante utilizar la correlación con precaución cuando se detectan atípicos.
+
 
 ---
 title_slide_background: "#008080"
 ---
 
-# 3. Las Tres Advertencias sobre la Correlación
+# 3. Advertencias sobre la Correlación
 
 ## 1. Correlación no implica Causalidad {.smaller background-color="white"}
 
-Este es el mantra más importante de la estadística. Una correlación fuerte entre dos variables **nunca** es, por sí sola, evidencia suficiente para concluir que una causa la otra.
+Una correlación fuerte entre dos variables **nunca** es, por sí sola, evidencia suficiente para concluir que una causa la otra.
 
 La relación podría ser una **asociación espuria**, causada por una tercera variable latente.
 
@@ -213,6 +231,7 @@ p2 <- ggplot(datos_outlier_mod, aes(x,y)) + geom_point(size=3) + geom_smooth(met
 
 gridExtra::grid.arrange(p1, p2, ncol = 2)
 ```
+
 **Lección:** Siempre inspecciona visualmente tu gráfico de dispersión para detectar outliers antes de interpretar `r`.
 
 ## 3. `r` Solo Mide Relaciones LINEALES {.smaller background-color="white"}
@@ -221,51 +240,78 @@ El coeficiente de correlación de Pearson está diseñado para medir qué tan bi
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 
-library(haven)
+library(tidyverse)
 
-# Carga de ENUT y preparación
-url_enut <- "https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7"
-archivo_interno <- "250403-ii-enut-bdd-r-v2.RDS"
-enut <- rio::import(url_enut, which = archivo_interno)
+# 1. GENERACIÓN DE DATOS SINTÉTICOS (ESQUEMÁTICOS)
+set.seed(123) # Semilla para reproducibilidad
 
-enut_trabajo <- enut %>%
-  filter(tiempo == 1) %>%
-  mutate(
-    sexo_factor = as_factor(sexo),
-    p_tdnr_dt_factor = as_factor(p_tdnr_dt),
-    t_tnr_dt = na_if(t_tnr_dt, 96),
-    t_tcnr_dt = na_if(t_tcnr_dt, 96),
-    t_to_dt = na_if(t_to_dt, 96),
-    t_tdnr_dt = na_if(t_tdnr_dt, 96)
-  )
+datos_simulados <- tibble(
+  x = seq(-10, 10, length.out = 300),
+  # Creamos una relación cuadrática perfecta (y = -x^2) + un poco de ruido normal
+  y = -x^2 + rnorm(300, mean = 0, sd = 15) 
+)
 
+# Calculamos la correlación para mostrarla en el gráfico
+cor_pearson <- cor(datos_simulados$x, datos_simulados$y)
 
-
-ggplot(enut_trabajo, aes(x = edad, y = t_tnr_dt)) +
-  geom_point(alpha = 0.05, color="#008080") +
-  geom_smooth(color="red", se = FALSE, method = "loess") +
+# 2. VISUALIZACIÓN
+ggplot(datos_simulados, aes(x = x, y = y)) +
+  # Puntos de los datos
+  geom_point(alpha = 0.6, color = "grey40", size = 2) +
+  
+  # A. Lo que ve Pearson (Ajuste Lineal - Rojo)
+  geom_smooth(method = "lm", se = FALSE, color = "#D55E00", linetype = "dashed", linewidth = 1.5) +
+  
+  # B. La relación real (Ajuste No Lineal - Azul Verdoso)
+  geom_smooth(method = "loess", se = FALSE, color = "#009E73", linewidth = 1.5) +
+  
+  # Etiquetas y Estética
   labs(
-    title = "Relación Curvilínea: Edad y Trabajo No Remunerado",
-    subtitle = paste("Correlación lineal (r) ≈", round(cor(enut_trabajo$edad, enut_trabajo$t_tnr_dt, use="complete.obs"), 2)),
-    x = "Edad", y = "Horas diarias de trabajo no remunerado"
+    title = "Relación Curvilínea (Simulación)",
+    subtitle = paste0("Ajuste real perfecto, pero Correlación de Pearson (r) = ", round(cor_pearson, 2)),
+    x = "Variable Independiente", 
+    y = "Variable Dependiente",
+    caption = "La línea roja discontinua muestra el mejor ajuste lineal posible (casi plano)."
   ) +
-  theme_minimal(base_size = 14)
+  theme_minimal(base_size = 16) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(color = "#D55E00", face = "bold")
+  )
 ```
 
 **Conclusión:** Un `r` cercano a 0 **no significa "ausencia de relación"**. Significa **"ausencia de relación *lineal*"**. Por eso, el análisis visual es irremplazable.
 
-## Cierre del Curso: Más Allá de la Descripción {.smaller background-color="white"}
+# 4. Conclusión del Curso
 
-Hemos pasado el curso aprendiendo a explorar, resumir y visualizar los patrones en **nuestros datos**.
+## Más Allá de lo Descriptivo: Incertidumbre y Probabilidad {.smaller background-color="white"}
 
-Pero casi siempre, nuestros datos provienen de una **muestra**. Esto nos deja con la pregunta más importante de la estadística:
+En este curso hemos aprendiendo a describir los patrones que vemos en **nuestros datos**. Pero casi siempre, estos datos provienen de una **muestra**.
 
-> *"En nuestra muestra de la ENUT, la brecha de género en trabajo doméstico es de 2.1 horas. ¿Es esta diferencia 'real' o podría ser una simple casualidad producto del azar del muestreo?"*
+Esto nos deja con la pregunta muy importante en estadística y para los resultados de nuestras investigaciones:
 
-Responder esta pregunta es el trabajo de la **Estadística Inferencial**.
+"En nuestra muestra de la ENUT, encontramos que las mujeres dedican, en promedio, 2.1 horas más de trabajo no remunerado que los hombres. ¿Qué tan seguros podemos estar de que esta diferencia no es solo una casualidad producto del azar del muestreo? ¿Podemos **generalizar** o **inferir** que esta brecha existe en toda la población chilena?"
 
--   **El Problema:** La **incertidumbre del muestreo**.
--   **La Herramienta:** La **Teoría de la Probabilidad**.
--   **El Objetivo:** Hacer **inferencias** sobre la población a partir de la muestra y cuantificar nuestra confianza en esas conclusiones (p-valores, intervalos de confianza).
+Responder esta pregunta no es posible usando solo estadística descriptiva.
 
-La estadística descriptiva que han aprendido es el fundamento indispensable para poder hacer inferencia de manera correcta. ¡Felicitaciones por completar este primer gran paso
+## El Puente a la Estadística Inferencial {.smaller background-color="white"}
+
+-   **El Problema:** La **incertidumbre del muestreo**. Cada muestra que saquemos será ligeramente diferente, y nuestros estadísticos (media, correlación, etc.) variarán de muestra en muestra.
+
+-   **La Solución:** La **Teoría de la Probabilidad**. La probabilidad es la herramienta matemática que nos permite cuantificar la incertidumbre. Nos permite decir qué tan "probable" es que un resultado observado en una muestra ocurra por pura casualidad.
+
+-   **El Siguiente Paso:** Al combinar nuestros estadísticos descriptivos con la probabilidad, podemos hacer **inferencia estadística**: sacar conclusiones sobre la población a partir de la muestra, y cuantificar nuestra confianza en esas conclusiones (ej. p-valores, intervalos de confianza).
+
+Lo que han aprendido en este curso es el fundamento indispensable para poder hacer inferencia de manera rigurosa y crítica.
+
+## Cierre y Próximos Pasos {.smaller background-color="white"}
+
+**Resumen de la sesión de hoy:**
+
+-   Hemos **sintetizado** las estrategias visuales y numéricas para los tres tipos de análisis bivariado.
+-   El **coeficiente de correlación (r)** cuantifica la fuerza y dirección de una relación **lineal**, pero tiene importantes **limitaciones**.
+-   La **estadística descriptiva** es el primer paso, y la **probabilidad** es el puente hacia la **estadística inferencial**.
+
+**En el práctico de hoy:**
+
+-   Aplicarán estas técnicas para crear gráficos de dispersión, calcular correlaciones e interpretar los resultados en el contexto de sus limitaciones.
