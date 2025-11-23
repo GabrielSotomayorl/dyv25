@@ -24,7 +24,16 @@ En este práctico cerraremos el ciclo de análisis bivariado explorando la relac
 
 ## 1. Contexto y Preparación de Datos
 
-### 1.1 Preparación del Entorno
+### 1.1 Preparación del Entorno y Datos
+
+**Paso 1: Organiza tu entorno**
+Como siempre, asegúrate de estar trabajando dentro de tu **Proyecto de RStudio** y de tener una carpeta `datos`.
+
+**Paso 2: Descarga la Base de Datos**
+Descarga la base de datos de la ENUT 2023 desde el siguiente enlace y guarda el archivo `.zip` en tu carpeta `datos`:
+-   **Enlace de descarga:** [Base de datos ENUT 2023 (formato R)](https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7)
+
+**Paso 3: Carga de Paquetes y Datos**
 
 Como es habitual, cargamos nuestros paquetes. Hoy incorporamos `corrr`, una herramienta moderna del ecosistema `tidyverse` diseñada específicamente para trabajar con correlaciones de forma ordenada y compatible con el flujo de datos que ya conoces.
 
@@ -40,9 +49,7 @@ library(kableExtra) # Estilo de tablas
 library(corrr)      # Análisis de correlaciones estilo 'tidy'
 ```
 
-### 1.2 Carga de Datos (ENUT 2023)
-
-Continuamos trabajando con la Encuesta Nacional de Uso del Tiempo.
+Cargamos la base de datos:
 
 ```{r load-manual, eval=FALSE, echo=TRUE}
 # Carga Manual (Método recomendado desde tu carpeta de proyecto)
@@ -54,7 +61,7 @@ enut <- rio::import("datos/250403-ii-enut-bdd-r-v2.zip", which = "250403-ii-enut
 enut <- rio::import("https://www.ine.gob.cl/docs/default-source/uso-del-tiempo-tiempo-libre/bbdd/ii-enut/250403-ii-enut-bdd-r-v2.zip?sfvrsn=87682f16_7", which = "250403-ii-enut-bdd-r-v2.RDS")
 ```
 
-### 1.3 Limpieza y Selección de Variables
+### 1.2 Limpieza y Selección de Variables
 
 Para analizar correlaciones, necesitamos variables puramente numéricas. Los códigos de "No aplica" (como 96, 99, etc.) actúan como ruido estadístico si no los tratamos, ya que R los interpretará como una cantidad de horas muy alta (96 horas) en lugar de una categoría administrativa.
 
@@ -98,7 +105,8 @@ Utilizaremos `geom_point()` para los datos y `geom_smooth()` para comparar tende
 ggplot(enut_cuant, aes(x = edad, y = t_tdnr_dt)) +
   
   # Capa 1: Los Puntos 
-  # Usamos alpha = 0.1 para manejar el 'overplotting' (muchos puntos encimados)
+  # Usamos alpha = 0.1 para manejar el 'overplotting' (muchos puntos encimados).
+  # Esto hace que los puntos sean semitransparentes: zonas más oscuras indican mayor densidad de datos.
   geom_point(alpha = 0.1, color = "#2c3e50") +
   
   # Capa 2: Tendencia Lineal 
@@ -119,12 +127,14 @@ ggplot(enut_cuant, aes(x = edad, y = t_tdnr_dt)) +
   theme_minimal()
 ```
 
-### Interpretación Pedagógica
+### Interpretación 
 Observa las diferencias entre las líneas de tendencia:
 1.  **Línea Roja (Lineal):** Muestra una pendiente positiva suave. Nos dice que, *en general*, a mayor edad, mayor trabajo doméstico.
 2.  **Línea Azul (Loess):** Nos cuenta una historia más rica. El trabajo doméstico aumenta rápidamente entre los 15 y los 30 años (independencia, formación de hogares), se mantiene alto y estable durante la adultez, y comienza a decaer levemente en la vejez avanzada.
 
 En este caso la línea roja (correlación lineal) "aplana" la realidad. Si solo calculamos el número, perdemos de vista la aceleración inicial y la caída final que nos muestra la línea azul.
+
+> **Tip:** Los valores atípicos (*outliers*) pueden distorsionar fuertemente la línea recta. Siempre mira el gráfico para ver si unos pocos puntos extremos están "tirando" de la línea.
 
 ## 3. Cuantificando la Relación: Correlación de Pearson
 
@@ -148,6 +158,8 @@ El resultado es **0.204**. ¿Cómo leemos esto?
 *   **Magnitud (0.2):** Es una correlación **baja a moderada**.
 *   **Sociológicamente:** Esto indica que, aunque la edad influye, **no determina por sí sola** cuánto lavas o cocinas. Hay mucha variabilidad (dispersión) en los datos que la edad no explica (como el género, el tamaño del hogar, o la clase social).
 
+> **Recuerda:** Correlación no implica causalidad. Que dos cosas se muevan juntas no significa que una cause la otra.
+
 ### 3.2 Actividad 1: Relaciones entre Tipos de Trabajo
 
 **Instrucción:** Ahora analiza dos variables de carga de trabajo. Calcula e interpreta la correlación entre las **horas de trabajo doméstico** (`t_tdnr_dt`) y las **horas de trabajo de cuidados** (`t_tcnr_dt`).
@@ -163,7 +175,7 @@ El resultado es **0.204**. ¿Cómo leemos esto?
 
 ## 4. Matrices de Correlación con `corrr`
 
-En las ciencias sociales rara vez analizamos solo dos variables aisladas. Necesitamos ver el sistema completo. La función base `cor()` devuelve una matriz difícil de leer. El paquete `corrr` soluciona esto devolviendo un `tibble` (dataframe) fácil de manipular y visualizar.
+En las ciencias sociales rara vez analizamos solo dos variables aisladas. Necesitamos ver el sistema completo. La función base `cor()` devuelve una matriz difícil de leer y poco amigable. El paquete `corrr` soluciona esto devolviendo un `tibble` (dataframe) fácil de manipular, filtrar y visualizar con `ggplot2`.
 
 ### 4.1 Creación de la Matriz Tidy
 
@@ -176,7 +188,7 @@ matriz_tidy <- enut_cuant %>%
 # 2. Visualización elegante de la tabla
 matriz_tidy %>%
   shave() %>% # Elimina la mitad superior duplicada (espejo) para limpiar la vista
-  fashion()   # Formatea decimales para lectura humana
+  fashion()   # Formatea decimales para lectura humana y redondea inteligentemente
 ```
 
 ### 4.2 Visualización de la Matriz (`rplot`)
@@ -203,7 +215,7 @@ Mirando la tabla y el gráfico, podemos extraer conclusiones sistémicas:
 
 **Instrucciones:**
 
-1.  Crea una nueva variable `trabajo_total_nr` (ya disponible si ejecutaste el paso 1.3).
+1.  Crea una nueva variable `trabajo_total_nr` (ya disponible si ejecutaste el paso 1.2).
 2.  **Filtra** la base para analizar solo a personas **ocupadas** (`t_to_dt > 0`), ya que queremos ver el efecto del empleo.
 3.  Genera un gráfico de dispersión facetado por sexo:
     *   Eje X: `t_to_dt` (Horas remuneradas)
@@ -217,15 +229,20 @@ Mirando la tabla y el gráfico, podemos extraer conclusiones sistémicas:
 
 ```{r, eval=FALSE, echo=TRUE}
 # 1. Preparación de datos (filtro)
-
+# data_filtrada <- enut_cuant %>% filter(...)
 
 # 2. Gráfico facetado por sexo (Visualización de la pendiente)
-
+# ggplot(data_filtrada, aes(x = ..., y = ...)) +
+#   geom_point(...) +
+#   geom_smooth(...) +
+#   facet_wrap(...)
 
 # 3. Cálculo de correlaciones por grupo (Cuantificación de la pendiente)
 # Pista: usa group_by() %>% summarise(r = cor(..., use = "pairwise.complete.obs"))
-
+# data_filtrada %>%
+#   group_by(...) %>%
+#   summarise(...)
 
 # 4. Comentario de interpretación sociológica
-
+# (Escribe aquí tu interpretación comparando los coeficientes)
 ```
