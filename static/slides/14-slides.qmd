@@ -92,7 +92,8 @@ ggplot(datos_cov, aes(x, y)) +
 La covarianza calcula el "promedio" del producto de las desviaciones de cada punto a sus respectivas medias.
 
 $$
-Cov(x, y) = s\_{xy} = \frac{\sum\_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n - 1}
+\operatorname{Cov}(x,y)=s_{xy}
+=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})
 $$
 
 -   **Interpretación del signo:**
@@ -105,7 +106,10 @@ $$
 Para resolver el problema de las unidades, **estandarizamos** la covarianza. La dividimos por el producto de las desviaciones estándar de cada variable. El resultado es el **coeficiente de correlación de Pearson (r)**.
 
 $$
-r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum\_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
+r=\frac{\operatorname{Cov}(x,y)}{s_x\,s_y}
+=\frac{1}{n-1}\sum_{i=1}^{n}
+\left(\frac{x_i-\bar{x}}{s_x}\right)
+\left(\frac{y_i-\bar{y}}{s_y}\right)
 $$
 
 -   La fórmula de `r` es el promedio del producto de las **puntuaciones Z** de X e Y.

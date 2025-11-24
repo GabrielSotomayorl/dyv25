@@ -6,8 +6,8 @@
 <script src="14-slides_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="14-slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="14-slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="14-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="14-slides_files/libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
 
   <meta name="author" content="Gabriel Sotomayor">
   <meta name="dcterms.date" content="2025-11-24">
@@ -30,7 +30,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="14-slides_files/libs/revealjs/dist/theme/quarto-e1cbb759e4a46ec0f203c77955f7056a.css">
+  <link rel="stylesheet" href="14-slides_files/libs/revealjs/dist/theme/quarto-aff1f7264a615286def6c13f54e8bcad.css">
   <link href="14-slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="14-slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="14-slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -234,7 +234,8 @@ Gabriel Sotomayor
 <h2>La Covarianza (sxy)</h2>
 <p>La covarianza calcula el “promedio” del producto de las desviaciones de cada punto a sus respectivas medias.</p>
 <p><span class="math display">\[
-Cov(x, y) = s\_{xy} = \frac{\sum\_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n - 1}
+\operatorname{Cov}(x,y)=s_{xy}
+=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})
 \]</span></p>
 <ul>
 <li><strong>Interpretación del signo:</strong>
@@ -249,7 +250,10 @@ Cov(x, y) = s\_{xy} = \frac{\sum\_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n - 
 <h2>La Solución: Correlación de Pearson (r)</h2>
 <p>Para resolver el problema de las unidades, <strong>estandarizamos</strong> la covarianza. La dividimos por el producto de las desviaciones estándar de cada variable. El resultado es el <strong>coeficiente de correlación de Pearson (r)</strong>.</p>
 <p><span class="math display">\[
-r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum\_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s_x} \right) \left( \frac{y_i - \bar{y}}{s_y} \right)
+r=\frac{\operatorname{Cov}(x,y)}{s_x\,s_y}
+=\frac{1}{n-1}\sum_{i=1}^{n}
+\left(\frac{x_i-\bar{x}}{s_x}\right)
+\left(\frac{y_i-\bar{y}}{s_y}\right)
 \]</span></p>
 <ul>
 <li>La fórmula de <code>r</code> es el promedio del producto de las <strong>puntuaciones Z</strong> de X e Y.</li>
@@ -556,7 +560,7 @@ r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum\_{i=1}^{n} \left( \frac
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -583,80 +587,42 @@ r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum\_{i=1}^{n} \left( \frac
       });
     </script>
     
-
     <script>
-
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-
       // slide changes (different for each slide format).
-
       (function () {
-
         // dispatch for htmlwidgets
-
         function fireSlideEnter() {
-
           const event = window.document.createEvent("Event");
-
           event.initEvent("slideenter", true, true);
-
           window.document.dispatchEvent(event);
-
         }
-
-    
 
         function fireSlideChanged(previousSlide, currentSlide) {
-
           fireSlideEnter();
 
-    
-
           // dispatch for shiny
-
           if (window.jQuery) {
-
             if (previousSlide) {
-
               window.jQuery(previousSlide).trigger("hidden");
-
             }
-
             if (currentSlide) {
-
               window.jQuery(currentSlide).trigger("shown");
-
             }
-
           }
-
         }
-
-    
 
         // hookup for slidy
-
         if (window.w3c_slidy) {
-
           window.w3c_slidy.add_observer(function (slide_num) {
-
             // slide_num starts at position 1
-
             fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-
           });
-
         }
 
-    
-
       })();
-
     </script>
-
-    
 
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -706,13 +672,14 @@ r = \frac{Cov(x, y)}{s_x \cdot s_y} = \frac{1}{n-1} \sum\_{i=1}^{n} \left( \frac
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
