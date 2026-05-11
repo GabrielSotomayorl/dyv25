@@ -43,7 +43,11 @@ Tienen el poder de:
 -   **Desafiar narrativas** dominantes sobre el progreso y la sociedad.
 -   **Redefinir el debate** público y académico.
 
-Como argumenta Mike Savage, estas "visualizaciones icónicas" no solo muestran datos, sino que proponen una nueva forma de ver el mundo social.
+Como argumenta Mike Savage en *The Return of Inequality: Social Change and the Weight of the Past* (Harvard University Press, 2021), estas "visualizaciones icónicas" no solo muestran datos, sino que proponen una nueva forma de ver el mundo social.
+
+::: {style="font-size: 0.65em; color: #aaa; margin-top: 1em;"}
+Savage, M. (2021). *The Return of Inequality: Social Change and the Weight of the Past*. Harvard University Press. https://doi.org/10.2307/j.ctv31xf633
+:::
 
 
 ## La Curva en U de Piketty (La Desigualdad en el Tiempo) {.smaller background-color="white"}
@@ -73,7 +77,7 @@ Como argumenta Mike Savage, estas "visualizaciones icónicas" no solo muestran d
 
 ## Ver para argumentar {.smaller background-color="white"}
 
-Savage señala que Piketty usa el **tiempo** para argumentar que el pasado está regresando. Bourdieu usa el **espacio** para argumentar que la desigualdad es más que solo económica.
+Savage (2021) señala que Piketty usa el **tiempo** para argumentar que el pasado está regresando. Bourdieu usa el **espacio** para argumentar que la desigualdad es más que solo económica.
 
 En ambos casos, el gráfico no es una simple ilustración del texto. Es el **núcleo de su argumento teórico**.
 

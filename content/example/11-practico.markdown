@@ -26,7 +26,7 @@ El objetivo de este práctico es dominar la "Gramática de Gráficos" para const
 
 ### 1.1 El "Porqué" de la Visualización
 
-Como vimos en la clase, la visualización de datos no es un simple adorno. Es una forma de **argumento sociológico** y una herramienta de **diagnóstico fundamental**. AVimosen la clase como autores como Piketty y Bourdieu usan gráficos como el núcleo de sus teorías. Estadísticamente, graficar nuestros datos es la mejor forma de descubrir la verdadera forma de una distribución, que puede ocultarse detrás de estadísticos descriptivos similares.
+Como vimos en la clase, la visualización de datos no es un simple adorno. Es una forma de **argumento sociológico** y una herramienta de **diagnóstico fundamental**. Autores como Piketty y Bourdieu usan gráficos como el núcleo de sus teorías. Estadísticamente, graficar nuestros datos es la mejor forma de descubrir la verdadera forma de una distribución, que puede ocultarse detrás de estadísticos descriptivos similares.
 
 ### **1.2 Preparación del Entorno y Datos (CASEN 2022)**
 
@@ -133,7 +133,7 @@ p
 ```
 
 ```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value `binwidth`.
 ```
 
 <img src="/example/11-practico_files/figure-html/ggplot-paso-a-paso-2.png" width="672" />
@@ -216,10 +216,6 @@ casen %>%
 
 <img src="/example/11-practico_files/figure-html/unnamed-chunk-3-1.png" width="672" />
 
-
-Perfecto. Agrego la **sección 4.4** con estructura docente y lista para usar.
-
----
 
 ### 4.4 Etiquetas sobre las barras
 
