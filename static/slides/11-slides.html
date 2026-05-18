@@ -215,12 +215,12 @@ Gabriel Sotomayor
 <section id="objetivos-de-la-sesión-de-hoy" class="slide level2 smaller" data-background-color="white">
 <h2>Objetivos de la Sesión de Hoy</h2>
 <ul>
-<li><strong>Comprender</strong> la visualización no solo como una ilustración, sino como una <strong>forma de argumento sociológico</strong>.</li>
-<li><strong>Analizar</strong> cómo “visualizaciones icónicas” han redefinido debates sobre la desigualdad.</li>
-<li><strong>Demostrar</strong> por qué los estadísticos resumen por sí solos pueden ser engañosos.</li>
-<li><strong>Aprender</strong> y aplicar un conjunto de <strong>mejores prácticas</strong> para la creación de gráficos claros y honestos.</li>
-<li><strong>Introducir</strong> la <strong>“Gramática de Gráficos”</strong> y sus componentes (<code>data</code>, <code>aes</code>, <code>geom</code>).</li>
-<li><strong>Ampliar</strong> el repertorio en <code>ggplot2</code> con una herramienta clave para la comparación: <strong>el <em>faceting</em></strong>.</li>
+<li>Ver la visualización como <strong>argumento sociológico</strong>, no solo como ilustración.</li>
+<li>Analizar cómo “visualizaciones icónicas” han redefinido debates sobre la desigualdad.</li>
+<li>Entender por qué los estadísticos resumen por sí solos pueden ser engañosos.</li>
+<li>Aplicar <strong>mejores prácticas</strong> para crear gráficos claros y honestos.</li>
+<li>Conocer la <strong>“Gramática de Gráficos”</strong> y sus componentes (<code>data</code>, <code>aes</code>, <code>geom</code>).</li>
+<li>Usar <strong>el <em>faceting</em></strong> en <code>ggplot2</code> para comparar distribuciones entre grupos.</li>
 </ul>
 </section>
 <section>
@@ -230,14 +230,14 @@ Gabriel Sotomayor
 </section>
 <section id="más-allá-de-la-ilustración" class="slide level2 smaller" data-background-color="white">
 <h2>Más Allá de la Ilustración</h2>
-<p>La visualización de datos no es un paso meramente técnico o decorativo al final de un análisis. En sociología, las visualizaciones más influyentes son, en sí mismas, <strong>argumentos teóricos condensados</strong>.</p>
-<p>Tienen el poder de:</p>
+<p>En sociología, las visualizaciones más influyentes son, en sí mismas, <strong>argumentos teóricos condensados</strong>. No son el paso final del análisis: son el análisis.</p>
+<p>Pueden:</p>
 <ul>
 <li>Contar una <strong>historia</strong> compleja de forma simple y memorable.</li>
 <li><strong>Desafiar narrativas</strong> dominantes sobre el progreso y la sociedad.</li>
 <li><strong>Redefinir el debate</strong> público y académico.</li>
 </ul>
-<p>Como argumenta Mike Savage en <em>The Return of Inequality: Social Change and the Weight of the Past</em> (Harvard University Press, 2021), estas “visualizaciones icónicas” no solo muestran datos, sino que proponen una nueva forma de ver el mundo social.</p>
+<p>Mike Savage, en <em>The Return of Inequality</em> (Harvard University Press, 2021), llama a estas “visualizaciones icónicas”: proponen una nueva forma de ver el mundo social.</p>
 <div style="font-size: 0.65em; color: #aaa; margin-top: 1em;">
 <p>Savage, M. (2021). <em>The Return of Inequality: Social Change and the Weight of the Past</em>. Harvard University Press. https://doi.org/10.2307/j.ctv31xf633</p>
 </div>
@@ -249,7 +249,7 @@ Gabriel Sotomayor
 <section id="la-curva-en-u-de-piketty-la-desigualdad-en-el-tiempo-1" class="slide level2 smaller" data-background-color="white">
 <h2>La Curva en U de Piketty (La Desigualdad en el Tiempo)</h2>
 <ul>
-<li><p><strong>El Gráfico:</strong> Una simple línea del tiempo (<em>sparkline</em>) que muestra la participación del 1% más rico en el ingreso nacional de EE.UU. a lo largo del siglo XX.</p></li>
+<li><p><strong>El Gráfico:</strong> Una simple línea del tiempo (<em>sparkline</em>) que muestra la participación del <strong>decil superior</strong> en el ingreso nacional de EE.UU. a lo largo del siglo XX.</p></li>
 <li><p><strong>El Argumento Visual:</strong> La forma de <strong>“U”</strong> es una poderosa narrativa. Desafía la idea modernista de un progreso lineal y constante hacia una mayor igualdad. El gráfico <em>argumenta</em> que, tras un período de relativa equidad a mediados de siglo, estamos <strong>“regresando”</strong> a los niveles de desigualdad de la “Gilded Age”. Hace visible <strong>“el peso de la historia”</strong> en el presente.</p></li>
 </ul>
 </section>
@@ -270,9 +270,9 @@ Gabriel Sotomayor
 </section>
 <section id="ver-para-argumentar" class="slide level2 smaller" data-background-color="white">
 <h2>Ver para argumentar</h2>
-<p>Savage (2021) señala que Piketty usa el <strong>tiempo</strong> para argumentar que el pasado está regresando. Bourdieu usa el <strong>espacio</strong> para argumentar que la desigualdad es más que solo económica.</p>
-<p>En ambos casos, el gráfico no es una simple ilustración del texto. Es el <strong>núcleo de su argumento teórico</strong>.</p>
-<p>La visualización, por tanto, es una forma de hacer sociología.</p>
+<p>Savage (2021) señala que Piketty usa el <strong>tiempo</strong> para argumentar que el pasado está regresando. Bourdieu usa el <strong>espacio</strong> para mostrar que la desigualdad es multidimensional.</p>
+<p>En ambos casos, el gráfico es el <strong>núcleo del argumento teórico</strong>, no una ilustración de él.</p>
+<p>Visualizar bien es hacer sociología.</p>
 </section>
 <section id="veamos-algunos-otros-ejemplos" class="slide level2 smaller" data-background-color="white">
 <h2>Veamos algunos otros ejemplos</h2>
@@ -297,7 +297,7 @@ Gabriel Sotomayor
 </section>
 <section id="el-engaño-de-los-estadísticos-descriptivos" class="slide level2 smaller" data-background-color="white">
 <h2>El Engaño de los Estadísticos Descriptivos</h2>
-<p>Además de ser argumentos, los gráficos son herramientas de <strong>diagnóstico</strong> cruciales. Los estadísticos resumen por sí solos pueden ser idénticos para distribuciones radicalmente diferentes.</p>
+<p>Los gráficos también son herramientas de <strong>diagnóstico</strong>. Los estadísticos resumen pueden ser idénticos para distribuciones radicalmente diferentes.</p>
 <p><strong>Ejemplo: “El Trío Engañoso”</strong></p>
 <p>Imaginemos tres grupos de datos con los siguientes estadísticos:</p>
 <table class="caption-top">
@@ -341,7 +341,7 @@ Gabriel Sotomayor
 </section>
 <section id="principios-para-gráficos-claros-y-honestos" class="slide level2 smaller" data-background-color="white">
 <h2>Principios para Gráficos Claros y Honestos</h2>
-<p>Un buen gráfico no solo muestra datos, sino que cuenta una historia de forma clara, precisa y honesta.</p>
+<p>Un buen gráfico cuenta una historia de forma clara, precisa y honesta.</p>
 <ol type="1">
 <li><strong>Maximizar la Razón “Tinta-Dato” (Edward Tufte):</strong>
 <ul>
@@ -437,37 +437,33 @@ Gabriel Sotomayor
 <img data-src="11-slides_files/figure-revealjs/unnamed-chunk-4-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="mapear-vs.-fijar" class="slide level2 smaller" data-background-color="white">
 <h2>Mapear vs.&nbsp;Fijar</h2>
-<p>Este es el punto que causa más confusión al principio, pero es fundamental.</p>
+<p>Es la distinción que más confunde al principio, pero que define cómo funciona <code>ggplot2</code>.</p>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p><strong>Mapear (DENTRO de <code>aes()</code>):</strong></p>
-<ul>
-<li>El atributo visual <strong>depende de una variable</strong>.</li>
-<li>Se usa para que el gráfico <strong>represente información</strong>.</li>
-<li><strong>Ejemplo:</strong> <code>r     ... aes(color = sexo) ...</code> Aquí, el <strong>color</strong> del punto dependerá de si el valor en la columna <code>sexo</code> es “Hombre” o “Mujer”.</li>
-</ul>
+<p>El atributo visual <strong>depende de una variable</strong>. El gráfico usa el color (o el tamaño, etc.) para <strong>representar información</strong>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">aes</span>(<span class="at">color =</span> sexo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>El color de cada punto depende del valor de <code>sexo</code>.</p>
 </div><div class="column" style="width:50%;">
 <p><strong>Fijar (FUERA de <code>aes()</code>):</strong></p>
-<ul>
-<li>Asigna un <strong>valor constante</strong> al atributo.</li>
-<li>Se usa para <strong>mejorar la estética</strong>.</li>
-<li><strong>Ejemplo:</strong> <code>r     ... geom_point(color = "blue")</code> Aquí, <strong>todos los puntos serán azules</strong>, sin importar sus otras características.</li>
-</ul>
+<p>Se asigna un <strong>valor constante</strong>. Es una decisión estética, no informativa.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"blue"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Todos los puntos son azules, sin excepción.</p>
 </div></div>
 </section>
 <section id="mapear-vs.-fijar-ejemplo-visual" class="slide level2 smaller" data-background-color="white">
 <h2>Mapear vs.&nbsp;Fijar: Ejemplo Visual</h2>
-<p>Usemos el dataset <code>mtcars</code> para ver la diferencia de forma clara. Crearemos un gráfico de dispersión del peso (<code>wt</code>) vs.&nbsp;el rendimiento (<code>mpg</code>) de los autos.</p>
+<div style="font-size: 0.8em;">
+<p>Dispersión del peso (<code>wt</code>) vs.&nbsp;rendimiento (<code>mpg</code>) en <code>mtcars</code>.</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><strong>Mapeando <code>color</code> a la variable <code>cyl</code> (cilindros)</strong></p>
-<p>Aquí, el color <strong>representa información</strong>: nos dice cuántos cilindros tiene cada auto.</p>
+<p><strong>Mapeando <code>color</code> a <code>cyl</code>:</strong> el color representa información.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg, <span class="at">color =</span> <span class="fu">as.factor</span>(cyl))) <span class="sc">+</span></span>
-<span id="cb3-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb3-3"><a href=""></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Cilindros"</span>) <span class="sc">+</span></span>
-<span id="cb3-4"><a href=""></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb3-5"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg, <span class="at">color =</span> <span class="fu">as.factor</span>(cyl))) <span class="sc">+</span></span>
+<span id="cb5-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href=""></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Cilindros"</span>) <span class="sc">+</span></span>
+<span id="cb5-4"><a href=""></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -477,12 +473,11 @@ Gabriel Sotomayor
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<p><strong>Fijando <code>color</code> a “blue”</strong></p>
-<p>Aquí, el color es una <strong>decisión estética</strong>: todos los puntos son azules, sin importar sus datos.</p>
+<p><strong>Fijando <code>color</code> a “blue”:</strong> todos los puntos iguales.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg)) <span class="sc">+</span></span>
-<span id="cb4-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb4-3"><a href=""></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href=""></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -492,15 +487,16 @@ Gabriel Sotomayor
 </div>
 </div>
 </div></div>
+</div>
 </section>
 <section id="ampliando-la-gramática-faceting-small-multiples" class="slide level2 smaller" data-background-color="white">
 <h2>Ampliando la Gramática: Faceting (Small Multiples)</h2>
 <p><strong>El Problema:</strong> ¿Qué pasa si queremos comparar la distribución del ingreso a través de las 16 regiones de Chile? Mapear 16 colores a una estética se vuelve un caos visual.</p>
 <p><strong>La Solución: El Faceting (<code>facet_wrap()</code> o <code>facet_grid()</code>)</strong></p>
 <p>Consiste en crear una <strong>grilla de gráficos más pequeños</strong>, donde cada panel muestra un subconjunto de los datos. Es una de las herramientas más poderosas de <code>ggplot2</code> para el análisis exploratorio.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="fu">ggplot</span>(datos, <span class="fu">aes</span>(<span class="at">x =</span> ingreso)) <span class="sc">+</span></span>
-<span id="cb5-2"><a href=""></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
-<span id="cb5-3"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> region) <span class="co"># Crea un histograma separado para cada región</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a><span class="fu">ggplot</span>(datos, <span class="fu">aes</span>(<span class="at">x =</span> ingreso)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href=""></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb7-3"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> region) <span class="co"># Crea un histograma separado para cada región</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="faceting-en-acción" class="slide level2 smaller" data-background-color="white">
 <h2>Faceting en Acción</h2>
@@ -745,42 +741,80 @@ Gabriel Sotomayor
       });
     </script>
     
+
     <script>
+
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
       // slide changes (different for each slide format).
+
       (function () {
+
         // dispatch for htmlwidgets
+
         function fireSlideEnter() {
+
           const event = window.document.createEvent("Event");
+
           event.initEvent("slideenter", true, true);
+
           window.document.dispatchEvent(event);
+
         }
+
+    
 
         function fireSlideChanged(previousSlide, currentSlide) {
+
           fireSlideEnter();
 
+    
+
           // dispatch for shiny
+
           if (window.jQuery) {
+
             if (previousSlide) {
+
               window.jQuery(previousSlide).trigger("hidden");
+
             }
+
             if (currentSlide) {
+
               window.jQuery(currentSlide).trigger("shown");
+
             }
+
           }
+
         }
+
+    
 
         // hookup for slidy
+
         if (window.w3c_slidy) {
+
           window.w3c_slidy.add_observer(function (slide_num) {
+
             // slide_num starts at position 1
+
             fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
           });
+
         }
 
+    
+
       })();
+
     </script>
+
+    
 
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {

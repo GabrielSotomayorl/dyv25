@@ -26,7 +26,7 @@ El objetivo de este práctico es dominar la "Gramática de Gráficos" para const
 
 ### 1.1 El "Porqué" de la Visualización
 
-Como vimos en la clase, la visualización de datos no es un simple adorno. Es una forma de **argumento sociológico** y una herramienta de **diagnóstico fundamental**. Autores como Piketty y Bourdieu usan gráficos como el núcleo de sus teorías. Estadísticamente, graficar nuestros datos es la mejor forma de descubrir la verdadera forma de una distribución, que puede ocultarse detrás de estadísticos descriptivos similares.
+Como vimos en la clase, la visualización de datos es una forma de **argumento sociológico** y una herramienta de **diagnóstico fundamental**. Autores como Piketty y Bourdieu usan gráficos como el núcleo de sus teorías. Estadísticamente, graficar los datos es la mejor forma de descubrir la verdadera forma de una distribución, que puede ocultarse detrás de estadísticos descriptivos similares.
 
 ### **1.2 Preparación del Entorno y Datos (CASEN 2022)**
 

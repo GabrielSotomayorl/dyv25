@@ -20,12 +20,12 @@ include-in-header:
 
 ## Objetivos de la Sesión de Hoy {.smaller background-color="white"}
 
--   **Comprender** la visualización no solo como una ilustración, sino como una **forma de argumento sociológico**.
--   **Analizar** cómo "visualizaciones icónicas" han redefinido debates sobre la desigualdad.
--   **Demostrar** por qué los estadísticos resumen por sí solos pueden ser engañosos.
--   **Aprender** y aplicar un conjunto de **mejores prácticas** para la creación de gráficos claros y honestos.
--   **Introducir** la **"Gramática de Gráficos"** y sus componentes (`data`, `aes`, `geom`).
--   **Ampliar** el repertorio en `ggplot2` con una herramienta clave para la comparación: **el *faceting***.
+-   Ver la visualización como **argumento sociológico**, no solo como ilustración.
+-   Analizar cómo "visualizaciones icónicas" han redefinido debates sobre la desigualdad.
+-   Entender por qué los estadísticos resumen por sí solos pueden ser engañosos.
+-   Aplicar **mejores prácticas** para crear gráficos claros y honestos.
+-   Conocer la **"Gramática de Gráficos"** y sus componentes (`data`, `aes`, `geom`).
+-   Usar **el *faceting*** en `ggplot2` para comparar distribuciones entre grupos.
 
 ---
 title_slide_background: "#008080"
@@ -35,15 +35,15 @@ title_slide_background: "#008080"
 
 ## Más Allá de la Ilustración {.smaller background-color="white"}
 
-La visualización de datos no es un paso meramente técnico o decorativo al final de un análisis. En sociología, las visualizaciones más influyentes son, en sí mismas, **argumentos teóricos condensados**.
+En sociología, las visualizaciones más influyentes son, en sí mismas, **argumentos teóricos condensados**. No son el paso final del análisis: son el análisis.
 
-Tienen el poder de:
+Pueden:
 
 -   Contar una **historia** compleja de forma simple y memorable.
 -   **Desafiar narrativas** dominantes sobre el progreso y la sociedad.
 -   **Redefinir el debate** público y académico.
 
-Como argumenta Mike Savage en *The Return of Inequality: Social Change and the Weight of the Past* (Harvard University Press, 2021), estas "visualizaciones icónicas" no solo muestran datos, sino que proponen una nueva forma de ver el mundo social.
+Mike Savage, en *The Return of Inequality* (Harvard University Press, 2021), llama a estas "visualizaciones icónicas": proponen una nueva forma de ver el mundo social.
 
 ::: {style="font-size: 0.65em; color: #aaa; margin-top: 1em;"}
 Savage, M. (2021). *The Return of Inequality: Social Change and the Weight of the Past*. Harvard University Press. https://doi.org/10.2307/j.ctv31xf633
@@ -56,7 +56,7 @@ Savage, M. (2021). *The Return of Inequality: Social Change and the Weight of th
 
 ## La Curva en U de Piketty (La Desigualdad en el Tiempo) {.smaller background-color="white"}
 
--   **El Gráfico:** Una simple línea del tiempo (*sparkline*) que muestra la participación del 1% más rico en el ingreso nacional de EE.UU. a lo largo del siglo XX.
+-   **El Gráfico:** Una simple línea del tiempo (*sparkline*) que muestra la participación del **decil superior** en el ingreso nacional de EE.UU. a lo largo del siglo XX.
 
 -   **El Argumento Visual:** La forma de **"U"** es una poderosa narrativa. Desafía la idea modernista de un progreso lineal y constante hacia una mayor igualdad. El gráfico *argumenta* que, tras un período de relativa equidad a mediados de siglo, estamos **"regresando"** a los niveles de desigualdad de la "Gilded Age". Hace visible **"el peso de la historia"** en el presente.
 
@@ -77,11 +77,11 @@ Savage, M. (2021). *The Return of Inequality: Social Change and the Weight of th
 
 ## Ver para argumentar {.smaller background-color="white"}
 
-Savage (2021) señala que Piketty usa el **tiempo** para argumentar que el pasado está regresando. Bourdieu usa el **espacio** para argumentar que la desigualdad es más que solo económica.
+Savage (2021) señala que Piketty usa el **tiempo** para argumentar que el pasado está regresando. Bourdieu usa el **espacio** para mostrar que la desigualdad es multidimensional.
 
-En ambos casos, el gráfico no es una simple ilustración del texto. Es el **núcleo de su argumento teórico**.
+En ambos casos, el gráfico es el **núcleo del argumento teórico**, no una ilustración de él.
 
-La visualización, por tanto, es una forma de hacer sociología.
+Visualizar bien es hacer sociología.
 
 
 ## Veamos algunos otros ejemplos {.smaller background-color="white"}
@@ -110,7 +110,7 @@ La visualización, por tanto, es una forma de hacer sociología.
 
 ## El Engaño de los Estadísticos Descriptivos {.smaller background-color="white"}
 
-Además de ser argumentos, los gráficos son herramientas de **diagnóstico** cruciales. Los estadísticos resumen por sí solos pueden ser idénticos para distribuciones radicalmente diferentes.
+Los gráficos también son herramientas de **diagnóstico**. Los estadísticos resumen pueden ser idénticos para distribuciones radicalmente diferentes.
 
 **Ejemplo: "El Trío Engañoso"**
 
@@ -167,7 +167,7 @@ title_slide_background: "#008080"
 
 ## Principios para Gráficos Claros y Honestos {.smaller background-color="white"}
 
-Un buen gráfico no solo muestra datos, sino que cuenta una historia de forma clara, precisa y honesta.
+Un buen gráfico cuenta una historia de forma clara, precisa y honesta.
 
 1.  **Maximizar la Razón "Tinta-Dato" (Edward Tufte):**
     -   Cada elemento visual debe comunicar información. Evita "ruido" como fondos recargados, sombras, efectos 3D o colores que no aportan significado.
@@ -263,60 +263,57 @@ ggplot(data = casen, mapping = aes(x = edad)) +
 
 ## Mapear vs. Fijar {.smaller background-color="white"}
 
-Este es el punto que causa más confusión al principio, pero es fundamental.
+Es la distinción que más confunde al principio, pero que define cómo funciona `ggplot2`.
 
 :::::: columns
 ::: {.column width="50%"}
 **Mapear (DENTRO de `aes()`):**
 
--   El atributo visual **depende de una variable**.
--   Se usa para que el gráfico **represente información**.
--   **Ejemplo:**
-    ```r
-    ... aes(color = sexo) ...
-    ```    Aquí, el **color** del punto dependerá de si el valor en la columna `sexo` es "Hombre" o "Mujer".
+El atributo visual **depende de una variable**. El gráfico usa el color (o el tamaño, etc.) para **representar información**.
+
+```r
+aes(color = sexo)
+```
+El color de cada punto depende del valor de `sexo`.
 :::
 ::: {.column width="50%"}
 **Fijar (FUERA de `aes()`):**
 
--   Asigna un **valor constante** al atributo.
--   Se usa para **mejorar la estética**.
--   **Ejemplo:**
-    ```r
-    ... geom_point(color = "blue")
-    ```
-    Aquí, **todos los puntos serán azules**, sin importar sus otras características.
+Se asigna un **valor constante**. Es una decisión estética, no informativa.
+
+```r
+geom_point(color = "blue")
+```
+Todos los puntos son azules, sin excepción.
 :::
 ::::::
 
 ## Mapear vs. Fijar: Ejemplo Visual {.smaller background-color="white"}
 
-Usemos el dataset `mtcars` para ver la diferencia de forma clara. Crearemos un gráfico de dispersión del peso (`wt`) vs. el rendimiento (`mpg`) de los autos.
+::: {style="font-size: 0.8em;"}
+Dispersión del peso (`wt`) vs. rendimiento (`mpg`) en `mtcars`.
 
 :::::: columns
 ::: {.column width="50%"}
-**Mapeando `color` a la variable `cyl` (cilindros)**
-
-Aquí, el color **representa información**: nos dice cuántos cilindros tiene cada auto.
-```{r, echo=TRUE, message=FALSE, warning=FALSE}
+**Mapeando `color` a `cyl`:** el color representa información.
+```{r, echo=TRUE, message=FALSE, warning=FALSE, fig.height=3}
 ggplot(mtcars, aes(x = wt, y = mpg, color = as.factor(cyl))) +
-  geom_point(size = 4, alpha = 0.8) +
+  geom_point(size = 3, alpha = 0.8) +
   labs(color = "Cilindros") +
-  theme_minimal(base_size = 14) +
+  theme_minimal(base_size = 11) +
   theme(legend.position="bottom")
 ```
 :::
 ::: {.column width="50%"}
-**Fijando `color` a "blue"**
-
-Aquí, el color es una **decisión estética**: todos los puntos son azules, sin importar sus datos.
-```{r, echo=TRUE, message=FALSE, warning=FALSE}
+**Fijando `color` a "blue":** todos los puntos iguales.
+```{r, echo=TRUE, message=FALSE, warning=FALSE, fig.height=3}
 ggplot(mtcars, aes(x = wt, y = mpg)) +
-  geom_point(size = 4, alpha = 0.8, color = "blue") +
-  theme_minimal(base_size = 14)
+  geom_point(size = 3, alpha = 0.8, color = "blue") +
+  theme_minimal(base_size = 11)
 ```
 :::
 ::::::
+:::
 
 
 
